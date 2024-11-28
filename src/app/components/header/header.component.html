@@ -1,0 +1,57 @@
+<header class="header">
+
+	<div class="left">
+
+		<a href="/">
+			<div class="logo"></div>
+		</a>
+	
+		<h3 (click)="togglePopup()">Blackhole</h3>
+    <button (click)="togglePopup()" [ngClass]="{'open': isPopupVisible, 'closed': !isPopupVisible}"></button>
+	
+	
+		<nav>
+      <a routerLink="/trade" routerLinkActive="active-link">Trade</a>
+      <a routerLink="/bridge" routerLinkActive="active-link">Bridge</a>
+      <a routerLink="/fun" routerLinkActive="active-link">Fun</a>
+      <a routerLink="/launchpad" routerLinkActive="active-link">Launchpad</a>
+      <a routerLink="/quests" routerLinkActive="active-link">Quests</a>
+    </nav>
+
+	</div>
+
+	<div class="right">
+
+<!-- GM STRAK WIDGET -->
+		<div class="gm" (click)="incrementGmCount()">
+			<p *ngIf="gmCount !== null">{{ gmCount }}</p>
+			<div class="fire-img"></div>
+			<div class="fireworks-container"></div>
+		</div>
+
+		<!-- Мини-попап -->
+		<div class="gm-popup" *ngIf="showPopup">
+			{{ popupMessage }}
+		</div>
+
+
+<!-- XP WIDGET -->
+		<div class="xp">
+			<p>0 XP</p>
+		</div>
+
+<!-- NETWORK CHANGE -->
+		<div (click)="toggleNetworkPopup()" class="network">
+			<div class="network-icon" [ngClass]="selectedNetwork"></div>
+			<button (click)="toggleNetworkPopup()" [ngClass]="{'network-open': isNetworkPopupVisible, 'network-closed': !isNetworkPopupVisible}"></button>
+		</div>
+
+<!-- WALLET -->
+		<div class="wallet">
+			<div class="wallet-icon"></div>
+			<p>Connect Wallet</p>
+		</div>
+
+	</div>
+
+</header>

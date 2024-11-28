@@ -1,0 +1,111 @@
+.popup-menu {
+	width: 277px;
+	height: 408px;
+  position: fixed;
+  top: 148px;
+  left: 40px;
+  background: black;
+  border: 1px solid var(--elem-nonactive);
+	border-radius: 28px;
+  z-index: 1000;
+	padding-left: 30px;
+	padding-top: 25px;
+	padding-right: 30px;
+	box-sizing: border-box;
+}
+.upper{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+h6{
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 800;
+	font-size: 21px;
+	color: white;
+}
+button{
+	height: 15px;
+	width: 15px;
+	background: url(/img/header/popup-menu/close-icon.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+.devider{
+	margin-top: 17px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+div.devider2{
+	margin-bottom: 17px;
+	margin-top: 47px;
+}
+p{
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 400;
+	font-size: 18px;
+	color: var(--elem-nonactive);
+}
+hr{
+	width: 125px;
+	border: 0.5px solid var(--elem-nonactive);
+}
+div.devider hr.hr2{
+	width: 95px;
+	border: 0.5px solid var(--elem-nonactive);
+}
+
+.socials{
+	margin-top: 17px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+a{
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 400;
+	font-size: 18px;
+	color: white;
+	display: flex;
+	transition: 0.2s;
+}
+a:hover{
+	color: var(--elem-nonactive);
+}
+.social-img{
+	width: 20px;
+	height: 20px;
+	margin-right: 10px;
+}
+.twitter{
+	background: url(/img/header/popup-menu/twitter.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+.telegram{
+	background: url(/img/header/popup-menu/telegram.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+.github{
+	background: url(/img/header/popup-menu/github.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+.medium{
+	background: url(/img/header/popup-menu/medium.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+.documentation{
+	background: url(/img/header/popup-menu/documentation.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+.contact{
+	background: url(/img/header/popup-menu/contact.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+}

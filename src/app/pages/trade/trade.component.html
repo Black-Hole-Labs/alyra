@@ -1,0 +1,133 @@
+<div class="trade">
+  <div class="trade-window">
+    <div class="header">
+      <h3>Trade</h3>
+      <div class="icons">
+        <div class="refresh" (mousedown)="rotateRefresh()"></div>
+				<div class="settings" (click)="toggleSettingsPopup()"></div>
+
+				<app-settings
+					*ngIf="showSettingsPopup"
+					class="settings-popup open"
+					(close)="toggleSettingsPopup()"
+					(save)="onSlippageSave($event)"
+				></app-settings>
+
+      </div>
+    </div>
+
+    <div class="swap-container">
+			<div class="change-button" id="change-button" 
+					(mousedown)="onMouseDown()" 
+					(animationend)="onAnimationEnd()">
+				<div class="arrow-up"></div>
+				<div class="arrow-down"></div>
+			</div>
+
+
+      <div class="sell">
+        <div class="left">
+          <h6 class="sell-h6">Sell</h6>
+          <input
+            type="text"
+            id="number-input-sell"
+						placeholder="0.0"
+            [(ngModel)]="sellAmount"
+            (input)="processInput($event, true)"
+          />
+        </div>
+
+        <div class="right">
+          <div class="token" (click)="openTokenPopup()">
+            <div class="token-icon" [style.backgroundImage]="'url(' + selectedTokenImage + ')'"></div>
+            <p>{{ selectedToken }}</p>
+            <button></button>
+          </div>
+        </div>
+
+				<app-token-change
+					*ngIf="showTokenPopup"
+					(close)="closeTokenPopup()"
+					(tokenSelected)="onTokenSelected($event)"
+				></app-token-change>
+
+        <div class="bottom">
+          <p id="sell-price-usd">{{ sellPriceUsd }}</p>
+
+          <div class="balance">
+            <p>Balance:</p>
+            <p id="balance">{{ balance }}</p>
+            <p>${{ selectedToken }}</p>
+
+            <button class="max" (click)="setMaxSellAmount()">MAX</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="buy">
+        <div class="left">
+          <h6 class="buy-h6">Buy</h6>
+          <input
+            type="text"
+            id="number-input-buy"
+						placeholder="0.0"
+            [value]="buyAmount"
+            readonly
+          />
+        </div>
+
+        <div class="right">
+          <div class="token" (click)="openTokenBuyPopup()">
+            <div class="token-icon" [style.backgroundImage]="'url(' + selectedBuyTokenImage + ')'"></div>
+            <p>{{ selectedBuyToken }}</p>
+            <button></button>
+          </div>
+        </div>
+
+				<app-token-change-buy
+					*ngIf="showTokenBuyPopup"
+					(close)="closeTokenBuyPopup()"
+					(tokenSelected)="onBuyTokenSelected($event)"
+				></app-token-change-buy>
+
+        <div class="bottom">
+          <p id="buy-price-usd">{{ sellPriceUsd }}</p>
+
+          <div class="balance">
+            <p>Balance:</p>
+            <p>0.1465</p>
+            <p>${{ selectedBuyToken }}</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="main-button">Swap</button>
+
+      <div class="price">
+        <p>1</p>
+        <p>{{ selectedToken }}</p>
+        <p>=</p>
+        <p id="price">{{ price }}</p>
+        <p>{{ selectedBuyToken }}</p>
+        <p class="price-usd">($</p>
+        <p class="price-usd" id="price-usd">{{ priceUsd }}</p>
+        <p class="price-usd">)</p>
+      </div>
+			
+      <div class="gas-fee" *ngIf="sellAmount">
+        <p>Gas fee:</p>
+        <p>$0.214</p>
+      </div>
+
+      <div class="platform-fee" *ngIf="sellAmount">
+        <p>Platform fee:</p>
+        <p>$0.23214</p>
+      </div>
+
+      <div class="slippage" *ngIf="sellAmount">
+				<p>Slippage:</p>
+				<p>{{ slippage }}</p>
+			</div>
+    </div>
+  </div>
+</div>

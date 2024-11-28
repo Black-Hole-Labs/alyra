@@ -1,0 +1,27 @@
+footer{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+p{
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 400;
+	font-size: 18px;
+	color: white;
+}
+.links{
+	display: flex;
+	align-items: center;
+	gap: 40px
+}
+a{
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 400;
+	font-size: 18px;
+	color: white;
+	cursor: pointer;
+	transition: 0.2s;
+}
+a:hover{
+	color: var(--elem-nonactive);
+}
