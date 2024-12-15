@@ -29,11 +29,35 @@ export class LifiController {
     @Query('fromAmount') fromAmount: string,
     @Query('fromAddress') fromAddress: string,
   ) {
-      if (!fromChain || !toChain || !fromToken || !toToken || !fromAmount || !fromAddress) {
-        throw new HttpException('Missing required query parameters', HttpStatus.BAD_REQUEST);
-      }
-
+        if (!fromChain || !toChain || !fromToken || !toToken || !fromAmount || !fromAddress) {
+          throw new HttpException('Missing required query parameters', HttpStatus.BAD_REQUEST);
+        }
         const quote = await this.lifiService.getQuote(fromChain, toChain, fromToken, toToken, fromAmount, fromAddress);
+
         return quote;
     }
+  
+  @Get('quote-toamount')
+  async getQuoteByReceivingAmount(
+    @Query('fromChain') fromChain: string,
+    @Query('toChain') toChain: string,
+    @Query('fromToken') fromToken: string,
+    @Query('toToken') toToken: string,
+    @Query('toAmount') toAmount: string,
+    @Query('fromAddress') fromAddress: string,
+  ) {
+        if (!fromChain || !toChain || !fromToken || !toToken || !toAmount || !fromAddress) {
+          throw new HttpException('Missing required query parameters', HttpStatus.BAD_REQUEST);
+        }
+        const quote = await this.lifiService.getQuoteByReceivingAmount(fromChain, toChain, fromToken, toToken, toAmount, fromAddress);
+
+        return quote;
+    }
+
+    @Get('status')
+    async getStatus(@Query('txHash') txHash: string) {
+      return await this.lifiService.getStatus(txHash);
+    }
+
+    // TODO: controller for executeTransaction()
 }
