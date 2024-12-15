@@ -28,4 +28,32 @@ export class LifiService {
         }});
     return result.data;
   }
+
+  async getQuote (fromChain, toChain, fromToken, toToken, fromAmount, fromAddress) {
+    const result = await axios.get('https://li.quest/v1/quote', {
+        params: {
+            fromChain,
+            toChain,
+            fromToken,
+            toToken,
+            fromAmount,
+            fromAddress,
+        }
+    });
+    return result.data;
+  }
+
+  async getQuoteByReceivingAmount (fromChain, toChain, fromToken, toToken, toAmount, fromAddress) {
+    const result = await axios.get('https://li.quest/v1/quote/toAmount', {
+        params: {
+            fromChain,
+            toChain,
+            fromToken,
+            toToken,
+            toAmount,
+            fromAddress,
+        }
+    });
+    return result.data;
+  }
 }

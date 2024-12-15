@@ -1,22 +1,39 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { LifiService } from './lifi.service';
 
 @Controller('lifi')
 export class LifiController {
   constructor(private readonly lifiService: LifiService) {}
 
-  @Get('get-chains')
+  @Get('chains')
   async getChains() {
     return await this.lifiService.getChains();
   }
 
-  @Get('get-tools')
+  @Get('tools')
   async getTools() {
     return await this.lifiService.getTools();
   }
 
-  @Get('get-tokens')
+  @Get('tokens')
   async getTokens() {
     return await this.lifiService.getTokens();
   }
+
+  @Get('quote')
+  async getQuote(
+    @Query('fromChain') fromChain: string,
+    @Query('toChain') toChain: string,
+    @Query('fromToken') fromToken: string,
+    @Query('toToken') toToken: string,
+    @Query('fromAmount') fromAmount: string,
+    @Query('fromAddress') fromAddress: string,
+  ) {
+      if (!fromChain || !toChain || !fromToken || !toToken || !fromAmount || !fromAddress) {
+        throw new HttpException('Missing required query parameters', HttpStatus.BAD_REQUEST);
+      }
+
+        const quote = await this.lifiService.getQuote(fromChain, toChain, fromToken, toToken, fromAmount, fromAddress);
+        return quote;
+    }
 }
