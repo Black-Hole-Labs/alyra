@@ -6,14 +6,15 @@ import { BlackholeMenuComponent } from './components/popup/blackhole-menu/blackh
 import { CommonModule } from '@angular/common';
 import { BlackholeNetworkComponent } from './components/popup/blackhole-network/blackhole-network.component';
 import { Router, NavigationEnd } from '@angular/router';  // Импортируем Router и NavigationEnd
-import { filter } from 'rxjs/operators'; 
+import { filter } from 'rxjs/operators';
+import { BlockchainConnectComponent } from "./components/blockchain-connect/blockchain-connect.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, BlackholeMenuComponent, CommonModule, BlackholeNetworkComponent]
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, BlackholeMenuComponent, CommonModule, BlackholeNetworkComponent, BlockchainConnectComponent]
 })
 export class AppComponent {
   isPopupVisible = false;

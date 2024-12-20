@@ -1,0 +1,41 @@
+[
+  {
+    "id": "ethereum_mainnet",
+    "chainId": "0x1",
+    "name": "Ethereum Mainnet",
+    "rpcUrls": ["https://mainnet.infura.io/v3/YOUR_INFURA_KEY"],
+    "nativeCurrency": {
+      "name": "Ether",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "type": "ethereum",
+    "provider": "metamask"
+  },
+  {
+    "id": "ethereum_testnet",
+    "chainId": "0x5",
+    "name": "Goerli Testnet",
+    "rpcUrls": ["https://goerli.infura.io/v3/YOUR_INFURA_KEY"],
+    "nativeCurrency": {
+      "name": "Goerli Ether",
+      "symbol": "gETH",
+      "decimals": 18
+    },
+    "type": "ethereum",
+    "provider": "metamask"
+  },
+  {
+    "id": "polygon_mainnet",
+    "chainId": "0x89",
+    "name": "Polygon Mainnet",
+    "rpcUrls": ["https://polygon-rpc.com"],
+    "nativeCurrency": {
+      "name": "Matic",
+      "symbol": "MATIC",
+      "decimals": 18
+    },
+    "type": "polygon",
+    "provider": "metamask"
+  }
+]

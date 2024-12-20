@@ -8,12 +8,12 @@
 
 <router-outlet></router-outlet>
 
-<!-- Первый попап -->
 <app-blackhole-menu *ngIf="isPopupVisible" (close)="togglePopup()"></app-blackhole-menu>
 
-<!-- Второй попап -->
 <app-blackhole-network *ngIf="isNetworkPopupVisible" 
                        (networkSelected)="onNetworkSelected($event)"
                        (close)="toggleNetworkPopup()"></app-blackhole-network>
 
 <app-footer></app-footer>
+
+<app-blockchain-connect></app-blockchain-connect>

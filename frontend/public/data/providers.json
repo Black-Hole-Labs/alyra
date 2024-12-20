@@ -1,0 +1,18 @@
+[
+    {
+      "id": "metamask",
+      "name": "MetaMask",
+      "type": "ethereum"
+    },
+    {
+      "id": "solflare",
+      "name": "Solflare",
+      "type": "solana"
+    },
+    {
+      "id": "cyberwallet",
+      "name": "CyberWallet",
+      "type": "multichain"
+    }
+  ]
+  

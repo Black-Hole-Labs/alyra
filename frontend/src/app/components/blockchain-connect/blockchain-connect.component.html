@@ -1,0 +1,39 @@
+<div>
+    <label for="provider-select">Select Provider:</label>
+    <select
+      id="provider-select"
+      [(ngModel)]="selectedProvider"
+    >
+      @for (provider of providers; track $index) {
+        <option [value]="provider">
+          {{ provider }}
+        </option>
+      }
+    </select>
+  
+    @if (!connected()) {
+      <button (click)="connectWallet()">Connect</button>
+    } @else {
+      <button (click)="disconnectWallet()">Disconnect</button>
+    }
+  
+    @if (connected()) {
+      <div>
+        <label for="network-select">Select Network:</label>
+        <select
+          id="network-select"
+          [(ngModel)]="selectedNetwork"
+          (ngModelChange)="onNetworkChange($event)"
+        >
+          @for (network of networks; track $index) {
+            <option [value]="network.id">
+              {{ network.name }}
+            </option>
+          }
+        </select>
+      </div>
+    } @else {
+      <p>Please connect your wallet to select a network.</p>
+    }
+  </div>
+  
