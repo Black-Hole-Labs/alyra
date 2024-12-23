@@ -6,7 +6,7 @@ import { BlockchainConnectComponent } from "../blockchain-connect/blockchain-con
   standalone: true,
   imports: [BlockchainConnectComponent],
   templateUrl: './footer.component.html',
-  styleUrl: './footer.component.css'
+  styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
 

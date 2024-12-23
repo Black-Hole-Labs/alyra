@@ -1,11 +1,12 @@
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Renderer2, EventEmitter, Input, Output } from '@angular/core';
+import { BlockchainConnectComponent } from "../blockchain-connect/blockchain-connect.component";
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, BlockchainConnectComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })

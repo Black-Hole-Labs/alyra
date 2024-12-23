@@ -1,12 +1,13 @@
-import { Component, effect } from '@angular/core';
+import { Component, effect, EventEmitter, Input, Output } from '@angular/core';
 import { BlockchainProvidersService } from '../../services/blockchain-providers.service';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
 import { FormsModule } from '@angular/forms';
 import { Network } from '../../models/wallet-provider.interface';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   selector: 'app-blockchain-connect',
   templateUrl: './blockchain-connect.component.html',
   styleUrls: ['./blockchain-connect.component.scss'],
@@ -15,7 +16,7 @@ export class BlockchainConnectComponent {
   providers = ['metamask', 'solflare']; 
   selectedProvider: string | null = null;
   readonly connected;
-  networks: Network[] = [];
+  networks: any[] = [];
   selectedNetwork: string | null = null;
 
   constructor(
@@ -66,7 +67,7 @@ export class BlockchainConnectComponent {
   private async loadNetworks(): Promise<void> {
     try {
       const response = await fetch('/data/networks.json');
-      const allNetworks: Network[] = await response.json();
+      const allNetworks: any[] = await response.json();
 
       // Фильтруем сети по текущему провайдеру
       this.networks = allNetworks.filter(
@@ -78,7 +79,7 @@ export class BlockchainConnectComponent {
   }
 
   async onNetworkChange(networkId: string): Promise<void> {
-    const selectedNetwork = this.networks.find((network) => network.id === networkId);
+    const selectedNetwork = this.networks.find((network) => (network.id).toString() === networkId);
     if (!selectedNetwork) {
       console.error('Network not found');
       return;
@@ -91,7 +92,7 @@ export class BlockchainConnectComponent {
     }
 
     try {
-      await provider.switchNetwork(selectedNetwork.chainId);
+      await provider.switchNetwork(selectedNetwork);
       this.selectedNetwork = networkId;
       console.log(`Switched to network: ${selectedNetwork.name}`);
     } catch (error) {

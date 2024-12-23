@@ -3,7 +3,7 @@ import { WalletProvider } from './wallet-provider.interface';
 export class MetaMaskProvider implements WalletProvider {
   private address: string = '';
   private network: string = '';
-  private networks: Record<string, any> = {};
+  private networks: any;
 
   constructor() {
     this.loadNetworks();
@@ -17,18 +17,17 @@ export class MetaMaskProvider implements WalletProvider {
     return { address: this.address, network: this.network };
   }
 
-  async switchNetwork(chainId: string): Promise<void> {
+  async switchNetwork(selectedNetwork: any): Promise<void> {
     try {
-      // Попытка переключения сети
       await window.ethereum?.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId }],
+        params: [{ chainId: selectedNetwork.metamask.chainId }],
       });
-      this.network = chainId;
+      this.network = selectedNetwork.metamask.chainId;
     } catch (error: any) {
       // Если сеть не найдена, добавляем её
       if (error.code === 4902) {
-        await this.addNetwork(chainId);
+        await this.addNetwork(selectedNetwork);
       } else {
         throw error;
       }
@@ -38,30 +37,29 @@ export class MetaMaskProvider implements WalletProvider {
   private async loadNetworks(): Promise<void> {
     try {
       const response = await fetch('/data/networks.json');
-      const networks = await response.json();
-      this.networks = networks.reduce((map: Record<string, any>, network: any) => {
-        map[network.chainId] = network;
-        return map;
-      }, {});
+      this.networks = await response.json();
+      // this.networks = networks.reduce((map: Record<string, any>, network: any) => {
+      //   map[network.chainId] = network;
+      //   return map;
+      // }, {});
     } catch (error) {
       console.error('Failed to load networks:', error);
     }
   }
 
-  private async addNetwork(chainId: string): Promise<void> {
-    const network = this.networks[chainId];
-    if (!network) {
-      throw new Error(`Network with chainId ${chainId} is not configured.`);
+  private async addNetwork(selectedNetwork:any): Promise<void> {
+    //const network = this.networks[chainId];
+    if (!selectedNetwork) {
+      throw new Error(`Network with chainId ${selectedNetwork} is not configured.`);
     }
-
     await window.ethereum?.request({
       method: 'wallet_addEthereumChain',
       params: [
         {
-          chainId,
-          chainName: network.name,
-          rpcUrls: network.rpcUrls,
-          nativeCurrency: network.nativeCurrency,
+          chainId: selectedNetwork.metamask.chainId,
+          chainName: selectedNetwork.metamask.chainName,
+          rpcUrls: selectedNetwork.metamask.rpcUrls,
+          nativeCurrency: selectedNetwork.metamask.nativeCurrency,
         },
       ],
     });

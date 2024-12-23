@@ -5,7 +5,7 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
 @Component({
   selector: 'app-blockchain-select-provider',
   templateUrl: './blockchain-select-provider.component.html',
-  styleUrls: ['./blockchain-select-provider.component.scss'],
+  styleUrls: ['./blockchain-select-provider.component.css'],
 })
 export class BlockchainSelectProviderComponent implements OnInit {
   providers: { id: string; name: string; type: string }[] = [];

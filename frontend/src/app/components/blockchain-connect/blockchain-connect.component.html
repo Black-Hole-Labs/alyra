@@ -1,6 +1,8 @@
-<div>
-    <label for="provider-select">Select Provider:</label>
-    <select
+
+
+<div class="wallet">
+  <div class="wallet-icon"></div>
+  <select
       id="provider-select"
       [(ngModel)]="selectedProvider"
     >
@@ -12,7 +14,7 @@
     </select>
   
     @if (!connected()) {
-      <button (click)="connectWallet()">Connect</button>
+      <button (click)="connectWallet()">Connect Wallet</button>
     } @else {
       <button (click)="disconnectWallet()">Disconnect</button>
     }
@@ -32,8 +34,6 @@
           }
         </select>
       </div>
-    } @else {
-      <p>Please connect your wallet to select a network.</p>
     }
-  </div>
+</div>
   

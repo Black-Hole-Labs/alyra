@@ -1,0 +1,31 @@
+/* WALLET */
+.wallet{
+	padding-top: 14px;
+	padding-bottom: 14px;
+	padding-left: 18px;
+	padding-right: 18px;
+	background-color: var(--btn-dark);
+	border-radius: 14px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: 0.2s;
+}
+.wallet:hover{
+	background-color: var(--elem-nonactive);
+}
+.wallet-icon{
+	width: 32px;
+	height: 32px;
+	background: url(/img/header/wallet.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+	margin-right: 16px;
+}
+.wallet p{
+	font-size: 21px;
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 500;
+	color: white;
+}
