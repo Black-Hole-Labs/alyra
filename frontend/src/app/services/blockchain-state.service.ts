@@ -3,6 +3,7 @@ import { Injectable, signal, effect } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class BlockchainStateService {
   readonly walletAddress = signal<string | null>(null); // Адрес кошелька
+  readonly provider = signal<string | null>(null); // Выбранная сеть
   readonly network = signal<string | null>(null); // Выбранная сеть
   readonly connected = signal<boolean>(false); // Статус подключения
 
@@ -22,11 +23,12 @@ export class BlockchainStateService {
   }
 
   updateProvider(provider: string | null): void {
-    this.network.set(provider);
+    this.provider.set(provider);
   }
 
   disconnect(): void {
     this.walletAddress.set(null);
+    this.provider.set(null);
     this.network.set(null);
     this.connected.set(false);
   }

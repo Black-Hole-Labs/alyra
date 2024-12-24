@@ -94,6 +94,7 @@ export class BlockchainConnectComponent {
     try {
       await provider.switchNetwork(selectedNetwork);
       this.selectedNetwork = networkId;
+      this.blockchainStateService.updateNetwork(networkId);
       console.log(`Switched to network: ${selectedNetwork.name}`);
     } catch (error) {
       console.error('Failed to switch network:', error);
