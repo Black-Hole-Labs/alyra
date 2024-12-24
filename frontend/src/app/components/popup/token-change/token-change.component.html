@@ -19,7 +19,7 @@
 	<div class="list">
 		<div class="inner-list">
 
-			<div class="token" *ngFor="let token of filteredTokens" (click)="selectToken(token)">
+			<div class="token" *ngFor="let token of blockchainStateService.filteredTokens" (click)="selectToken(token)">
 				<div class="left">
 					<div class="image">
 						<div class="token-image" [style.backgroundImage]="'url(' + token.imageUrl + ')'"></div>
