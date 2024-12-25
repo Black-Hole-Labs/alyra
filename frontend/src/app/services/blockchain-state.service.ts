@@ -2,19 +2,25 @@ import { Injectable, signal, effect } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class BlockchainStateService {
+  // Управление провайдерами
+  private providers: Record<string, any> = {};
+  private currentProviderId: string | null = null;
+
+  // Сигналы состояния
   readonly walletAddress = signal<string | null>(null); // Адрес кошелька
-  readonly provider = signal<string | null>(null); // Выбранная сеть
   readonly network = signal<string | null>(null); // Выбранная сеть
   readonly connected = signal<boolean>(false); // Статус подключения
+
   tokens: { symbol: string; name: string; contractAddress: string; imageUrl: string }[] = [];
   filteredTokens = [...this.tokens];
 
   constructor() {
-    // Используем effect для автоматического обновления connected
+    // Эффект для обновления статуса подключения
     effect(() => {
       this.connected.set(this.walletAddress() !== null);
-    },{ allowSignalWrites: true });
+    }, { allowSignalWrites: true });
 
+    // Эффект для загрузки токенов при изменении сети
     effect(() => {
       if (this.network()) {
         this.loadTokensForNetwork(this.network()!);
@@ -22,6 +28,29 @@ export class BlockchainStateService {
     });
   }
 
+  // Методы управления провайдерами
+  registerProvider(id: string, provider: any): void {
+    this.providers[id] = provider;
+  }
+
+  getProvider(id: string): any {
+    return this.providers[id];
+  }
+
+  setCurrentProvider(id: string): void {
+    this.currentProviderId = id;
+  }
+
+  getCurrentProvider(): any {
+    return this.currentProviderId ? this.providers[this.currentProviderId] : null;
+  }
+
+  async loadProviders(): Promise<{ id: string; name: string; type: string }[]> {
+    const response = await fetch('/assets/providers.json');
+    return await response.json();
+  }
+
+  // Методы управления состоянием
   private loadTokensForNetwork(network: string): void {
     fetch(`/data/tokens.json`)
       .then((response) => {
@@ -33,7 +62,6 @@ export class BlockchainStateService {
       .then((data) => {
         const tokensForNetwork = data.tokensEVM[network];
         if (tokensForNetwork) {
-          // console.log(tokensForNetwork);
           this.tokens = tokensForNetwork.map((token: any) => ({
             symbol: token.symbol,
             name: token.name,
@@ -62,13 +90,8 @@ export class BlockchainStateService {
     this.network.set(networkId);
   }
 
-  updateProvider(provider: string | null): void {
-    this.provider.set(provider);
-  }
-
   disconnect(): void {
     this.walletAddress.set(null);
-    this.provider.set(null);
     this.network.set(null);
     this.connected.set(false);
   }

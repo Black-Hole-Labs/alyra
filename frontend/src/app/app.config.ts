@@ -1,12 +1,12 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { APP_INITIALIZER } from '@angular/core';
-import { BlockchainProvidersService } from './services/blockchain-providers.service';
+import { BlockchainStateService } from './services/blockchain-state.service';
 import { routes } from './app.routes';
 import { MetaMaskProvider } from './models/network.model';
 
 function initializeApp(
-  providersService: BlockchainProvidersService
+  stateService: BlockchainStateService
 ): () => Promise<void> {
   return async () => {
     // Загрузка списка провайдеров из JSON
@@ -16,7 +16,7 @@ function initializeApp(
     // Регистрация провайдеров
     providers.forEach((provider: { id: string; name: string; type: string }) => {
       if (provider.id === 'metamask') {
-        providersService.registerProvider('metamask', new MetaMaskProvider());
+        stateService.registerProvider('metamask', new MetaMaskProvider());
       } 
       // else if (provider.id === 'solflare') {
       //   providersService.registerProvider('solflare', new SolflareProvider());
@@ -30,9 +30,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     {
       provide: APP_INITIALIZER,
-      useFactory: (providersService: BlockchainProvidersService) =>
+      useFactory: (providersService: BlockchainStateService) =>
         initializeApp(providersService),
-      deps: [BlockchainProvidersService],
+      deps: [BlockchainStateService],
       multi: true,
     },
   ],

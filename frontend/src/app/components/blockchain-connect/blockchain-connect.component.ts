@@ -1,5 +1,4 @@
 import { Component, effect, EventEmitter, Input, Output } from '@angular/core';
-import { BlockchainProvidersService } from '../../services/blockchain-providers.service';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
 import { FormsModule } from '@angular/forms';
 import { Network } from '../../models/wallet-provider.interface';
@@ -20,7 +19,6 @@ export class BlockchainConnectComponent {
   selectedNetwork: string | null = null;
 
   constructor(
-    private blockchainProvidersService: BlockchainProvidersService,
     private blockchainStateService: BlockchainStateService
   ) {
     this.connected = this.blockchainStateService.connected;
@@ -42,7 +40,7 @@ export class BlockchainConnectComponent {
       return;
     }
 
-    const provider = this.blockchainProvidersService.getProvider(this.selectedProvider);
+    const provider = this.blockchainStateService.getProvider(this.selectedProvider);
     if (!provider) {
       alert('Provider not registered');
       return;
@@ -51,7 +49,7 @@ export class BlockchainConnectComponent {
     try {
       const { address } = await provider.connect();
       this.blockchainStateService.updateWalletAddress(address);
-      this.blockchainStateService.updateProvider(this.selectedProvider);
+      this.blockchainStateService.setCurrentProvider(this.selectedProvider);
       this.loadNetworks();
     } catch (error) {
       console.error('Connection error:', error);
@@ -85,7 +83,7 @@ export class BlockchainConnectComponent {
       return;
     }
 
-    const provider = this.blockchainProvidersService.getProvider(this.selectedProvider!);
+    const provider = this.blockchainStateService.getProvider(this.selectedProvider!);
     if (!provider) {
       alert('Provider not registered');
       return;
