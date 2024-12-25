@@ -84,11 +84,11 @@
           </div>
         </div>
 
-				<app-token-change-buy
+				<app-token-change
 					*ngIf="showTokenBuyPopup"
 					(close)="closeTokenBuyPopup()"
 					(tokenSelected)="onBuyTokenSelected($event)"
-				></app-token-change-buy>
+				></app-token-change>
 
         <div class="bottom">
           <p id="buy-price-usd">{{ sellPriceUsd }}</p>

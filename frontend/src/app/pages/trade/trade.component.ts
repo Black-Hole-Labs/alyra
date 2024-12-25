@@ -2,7 +2,6 @@ import { Component, Renderer2, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
-import { TokenChangeBuyComponent } from '../../components/popup/token-change-buy/token-change-buy.component';
 import { SettingsComponent } from '../../components/popup/settings/settings.component'; // Импортируем SettingsComponent
 
 @Component({
@@ -14,7 +13,6 @@ import { SettingsComponent } from '../../components/popup/settings/settings.comp
     FormsModule,
     CommonModule,
     TokenChangePopupComponent,
-    TokenChangeBuyComponent,
     SettingsComponent, // Добавляем SettingsComponent в imports
   ],
 })
