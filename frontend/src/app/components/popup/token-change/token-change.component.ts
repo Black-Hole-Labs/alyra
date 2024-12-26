@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, inject, effect } from '@angular/core';
+import { Component, EventEmitter, Output, inject, effect, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
@@ -11,6 +11,7 @@ import { BlockchainStateService } from '../../../services/blockchain-state.servi
   imports: [CommonModule, FormsModule],
 })
 export class TokenChangePopupComponent {
+  @Input() mode!: 'sell' | 'buy';
   @Output() close = new EventEmitter<void>();
   @Output() tokenSelected = new EventEmitter<{ symbol: string; imageUrl: string }>();
 
@@ -18,6 +19,10 @@ export class TokenChangePopupComponent {
   public blockchainStateService = inject(BlockchainStateService);
 
   ngOnInit(): void {
+    if (!this.mode) {
+      throw new Error('Mode is required! Pass "sell" or "buy" to the mode input.');
+    }
+    console.log('Current mode:', this.mode);
   }
 
   performSearch(): void {

@@ -46,6 +46,7 @@
         </div>
 
 				<app-token-change
+          [mode]="'sell'"
 					*ngIf="showTokenPopup"
 					(close)="closeTokenPopup()"
 					(tokenSelected)="onTokenSelected($event)"
@@ -85,6 +86,7 @@
         </div>
 
 				<app-token-change
+          [mode]="'buy'"
 					*ngIf="showTokenBuyPopup"
 					(close)="closeTokenBuyPopup()"
 					(tokenSelected)="onBuyTokenSelected($event)"
