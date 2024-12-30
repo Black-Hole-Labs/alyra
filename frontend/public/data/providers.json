@@ -1,18 +1,62 @@
 [
-    {
-      "id": "metamask",
-      "name": "MetaMask",
-      "type": "ethereum"
-    },
-    {
-      "id": "solflare",
-      "name": "Solflare",
-      "type": "solana"
-    },
-    {
-      "id": "cyberwallet",
-      "name": "CyberWallet",
-      "type": "multichain"
-    }
-  ]
-  
+  {
+    "id": "metamask",
+    "name": "MetaMask",
+    "type": "multichain"
+  },
+  {
+    "id": "solflare",
+    "name": "Solflare",
+    "type": "SVM"
+  },
+  {
+    "id": "phantom",
+    "name": "Phantom",
+    "type": "SVM"
+  },
+  {
+    "id": "magic-eden",
+    "name": "Magic Eden",
+    "type": "SVM"
+  },
+  {
+    "id": "backpack",
+    "name": "Backpack",
+    "type": "SVM"
+  },
+  {
+    "id": "ledger",
+    "name": "Ledger",
+    "type": "multichain"
+  },
+  {
+    "id": "trezor",
+    "name": "Trezor",
+    "type": "SVM"
+  },
+  {
+    "id": "trust-wallet",
+    "name": "Trust Wallet",
+    "type": "multichain"
+  },
+  {
+    "id": "okx-wallet",
+    "name": "OKX Wallet",
+    "type": "multichain"
+  },
+  {
+    "id": "walletConnect",
+    "name": "WalletConnect",
+    "type": "multichain"
+  },
+  {
+    "id": "coinbase-wallet",
+    "name": "Coinbase Wallet",
+    "type": "multichain"
+  },
+  {
+    "id": "rabby-wallet",
+    "name": "Rabby Wallet",
+    "type": "EVM"
+  }
+]
