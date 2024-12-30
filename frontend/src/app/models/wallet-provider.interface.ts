@@ -8,8 +8,7 @@ export interface WalletProvider {
 export interface Network {
     id: string;
     name: string;
-    rpcUrl: string;
+    rpcUrls: string;
     chainId: string;
-    type: string; // Тип сети (ethereum, solana и т.д.)
-    provider: string; // Провайдер, который поддерживает эту сеть (например, metamask, solflare)
+    chainType: string; // Тип сети (EVM, SVM)
 }

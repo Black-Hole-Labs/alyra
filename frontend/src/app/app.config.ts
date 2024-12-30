@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { APP_INITIALIZER } from '@angular/core';
 import { BlockchainStateService } from './services/blockchain-state.service';
 import { routes } from './app.routes';
-import { MetaMaskProvider } from './models/network.model';
+import { MetaMaskProvider, SolflareProvider } from './models/network.model';
 
 function initializeApp(
   stateService: BlockchainStateService
@@ -16,11 +16,11 @@ function initializeApp(
     // Регистрация провайдеров
     providers.forEach((provider: { id: string; name: string; type: string }) => {
       if (provider.id === 'metamask') {
-        stateService.registerProvider('metamask', new MetaMaskProvider());
+        stateService.registerProvider('metamask', new MetaMaskProvider(), provider.type);
       } 
-      // else if (provider.id === 'solflare') {
-      //   providersService.registerProvider('solflare', new SolflareProvider());
-      // }
+      else if (provider.id === 'solflare') {
+        stateService.registerProvider('solflare', new SolflareProvider(), provider.type);
+      }
     });
   };
 }

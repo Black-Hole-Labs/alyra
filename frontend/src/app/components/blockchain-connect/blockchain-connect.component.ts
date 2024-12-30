@@ -46,11 +46,13 @@ export class BlockchainConnectComponent {
       return;
     }
 
+    const type = this.blockchainStateService.getType(this.selectedProvider);
+
     try {
       const { address } = await provider.connect();
       this.blockchainStateService.updateWalletAddress(address);
       this.blockchainStateService.setCurrentProvider(this.selectedProvider);
-      this.loadNetworks();
+      this.loadNetworks(type);
     } catch (error) {
       console.error('Connection error:', error);
     }
@@ -62,15 +64,21 @@ export class BlockchainConnectComponent {
     this.selectedNetwork = null;
   }
 
-  private async loadNetworks(): Promise<void> {
+  private async loadNetworks(type : string): Promise<void> {
     try {
       const response = await fetch('/data/networks.json');
       const allNetworks: any[] = await response.json();
 
-      // Фильтруем сети по текущему провайдеру
-      this.networks = allNetworks.filter(
-        (network: Network) => network.provider === this.selectedProvider
-      );
+      if (type === 'multichain') // Both EVM and SVM
+      {
+        this.networks = allNetworks;
+      }
+      else
+      {
+        this.networks = allNetworks.filter(
+          (network: Network) => network.chainType === type
+        );
+      }
     } catch (error) {
       console.error('Failed to load networks:', error);
     }
