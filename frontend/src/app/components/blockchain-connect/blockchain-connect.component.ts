@@ -39,20 +39,31 @@ export class BlockchainConnectComponent {
       alert('Please select a provider');
       return;
     }
-
+  
     const provider = this.blockchainStateService.getProvider(this.selectedProvider);
     if (!provider) {
       alert('Provider not registered');
       return;
     }
-
+  
     const type = this.blockchainStateService.getType(this.selectedProvider);
-
+  
     try {
       const { address } = await provider.connect();
       this.blockchainStateService.updateWalletAddress(address);
       this.blockchainStateService.setCurrentProvider(this.selectedProvider);
-      this.loadNetworks(type);
+      await this.loadNetworks(type);
+      // Select Solana by default for SVM
+      if (type === 'SVM')
+      {
+        const solanaNetwork = this.networks.find(network => network.name === 'Solana');
+
+        if (solanaNetwork) {
+          this.onNetworkChange(solanaNetwork.id.toString());
+        } else {
+          console.error('Network for SVM not found!');
+        }
+      }
     } catch (error) {
       console.error('Connection error:', error);
     }
