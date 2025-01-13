@@ -2,7 +2,7 @@
   {
     "id": "metamask",
     "name": "MetaMask",
-    "type": "multichain"
+    "type": "EVM"
   },
   {
     "id": "solflare",
@@ -12,12 +12,12 @@
   {
     "id": "phantom",
     "name": "Phantom",
-    "type": "SVM"
+    "type": "multichain"
   },
   {
     "id": "magic-eden",
     "name": "Magic Eden",
-    "type": "SVM"
+    "type": "multichain"
   },
   {
     "id": "backpack",
@@ -28,11 +28,6 @@
     "id": "ledger",
     "name": "Ledger",
     "type": "multichain"
-  },
-  {
-    "id": "trezor",
-    "name": "Trezor",
-    "type": "SVM"
   },
   {
     "id": "trust-wallet",

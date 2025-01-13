@@ -3,27 +3,49 @@ import { provideRouter } from '@angular/router';
 import { APP_INITIALIZER } from '@angular/core';
 import { BlockchainStateService } from './services/blockchain-state.service';
 import { routes } from './app.routes';
-import { MetaMaskProvider, SolflareProvider } from './models/network.model';
+import { BackpackProvider, LedgerProvider, MagicEdenProvider, MetaMaskProvider, PhantomProvider, SolflareProvider, TrustWalletProvider, WalletProviderManager } from './models/network.model';
 
 function initializeApp(
   stateService: BlockchainStateService
 ): () => Promise<void> {
   return async () => {
-    // Загрузка списка провайдеров из JSON
+    const walletManager = new WalletProviderManager();
+
     const response = await fetch('/data/providers.json');
     const providers = await response.json();
 
     // Регистрация провайдеров
     providers.forEach((provider: { id: string; name: string; type: string }) => {
-      if (provider.id === 'metamask') {
-        stateService.registerProvider('metamask', new MetaMaskProvider(), provider.type);
-      } 
-      else if (provider.id === 'solflare') {
-        stateService.registerProvider('solflare', new SolflareProvider(), provider.type);
+      switch (provider.id) {
+        case 'metamask':
+          stateService.registerProvider(provider.id, new MetaMaskProvider(walletManager), provider.type);
+          break;
+        case 'solflare':
+          stateService.registerProvider(provider.id, new SolflareProvider(), provider.type);
+          break;
+        case 'phantom':
+          stateService.registerProvider(provider.id, new PhantomProvider(walletManager), provider.type);
+          break;
+        case 'magic-eden':
+          stateService.registerProvider(provider.id, new MagicEdenProvider(walletManager), provider.type);
+          break;
+        case 'backpack':
+          stateService.registerProvider(provider.id, new BackpackProvider(), provider.type);
+          break;
+        case 'ledger':
+          stateService.registerProvider(provider.id, new LedgerProvider(), provider.type);
+          break;
+        case 'trust-wallet':
+          stateService.registerProvider(provider.id, new TrustWalletProvider(), provider.type);
+          break;
+        default:
+          console.warn(`Provider ${provider.id} is not yet implemented.`);
       }
     });
   };
 }
+
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
