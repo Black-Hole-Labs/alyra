@@ -64,6 +64,16 @@ export class BlockchainConnectComponent {
           console.error('Network for SVM not found!');
         }
       }
+      else // EVM / multichain -> default Ethereum
+      {
+        const ethereumNetwork = this.networks.find(network => network.name === 'Ethereum');
+
+        if (ethereumNetwork) {
+          this.onNetworkChange(ethereumNetwork.id.toString());
+        } else {
+          console.error('Network for SVM not found!');
+        }
+      }
     } catch (error) {
       console.error('Connection error:', error);
     }
