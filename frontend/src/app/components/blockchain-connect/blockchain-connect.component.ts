@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./blockchain-connect.component.scss'],
 })
 export class BlockchainConnectComponent {
-  providers = ['metamask', 'solflare', 'phantom', 'magic-eden', 'backpack', 'ledger', 'trust-wallet']; 
+  providers = ['metamask', 'solflare', 'phantom', 'magic-eden', 'backpack', 'ledger', 'trust-wallet', 'okx-wallet', 'coinbase-wallet', 'rabby-wallet']; 
   selectedProvider: string | null = null;
   readonly connected;
   networks: any[] = [];

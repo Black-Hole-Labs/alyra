@@ -6,6 +6,7 @@ export class WalletProviderManager {
   private trustWalletProvider: any = null;
   private magicEdenProvider: any = null;
   private PhantomProvider: any = null;
+  private RabbyWalletProvider: any = null;
 
   constructor() {
     this.initializeProviders();
@@ -23,6 +24,10 @@ export class WalletProviderManager {
         console.log("Detected Phantom");
         this.PhantomProvider = provider;
       }
+      else if (provider.isRabby) {
+        console.log("Detected RabbyWallet");
+        this.RabbyWalletProvider = provider;
+      }
       else if (provider.isMetaMask) {
         console.log("Detected MetaMask");
         this.metaMaskProvider = provider;
@@ -39,6 +44,10 @@ export class WalletProviderManager {
 
   getMetaMaskProvider(): any {
     return this.metaMaskProvider;
+  }
+
+  getRabbyWalletProvider(): any {
+    return this.RabbyWalletProvider;
   }
 
   getTrustWalletProvider(): any {
@@ -76,7 +85,6 @@ export class MetaMaskProvider implements WalletProvider {
   }
 
   async connect(): Promise<{ address: string; network: string }> {
-    console.log(this.provider);
     if (!this.provider) throw new Error('MetaMask not installed');
     
     const accounts = await this.provider.request({ method: 'eth_requestAccounts' });
@@ -509,4 +517,235 @@ export class TrustWalletProvider implements WalletProvider {
   }
 }
 
+export class OkxWalletProvider implements WalletProvider {
+  private address: string = '';
+  private network: string = '';
+  private provider: any;
+
+  async connect(): Promise<{ address: string; network: string }> {    
+    this.provider = window.okexchain;
+    if (!this.provider) {
+      throw new Error('OKX Wallet not available');
+    }
+
+    const accounts = await this.provider.request({ method: 'eth_requestAccounts' });
+    if (!accounts || accounts.length === 0) {
+      throw new Error('Failed to retrieve OKX Wallet accounts');
+    }
+
+    this.address = accounts[0];
+    this.network = await this.getNetwork();
+    return { address: this.address, network: this.network };
+  }
+
+  async switchNetwork(selectedNetwork: any): Promise<void> {
+    if(selectedNetwork.id === 1151111081099710) // Solana ID
+    {
+      const okx_solana = this.provider.solana;
+      if (!okx_solana) {
+        throw new Error('OKX SVM not added');
+      }
+  
+      if (!okx_solana.isConnected) {
+        await okx_solana.connect();
+      }
+      const account = okx_solana.publicKey?.toString();
+      if (!account) {
+        throw new Error('Failed to retrieve OKX SVM account');
+      }
+      this.address = account;
+      console.log(`OKX: Solana address: ${this.address}`);
+      // this.network = await this.getNetwork();
+    }
+    else
+    {
+      try {
+        await this.provider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: selectedNetwork.idHex }],
+        });
+        this.network = selectedNetwork.idHex;
+      } catch (error: any) {
+        // Если сеть не найдена, добавляем её
+        if (error.code === 4902) {
+          await this.addNetwork(selectedNetwork);
+        } else {
+          throw error;
+        }
+      }
+    }
+  }
+
+  private async addNetwork(selectedNetwork: any): Promise<void> {
+    await this.provider.request({
+      method: 'wallet_addEthereumChain',
+      params: [
+        {
+          chainId: selectedNetwork.idHex,
+          chainName: selectedNetwork.name,
+          rpcUrls: selectedNetwork.rpcUrls,
+          nativeCurrency: selectedNetwork.nativeCurrency,
+        },
+      ],
+    });
+  }
+
+  async getNetwork(): Promise<string> {
+    const chainId = await this.provider.request({ method: 'eth_chainId' });
+    return chainId || '';
+  }
+
+  getAddress(): string {
+    return this.address;
+  }
+}
+
+export class CoinbaseWalletProvider implements WalletProvider {
+  private address: string = '';
+  private network: string = '';
+  private provider: any;
+
+  async connect(): Promise<{ address: string; network: string }> {
+    this.provider = window.coinbaseWalletExtension;
+    if (!this.provider) {
+      throw new Error('Coinbase Wallet not available');
+    }
+
+    const accounts = await this.provider.request({ method: 'eth_requestAccounts' });
+    if (!accounts || accounts.length === 0) {
+      throw new Error('Failed to retrieve Coinbase Wallet accounts');
+    }
+
+    this.address = accounts[0];
+    this.network = await this.getNetwork();
+    return { address: this.address, network: this.network };
+  }
+
+  async switchNetwork(selectedNetwork: any): Promise<void> {
+    if(selectedNetwork.id === 1151111081099710) // Solana ID
+    {
+      const coinbase_solana = (window as any).coinbaseSolana;
+      if (!coinbase_solana) {
+        throw new Error('Coinbase SVM not added');
+      }
+  
+      if (!coinbase_solana.isConnected) {
+        await coinbase_solana.connect();
+      }
+      const account = coinbase_solana.publicKey?.toString();
+      if (!account) {
+        throw new Error('Failed to retrieve Coinbase SVM account');
+      }
+      this.address = account;
+      console.log(`Coinbase: Solana address: ${this.address}`);
+      // this.network = await this.getNetwork();
+    }
+    else
+    {
+      try {
+        await this.provider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: selectedNetwork.idHex }],
+        });
+        this.network = selectedNetwork.idHex;
+      } catch (error: any) {
+        // Если сеть не найдена, добавляем её
+        if (error.code === 4902) {
+          await this.addNetwork(selectedNetwork);
+        } else {
+          throw error;
+        }
+      }
+    }
+  }
+
+  private async addNetwork(selectedNetwork: any): Promise<void> {
+    await this.provider.request({
+      method: 'wallet_addEthereumChain',
+      params: [
+        {
+          chainId: selectedNetwork.idHex,
+          chainName: selectedNetwork.name,
+          rpcUrls: selectedNetwork.rpcUrls,
+          nativeCurrency: selectedNetwork.nativeCurrency,
+        },
+      ],
+    });
+  }
+
+  async getNetwork(): Promise<string> {
+    const chainId = await this.provider.request({ method: 'eth_chainId' });
+    return chainId || '';
+  }
+
+  getAddress(): string {
+    return this.address;
+  }
+}
+
+export class RabbyWalletProvider implements WalletProvider {
+  private address: string = '';
+  private network: string = '';
+  private provider: any;
+
+  constructor(private walletManager: WalletProviderManager) {
+    this.provider = this.walletManager.getRabbyWalletProvider();
+  }
+
+  async connect(): Promise<{ address: string; network: string }> {
+    console.log(window);
+    if (!this.provider) {
+      throw new Error('Rabby Wallet not available');
+    }
+
+    const accounts = await this.provider.request({ method: 'eth_requestAccounts' });
+    if (!accounts || accounts.length === 0) {
+      throw new Error('Failed to retrieve Rabby Wallet accounts');
+    }
+
+    this.address = accounts[0];
+    this.network = await this.getNetwork();
+    return { address: this.address, network: this.network };
+  }
+
+  async switchNetwork(selectedNetwork: any): Promise<void> {
+    try {
+      await this.provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: selectedNetwork.idHex }],
+      });
+      this.network = selectedNetwork.idHex;
+    } catch (error: any) {
+      // Если сеть не найдена, добавляем её
+      if (error.code === 4902) {
+        await this.addNetwork(selectedNetwork);
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  private async addNetwork(selectedNetwork: any): Promise<void> {
+    await this.provider.request({
+      method: 'wallet_addEthereumChain',
+      params: [
+        {
+          chainId: selectedNetwork.idHex,
+          chainName: selectedNetwork.name,
+          rpcUrls: selectedNetwork.rpcUrls,
+          nativeCurrency: selectedNetwork.nativeCurrency,
+        },
+      ],
+    });
+  }
+
+  async getNetwork(): Promise<string> {
+    const chainId = await this.provider.request({ method: 'eth_chainId' });
+    return chainId || '';
+  }
+
+  getAddress(): string {
+    return this.address;
+  }
+}
 

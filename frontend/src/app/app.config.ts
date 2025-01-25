@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { APP_INITIALIZER } from '@angular/core';
 import { BlockchainStateService } from './services/blockchain-state.service';
 import { routes } from './app.routes';
-import { BackpackProvider, LedgerProvider, MagicEdenProvider, MetaMaskProvider, PhantomProvider, SolflareProvider, TrustWalletProvider, WalletProviderManager } from './models/network.model';
+import { BackpackProvider, CoinbaseWalletProvider, LedgerProvider, MagicEdenProvider, MetaMaskProvider, OkxWalletProvider, PhantomProvider, RabbyWalletProvider, SolflareProvider, TrustWalletProvider, WalletProviderManager } from './models/network.model';
 
 function initializeApp(
   stateService: BlockchainStateService
@@ -37,6 +37,15 @@ function initializeApp(
           break;
         case 'trust-wallet':
           stateService.registerProvider(provider.id, new TrustWalletProvider(), provider.type);
+          break;
+        case 'okx-wallet':
+          stateService.registerProvider(provider.id, new OkxWalletProvider(), provider.type);
+          break;
+        case 'coinbase-wallet':
+          stateService.registerProvider(provider.id, new CoinbaseWalletProvider(), provider.type);
+          break;
+        case 'rabby-wallet':
+          stateService.registerProvider(provider.id, new RabbyWalletProvider(walletManager), provider.type);
           break;
         default:
           console.warn(`Provider ${provider.id} is not yet implemented.`);

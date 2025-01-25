@@ -13,4 +13,7 @@ interface Window {
   solflare?: any;
   magicEden?: any;
   backpack?: any;
+  okexchain?: any;
+  coinbaseWalletExtension?: any;
+  rabby?: any;
 }
