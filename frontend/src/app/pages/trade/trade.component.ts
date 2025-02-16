@@ -1,4 +1,4 @@
-import { Component, Renderer2, ChangeDetectorRef, computed, signal } from '@angular/core';
+import { Component, Renderer2, ChangeDetectorRef, computed, signal, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
@@ -55,7 +55,11 @@ export class TradeComponent {
   //selectedBuyTokenAddress = '';
   //selectedTokenBuydecimals = '';
   //selectedTokendecimals = '';
-  txData: TransactionRequest | undefined = undefined;
+  txData = signal<TransactionRequest | undefined> (undefined);
+
+  swapButtonValidation = computed(() =>
+    this.txData() !== undefined
+  );
 
   allFieldsReady = computed(() =>
     !!this.blockchainStateService.network &&
@@ -72,9 +76,16 @@ export class TradeComponent {
     private cdr: ChangeDetectorRef,
     private blockchainStateService: BlockchainStateService,
     private transactionsService: TransactionsService
-  ) {}
+  ) {
+    effect(() => {
+      if (this.allFieldsReady()) {
+        this.getTxData();
+      }
+    });
+  }
 
   processInput(event: Event, isSell: boolean): void {
+    this.txData.set(undefined);
     const inputElement = event.target as HTMLInputElement;
     inputElement.value = inputElement.value
       .replace(/[^0-9.,]/g, '') // Удаляем недопустимые символы
@@ -83,14 +94,13 @@ export class TradeComponent {
       .replace(/,/g, '.'); // Заменяем запятую на точку
 
     if (isSell) {
-      this.sellAmount = inputElement.value;
-      this.validatedSellAmount.set(inputElement.value);
       // this.updateBuyAmount();
       // this.updateSellPriceUsd();
       clearTimeout(this.inputTimeout);
 
       this.inputTimeout = setTimeout(() => {
-        this.getTxData();
+        this.sellAmount = inputElement.value;
+        this.validatedSellAmount.set(inputElement.value);
       }, 2000);
     }
     console.log("some data");
@@ -157,6 +167,7 @@ export class TradeComponent {
 	swapTokens(): void {
 		console.log('Swapping tokens...');
 		console.log('Before swap:', this.selectedToken, this.selectedBuyToken());
+    this.txData.set(undefined);
 	
 		const tempToken = this.selectedToken();
 		this.selectedToken.set(this.selectedBuyToken());
@@ -179,6 +190,7 @@ export class TradeComponent {
   }
 
   onTokenSelected(token: { symbol: string; imageUrl: string; contractAddress: string; decimals: string }): void {
+    this.txData.set(undefined);
     this.selectedToken.set(token);
     // this.selectedToken = token.symbol;
     // this.selectedTokenImage = token.imageUrl;
@@ -197,6 +209,7 @@ export class TradeComponent {
   }
 
   onBuyTokenSelected(token: { symbol: string; imageUrl: string; contractAddress: string; decimals: string }): void {
+    this.txData.set(undefined);
     this.selectedBuyToken.set(token);
     // this.selectedBuyToken = token.symbol;
     // this.selectedBuyTokenImage = token.imageUrl;
@@ -222,7 +235,7 @@ export class TradeComponent {
 
     console.log("provider",provider);
 
-    const txHash = provider.sendTx(this.txData);
+    const txHash = provider.sendTx(this.txData());
 
     console.log("txHash",txHash);
     
@@ -297,7 +310,7 @@ export class TradeComponent {
 
         if(response.transactionRequest.data)
         {
-          this.txData = response.transactionRequest;
+          this.txData.set(response.transactionRequest);
         }
         
       },
