@@ -4,12 +4,14 @@ import { APP_INITIALIZER } from '@angular/core';
 import { BlockchainStateService } from './services/blockchain-state.service';
 import { routes } from './app.routes';
 import { BackpackProvider, CoinbaseWalletProvider, LedgerProvider, MagicEdenProvider, MetaMaskProvider, OkxWalletProvider, PhantomProvider, RabbyWalletProvider, SolflareProvider, TrustWalletProvider, WalletProviderManager } from './models/network.model';
+import { WalletBalanceService } from './services/wallet-balance.service';
 
 function initializeApp(
   stateService: BlockchainStateService
 ): () => Promise<void> {
   return async () => {
     const walletManager = new WalletProviderManager();
+    const walletBalanceService = new WalletBalanceService();
 
     const response = await fetch('/data/providers.json');
     const providers = await response.json();

@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
 import { SettingsComponent } from '../../components/popup/settings/settings.component'; // Импортируем SettingsComponent
+import { WalletBalanceService } from '../../services/wallet-balance.service';
+import { BlockchainStateService } from '../../services/blockchain-state.service';
 
 @Component({
   selector: 'app-trade',
@@ -22,7 +24,7 @@ export class TradeComponent {
   price: number = 0.5637; // Цена обмена
   priceUsd: number = 921244; // Текущая стоимость в USD за единицу
   sellPriceUsd: string = ''; // Значение для отображения стоимости продажи в USD
-  balance: number = 0.1465; // Баланс пользователя для продажи
+  balance: number = 0.0; // Баланс пользователя для продажи
   rotationCount: number = 0; // Счетчик для отслеживания вращений
 	slippage: string = 'Auto'; // Значение для отображения Slippage
 
@@ -35,7 +37,7 @@ export class TradeComponent {
   selectedTokenImage = '/img/trade/eth.png'; // Изображение для sell
   selectedBuyTokenImage = '/img/trade/usdt.png'; // Изображение для buy
 
-  constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) {}
+  constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef, private walletBalance: WalletBalanceService, private blockchainState: BlockchainStateService) {}
 
   processInput(event: Event, isSell: boolean): void {
     const inputElement = event.target as HTMLInputElement;
@@ -141,10 +143,71 @@ export class TradeComponent {
     this.showTokenPopup = false;
   }
 
-  onTokenSelected(token: { symbol: string; imageUrl: string }): void {
+  async onTokenSelected(token: { symbol: string; imageUrl: string }): Promise<void> {
+    const a = await this.getBalanceForToken(token.symbol);
+    console.log(`A: `, a);
+    this.balance = parseFloat(a);
     this.selectedToken = token.symbol;
     this.selectedTokenImage = token.imageUrl;
     this.closeTokenPopup();
+  }
+
+  async getBalanceForToken(symbol: string): Promise<any> {
+    const search = symbol.toLowerCase().trim();
+    const token = this.blockchainState.filteredTokens.find(
+      token => token.symbol.toLowerCase() === search.toLowerCase()
+    );
+    if(!token)
+    {
+      throw new Error(`Failed to find needed token to show Balance`);
+    }
+
+    console.log(token);
+
+    const walletAddress = this.blockchainState.getCurrentWalletAddress();
+    if (!walletAddress)
+    {
+      throw new Error(`Failed to get wallet address`);
+    }
+
+    if(this.blockchainState.getCurrentNetworkId() === "1151111081099710") { // SVM
+      if (token.symbol === "SOL")
+      {
+        return this.walletBalance.getSolanaBalance(walletAddress);
+      }
+      else
+      {
+        return this.walletBalance.getSolanaBalance(walletAddress, token.contractAddress);
+      }
+    }
+    else { // EVM
+      try {
+        const response = await fetch('/data/networks.json');
+        if (!response.ok) {
+          throw new Error('Failed to load networks');
+        }
+  
+        const data = await response.json();
+  
+        const network = data.find((net: { id: number }) => net.id.toString() === this.blockchainState.getCurrentNetworkId());
+  
+        if (!network) {
+          throw new Error('Network not found');
+        }
+        console.log('Found network:', network);
+  
+        if (token.symbol === "ETH") {
+          const balance = await this.walletBalance.getEvmBalance(walletAddress, network.rpcUrls[0]);
+          return balance;
+        } else {
+          return await this.walletBalance.getEvmBalance(walletAddress, network.rpcUrls[0], token.contractAddress);
+        }
+      } catch (error) {
+        console.error(`Error loading networks`);
+        return "0";
+      }
+    }
+    
   }
 
   // Методы управления попапом для buy
