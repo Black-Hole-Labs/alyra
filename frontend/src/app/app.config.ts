@@ -4,6 +4,7 @@ import { APP_INITIALIZER } from '@angular/core';
 import { BlockchainStateService } from './services/blockchain-state.service';
 import { routes } from './app.routes';
 import { BackpackProvider, CoinbaseWalletProvider, LedgerProvider, MagicEdenProvider, MetaMaskProvider, OkxWalletProvider, PhantomProvider, RabbyWalletProvider, SolflareProvider, TrustWalletProvider, WalletProviderManager } from './models/network.model';
+import { provideHttpClient } from '@angular/common/http';
 
 function initializeApp(
   stateService: BlockchainStateService
@@ -66,5 +67,6 @@ export const appConfig: ApplicationConfig = {
       deps: [BlockchainStateService],
       multi: true,
     },
+    provideHttpClient()
   ],
 };

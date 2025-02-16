@@ -13,7 +13,7 @@ import { BlockchainStateService } from '../../../services/blockchain-state.servi
 export class TokenChangePopupComponent {
   @Input() mode!: 'sell' | 'buy';
   @Output() close = new EventEmitter<void>();
-  @Output() tokenSelected = new EventEmitter<{ symbol: string; imageUrl: string }>();
+  @Output() tokenSelected = new EventEmitter<{ symbol: string; imageUrl: string; contractAddress: string; decimals: string }>();
 
   searchText: string = '';
   public blockchainStateService = inject(BlockchainStateService);
@@ -39,8 +39,8 @@ export class TokenChangePopupComponent {
     this.close.emit();
   }
 
-  selectToken(token: { symbol: string; name: string; contractAddress: string; imageUrl: string }): void {
-    this.tokenSelected.emit({ symbol: token.symbol, imageUrl: token.imageUrl });
+  selectToken(token: { symbol: string; name: string; contractAddress: string; imageUrl: string ; decimals: string}): void {
+    this.tokenSelected.emit({ symbol: token.symbol, imageUrl: token.imageUrl, contractAddress: token.contractAddress, decimals: token.decimals });
     this.closePopup();
   }
 

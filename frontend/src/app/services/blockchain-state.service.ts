@@ -11,7 +11,7 @@ export class BlockchainStateService {
   readonly network = signal<string | null>(null); // Выбранная сеть
   readonly connected = signal<boolean>(false); // Статус подключения
 
-  tokens: { symbol: string; name: string; contractAddress: string; imageUrl: string }[] = [];
+  tokens: { symbol: string; name: string; contractAddress: string; imageUrl: string, decimals: string }[] = [];
   filteredTokens = [...this.tokens];
 
   constructor() {
@@ -81,6 +81,7 @@ export class BlockchainStateService {
             name: token.name,
             contractAddress: token.address,
             imageUrl: token.logoURI,
+            decimals: token.decimals
           }));
           this.filteredTokens = [...this.tokens];
         } else {

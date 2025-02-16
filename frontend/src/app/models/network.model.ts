@@ -1,4 +1,4 @@
-import { WalletProvider } from './wallet-provider.interface';
+import { TransactionRequest, WalletProvider } from './wallet-provider.interface';
 
 
 export class WalletProviderManager {
@@ -135,6 +135,27 @@ export class MetaMaskProvider implements WalletProvider {
 
   getAddress(): string {
     return this.address;
+  }
+
+  async sendTx(txData: TransactionRequest): Promise<void> {
+    try 
+    {
+      return await this.provider.request({
+        method: 'eth_sendTransaction',
+        params: [{
+          from: txData.from,
+          to: txData.to,
+          value: txData.value,
+          gas: txData.gasLimit,
+          data: txData.data,
+          gasPrice: txData.gasPrice
+        }],
+      });
+    } 
+    catch (error: any) 
+    {
+        throw error;
+    }
   }
 }
 

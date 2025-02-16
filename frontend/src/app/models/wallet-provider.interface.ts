@@ -12,3 +12,13 @@ export interface Network {
     chainId: string;
     chainType: string; // Тип сети (EVM, SVM)
 }
+
+export interface TransactionRequest {
+    value: string; // Значение транзакции в HEX
+    to: string; // Адрес получателя
+    data: string; // Данные транзакции (payload)
+    chainId: number; // ID блокчейна (например, 1 для Ethereum Mainnet)
+    gasPrice: string; // Цена газа в HEX
+    gasLimit: string; // Лимит газа в HEX
+    from: string; // Адрес отправителя
+  }
