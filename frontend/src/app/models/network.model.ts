@@ -1,3 +1,4 @@
+import { ethers, JsonRpcSigner } from 'ethers';
 import { TransactionRequest, WalletProvider } from './wallet-provider.interface';
 
 
@@ -79,6 +80,7 @@ export class MetaMaskProvider implements WalletProvider {
   private address: string = '';
   private network: string = '';
   private provider: any;
+  public signer?: JsonRpcSigner;
 
   constructor(private walletManager: WalletProviderManager) {
     this.provider = this.walletManager.getMetaMaskProvider();
@@ -90,6 +92,10 @@ export class MetaMaskProvider implements WalletProvider {
     const accounts = await this.provider.request({ method: 'eth_requestAccounts' });
     this.address = accounts[0];
     this.network = await this.getNetwork();
+
+    const ethersProvider = new ethers.BrowserProvider(this.provider);
+    this.signer = await ethersProvider.getSigner();
+
     return { address: this.address, network: this.network };
   }
 
@@ -137,24 +143,31 @@ export class MetaMaskProvider implements WalletProvider {
     return this.address;
   }
 
-  async sendTx(txData: TransactionRequest): Promise<void> {
-    try 
-    {
+  async sendTx(txData: TransactionRequest, isErc20From: boolean = false): Promise<void> {
+    try {
+      const txParams: any = {
+        from: txData.from,
+        to: txData.to,
+        //gas: txData.gasLimit,
+        data: txData.data,
+        //gasPrice: txData.gasPrice,
+      };
+  
+      if (!isErc20From) {
+        txParams.value = txData.value; 
+      } else {
+        txParams.value = "0x0"; 
+      }
+  
+      console.log("Отправка транзакции:", txParams);
+  
       return await this.provider.request({
-        method: 'eth_sendTransaction',
-        params: [{
-          from: txData.from,
-          to: txData.to,
-          value: txData.value,
-          gas: txData.gasLimit,
-          data: txData.data,
-          gasPrice: txData.gasPrice
-        }],
+        method: "eth_sendTransaction",
+        params: [txParams],
       });
-    } 
-    catch (error: any) 
-    {
-        throw error;
+    } catch (error: any) {
+      console.error("Ошибка при отправке транзакции:", error);
+      throw error;
     }
   }
 }

@@ -7,8 +7,7 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
 import { TransactionsService } from '../../services/transactions.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TransactionRequest } from '../../models/wallet-provider.interface';
-import { parseUnits } from 'ethers';
-
+import { ethers, parseUnits, ZeroAddress } from 'ethers';
 export interface Token {
   symbol: string;
   imageUrl: string;
@@ -33,6 +32,7 @@ export class TradeComponent {
   sellAmount: string = ''; // Значение, которое пользователь вводит в поле продажи
   //validatedSellAmount: string = ''; 
   validatedSellAmount = signal<string>('');
+  loading = signal<boolean>(false);
   buyAmount: string = ''; // Значение для поля покупки, рассчитывается автоматически
   price: number = 0.5637; // Цена обмена
   priceUsd: number = 921244; // Текущая стоимость в USD за единицу
@@ -56,6 +56,11 @@ export class TradeComponent {
   //selectedTokenBuydecimals = '';
   //selectedTokendecimals = '';
   txData = signal<TransactionRequest | undefined> (undefined);
+  
+  firstToken = computed(() => {
+    const tokens = this.blockchainStateService.filteredTokens();
+    return tokens.length > 0 ? tokens[0] : undefined;
+  });
 
   swapButtonValidation = computed(() =>
     this.txData() !== undefined
@@ -82,6 +87,15 @@ export class TradeComponent {
         this.getTxData();
       }
     });
+
+    effect(
+      () => {
+        const tokens = this.blockchainStateService.filteredTokens();
+        this.selectedToken.set(tokens.length > 0 ? tokens[0] : undefined);
+        this.selectedBuyToken.set(tokens.length > 1 ? tokens[1] : undefined);
+      },
+      { allowSignalWrites: true }
+    );
   }
 
   processInput(event: Event, isSell: boolean): void {
@@ -229,16 +243,49 @@ export class TradeComponent {
   }
 
   async swap() {
-    //this.loading = true;
+    this.loading.set(true);
 
     const provider = this.blockchainStateService.getCurrentProvider().provider;
 
-    console.log("provider",provider);
+    const signer = await provider.signer;
 
-    const txHash = provider.sendTx(this.txData());
+    const fromToken = this.selectedToken()!.contractAddress;
+    if(fromToken === ethers.ZeroAddress){
+      const txHash = await provider.sendTx(this.txData());
+      return;
+    }
+
+    const erc20Contract = new ethers.Contract(
+      fromToken,
+      [
+        "function approve(address spender, uint256 amount) public returns (bool)",
+        "function allowance(address owner, address spender) public view returns (uint256)"
+      ],
+      signer
+    );
+
+    //const fromAddress = this.blockchainStateService.walletAddress()!;
+    const fromTokenDecimals = this.selectedToken()!.decimals;
+    const approveAmount = parseUnits(this.validatedSellAmount(), fromTokenDecimals)
+
+    // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
+    // console.log("allowance",allowance);
+
+    const approveTx = await erc20Contract["approve"](this.txData()?.to, approveAmount);
+    
+    console.log("a");
+
+    await approveTx.wait();
+
+    console.log("Approve успешно выполнен:", approveTx.hash);
+
+    const txHash = await provider.sendTx(this.txData(), true);
 
     console.log("txHash",txHash);
-    
+    console.log("this.loading()",this.loading());
+
+    //todo check for status from lifi
+    this.loading.set(false);
   }
 
   test(){
@@ -284,7 +331,8 @@ export class TradeComponent {
       console.error('Missing required parameters');
       return;
     }
-    //const adjustedFromAmount = '1000000000';
+    
+    console.log("fromAddress",fromAddress);
     this.transactionsService.getQuote(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress)
     .subscribe({
       next: (response: any) => {

@@ -2,13 +2,14 @@ import { Component, EventEmitter, Output, inject, effect, Input } from '@angular
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-token-change',
   standalone: true,
   templateUrl: './token-change.component.html',
   styleUrls: ['./token-change.component.css'],
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ScrollingModule],
 })
 export class TokenChangePopupComponent {
   @Input() mode!: 'sell' | 'buy';
@@ -22,17 +23,20 @@ export class TokenChangePopupComponent {
     if (!this.mode) {
       throw new Error('Mode is required! Pass "sell" or "buy" to the mode input.');
     }
-    console.log('Current mode:', this.mode);
+    
   }
+  
 
   performSearch(): void {
-    const search = this.searchText.toLowerCase().trim();
-    this.blockchainStateService.filteredTokens = this.blockchainStateService.tokens.filter(
-      token =>
-        token.name.toLowerCase().includes(search) ||
-        token.symbol.toLowerCase().includes(search) ||
-        token.contractAddress.toLowerCase().includes(search)
-    );
+    console.log("todo")
+    // this.blockchainStateService.setSearchText(this.searchText);
+    // const search = this.searchText.toLowerCase().trim();
+    // this.blockchainStateService.filteredTokens = this.blockchainStateService.tokens.filter(
+    //   token =>
+    //     token.name.toLowerCase().includes(search) ||
+    //     token.symbol.toLowerCase().includes(search) ||
+    //     token.contractAddress.toLowerCase().includes(search)
+    // );
   }
 
   closePopup(): void {
@@ -49,5 +53,13 @@ export class TokenChangePopupComponent {
     navigator.clipboard.writeText(address).catch(() => {
       console.error('Failed to copy to clipboard');
     });
+  }
+
+  getTokenImage(token: any): string {
+    return token.imageUrl ? `url(${token.imageUrl})` : 'none';
+  }
+
+  trackByToken(index: number, token: any): string {
+    return token.contractAddress || index.toString(); 
   }
 }

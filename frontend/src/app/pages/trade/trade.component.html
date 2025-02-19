@@ -105,7 +105,7 @@
 
       <button class="main-button"
       (click)="swap()"
-      [disabled]="!swapButtonValidation()"
+      [disabled]="!swapButtonValidation() || loading()"
       >
         Swap
       </button>
