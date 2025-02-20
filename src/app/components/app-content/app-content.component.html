@@ -1,0 +1,38 @@
+<div *ngIf="showDefaultLayout">
+  <app-header 
+    [isPopupVisible]="isPopupVisible" 
+    [isNetworkPopupVisible]="isNetworkPopupVisible"
+    [selectedNetwork]="selectedNetwork"
+    (toggleMenu)="togglePopup()"
+    (toggleNetwork)="toggleNetworkPopup()">
+    <div class="header">
+      <div class="network-icon" [ngStyle]="{'background-image': 'url(' + (selectedNetwork?.icon || '/path/to/default/icon.png') + ')'}"></div>
+      <p>{{ selectedNetwork?.name || 'Default Network Name' }}</p>
+    </div>
+  </app-header>
+</div>
+
+<router-outlet></router-outlet>
+
+<!-- Первый попап -->
+<app-blackhole-menu *ngIf="isPopupVisible" (close)="togglePopup()"></app-blackhole-menu>
+
+<!-- Второй попап -->
+<app-blackhole-network *ngIf="isNetworkPopupVisible" 
+                       (networkSelected)="onNetworkSelected($event)"
+                       (close)="toggleNetworkPopup()"></app-blackhole-network>
+
+<div *ngIf="showDefaultLayout">
+  <app-footer></app-footer>
+</div>
+
+<div class="app-content">
+  <div class="network-container">
+    <div *ngFor="let network of networks" 
+         class="network" 
+         (click)="onNetworkSelected(network)">
+      <div class="network-icon" [ngClass]="network.id"></div>
+      <p>{{ network.name }}</p>
+    </div>
+  </div>
+</div>

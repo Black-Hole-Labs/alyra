@@ -1,0 +1,161 @@
+<div class="bridge">
+  <div class="bridge-window">
+    <div class="header">
+			<div class="title">
+				<div class="icon-bridge"></div>
+        <h3>Bridge</h3>
+			</div>
+			<div class="custom-wallet-button" 
+				 *ngIf="isBridgeButtonActive()"
+				(click)="toggleCustomAddress()"
+				[class.active]="showCustomAddress">
+			</div>
+    </div>
+
+		<div class="main">
+			<div class="send">
+				<h4>Send</h4>
+				<div class="choose">
+					<div class="token" (click)="showTokenChangePopup = true">
+						<div class="token-icon" 
+							 *ngIf="selectedToken.imageUrl" 
+                [style.backgroundImage]="'url(' + selectedToken.imageUrl + ')'">
+						</div>
+						<p>{{ selectedToken.symbol || 'Select Token' }}</p>
+					</div>
+					<div class="bridge-amount">
+						<input
+							type="text"
+							id="number-input"
+							placeholder="Enter amount"
+							[value]="inputAmount"
+              (input)="processInput($event, true)"
+              (keydown)="restrictInput($event)"
+						/>
+						<h6 class="max-button">MAX</h6>
+					</div>
+				</div>
+			</div>
+			<div class="from">
+				<h4>From</h4>
+				<div class="choose-network" (click)="showNetworkChangeFromPopup = true">
+					<div class="network-from">
+						<div class="network-icon" [style.backgroundImage]="'url(' + selectedNetworkImage + ')'"></div>
+						<p>{{ selectedNetwork }}</p>
+					</div>
+					<button></button>
+				</div>
+			</div>
+
+			<app-token-change
+				*ngIf="showTokenChangePopup"
+				(close)="closeTokenChangePopup()"
+				(tokenSelected)="onTokenSelected($event)">
+			</app-token-change>
+
+			<app-network-change-from
+				*ngIf="showNetworkChangeFromPopup"
+				(close)="closeNetworkChangeFromPopup()"
+				(networkSelected)="onNetworkSelected($event)">
+			</app-network-change-from>
+
+			<div class="changer">
+
+				<hr>
+
+				<div class="change-button" id="change-button" 
+          (mousedown)="onMouseDown()" 
+          (animationend)="onAnimationEnd()">
+					<div class="arrow-up"></div>
+					<div class="arrow-down"></div>
+				</div>
+
+				<hr>
+
+			</div>
+
+			<div class="to">
+				<h4>To</h4>
+				<div class="choose-network" (click)="showNetworkChangeToPopup = true">
+					<div class="network-to">
+						<div class="network-icon" 
+							 *ngIf="selectedNetworkTo" 
+              [style.backgroundImage]="'url(' + selectedNetworkToImage + ')'">
+						</div>
+						<p>{{ selectedNetworkTo || 'Select Network' }}</p>
+					</div>
+					<button></button>
+				</div>
+			</div>
+			<div class="custom-address" *ngIf="showCustomAddress">
+				<input 
+					type="text" 
+					placeholder="Enter custom address"
+					[(ngModel)]="customAddress"
+					(input)="validateAddress($event)">
+				<div 
+					class="address-status" 
+					*ngIf="customAddress"
+					[ngClass]="{
+						'status-good': addressStatus === 'good',
+						'status-bad': addressStatus === 'bad'
+					}">
+				</div>
+			</div>
+			<div class="receive" *ngIf="isBridgeButtonActive()">
+				<h4>Receive</h4>
+				<div class="choose-network" [ngClass]="{'active': isNetworkChosen}">
+					<div class="receive-network">
+						<p *ngIf="selectedToken">{{ inputAmount }} {{ selectedToken.symbol }} in ~2 seconds</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+      <button 
+        class="main-button" 
+        *ngIf="isWalletConnected(); else connectWallet"
+        [class.inactive]="!isBridgeButtonActive()"
+        [disabled]="!isBridgeButtonActive()"
+        (click)="isBridgeButtonActive() && openBridgeTxPopup()">
+        Bridge
+      </button>
+
+			<div class="gas-container" *ngIf="isBridgeButtonActive()">
+				<div class="gas">
+					<div class="gas-img"></div>
+					<p class="gas-text">0.21</p>
+				</div>
+			</div>
+  </div>
+</div>
+
+<ng-template #connectWallet>
+  <button 
+    class="main-button"
+    (click)="openConnectWalletPopup()">
+    Connect Wallet
+  </button>
+</ng-template>
+
+<app-network-change-to
+    *ngIf="showNetworkChangeToPopup"
+    (close)="closeNetworkChangeToPopup()"
+    (networkSelected)="onNetworkToSelected($event)">
+</app-network-change-to>
+
+<app-bridge-tx
+  *ngIf="showBridgeTxPopup"
+  [selectedNetwork]="selectedNetwork"
+  [selectedNetworkImage]="selectedNetworkImage"
+  [selectedNetworkTo]="selectedNetworkTo"
+  [selectedNetworkToImage]="selectedNetworkToImage"
+  [selectedToken]="selectedToken"
+  [inputAmount]="inputAmount"
+  (close)="closeBridgeTxPopup()">
+</app-bridge-tx>
+
+<app-connect-wallet 
+  *ngIf="showConnectWalletPopup"
+  (close)="closeConnectWalletPopup()">
+</app-connect-wallet>

@@ -1,0 +1,81 @@
+<div class="connect-wallet">
+
+	<div class="upper">
+		<h6>Connect Wallet</h6>
+		<button (click)="closePopup()"></button>
+	</div>
+
+	<div class="devider">
+		<p>Available</p>
+		<hr class="hr1" />
+	</div>
+
+	<div class="inner-wallets">
+		<div class="wallet" (click)="onWalletClick()">
+			<div class="name">
+				<div class="wallet-img metamask"></div>
+				<p>Metamask</p>
+			</div>
+			<div class="status recent">
+				<p>Recent</p>
+			</div>
+		</div>
+	
+		<div class="wallet" (click)="onWalletClick()">
+			<div class="name">
+				<div class="wallet-img rabby-wallet"></div>
+				<p>Rabby Wallet</p>
+			</div>
+			<div class="status detected">
+				<p>Detected</p>
+			</div>
+		</div>
+	
+		<div class="wallet" (click)="onWalletClick()">
+			<div class="name">
+				<div class="wallet-img backpack"></div>
+				<p>Backpack</p>
+			</div>
+			<div class="status detected">
+				<p>Detected</p>
+			</div>
+		</div>
+	
+		<div class="wallet" (click)="onWalletClick()">
+			<div class="name">
+				<div class="wallet-img phantom"></div>
+				<p>Phantom</p>
+			</div>
+			<div class="status detected">
+				<p>Detected</p>
+			</div>
+		</div>
+	
+		<div class="wallet" (click)="onWalletClick()">
+			<div class="name">
+				<div class="wallet-img walletconnect"></div>
+				<p>WalletConnect</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="devider">
+		<p>Other Wallets</p>
+		<hr class="hr2" />
+	</div>
+	
+	<div class="inner-wallets">
+		<div class="wallet" (click)="onWalletClick()">
+			<div class="name">
+				<div class="wallet-img magic-eden"></div>
+				<p>Magic Eden</p>
+			</div>
+			<div class="status install">
+				<a href="">Install</a>
+			</div>
+		</div>
+	</div>
+
+	<p class="disclaimer">By connecting a wallet, you agree to Blackhole Aggregator's <a routerLink="/documentation/termsofuse">Terms of Use</a> and consent to its <a routerLink="/documentation/privacypolicy">Privacy Policy</a>.</p>
+
+</div>

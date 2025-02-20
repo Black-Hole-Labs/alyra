@@ -27,8 +27,8 @@
               }
             ],
             "styles": [
-							"src/reset.css",
-              "src/styles.css"
+							"src/reset.scss",
+              "src/styles.scss"
             ],
             "scripts": []
           },
@@ -86,12 +86,17 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": []
           }
         }
       }
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "style": "scss"
     }
   },
   "cli": {

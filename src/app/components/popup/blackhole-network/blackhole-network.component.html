@@ -4,60 +4,12 @@
 
 	<div class="network-container">
 
-		<div class="network" (click)="selectNetwork('ethereum')">
-			<div class="network-icon ethereum"></div>
-			<p>Ethereum</p>
+		<div *ngFor="let network of networks" class="network" (click)="selectNetwork(network.id)">
+			<div class="network-icon" [style.backgroundImage]="'url(' + network.icon + ')'"></div>
+			<p>{{ network.name }}</p>
 		</div>
 
-		<div class="network" (click)="selectNetwork('optimism')">
-			<div class="network-icon optimism"></div>
-			<p>Optimism</p>
-		</div>
-
-		<div class="network" (click)="selectNetwork('arbitrum')">
-			<div class="network-icon arbitrum"></div>
-			<p>Arbitrum One</p>
-		</div>
-
-		<div class="network" (click)="selectNetwork('zksync')">
-			<div class="network-icon zksync"></div>
-			<p>Zk Sync</p>
-		</div>
-
-		<div class="network" (click)="selectNetwork('scroll')">
-			<div class="network-icon scroll"></div>
-			<p>Scroll</p>
-		</div>
-
-		<div class="network" (click)="selectNetwork('linea')">
-			<div class="network-icon linea"></div>
-			<p>Linea</p>
-		</div>
-
-		<div class="network" (click)="selectNetwork('mantle')">
-			<div class="network-icon mantle"></div>
-			<p>Mantle</p>
-		</div>
-
-		<div class="network" (click)="selectNetwork('blast')">
-			<div class="network-icon blast"></div>
-			<p>Blast</p>
-		</div>
-
-		<div class="network" (click)="selectNetwork('bnb')">
-			<div class="network-icon bnb"></div>
-			<p>BNB Smart Chain</p>
-		</div>
-
-		<div class="network" (click)="selectNetwork('polygon')">
-			<div class="network-icon polygon"></div>
-			<p>Polygon</p>
-		</div>
-
-		<div class="network" (click)="selectNetwork('avalanche')">
-			<div class="network-icon avalanche"></div>
-			<p>Avalanche</p>
-		</div>
+		<div class="last"></div>
 
 	</div>
 	

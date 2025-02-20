@@ -1,0 +1,503 @@
+.bridge {
+	min-height: calc(100vh - 150px);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 40px;
+	box-sizing: border-box;
+	background-color: none;
+}
+
+.bridge-window {
+	width: 681px;
+	height: auto;
+	position: fixed;
+	top: 148px;
+	left: 50%;
+	transform: translate(-50%, 0%);
+	background-color: rgba(var(--dark-bg), 0.3);
+	backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(5px);
+	border-radius: 28px;
+	box-sizing: border-box;
+	padding: 40px;
+	.header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		.title {
+			display: flex;
+			align-items: center;
+			justify-content: flex-start;
+			gap: 10px;
+			.icon-bridge {
+				background-image: url(/img/bridge/icon-bridge.png);
+				background-size: cover;
+				background-repeat: no-repeat;
+				height: 24px;
+				width: 24px;
+			}
+			h3 {
+				font-family: "JetBrains Mono", monospace;
+				font-weight: 500;
+				font-size: 32px;
+				color: white;
+			}
+		}
+		.custom-wallet-button {
+			width: 32px;
+			height: 32px;
+			background-image: url(/img/header/wallet.png);
+			background-size: cover;
+			background-repeat: no-repeat;
+			cursor: pointer;
+			opacity: 0.3;
+			transition: opacity 0.2s ease-in-out;
+			&:hover {
+				opacity: 1;
+			}
+	
+			&.active {
+				opacity: 1;
+			}
+		}
+	}
+	
+	.main {
+		margin-top: 46px;
+		.send {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			h4 {
+				font-family: "JetBrains Mono", monospace;
+				font-weight: 500;
+				font-size: 24px;
+				color: white;
+			}
+			.choose {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				.token {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					gap: 6px;
+					height: 60px;
+					width: 110px;
+					border-radius: 15px;
+					cursor: pointer;
+					transition: 0.2s ease-in-out;
+					&:hover{
+						background-color: var(--btn-dark);
+					}
+					.token-icon {
+						background-image: url(/img/bridge/icon-bridge.png);
+						background-size: cover;
+						background-repeat: no-repeat;
+						height: 36px;
+						width: 36px;
+					}
+					p {
+						font-family: "JetBrains Mono", monospace;
+						font-weight: 500;
+						font-size: 20px;
+						color: white;
+					}
+					button {
+						background: url(/img/header/open-img.png);
+						width: 6px;
+						height: 3px;
+						background-size: cover;
+						background-repeat: no-repeat;
+					}
+				}
+			}
+			.bridge-amount {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				width: 350px;
+				height: 60px;
+				background-color: var(--dark-select);
+				border: 1px solid var(--elem-nonactive);
+				border-radius: 15px;
+				padding: 17px 30px;
+				box-sizing: border-box;
+				input {
+					width: 250px;
+					height: 26px;
+					font-family: "JetBrains Mono", monospace;
+					font-weight: 400;
+					font-size: 20px;
+					color: white;
+					background-color: var(--dark-select);
+					outline: none;
+					border: none;
+				}
+				input::placeholder {
+					color: var(--elem-nonactive);
+					font-family: "JetBrains Mono", monospace;
+					font-weight: 400;
+					font-size: 20px;
+				}
+				h6 {
+					color: white;
+					font-family: "JetBrains Mono", monospace;
+					font-weight: 500;
+					font-size: 16px;
+					cursor: pointer;
+					transition: 0.2s;
+				}
+				h6:hover {
+					color: var(--elem-nonactive);
+				}
+			}
+		}
+	}
+	.from {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: 50px;
+		h4 {
+			font-family: "JetBrains Mono", monospace;
+			font-weight: 500;
+			font-size: 24px;
+			color: white;
+		}
+		.choose-network {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			width: 469px;
+			height: 60px;
+			background-color: var(--dark-select);
+			border: 1px solid var(--elem-nonactive);
+			border-radius: 15px;
+			padding: 13px 28px;
+			box-sizing: border-box;
+			cursor: pointer;
+			.network-from {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				.network-icon {
+					background-image: url(/img/bridge/icon-bridge.png);
+					background-size: cover;
+					background-repeat: no-repeat;
+					height: 34px;
+					width: 34px;
+				}
+				p {
+					font-family: "JetBrains Mono", monospace;
+					font-weight: 400;
+					font-size: 20px;
+					color: white;
+				}
+			}
+		}
+		button {
+			background: url(/img/header/open-img.png);
+			width: 15px;
+			height: 9px;
+			background-size: cover;
+			background-repeat: no-repeat;
+		}
+	}
+}
+.changer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 50px;
+	margin-bottom: 50px;
+	hr {
+		width: 255px;
+		border: 1px solid var(--elem-nonactive);
+	}
+}
+.to {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	h4 {
+		font-family: "JetBrains Mono", monospace;
+		font-weight: 500;
+		font-size: 24px;
+		color: white;
+	}
+	.choose-network {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 469px;
+		height: 60px;
+		background-color: var(--dark-select);
+		border: 1px solid var(--elem-nonactive);
+		border-radius: 15px;
+		padding: 13px 28px;
+		box-sizing: border-box;
+		cursor: pointer;
+		.network-to {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			.network-icon {
+				background-image: url(/img/bridge/icon-bridge.png);
+				background-size: cover;
+				background-repeat: no-repeat;
+				height: 34px;
+				width: 34px;
+			}
+			p {
+				font-family: "JetBrains Mono", monospace;
+				font-weight: 400;
+				font-size: 20px;
+				color: white;
+			}
+		}
+	}
+	button {
+		background: url(/img/header/open-img.png);
+		width: 15px;
+		height: 9px;
+		background-size: cover;
+		background-repeat: no-repeat;
+	}
+}
+.custom-address {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 20px;
+	width: 601px;
+	height: 60px;
+	background-color: var(--dark-select);
+	border: 1px solid var(--elem-nonactive);
+	border-radius: 15px;
+	padding: 13px 28px;
+	box-sizing: border-box;
+	input {
+		width: 531px;
+		height: 26px;
+		font-family: "JetBrains Mono", monospace;
+		font-weight: 400;
+		font-size: 20px;
+		color: white;
+		background-color: var(--dark-select);
+		outline: none;
+		border: none;
+	}
+	input::placeholder {
+		color: var(--elem-nonactive);
+		font-family: "JetBrains Mono", monospace;
+		font-weight: 400;
+		font-size: 20px;
+	}
+	.address-status {
+		width: 24px;
+		height: 24px;
+		background-size: cover;
+		background-repeat: no-repeat;
+
+		&.status-good {
+			background-image: url(/img/bridge/status-good.png);
+		}
+
+		&.status-bad {
+			background-image: url(/img/bridge/status-bad.png);
+		}
+	}
+}
+.receive {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 40px;
+	h4 {
+		font-family: "JetBrains Mono", monospace;
+		font-weight: 500;
+		font-size: 24px;
+		color: white;
+	}
+	.choose-network {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 469px;
+		height: 60px;
+		background-color: var(--btn-dark);
+		border-radius: 15px;
+		padding: 13px 28px;
+		box-sizing: border-box;
+		cursor: pointer;
+		.receive-network {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			.network-icon {
+				background-image: url(/img/bridge/icon-bridge.png);
+				background-size: cover;
+				background-repeat: no-repeat;
+				height: 34px;
+				width: 34px;
+			}
+			p {
+				font-family: "JetBrains Mono", monospace;
+				font-weight: 400;
+				font-size: 20px;
+				color: white;
+			}
+		}
+	}
+	.choose-network.active {
+		background-color: var(--elem-nonactive);
+	}
+}
+.main-button {
+	margin-top: 40px;
+	height: 72px;
+	width: 601px;
+	background-color: white;
+	border-radius: 16px;
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 500;
+	font-size: 21px;
+	color: black;
+	cursor: pointer;
+	transition: 0.2s;
+
+	&.inactive {
+		background-color: rgba(var(--dark-bg), 0.9);
+		cursor: not-allowed;
+		color: var(--elem-nonactive);
+		opacity: 0.5;
+	}
+	&.inactive:hover {
+    background-color: var(--dark-select);
+  }
+}
+.main-button:hover {
+	background-color: var(--elem-nonactive);
+}
+
+.gas-container{
+	width: 601px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+.gas{
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 10px;
+}
+.gas-img{
+	background-image: url(/img/trade/gas-image.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 20px;
+	width: 20px;
+}
+.gas-text{
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 400;
+	font-size: 18px;
+	color: var(--elem-nonactive);
+}
+
+.network-to {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+
+	p {
+		margin: 0;
+		// Добавьте дополнительные стили для текста, если необходимо
+	}
+}
+
+.change-button {
+	background-image: url(/img/trade/change.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 54px;
+	width: 54px;
+	position: absolute;
+	top: 325px;
+	left: 50%;
+	transform: translate(-50%, 0%);
+	display: flex;
+	justify-content: center;
+	cursor: pointer;
+	border-radius: 1000px;
+	overflow: hidden;
+	z-index: 0;
+}
+
+.arrow-up,
+.arrow-down {
+    background-image: url(/img/trade/change-arrow.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 21px;
+    margin-top: 16px;
+    transition: 0.2s;
+}
+
+.arrow-down {
+	transform: rotate(180deg);
+	transform-origin: center;
+}
+.change-button:hover .arrow-up{
+margin-top: 20px;
+}
+.change-button:hover .arrow-down{
+margin-top: 12px;
+}
+
+.animate .arrow-up {
+animation: click-animation-up 1s linear;
+}
+
+.animate .arrow-down {
+animation: click-animation-down 1s linear;
+}
+
+@keyframes click-animation-up {
+	0% {
+			margin-top: 20px;
+	}
+	50% {
+			margin-top: -120px;
+	}
+	100% {
+			margin-top: 20px;
+	}
+}
+
+@keyframes click-animation-down {
+	0% {
+			margin-top: 12px;
+	}
+	50% {
+			margin-top: 132px;
+	}
+	100% {
+			margin-top: 12px;
+	}
+}
+
+.network-icon {
+	width: 29px;
+	height: 29px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	margin-right: 10px;
+}
+

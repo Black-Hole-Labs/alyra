@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PopupService } from '../../../services/popup.service';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css'],
+  styleUrls: ['./settings.component.scss'],
   imports: [CommonModule],
 })
 export class SettingsComponent {
@@ -16,7 +17,19 @@ export class SettingsComponent {
   selectedIndex: number | null = 0; // Индекс выбранной кнопки
   customValue: string = ''; // Значение для кастомного ввода
 
+  constructor(private popupService: PopupService) {}
+
+  onOpen(): void {
+    this.popupService.openPopup('settings');
+  }
+
+  onClose(): void {
+    this.popupService.closePopup('settings');
+    this.close.emit();
+  }
+
   closePopup(): void {
+    this.popupService.closePopup('settings');
     this.close.emit();
   }
 
@@ -82,6 +95,7 @@ export class SettingsComponent {
     } else if (this.customValue) {
       this.save.emit(this.customValue + '%');
     }
-    this.closePopup();
+    this.popupService.closePopup('settings');
+    this.close.emit();
   }
 }

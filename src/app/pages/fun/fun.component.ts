@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-fun',
   standalone: true,
   templateUrl: './fun.component.html',
-  styleUrls: ['./fun.component.css']
+  styleUrls: ['./fun.component.scss']
 })
 export class FunComponent {
 }

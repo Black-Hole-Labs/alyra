@@ -4,12 +4,15 @@
       <h3>Trade</h3>
       <div class="icons">
         <div class="refresh" (mousedown)="rotateRefresh()"></div>
-				<div class="settings" (click)="toggleSettingsPopup()"></div>
+				<div class="settings" 
+					[class.active]="showSettingsPopup"
+					(click)="toggleSettingsPopup()">
+				</div>
 
 				<app-settings
 					*ngIf="showSettingsPopup"
 					class="settings-popup open"
-					(close)="toggleSettingsPopup()"
+					(close)="popupService.closePopup('settings')"
 					(save)="onSlippageSave($event)"
 				></app-settings>
 
@@ -71,8 +74,8 @@
             type="text"
             id="number-input-buy"
 						placeholder="0.0"
-            [value]="buyAmount"
-            readonly
+            [(ngModel)]="buyAmount"
+            (input)="processInput($event, false)"
           />
         </div>
 
@@ -101,33 +104,45 @@
         </div>
       </div>
 
-      <button class="main-button">Swap</button>
+      <button 
+        class="main-button" 
+        *ngIf="isWalletConnected(); else connectWallet"
+        [class.inactive]="!isSwapButtonActive()"
+        [disabled]="!isSwapButtonActive()"
+        (click)="isSwapButtonActive() && swap()">
+        Swap
+      </button>
 
-      <div class="price">
-        <p>1</p>
-        <p>{{ selectedToken }}</p>
-        <p>=</p>
-        <p id="price">{{ price }}</p>
-        <p>{{ selectedBuyToken }}</p>
-        <p class="price-usd">($</p>
-        <p class="price-usd" id="price-usd">{{ priceUsd }}</p>
-        <p class="price-usd">)</p>
-      </div>
-			
-      <div class="gas-fee" *ngIf="sellAmount">
-        <p>Gas fee:</p>
-        <p>$0.214</p>
-      </div>
+			<ng-template #connectWallet>
+				<button 
+					class="main-button"
+					(click)="openConnectWalletPopup()">
+					Connect Wallet
+				</button>
+			</ng-template>
 
-      <div class="platform-fee" *ngIf="sellAmount">
-        <p>Platform fee:</p>
-        <p>$0.23214</p>
-      </div>
-
-      <div class="slippage" *ngIf="sellAmount">
-				<p>Slippage:</p>
-				<p>{{ slippage }}</p>
+			<div class="info">
+				<div class="price">
+					<p>1</p>
+					<p>{{ selectedToken }}</p>
+					<p>=</p>
+					<p id="price">{{ price }}</p>
+					<p>{{ selectedBuyToken }}</p>
+					<p class="price-usd">($</p>
+					<p class="price-usd" id="price-usd">{{ priceUsd }}</p>
+					<p class="price-usd">)</p>
+				</div>
+				<div class="gas" *ngIf="sellAmount">
+					<div class="gas-img"></div>
+					<p class="gas-text">0.21</p>
+				</div>
 			</div>
+
     </div>
   </div>
 </div>
+
+<app-connect-wallet 
+  *ngIf="showConnectWalletPopup"
+  (close)="closeConnectWalletPopup()">
+</app-connect-wallet>

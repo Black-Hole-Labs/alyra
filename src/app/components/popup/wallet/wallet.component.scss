@@ -1,0 +1,233 @@
+.wallet-popup{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 500px;
+	height: 784px;
+  position: fixed;
+  top: 148px;
+  right: 40px;
+  background-color: rgba(var(--dark-bg), 0.3);
+	backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(5px);
+	border-radius: 28px;
+  z-index: 1000;
+	padding: 40px 40px 0 40px;
+	box-sizing: border-box;
+	.header{
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		.left-header{
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			.avatar{
+				width: 60px;
+				height: 60px;
+				background: url(/img/wallet-icns/profile.png);
+				background-size: cover;
+				background-repeat: no-repeat;
+			}
+			.wallet-name{
+				display: flex;
+				flex-direction: column;
+				gap: 5px;
+				h3{
+					font-family: "JetBrains Mono", monospace;
+					font-weight: 500;
+					font-size: 22px;
+					color: white;
+				}
+				.wallet-address{
+					display: flex;
+					align-items: center;
+					gap: 5px;
+					p{
+						font-family: "JetBrains Mono", monospace;
+						font-weight: 400;
+						font-size: 18px;
+						color: var(--elem-nonactive);
+					}
+					.copy{
+						width: 20px;
+						height: 20px;
+						background: url(/img/trade/copy-hover.png);
+						opacity: 0.3;
+						background-size: cover;
+						cursor: pointer;
+						transition: 0.2s ease-in-out;
+					}
+					.copy:hover{
+						opacity: 1;
+					}
+				}
+			}
+		}
+		.right-header{
+			display: flex;
+			align-items: center;
+			gap: 22px;
+			.disconnect{
+				padding: 4px 9px;
+				border-radius: 10px;
+				background-color: var(--dark-red);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				transition: 0.2s;
+				cursor: pointer;
+				p{
+					font-family: "JetBrains Mono", monospace;
+					font-weight: 400;
+					font-size: 13px;
+					color: var(--red);
+				}
+			}
+			.disconnect:hover{
+				background-color: var(--dark-red-hover);
+			}
+			button{
+				height: 15px;
+				width: 15px;
+				background: url(/img/header/popup-menu/close-icon.png);
+				background-size: cover;
+				background-repeat: no-repeat;
+				cursor: pointer;
+			}
+		}
+	}
+	.devider{
+		margin-top: 27px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		p{
+			font-family: "JetBrains Mono", monospace;
+			font-weight: 400;
+			font-size: 18px;
+			color: var(--elem-nonactive);
+			margin-right: 17px;
+		}
+		hr.hr1{
+			width: 332px;
+			border: 1px solid var(--elem-nonactive);
+		}
+		hr.hr2{
+			width: 304px;
+			border: 1px solid var(--elem-nonactive);
+		}
+	}
+	.balance{
+		align-self: flex-start;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		margin-top: 20px;
+		margin-bottom: 13px;
+		gap: 5px;
+		h2{
+			font-family: "JetBrains Mono", monospace;
+			font-weight: 400;
+			font-size: 45px;
+			color: white;
+		}
+		.grow{
+			display: flex;
+			align-items: center;
+			gap: 5px;
+			p{
+				font-family: "JetBrains Mono", monospace;
+				font-weight: 400;
+				font-size: 22px;
+			}
+			.usd{
+				color: var(--red);
+			}
+			.percent{
+				color: var(--elem-nonactive);
+			}
+			
+		}
+		
+	}
+	.token-portfolio{
+		width: 100%;
+		height: 432px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin-top: 30px;
+		gap: 25px;
+		.token{
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			.token-left{
+				display: flex;
+				align-items: center;
+				gap: 15px;
+				.token-img{
+					width: 60px;
+					height: 60px;
+					background: url(/img/trade/eth.png);
+					background-size: cover;
+					background-repeat: no-repeat;
+				}
+				.token-info{
+					display: flex;
+					flex-direction: column;
+					p{
+						font-family: "JetBrains Mono", monospace;
+						font-weight: 700;
+						font-size: 20px;
+						color: white;
+					}
+					.token-balance{
+						color: var(--elem-nonactive);
+					}
+				}
+			}
+			.token-right{
+				display: flex;
+				flex-direction: column;
+				align-items: flex-end;
+				gap: 3px;
+				h5{
+					font-family: "JetBrains Mono", monospace;
+					font-weight: 400;
+					font-size: 24px;
+					color: white;
+				}
+				.token-price-change{
+					display: flex;
+					align-items: center;
+					gap: 5px;
+					p{
+						font-family: "JetBrains Mono", monospace;
+						font-weight: 400;
+						font-size: 16px;
+					}
+					.usd-change{
+						color: var(--red);
+					}
+					.percent-change{
+						color: var(--elem-nonactive);
+					}
+				}
+				
+			}
+			
+		}
+		&::-webkit-scrollbar {
+			display: none;
+		}
+		
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+}

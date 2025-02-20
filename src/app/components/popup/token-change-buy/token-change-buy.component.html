@@ -23,7 +23,9 @@
 				<div class="left">
 					<div class="image">
 						<div class="token-image" [style.backgroundImage]="'url(' + token.imageUrl + ')'"></div>
-						<div class="network-image"></div>
+						<div class="network-bg">
+							<div class="network-image" [style.backgroundImage]="'url(' + currentNetworkIcon + ')'"></div>
+						</div>
 					</div>
 					<div class="name">
 						<h6>{{ token.name }}</h6>
@@ -42,7 +44,6 @@
 					</a>
 				</div>
 			</div>
-			
 
 		</div>
 

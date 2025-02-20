@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NetworkService } from '../../../services/network.service';
 
 @Component({
   selector: 'app-token-change-buy',
   standalone: true,
   templateUrl: './token-change-buy.component.html',
-  styleUrls: ['./token-change-buy.component.css'],
+  styleUrls: ['./token-change-buy.component.scss'],
 	imports: [CommonModule, FormsModule],
 })
 export class TokenChangeBuyComponent {
@@ -14,6 +15,7 @@ export class TokenChangeBuyComponent {
   @Output() tokenSelected = new EventEmitter<{ symbol: string; imageUrl: string }>();
 
 	searchText: string = '';
+  currentNetworkIcon: string = '';
 
   tokens = [
     { symbol: 'ARB', name: 'Arbitrum', contractAddress: '0xArbContract...', imageUrl: '/img/trade/arbitrum.png' },
@@ -29,6 +31,19 @@ export class TokenChangeBuyComponent {
   ];
 
 	filteredTokens = [...this.tokens]; // Массив для хранения отфильтрованных токенов
+
+  constructor(private networkService: NetworkService) {
+    const currentNetwork = this.networkService.getSelectedNetwork();
+    if (currentNetwork) {
+      this.currentNetworkIcon = currentNetwork.icon;
+    }
+
+    this.networkService.selectedNetwork$.subscribe(network => {
+      if (network) {
+        this.currentNetworkIcon = network.icon;
+      }
+    });
+  }
 
   performSearch(): void {
     const search = this.searchText.toLowerCase().trim();

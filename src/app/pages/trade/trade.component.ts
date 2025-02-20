@@ -4,18 +4,22 @@ import { CommonModule } from '@angular/common';
 import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
 import { TokenChangeBuyComponent } from '../../components/popup/token-change-buy/token-change-buy.component';
 import { SettingsComponent } from '../../components/popup/settings/settings.component'; // Импортируем SettingsComponent
+import { WalletService } from '../../services/wallet.service';
+import { ConnectWalletComponent } from '../../components/popup/connect-wallet/connect-wallet.component';
+import { PopupService } from '../../services/popup.service';
 
 @Component({
   selector: 'app-trade',
   standalone: true,
   templateUrl: './trade.component.html',
-  styleUrls: ['./trade.component.css'],
+  styleUrls: ['./trade.component.scss'],
   imports: [
     FormsModule,
     CommonModule,
     TokenChangePopupComponent,
     TokenChangeBuyComponent,
     SettingsComponent, // Добавляем SettingsComponent в imports
+    ConnectWalletComponent,
   ],
 })
 export class TradeComponent {
@@ -31,27 +35,48 @@ export class TradeComponent {
   // Управление попапами
   showTokenPopup = false; // Управляет отображением попапа для sell
   showTokenBuyPopup = false; // Управляет отображением попапа для buy
-	showSettingsPopup = false; // Управляет отображением попапа для settings
   selectedToken = 'ETH'; // Текущий выбранный токен для sell
   selectedBuyToken = 'USDT'; // Текущий выбранный токен для buy
   selectedTokenImage = '/img/trade/eth.png'; // Изображение для sell
   selectedBuyTokenImage = '/img/trade/usdt.png'; // Изображение для buy
 
-  constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) {}
+  showConnectWalletPopup: boolean = false;
 
-  processInput(event: Event, isSell: boolean): void {
-    const inputElement = event.target as HTMLInputElement;
-    inputElement.value = inputElement.value
-      .replace(/[^0-9.,]/g, '') // Удаляем недопустимые символы
-      .replace(/(,|\.){2,}/g, '') // Удаляем лишние точки или запятые
-      .replace(/^(,|\.)/g, '') // Удаляем точку или запятую в начале
-      .replace(/,/g, '.'); // Заменяем запятую на точку
+  constructor(
+    private renderer: Renderer2,
+    private cdr: ChangeDetectorRef,
+    private walletService: WalletService,
+    public popupService: PopupService
+  ) {}
 
-    if (isSell) {
-      this.sellAmount = inputElement.value;
-      this.updateBuyAmount();
-      this.updateSellPriceUsd();
+  processInput(event: Event, isSellInput: boolean): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    // Проверка на корректность ввода
+    if (value === '' || isNaN(Number(value))) {
+      if (isSellInput) {
+        this.sellAmount = '';
+        this.buyAmount = '';
+      } else {
+        this.buyAmount = '';
+        this.sellAmount = '';
+      }
+      this.sellPriceUsd = '';
+      return;
     }
+
+    if (isSellInput) {
+      // Конвертация из sell в buy
+      this.sellAmount = value;
+      this.buyAmount = (Number(value) * this.price).toString();
+    } else {
+      // Конвертация из buy в sell
+      this.buyAmount = value;
+      this.sellAmount = (Number(value) / this.price).toString();
+    }
+
+    this.updateSellPriceUsd();
   }
 
   updateBuyAmount(): void {
@@ -165,12 +190,41 @@ export class TradeComponent {
   }
 
 	// Settings popup
-	toggleSettingsPopup(): void {
-		this.showSettingsPopup = !this.showSettingsPopup;
-	}
+	get showSettingsPopup(): boolean {
+    return this.popupService.getCurrentPopup() === 'settings';
+  }
+
+  toggleSettingsPopup(): void {
+    if (this.showSettingsPopup) {
+      this.popupService.closePopup('settings');
+    } else {
+      this.popupService.openPopup('settings');
+    }
+  }
 
 	onSlippageSave(value: string): void {
-    this.slippage = value;
-    this.showSettingsPopup = false; // Закрываем popup после сохранения
+		this.slippage = value;
+  }
+
+  isSwapButtonActive(): boolean {
+    return !!(this.sellAmount && Number(this.sellAmount) > 0);
+  }
+
+  swap(): void {
+    // Здесь будет логика для свапа
+    console.log('Swap initiated with amount:', this.sellAmount);
+    // Можно добавить дополнительную логику свапа позже
+  }
+
+  isWalletConnected(): boolean {
+    return this.walletService.isConnected();
+  }
+
+  openConnectWalletPopup(): void {
+    this.showConnectWalletPopup = true;
+  }
+
+  closeConnectWalletPopup(): void {
+    this.showConnectWalletPopup = false;
   }
 }
