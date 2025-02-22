@@ -28,8 +28,9 @@ export class WalletProviderManager {
         console.log("Detected RabbyWallet");
         this.RabbyWalletProvider = provider;
       }
-      else if (provider.isMetaMask) {
+      else if (provider.isMetaMask && !provider.isPontem && !provider.isKeplr) {
         console.log("Detected MetaMask");
+        console.log(provider);
         this.metaMaskProvider = provider;
       }
       else if (provider.isTrust) {
