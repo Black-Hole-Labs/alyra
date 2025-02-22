@@ -1,10 +1,21 @@
-import { Component, Renderer2, ChangeDetectorRef } from '@angular/core';
+import { Component, Renderer2, ChangeDetectorRef, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
 import { SettingsComponent } from '../../components/popup/settings/settings.component'; // Импортируем SettingsComponent
-import { WalletBalanceService } from '../../services/wallet-balance.service';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
+import { WalletBalanceService } from '../../services/wallet-balance.service';
+import { TransactionsService } from '../../services/transactions.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { TransactionRequest } from '../../models/wallet-provider.interface';
+import { parseUnits } from 'ethers';
+
+export interface Token {
+  symbol: string;
+  imageUrl: string;
+  contractAddress: string;
+  decimals: string;
+}
 
 @Component({
   selector: 'app-trade',
@@ -19,12 +30,16 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
   ],
 })
 export class TradeComponent {
+//[x: string]: any;
   sellAmount: string = ''; // Значение, которое пользователь вводит в поле продажи
+  //validatedSellAmount: string = ''; 
+  validatedSellAmount = signal<string>('');
   buyAmount: string = ''; // Значение для поля покупки, рассчитывается автоматически
   price: number = 0.5637; // Цена обмена
   priceUsd: number = 921244; // Текущая стоимость в USD за единицу
   sellPriceUsd: string = ''; // Значение для отображения стоимости продажи в USD
   balance: number = 0.0; // Баланс пользователя для продажи
+  balanceBuy: number = 0.0; // Баланс пользователя для покупки
   rotationCount: number = 0; // Счетчик для отслеживания вращений
 	slippage: string = 'Auto'; // Значение для отображения Slippage
 
@@ -32,12 +47,35 @@ export class TradeComponent {
   showTokenPopup = false; // Управляет отображением попапа для sell
   showTokenBuyPopup = false; // Управляет отображением попапа для buy
 	showSettingsPopup = false; // Управляет отображением попапа для settings
-  selectedToken = 'ETH'; // Текущий выбранный токен для sell
-  selectedBuyToken = 'USDT'; // Текущий выбранный токен для buy
-  selectedTokenImage = '/img/trade/eth.png'; // Изображение для sell
-  selectedBuyTokenImage = '/img/trade/usdt.png'; // Изображение для buy
+  selectedToken = signal<Token | undefined>(undefined);
+  selectedBuyToken = signal<Token | undefined>(undefined);
+  //selectedToken = 'ETH'; // Текущий выбранный токен для sell
+  //selectedBuyToken = 'USDT'; // Текущий выбранный токен для buy
+  //selectedTokenImage = '/img/trade/eth.png'; // Изображение для sell
+  //selectedBuyTokenImage = '/img/trade/usdt.png'; // Изображение для buy
+  //selectedTokenAddress = '';
+  //selectedBuyTokenAddress = '';
+  //selectedTokenBuydecimals = '';
+  //selectedTokendecimals = '';
+  txData: TransactionRequest | undefined = undefined;
 
-  constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef, private walletBalance: WalletBalanceService, private blockchainState: BlockchainStateService) {}
+  allFieldsReady = computed(() =>
+    !!this.blockchainStateService.network &&
+    !!this.blockchainStateService.walletAddress() &&
+    this.selectedToken() !== undefined &&
+    this.selectedBuyToken() !== undefined &&
+    this.validatedSellAmount().trim() !== ''
+  );
+
+  private inputTimeout: any;
+
+  constructor(
+    private renderer: Renderer2,
+    private cdr: ChangeDetectorRef,
+    private blockchainStateService: BlockchainStateService,
+    private walletBalanceService: WalletBalanceService,
+    private transactionsService: TransactionsService
+  ) {}
 
   processInput(event: Event, isSell: boolean): void {
     const inputElement = event.target as HTMLInputElement;
@@ -49,9 +87,16 @@ export class TradeComponent {
 
     if (isSell) {
       this.sellAmount = inputElement.value;
-      this.updateBuyAmount();
-      this.updateSellPriceUsd();
+      this.validatedSellAmount.set(inputElement.value);
+      // this.updateBuyAmount();
+      // this.updateSellPriceUsd();
+      clearTimeout(this.inputTimeout);
+
+      this.inputTimeout = setTimeout(() => {
+        this.getTxData();
+      }, 2000);
     }
+    console.log("some data");
   }
 
   updateBuyAmount(): void {
@@ -114,22 +159,15 @@ export class TradeComponent {
 	
 	swapTokens(): void {
 		console.log('Swapping tokens...');
-		console.log('Before swap:', this.selectedToken, this.selectedBuyToken);
+		console.log('Before swap:', this.selectedToken, this.selectedBuyToken());
 	
-		// Меняем местами токены и изображения
-		const tempToken = this.selectedToken;
-		const tempTokenImage = this.selectedTokenImage;
-		this.selectedToken = this.selectedBuyToken;
-		this.selectedTokenImage = this.selectedBuyTokenImage;
-		this.selectedBuyToken = tempToken;
-		this.selectedBuyTokenImage = tempTokenImage;
-	
-		// Меняем местами значения sell и buy
-		const tempAmount = this.sellAmount;
-		this.sellAmount = this.buyAmount;
-		this.buyAmount = tempAmount;
+		const tempToken = this.selectedToken();
+		this.selectedToken.set(this.selectedBuyToken());
+		this.selectedBuyToken.set(tempToken);
 	
 		console.log('After swap:', this.selectedToken, this.selectedBuyToken);
+
+    //this.getTxData();
 	}
 	
 	
@@ -143,64 +181,54 @@ export class TradeComponent {
     this.showTokenPopup = false;
   }
 
-  async onTokenSelected(token: { symbol: string; imageUrl: string }): Promise<void> {
-    const a = await this.getBalanceForToken(token.symbol);
-    console.log(`A: `, a);
-    this.balance = parseFloat(a);
-    this.selectedToken = token.symbol;
-    this.selectedTokenImage = token.imageUrl;
+  async onTokenSelected(token: { symbol: string; imageUrl: string; contractAddress: string; decimals: string }): Promise<void> {
+    this.selectedToken.set(token);
+    this.balance = parseFloat(await this.getBalanceForToken(token));
+    // this.selectedToken = token.symbol;
+    // this.selectedTokenImage = token.imageUrl;
+    // this.selectedTokenAddress = token.contractAddress;
+    // this.selectedTokendecimals = token.decimals;
     this.closeTokenPopup();
   }
 
-  async getBalanceForToken(symbol: string): Promise<any> {
-    const search = symbol.toLowerCase().trim();
-    const token = this.blockchainState.filteredTokens.find(
-      token => token.symbol.toLowerCase() === search.toLowerCase()
-    );
-    if(!token)
-    {
-      throw new Error(`Failed to find needed token to show Balance`);
-    }
-
-    console.log(token);
-
-    const walletAddress = this.blockchainState.getCurrentWalletAddress();
+  async getBalanceForToken(token: Token): Promise<any> {
+    const walletAddress = this.blockchainStateService.getCurrentWalletAddress();
     if (!walletAddress)
     {
-      throw new Error(`Failed to get wallet address`);
+      console.error(`Failed to get wallet address`);
+      return;
     }
 
-    if(this.blockchainState.getCurrentNetworkId() === "1151111081099710") { // SVM
-      if (token.symbol === "SOL")
+    if(this.blockchainStateService.getCurrentNetworkId() === "1151111081099710") { // SVM
+      if (token.symbol === "SOL") // change to adres
       {
-        return this.walletBalance.getSolanaBalance(walletAddress);
+        return this.walletBalanceService.getSolanaBalance(walletAddress);
       }
       else
       {
-        return this.walletBalance.getSolanaBalance(walletAddress, token.contractAddress);
+        return this.walletBalanceService.getSolanaBalance(walletAddress, token.contractAddress);
       }
     }
     else { // EVM
       try {
         const response = await fetch('/data/networks.json');
         if (!response.ok) {
-          throw new Error('Failed to load networks');
+          console.error('Failed to load networks');
         }
   
         const data = await response.json();
   
-        const network = data.find((net: { id: number }) => net.id.toString() === this.blockchainState.getCurrentNetworkId());
+        const network = data.find((net: { id: number }) => net.id.toString() === this.blockchainStateService.getCurrentNetworkId());
   
         if (!network) {
-          throw new Error('Network not found');
+          console.error('Network not found');
         }
-        console.log('Found network:', network);
   
         if (token.symbol === "ETH") {
-          const balance = await this.walletBalance.getEvmBalance(walletAddress, network.rpcUrls[0]);
+          const balance = await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0]);
           return balance;
         } else {
-          return await this.walletBalance.getEvmBalance(walletAddress, network.rpcUrls[0], token.contractAddress);
+          return await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], token.contractAddress);
         }
       } catch (error) {
         console.error(`Error loading networks`);
@@ -219,9 +247,13 @@ export class TradeComponent {
     this.showTokenBuyPopup = false;
   }
 
-  onBuyTokenSelected(token: { symbol: string; imageUrl: string }): void {
-    this.selectedBuyToken = token.symbol;
-    this.selectedBuyTokenImage = token.imageUrl;
+  async onBuyTokenSelected(token: { symbol: string; imageUrl: string; contractAddress: string; decimals: string }): Promise<void> {
+    this.selectedBuyToken.set(token);
+    this.balanceBuy = parseFloat(await this.getBalanceForToken(token));
+    // this.selectedBuyToken = token.symbol;
+    // this.selectedBuyTokenImage = token.imageUrl;
+    // this.selectedBuyTokenAddress = token.contractAddress;
+    // this.selectedTokenBuydecimals = token.decimals;
     this.closeTokenBuyPopup();
   }
 
@@ -233,5 +265,128 @@ export class TradeComponent {
 	onSlippageSave(value: string): void {
     this.slippage = value;
     this.showSettingsPopup = false; // Закрываем popup после сохранения
+  }
+
+  async swap() {
+    //this.loading = true;
+
+    const provider = this.blockchainStateService.getCurrentProvider().provider;
+
+    console.log("provider",provider);
+
+    const txHash = provider.sendTx(this.txData);
+
+    console.log("txHash",txHash);
+    
+  }
+
+  test(){
+    this.transactionsService.runTest().subscribe({
+      next: (response) => {
+        console.log('Quote:', response.quote);
+        console.log('Simulation Result:', response.simulationResult);
+      },
+      error: (error) => {
+        console.error('Ошибка запроса:', error);
+      }
+    });
+  }
+
+  getTxData() {
+    const fromChain = this.blockchainStateService.network()!;
+    const toChain = this.blockchainStateService.network()!;
+    const fromAddress = this.blockchainStateService.walletAddress()!;
+    //const fromTokenDecimals = this.selectedTokendecimals;
+    const fromTokenDecimals = this.selectedToken()!.decimals;
+    //const fromAmount = this.validatedSellAmount;
+    const fromAmount = parseUnits(this.validatedSellAmount(), fromTokenDecimals);
+    //const fromToken = this.selectedTokenAddress;
+    const fromToken = this.selectedToken()!.contractAddress;
+    const toToken = this.selectedBuyToken()!.contractAddress;
+    const toTokenDecimals = this.selectedBuyToken()!.decimals;
+    // const toToken = this.selectedBuyTokenAddress;
+    // const toTokenDecimals = this.selectedTokenBuydecimals;
+
+    const adjustedFromAmount = fromAmount.toString();
+  
+    if (!fromChain || !toChain || !fromAddress || !fromAmount || !fromToken || !toToken || !fromTokenDecimals) {
+      console.log("fromChain",fromChain);
+      console.log("toChain",toChain);
+      console.log("fromAddress",fromAddress);
+      console.log("fromAmount",fromAmount);
+      console.log("fromToken",fromToken);
+      console.log("toToken",toToken);
+      console.log("fromTokenDecimals",fromTokenDecimals);
+      
+      console.log("adjusted From Amount",adjustedFromAmount);
+
+      console.error('Missing required parameters');
+      return;
+    }
+    //const adjustedFromAmount = '1000000000';
+    this.transactionsService.getQuote(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress)
+    .subscribe({
+      next: (response: any) => {
+        console.log('Quote received:', response);
+        if (response.estimate && response.transactionRequest) 
+        {
+          const readableToAmount = this.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals));
+        
+          console.log('readableToAmount:', readableToAmount);
+
+          const gasPriceHex = response.transactionRequest.gasPrice;
+          const gasLimitHex = response.transactionRequest.gasLimit;
+          const gasToken = response.estimate.gasCosts?.[0]?.token;
+
+          const gasPriceUSD = this.parseGasPriceUSD(gasPriceHex, gasLimitHex, gasToken);
+          
+          console.log('gasPriceUSD:', gasPriceUSD);
+        }
+        else 
+        {
+          console.error("Missing estimate or transactionRequest in response.");
+        }
+
+        if(response.transactionRequest.data)
+        {
+          this.txData = response.transactionRequest;
+        }
+        
+      },
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          console.error('Custom error message:', error || 'Unknown error');
+          console.error('Custom error message:', error.error?.message || 'Unknown error');
+        } else {
+          console.error('Unexpected error:', error);
+        }
+      },
+      complete: () => {
+        console.log('Quote request completed');
+      }
+    });
+
+  }
+
+  parseToAmount(toAmount: string, decimals: number): string {
+    return (Number(toAmount) / Math.pow(10, decimals)).toFixed(6);
+  }
+
+  parseGasPriceUSD(gasPriceHex: string, gasLimitHex: string, token: { decimals: number; priceUSD: string }): string {
+    // Конвертируем gasPrice и gasLimit из hex в десятичное число
+    const gasPriceWei = parseInt(gasPriceHex, 16);
+    const gasLimit = parseInt(gasLimitHex, 16);
+  
+    // Рассчитываем общую стоимость газа в Wei
+    const gasCostWei = gasPriceWei * gasLimit;
+  
+    // Переводим Wei в токены, используя decimals токена
+    const gasCostInToken = gasCostWei / Math.pow(10, token.decimals);
+  
+    // Умножаем на цену токена в USD
+    const gasCostUSD = gasCostInToken * parseFloat(token.priceUSD);
+  
+    // Форматируем результат
+    return gasCostUSD.toFixed(2); // Округляем до 2 знаков после запятой
   }
 }

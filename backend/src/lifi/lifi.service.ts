@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { ethers, Provider } from 'ethers';
 
@@ -31,17 +31,41 @@ export class LifiService {
   }
 
   async getQuote (fromChain: string, toChain: string, fromToken: string, toToken: string, fromAmount: string, fromAddress: string) {
-    const result = await axios.get('https://li.quest/v1/quote', {
-        params: {
-            fromChain,
-            toChain,
-            fromToken,
-            toToken,
-            fromAmount,
-            fromAddress,
-        }
-    });
-    return result.data;
+    try {
+      const result = await axios.get('https://li.quest/v1/quote', {
+          params: {
+              fromChain,
+              toChain,
+              fromToken,
+              toToken,
+              fromAmount,
+              fromAddress,
+          }
+      });
+      return result.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const statusCode = error.response.status;
+        const errorMessage = error.response.data?.message || 'An error occurred';
+  
+        console.error('Error from external API:', {
+          statusCode,
+          errorMessage,
+        });
+  
+        throw new HttpException(
+          { statusCode, message: errorMessage },
+          statusCode,
+        );
+      }
+  
+      console.error('Unexpected error:', error);
+      throw new HttpException(
+        { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Internal Server Error' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async getQuoteByReceivingAmount (fromChain: string, toChain: string, fromToken: string, toToken: string, toAmount: string, fromAddress: string) {
