@@ -332,3 +332,7 @@ p{
 	font-size: 18px;
 	color: white;
 }
+
+.main-button:disabled {
+	background-color: gray;
+}
