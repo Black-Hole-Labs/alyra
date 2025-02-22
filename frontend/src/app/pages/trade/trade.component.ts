@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
 import { SettingsComponent } from '../../components/popup/settings/settings.component'; // Импортируем SettingsComponent
 import { BlockchainStateService } from '../../services/blockchain-state.service';
+import { WalletBalanceService } from '../../services/wallet-balance.service';
 import { TransactionsService } from '../../services/transactions.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
@@ -14,7 +15,6 @@ export interface Token {
   contractAddress: string;
   decimals: string;
 }
-
 
 @Component({
   selector: 'app-trade',
@@ -29,6 +29,7 @@ export interface Token {
   ],
 })
 export class TradeComponent {
+//[x: string]: any;
   sellAmount: string = ''; // Значение, которое пользователь вводит в поле продажи
   //validatedSellAmount: string = ''; 
   validatedSellAmount = signal<string>('');
@@ -37,7 +38,8 @@ export class TradeComponent {
   price: number = 0.5637; // Цена обмена
   priceUsd: number = 921244; // Текущая стоимость в USD за единицу
   sellPriceUsd: string = ''; // Значение для отображения стоимости продажи в USD
-  balance: number = 0.1465; // Баланс пользователя для продажи
+  balance: number = 0.0; // Баланс пользователя для продажи
+  balanceBuy: number = 0.0; // Баланс пользователя для покупки
   rotationCount: number = 0; // Счетчик для отслеживания вращений
 	slippage: string = 'Auto'; // Значение для отображения Slippage
 
@@ -80,6 +82,7 @@ export class TradeComponent {
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
     private blockchainStateService: BlockchainStateService,
+    private walletBalanceService: WalletBalanceService,
     private transactionsService: TransactionsService
   ) {
     effect(() => {
@@ -203,14 +206,62 @@ export class TradeComponent {
     this.showTokenPopup = false;
   }
 
-  onTokenSelected(token: { symbol: string; imageUrl: string; contractAddress: string; decimals: string }): void {
+  async onTokenSelected(token: { symbol: string; imageUrl: string; contractAddress: string; decimals: string }): Promise<void> {
     this.txData.set(undefined);
     this.selectedToken.set(token);
+    this.balance = parseFloat(await this.getBalanceForToken(token));
     // this.selectedToken = token.symbol;
     // this.selectedTokenImage = token.imageUrl;
     // this.selectedTokenAddress = token.contractAddress;
     // this.selectedTokendecimals = token.decimals;
     this.closeTokenPopup();
+  }
+
+  async getBalanceForToken(token: Token): Promise<any> {
+    const walletAddress = this.blockchainStateService.getCurrentWalletAddress();
+    if (!walletAddress)
+    {
+      console.error(`Failed to get wallet address`);
+      return;
+    }
+
+    if(this.blockchainStateService.getCurrentNetworkId() === "1151111081099710") { // SVM
+      if (token.symbol === "SOL") // change to adres
+      {
+        return this.walletBalanceService.getSolanaBalance(walletAddress);
+      }
+      else
+      {
+        return this.walletBalanceService.getSolanaBalance(walletAddress, token.contractAddress);
+      }
+    }
+    else { // EVM
+      try {
+        const response = await fetch('/data/networks.json');
+        if (!response.ok) {
+          console.error('Failed to load networks');
+        }
+  
+        const data = await response.json();
+  
+        const network = data.find((net: { id: number }) => net.id.toString() === this.blockchainStateService.getCurrentNetworkId());
+  
+        if (!network) {
+          console.error('Network not found');
+        }
+  
+        if (token.symbol === "ETH") {
+          const balance = await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0]);
+          return balance;
+        } else {
+          return await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], token.contractAddress);
+        }
+      } catch (error) {
+        console.error(`Error loading networks`);
+        return "0";
+      }
+    }
+    
   }
 
   // Методы управления попапом для buy
@@ -222,9 +273,10 @@ export class TradeComponent {
     this.showTokenBuyPopup = false;
   }
 
-  onBuyTokenSelected(token: { symbol: string; imageUrl: string; contractAddress: string; decimals: string }): void {
+  async onBuyTokenSelected(token: { symbol: string; imageUrl: string; contractAddress: string; decimals: string }): Promise<void> {
     this.txData.set(undefined);
     this.selectedBuyToken.set(token);
+    this.balanceBuy = parseFloat(await this.getBalanceForToken(token));
     // this.selectedBuyToken = token.symbol;
     // this.selectedBuyTokenImage = token.imageUrl;
     // this.selectedBuyTokenAddress = token.contractAddress;

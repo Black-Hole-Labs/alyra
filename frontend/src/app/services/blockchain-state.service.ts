@@ -112,8 +112,16 @@ export class BlockchainStateService {
     this.walletAddress.set(address);
   }
 
+  getCurrentWalletAddress(): string | null {
+    return this.walletAddress();
+  }
+
   updateNetwork(networkId: string): void {
     this.network.set(networkId);
+  }
+
+  getCurrentNetworkId(): string | null {
+    return this.network();
   }
 
   disconnect(): void {

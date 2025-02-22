@@ -7,7 +7,7 @@ export class LifiService {
 
   async getChains() {
     /// chainTypes can be of type SVM and EVM, by default, only EVM chains will be returned
-    const optionalChainTypes = "EVM"
+    const optionalChainTypes = "SVM"
     const result = await axios.get('https://li.quest/v1/chains', 
       {params: {chainTypes: optionalChainTypes}});
     return result.data;
