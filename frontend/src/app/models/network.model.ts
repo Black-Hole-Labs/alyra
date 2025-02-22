@@ -1,7 +1,16 @@
 import { ethers, JsonRpcSigner } from 'ethers';
-import { TransactionRequest, WalletProvider } from './wallet-provider.interface';
-
-
+import { TransactionRequestEVM, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
+import { 
+  Connection,
+  PublicKey,
+  TransactionMessage,
+  VersionedTransaction,
+  MessageV0,
+  TransactionInstruction,
+  MessageHeader,
+  Transaction,
+} from '@solana/web3.js';
+import bs58 from 'bs58';
 export class WalletProviderManager {
   private metaMaskProvider: any = null;
   private trustWalletProvider: any = null;
@@ -143,7 +152,7 @@ export class MetaMaskProvider implements WalletProvider {
     return this.address;
   }
 
-  async sendTx(txData: TransactionRequest, isErc20From: boolean = false): Promise<void> {
+  async sendTx(txData: TransactionRequestEVM, isErc20From: boolean = false): Promise<void> {
     try {
       const txParams: any = {
         from: txData.from,
@@ -258,6 +267,7 @@ export class PhantomProvider implements WalletProvider {
       }
       this.address = account;
       console.log(`Phantom: Solana address: ${this.address}`);
+      this.network = "1151111081099710"; //todo 
       // this.network = await this.getNetwork();
     }
     else
@@ -304,6 +314,65 @@ export class PhantomProvider implements WalletProvider {
 
   getAddress(): string {
     return this.address;
+  }
+
+  async sendTx(
+    txData: TransactionRequestEVM | TransactionRequestSVM,
+    isErc20From: boolean = false
+  ): Promise<string> {
+    // Если сеть Solana (SVM)
+    if (this.network === "1151111081099710") {
+      const phantom_solana = (window as any).phantom?.solana;
+      if (!phantom_solana) {
+        throw new Error('Phantom SVM not available');
+      }
+    
+      const connection = new Connection("https://api.mainnet-beta.solana.com", 'confirmed');//todo
+    
+      const txDataSVM = txData as TransactionRequestSVM;
+      // Декодируем base64-строку в Uint8Array
+      const decodedTx = Uint8Array.from(atob(txDataSVM.data.toString()), c => c.charCodeAt(0));
+      
+      // Десериализуем полученные данные в VersionedTransaction
+      const versionedTx = VersionedTransaction.deserialize(decodedTx);
+    
+      // Подписываем транзакцию через Phantom (подпись выполняется самим пользователем)
+      const signedTx = await phantom_solana.signAndSendTransaction(versionedTx);
+      console.log("SVM Transaction sent:", signedTx);
+    
+      // Подтверждаем статус транзакции
+      await connection.confirmTransaction(signedTx, 'confirmed');
+    
+      return signedTx;
+    }
+     else {
+      // Логика для EVM
+      try {
+        const txParams: any = {
+          from: (txData as TransactionRequestEVM).from,
+          to: (txData as TransactionRequestEVM).to,
+          //gas: txData.gasLimit,
+          data: (txData as TransactionRequestEVM).data,
+          //gasPrice: txData.gasPrice,
+        };
+    
+        if (!isErc20From) {
+          txParams.value = (txData as TransactionRequestEVM).value; 
+        } else {
+          txParams.value = "0x0"; 
+        }
+    
+        console.log("Отправка транзакции:", txParams);
+    
+        return await this.provider.request({
+          method: "eth_sendTransaction",
+          params: [txParams],
+        });
+      } catch (error: any) {
+        console.error("Ошибка при отправке транзакции:", error);
+        throw error;
+      }
+    }
   }
 }
 

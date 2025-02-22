@@ -6,7 +6,7 @@ import { SettingsComponent } from '../../components/popup/settings/settings.comp
 import { BlockchainStateService } from '../../services/blockchain-state.service';
 import { TransactionsService } from '../../services/transactions.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { TransactionRequest } from '../../models/wallet-provider.interface';
+import { TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
 import { ethers, parseUnits, ZeroAddress } from 'ethers';
 export interface Token {
   symbol: string;
@@ -55,7 +55,7 @@ export class TradeComponent {
   //selectedBuyTokenAddress = '';
   //selectedTokenBuydecimals = '';
   //selectedTokendecimals = '';
-  txData = signal<TransactionRequest | undefined> (undefined);
+  txData = signal<TransactionRequestEVM | TransactionRequestSVM | undefined> (undefined);
   
   firstToken = computed(() => {
     const tokens = this.blockchainStateService.filteredTokens();
@@ -244,7 +244,42 @@ export class TradeComponent {
 
   async swap() {
     this.loading.set(true);
+    console.log("a");
+    if(this.blockchainStateService.network() === "1151111081099710")
+    {
+      console.log("b");
+      await this.svmSwap();
+      console.log("c");
+    }
+    else
+    {
+      await this.evmSwap();
+    }
+    
 
+    //todo check for status from lifi
+    this.loading.set(false);
+  }
+
+  async svmSwap() {
+    const txData = this.txData(); // Ожидаем тип TransactionRequestSVM
+    if (!txData) {
+      throw new Error("missing data transaction");
+    }
+    console.log("d");
+    const provider = this.blockchainStateService.getCurrentProvider().provider;
+  
+    // Если требуется, здесь можно дополнительно подготовить транзакцию через @solana/web3.js.
+    // Например, если txData.data содержит закодированные инструкции,
+    // можно создать Transaction, установить recentBlockhash и feePayer.
+    // Для простоты предполагаем, что provider.sendTx умеет работать с объектом txData напрямую.
+    console.log("e");
+    const txHash = await provider.sendTx(txData);
+    console.log("z");
+    console.log("SVM Swap транзакция отправлена:", txHash);
+  }
+
+  async evmSwap(){
     const provider = this.blockchainStateService.getCurrentProvider().provider;
 
     const signer = await provider.signer;
@@ -271,7 +306,7 @@ export class TradeComponent {
     // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
     // console.log("allowance",allowance);
 
-    const approveTx = await erc20Contract["approve"](this.txData()?.to, approveAmount);
+    const approveTx = await erc20Contract["approve"]((this.txData() as TransactionRequestEVM).to, approveAmount);
     
     console.log("a");
 
@@ -283,9 +318,6 @@ export class TradeComponent {
 
     console.log("txHash",txHash);
     console.log("this.loading()",this.loading());
-
-    //todo check for status from lifi
-    this.loading.set(false);
   }
 
   test(){
@@ -358,7 +390,14 @@ export class TradeComponent {
 
         if(response.transactionRequest.data)
         {
-          this.txData.set(response.transactionRequest);
+          if(this.blockchainStateService.network() === "1151111081099710")
+          {
+            this.txData.set(response.transactionRequest as TransactionRequestSVM);
+          }
+          else
+          {
+            this.txData.set(response.transactionRequest as TransactionRequestEVM);
+          }
         }
         
       },

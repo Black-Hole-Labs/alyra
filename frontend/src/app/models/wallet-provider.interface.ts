@@ -13,7 +13,7 @@ export interface Network {
     chainType: string; // Тип сети (EVM, SVM)
 }
 
-export interface TransactionRequest {
+export interface TransactionRequestEVM {
     value: string; // Значение транзакции в HEX
     to: string; // Адрес получателя
     data: string; // Данные транзакции (payload)
@@ -21,4 +21,8 @@ export interface TransactionRequest {
     gasPrice: string; // Цена газа в HEX
     gasLimit: string; // Лимит газа в HEX
     from: string; // Адрес отправителя
-  }
+}
+
+export interface TransactionRequestSVM {
+    data: string; 
+}
