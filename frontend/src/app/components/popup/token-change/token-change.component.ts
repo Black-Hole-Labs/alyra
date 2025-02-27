@@ -1,8 +1,10 @@
+
 import { Component, EventEmitter, Output, inject, effect, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { NetworkService } from '../../../services/network.service';
 
 @Component({
   selector: 'app-token-change',

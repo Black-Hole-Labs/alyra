@@ -4,6 +4,11 @@ header{
 	justify-content: space-between;
 	margin-top: 20px;
 }
+.menu{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
 .left{
 	display: flex;
 	align-items: center;
@@ -43,22 +48,25 @@ button.open {
 	background-size: cover;
 	background-repeat: no-repeat;
 }
-div.logo{
+a.logo{
 	width: 65px;
 	height: 65px;
 	background: url(/img/header/logo.png);
 	background-size: cover;
+	cursor: pointer;
 }
 img{
 	height: 65px;
 	width: 65px;
 }
 nav{
-	margin-left: 10px;
+	display: flex;
+	align-items: center;
+	gap: 70px;
+	margin-left: 80px;
 }
 nav a {
 	font-size: 24px;
-	margin-left: 70px;
 	font-family: "JetBrains Mono", monospace;
 	font-weight: 400;
 	color: var(--elem-nonactive);
@@ -77,7 +85,7 @@ nav a.active-link {
 	position: relative; /* Нужно для правильного позиционирования */
 	overflow: visible; /* Позволяем искрам выходить за пределы */
 	padding: 13px;
-	background-color: var(--dark-orange);
+	background-color: var(--dark-violet);
 	border-radius: 14px;
 	display: flex;
 	align-items: center;
@@ -86,18 +94,18 @@ nav a.active-link {
 	transition: 0.2s;
 }
 .gm:hover{
-	background-color: #7F4112;
+	background-color: #581A7F;
 }
 .gm p{
 	font-size: 21px;
 	font-family: "JetBrains Mono", monospace;
 	font-weight: 500;
-	color: var(--orange);
+	color: var(--violet);
 }
 .fire-img{
 	width: 34px;
 	height: 34px;
-	background: url(/img/header/fire.png);
+	background: url(/img/header/ufo.png);
 	background-size: cover;
 	background-repeat: no-repeat;
 }
@@ -109,7 +117,7 @@ nav a.active-link {
 	padding-bottom: 16px;
 	padding-left: 27px;
 	padding-right: 27px;
-	background-color: var(--dark-yellow);
+	background-color: var(--dark-pink);
 	border-radius: 14px;
 	display: flex;
 	align-items: center;
@@ -118,13 +126,13 @@ nav a.active-link {
 	transition: 0.2s;
 }
 .xp:hover{
-	background-color: #7F5F09;
+	background-color: #6D146A;
 }
 .xp p{
 	font-size: 21px;
 	font-family: "JetBrains Mono", monospace;
 	font-weight: 500;
-	color: var(--yellow);
+	color: var(--pink);
 }
 
 /* NETWORK CHANGE */
@@ -133,7 +141,7 @@ nav a.active-link {
 	padding-bottom: 13px;
 	padding-left: 13px;
 	padding-right: 13px;
-	background-color: var(--btn-dark);
+	background-color: rgba(var(--dark-bg), 0.3);
 	border-radius: 14px;
 	display: flex;
 	align-items: center;
@@ -143,7 +151,7 @@ nav a.active-link {
 	transition: 0.2s;
 }
 .network:hover{
-	background-color: var(--elem-nonactive);
+	background-color: rgba(var(--dark-bg), 1);
 }
 button.network-closed {
   background: url(/img/header/open-img.png);
@@ -161,68 +169,48 @@ button.network-open {
 	background-size: cover;
 	background-repeat: no-repeat;
 }
-.network-icon{
-	width: 34px;
-	height: 34px;
+.network-icon {
+  width: 34px;
+  height: 34px;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
-.ethereum{
-	background: url(/img/header/network-menu/ethereum.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-.optimism{
-	background: url(/img/header/network-menu/optimism.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-.arbitrum{
-	background: url(/img/header/network-menu/arbitrum.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-.zksync{
-	background: url(/img/header/network-menu/zksync.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-.scroll{
-	background: url(/img/header/network-menu/scroll.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-.linea{
-	background: url(/img/header/network-menu/linea.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-.mantle{
-	background: url(/img/header/network-menu/mantle.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-.blast{
-	background: url(/img/header/network-menu/blast.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-.bnb{
-	background: url(/img/header/network-menu/bnb.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-.polygon{
-	background: url(/img/header/network-menu/polygon.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-.avalanche{
-	background: url(/img/header/network-menu/avalanche.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-}
+<<<<<<<< HEAD:frontend/src/app/components/header/header.component.css
 
-
+========
+/* WALLET */
+.wallet{
+	padding-top: 14px;
+	padding-bottom: 14px;
+	padding-left: 18px;
+	padding-right: 18px;
+	background-color: rgba(var(--dark-bg), 0.3);
+	border-radius: 14px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: 0.2s;
+}
+.wallet:hover{
+	background-color: rgba(var(--dark-bg), 1);
+}
+.wallet-icon{
+	width: 32px;
+	height: 32px;
+	background: url(/img/header/wallet.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+	margin-right: 16px;
+}
+.wallet p{
+	font-size: 21px;
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 500;
+	color: white;
+}
+>>>>>>>> v0.2:frontend/src/app/components/header/header.component.scss
 
 
 
@@ -243,7 +231,7 @@ button.network-open {
   top: 50%;
   width: 20px;
   height: 20px;
-  background-image: url('/img/animation/fire.png');
+  background-image: url('/img/animation/ufo.png');
   background-size: contain;
   background-repeat: no-repeat;
   transform: translate(-50%, -50%);

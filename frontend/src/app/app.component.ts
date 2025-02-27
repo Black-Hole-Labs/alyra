@@ -8,20 +8,23 @@ import { BlackholeNetworkComponent } from './components/popup/blackhole-network/
 import { Router, NavigationEnd } from '@angular/router';  // Импортируем Router и NavigationEnd
 import { filter } from 'rxjs/operators';
 import { BlockchainConnectComponent } from "./components/blockchain-connect/blockchain-connect.component";
-
+import { RouterModule } from '@angular/router';
+import { PopupService } from './services/popup.service';
+import { ClosePopupsDirective } from './directives/close-popups.directive';
 @Component({
   selector: 'app-root',
   standalone: true,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, BlackholeMenuComponent, CommonModule, BlackholeNetworkComponent, BlockchainConnectComponent]
+  hostDirectives: [ClosePopupsDirective],
+  imports: [RouterOutlet, RouterModule,  HeaderComponent, FooterComponent, BlackholeMenuComponent, CommonModule, BlackholeNetworkComponent, BlockchainConnectComponent]
 })
 export class AppComponent {
   isPopupVisible = false;
   isNetworkPopupVisible = false;
 	selectedNetwork = 'ethereum';
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private popupService: PopupService) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {

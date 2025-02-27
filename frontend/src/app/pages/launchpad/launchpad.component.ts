@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-launchpad',
   standalone: true,
   templateUrl: './launchpad.component.html',
-  styleUrls: ['./launchpad.component.css']
+  styleUrls: ['./launchpad.component.scss']
 })
 export class LaunchpadComponent {
 

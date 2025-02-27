@@ -1,46 +1,72 @@
-<div class="popup-menu">
+<div class="popup-overlay" (click)="closePopup()">
+		<div class="popup-menu">
 
-	<div class="upper">
-		<h6>Menu</h6>
-  <button (click)="closePopup()"></button>
-	</div>
-	
-	<div class="devider">
-		<p>Social</p>
-	<hr>
-	</div>
+			<div class="upper">
+				<h6>Menu</h6>
+				<button (click)="closePopup()"></button>
+			</div>
 
-	<div class="socials">
-		<a href="">
-			<div class="social-img twitter"></div>
-			Twitter
-		</a>
-		<a href="">
-			<div class="social-img telegram"></div>
-			Telegram
-		</a>
-		<a href="">
-			<div class="social-img github"></div>
-			GitHub
-		</a>
-		<a href="">
-			<div class="social-img medium"></div>
-			Medium
-		</a>
-		<a href="">
-			<div class="social-img documentation"></div>
-			Documentation
-		</a>
-	</div>
+			<div class="devider">
+				<p>Overview</p>
+				<hr class="hr1"/>
+			</div>
+		
+			<div class="overview">
+				<a routerLink="/trade">
+					<div class="social-img trade"></div>
+					Trade
+				</a>
+				<a routerLink="/bridge">
+					<div class="social-img bridge"></div>
+					Bridge
+				</a>
+				<a routerLink="/fun">
+					<div class="social-img fun"></div>
+					Fun
+				</a>
+				<a routerLink="/launchpad">
+					<div class="social-img launchpad"></div>
+					Launchpad
+				</a>
+				<a routerLink="/quests">
+					<div class="social-img quests"></div>
+					Rewards
+				</a>
+			</div>
+			
+			<div class="devider devider2">
+				<p>Social</p>
+			<hr class="hr2">
+			</div>
+
+			<div class="socials">
+				<a href="">
+					<div class="social-img twitter"></div>
+					Twitter
+				</a>
+				<a href="">
+					<div class="social-img telegram"></div>
+					Telegram
+				</a>
+				<a href="">
+					<div class="social-img medium"></div>
+					Medium
+				</a>
+				<a routerLink="/documentation">
+					<div class="social-img documentation"></div>
+					Documentation
+				</a>
+			</div>
 
 
-	<div class="devider devider2">
-		<p>Need help?</p>
-		<hr class="hr2">
-	</div>
+			<div class="devider devider2">
+				<p>Need help?</p>
+				<hr class="hr3">
+			</div>
 
-	<a href="">
-		<div class="social-img contact"></div>
-		Contact us
-	</a>
+			<a href="">
+				<div class="social-img contact"></div>
+				Contact us
+			</a>
+		</div>
 </div>

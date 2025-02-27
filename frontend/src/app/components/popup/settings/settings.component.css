@@ -1,11 +1,10 @@
 .settings-popup {
   width: 380px;
-  height: 318px;
+  height: 268px;
   position: fixed;
   top: -1px;
   right: -400px;
-  background-color: black;
-  border: 1px solid var(--elem-nonactive);
+  background-color: rgba(var(--dark-bg), 0.6);
   border-radius: 28px;
   box-sizing: border-box;
   padding: 30px;
@@ -26,9 +25,14 @@
 	height: 19px;
 	width: 19px;
 	background: url(/img/settings/close.png);
+	opacity: 0.3;
 	background-size: cover;
 	background-repeat: no-repeat;
 	cursor: pointer;
+	transition: 0.2s ease-in-out;
+}
+.close-button:hover{
+	opacity: 1;
 }
 .settings-content{
 	display: flex;
@@ -64,7 +68,7 @@
 	font-family: "JetBrains Mono", monospace;
 	font-weight: 500;
 	font-size: 14px;
-	color: var(--elem-nonactive);
+	color: white;
 	padding: 6px 20px;
 	border: 1px solid var(--elem-nonactive);
 	border-radius: 16px;
@@ -97,7 +101,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: black;
 }
 .custom input {
   font-family: "JetBrains Mono", monospace;
@@ -156,7 +159,7 @@
 	border-radius: 16px;
 	font-family: "JetBrains Mono", monospace;
 	font-weight: 500;
-	font-size: 14px;
+	font-size: 18px;
 	color: black;
 	transition: 0.2s;
 }
@@ -164,23 +167,4 @@
 	background-color: var(--elem-nonactive);
 	color: black;
 	cursor: pointer;
-}
-.fee{
-	margin-top: 30px;
-	display: flex;
-	align-items: center;
-	gap: 10px;
-}
-.fee-image{
-	height: 19px;
-	width: 19px;
-	background: url(/img/settings/gas.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-.fee > p{
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 400;
-	font-size: 18px;
-	color: white;
 }

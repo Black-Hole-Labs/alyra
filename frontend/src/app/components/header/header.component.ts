@@ -1,34 +1,148 @@
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Renderer2, EventEmitter, Input, Output } from '@angular/core';
+import { NetworkService } from '../../services/network.service';
+import { BlackholeNetworkComponent } from '../popup/blackhole-network/blackhole-network.component';
+import { BlackholeMenuComponent } from '../popup/blackhole-menu/blackhole-menu.component';
+import { ConnectWalletComponent } from '../popup/connect-wallet/connect-wallet.component';
+import { WalletComponent } from '../popup/wallet/wallet.component';
+import { WalletService } from '../../services/wallet.service';
+import { PopupService } from '../../services/popup.service';
+import { Subscription } from 'rxjs';
+import { Component, ElementRef, Renderer2, EventEmitter, Input, Output, OnInit, OnDestroy } from '@angular/core';
 import { BlockchainConnectComponent } from "../blockchain-connect/blockchain-connect.component";
+
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule, CommonModule, BlockchainConnectComponent],
+  imports: [
+    RouterModule,
+    CommonModule,
+    BlockchainConnectComponent,
+    BlackholeNetworkComponent,
+    BlackholeMenuComponent,
+    ConnectWalletComponent,
+    WalletComponent
+  ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent {
-  @Input() isPopupVisible: boolean = false;
-  @Input() isNetworkPopupVisible: boolean = false;
-  @Input() selectedNetwork: string = 'ethereum';
+export class HeaderComponent implements OnInit, OnDestroy {
+  //@Input() isPopupVisible: boolean = false;
+  //@Input() isNetworkPopupVisible: boolean = false;
+  //@Input() selectedNetwork: string = 'ethereum';
+  @Input() selectedNetwork: { id: string; name: string; icon: string; } | null = null;
   gmCount: number | null = null;
   popupMessage: string = ''; // Сообщение для мини-попапа
   showPopup: boolean = false; // Управление отображением мини-попапа
+  private readonly GM_COUNT_KEY = 'gmCount';
+  private readonly LAST_GM_TIME_KEY = 'lastGmTime';
+  showBlackholeMenu = false;
+  showConnectWalletPopup = false;
+  showWalletPopup = false;
+  walletName: string = 'Connect Wallet';
+  private subscription: Subscription;
 
   @Output() toggleMenu = new EventEmitter<void>();
   @Output() toggleNetwork = new EventEmitter<void>();
 
-  constructor(private renderer: Renderer2, private elRef: ElementRef) {}
+  constructor(
+    private renderer: Renderer2,
+    private elRef: ElementRef,
+    private networkService: NetworkService,
+    public walletService: WalletService,
+    public popupService: PopupService
+  ) {
+    this.walletService.walletName$.subscribe(name => {
+      this.walletName = name || 'Connect Wallet';
+    });
+    this.subscription = this.popupService.activePopup$.subscribe(popupType => {
+      this.showBlackholeMenu = false;
+      this.showConnectWalletPopup = false;
+      this.showWalletPopup = false;
 
-  togglePopup() {
-    this.toggleMenu.emit();
+      switch(popupType) {
+        case 'blackholeMenu':
+          this.showBlackholeMenu = true;
+          break;
+        case 'connectWallet':
+          this.showConnectWalletPopup = true;
+          break;
+        case 'wallet':
+          this.showWalletPopup = true;
+          break;
+      }
+    });
   }
 
-  toggleNetworkPopup() {
-    this.toggleNetwork.emit();
+  ngOnInit() {
+    this.loadGmCount();
+    // Подписываемся на изменения сети
+    this.networkService.selectedNetwork$.subscribe(network => {
+      this.selectedNetwork = network;
+      console.log('Header network updated:', network); // для отладки
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  loadGmCount() {
+    const savedCount = localStorage.getItem(this.GM_COUNT_KEY);
+    const lastGmTime = localStorage.getItem(this.LAST_GM_TIME_KEY);
+
+    if (savedCount && lastGmTime) {
+      const now = new Date().getTime();
+      const timeDiff = now - parseInt(lastGmTime);
+      // Изменяем с 24 на 48 часов (48 * 60 * 60 * 1000 = 172800000 миллисекунд)
+      if (timeDiff > 172800000) {
+        // Прошло больше 48 часов - сбрасываем счетчик
+        localStorage.removeItem(this.GM_COUNT_KEY);
+        localStorage.removeItem(this.LAST_GM_TIME_KEY);
+        this.gmCount = null;
+      } else {
+        this.gmCount = parseInt(savedCount);
+      }
+    }
+  }
+
+  togglePopup(event?: Event): void {
+    // Если есть событие, предотвращаем его всплытие
+    if (event) {
+      event.stopPropagation();
+    }
+
+    const currentPopup = this.popupService.getCurrentPopup();
+    console.log('Current popup:', currentPopup);
+
+    if (currentPopup === 'blackholeMenu') {
+      console.log('Closing blackholeMenu');
+      this.popupService.closeAllPopups();
+    } else {
+      console.log('Opening blackholeMenu');
+      this.popupService.openPopup('blackholeMenu');
+    }
+  }
+
+  get isNetworkPopupVisible(): boolean {
+    return this.popupService.getCurrentPopup() === 'networkPopup';
+  }
+
+  toggleNetworkPopup(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+
+    const currentPopup = this.popupService.getCurrentPopup();
+    
+    if (currentPopup === 'networkPopup') {
+      this.popupService.closePopup('networkPopup');
+    } else {
+      this.popupService.openPopup('networkPopup');
+    }
   }
 
   incrementGmCount() {
@@ -94,7 +208,7 @@ export class HeaderComponent {
 
       // Устанавливаем начальную позицию
       this.renderer.setStyle(spark, 'background-color', ''); // Убедитесь, что нет фона
-      this.renderer.setStyle(spark, 'background-image', 'url("/img/animation/fire.png")');
+      this.renderer.setStyle(spark, 'background-image', 'url("/img/animation/ufo.png")');
       this.renderer.setStyle(spark, 'background-size', 'contain');
       this.renderer.setStyle(spark, 'border-radius', '0');
       this.renderer.setStyle(spark, 'box-shadow', 'none');
@@ -125,5 +239,71 @@ export class HeaderComponent {
 
       requestAnimationFrame(animate);
     }
+  }
+
+  selectNetwork(network: { id: string; name: string; icon: string }): void {
+    console.log('Header selecting network:', network); // для отладки
+    this.networkService.setSelectedNetwork(network);
+    this.popupService.closePopup('networkPopup');
+  }
+
+  openConnectWalletPopup(): void {
+		if (this.walletService.isConnected()) {
+			this.popupService.openPopup('wallet');
+		} else {
+			this.popupService.openPopup('connectWallet');
+		}
+	}
+
+  closeConnectWalletPopup(): void {
+    this.showConnectWalletPopup = false;
+  }
+
+  openWalletPopup(): void {
+    this.showConnectWalletPopup = false; // закрываем connect-wallet попап
+    this.showWalletPopup = true;
+  }
+
+  closeWalletPopup(): void {
+    this.showWalletPopup = false;
+  }
+
+  onWalletDisconnect(): void {
+    this.walletService.disconnect();
+    this.showWalletPopup = false;
+    this.showConnectWalletPopup = true;
+  }
+
+  openMenu(): void {
+    this.popupService.openPopup('blackholeMenu');
+  }
+
+  closeMenu(): void {
+    this.showConnectWalletPopup = false;
+  }
+
+  openConnectWallet(): void {
+    this.popupService.openPopup('connectWallet');
+  }
+
+  closeConnectWallet(): void {
+    this.showConnectWalletPopup = false;
+  }
+
+  openWallet(): void {
+    this.popupService.openPopup('wallet');
+  }
+
+  closeWallet(): void {
+    this.showWalletPopup = false;
+  }
+
+  closeAllPopups(): void {
+    this.popupService.closeAllPopups();
+  }
+
+  // Геттер для проверки состояния blackholeMenu
+  get isPopupVisible(): boolean {
+    return this.popupService.getCurrentPopup() === 'blackholeMenu';
   }
 }

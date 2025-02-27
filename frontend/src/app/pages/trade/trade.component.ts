@@ -9,6 +9,10 @@ import { TransactionsService } from '../../services/transactions.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
 import { ethers, parseUnits, ZeroAddress } from 'ethers';
+import { TokenChangeBuyComponent } from '../../components/popup/token-change-buy/token-change-buy.component';
+import { WalletService } from '../../services/wallet.service';
+import { ConnectWalletComponent } from '../../components/popup/connect-wallet/connect-wallet.component';
+import { PopupService } from '../../services/popup.service';
 export interface Token {
   symbol: string;
   imageUrl: string;
@@ -16,15 +20,18 @@ export interface Token {
   decimals: string;
 }
 
+
 @Component({
   selector: 'app-trade',
   standalone: true,
   templateUrl: './trade.component.html',
-  styleUrls: ['./trade.component.css'],
+  styleUrls: ['./trade.component.scss'],
   imports: [
     FormsModule,
     CommonModule,
     TokenChangePopupComponent,
+    TokenChangeBuyComponent,
+    ConnectWalletComponent,
     SettingsComponent, // Добавляем SettingsComponent в imports
   ],
 })
@@ -34,6 +41,7 @@ export class TradeComponent {
   //validatedSellAmount: string = ''; 
   validatedSellAmount = signal<string>('');
   loading = signal<boolean>(false);
+
   buyAmount: string = ''; // Значение для поля покупки, рассчитывается автоматически
   price: number = 0.5637; // Цена обмена
   priceUsd: number = 921244; // Текущая стоимость в USD за единицу
@@ -46,9 +54,10 @@ export class TradeComponent {
   // Управление попапами
   showTokenPopup = false; // Управляет отображением попапа для sell
   showTokenBuyPopup = false; // Управляет отображением попапа для buy
-	showSettingsPopup = false; // Управляет отображением попапа для settings
+	//showSettingsPopup = false; // Управляет отображением попапа для settings
   selectedToken = signal<Token | undefined>(undefined);
   selectedBuyToken = signal<Token | undefined>(undefined);
+  showConnectWalletPopup: boolean = false;
   //selectedToken = 'ETH'; // Текущий выбранный токен для sell
   //selectedBuyToken = 'USDT'; // Текущий выбранный токен для buy
   //selectedTokenImage = '/img/trade/eth.png'; // Изображение для sell
@@ -78,12 +87,15 @@ export class TradeComponent {
 
   private inputTimeout: any;
 
+
   constructor(
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
     private blockchainStateService: BlockchainStateService,
     private walletBalanceService: WalletBalanceService,
-    private transactionsService: TransactionsService
+    private transactionsService: TransactionsService,
+    private walletService: WalletService,
+    public popupService: PopupService
   ) {
     effect(() => {
       if (this.allFieldsReady()) {
@@ -285,13 +297,17 @@ export class TradeComponent {
   }
 
 	// Settings popup
-	toggleSettingsPopup(): void {
-		this.showSettingsPopup = !this.showSettingsPopup;
-	}
+  toggleSettingsPopup(): void {
+    if (this.showSettingsPopup) {
+      this.popupService.closePopup('settings');
+    } else {
+      this.popupService.openPopup('settings');
+    }
+  }
 
 	onSlippageSave(value: string): void {
     this.slippage = value;
-    this.showSettingsPopup = false; // Закрываем popup после сохранения
+    //this.showSettingsPopup = false; // Закрываем popup после сохранения
   }
 
   async swap() {
@@ -468,8 +484,24 @@ export class TradeComponent {
 
   }
 
+  isSwapButtonActive(): boolean {
+    return !!(this.sellAmount && Number(this.sellAmount) > 0);
+  }
+
+  isWalletConnected(): boolean {
+    return this.walletService.isConnected();
+  }
+
+  openConnectWalletPopup(): void {
+    this.showConnectWalletPopup = true;
+  }
+
   parseToAmount(toAmount: string, decimals: number): string {
     return (Number(toAmount) / Math.pow(10, decimals)).toFixed(6);
+  }
+
+  get showSettingsPopup(): boolean {
+    return this.popupService.getCurrentPopup() === 'settings';
   }
 
   parseGasPriceUSD(gasPriceHex: string, gasLimitHex: string, token: { decimals: number; priceUSD: string }): string {
@@ -489,4 +521,9 @@ export class TradeComponent {
     // Форматируем результат
     return gasCostUSD.toFixed(2); // Округляем до 2 знаков после запятой
   }
+
+  closeConnectWalletPopup(): void {
+    this.showConnectWalletPopup = false;
+  }
+  
 }

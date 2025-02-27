@@ -1,0 +1,240 @@
+.bridge-tx {
+	width: 681px;
+	height: auto;
+	position: fixed;
+	top: 148px;
+	left: 50%;
+	transform: translate(-50%, 0%);
+	background-color: black;
+	border: 1px solid var(--elem-nonactive);
+	border-radius: 28px;
+	box-sizing: border-box;
+	padding: 40px;
+	.header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+		.heading{
+			display: flex;
+			align-items: center;
+			justify-content: flex-start;
+			gap: 10px;
+			.icon-bridge {
+				background-image: url(/img/bridge/icon-bridge.png);
+				background-size: cover;
+				background-repeat: no-repeat;
+				height: 24px;
+				width: 24px;
+			}
+			h3 {
+				font-family: "JetBrains Mono", monospace;
+				font-weight: 500;
+				font-size: 32px;
+				color: white;
+			}
+		}
+		.close-button {
+			height: 30px;
+			width: 30px;
+			background: url(/img/trade/close-icon30px.png);
+			background-size: cover;
+			background-repeat: no-repeat;
+			cursor: pointer;
+		}
+	}
+	.tx-visualization {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: 76px;
+		gap: 190px;
+		.left-network {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			.network-icon-left {
+				background-image: url(/img/header/network-menu/ethereum.png);
+				background-size: cover;
+				background-repeat: no-repeat;
+				height: 105px;
+				width: 105px;
+			}
+			h4 {
+				font-family: "JetBrains Mono", monospace;
+				font-weight: 500;
+				font-size: 22px;
+				color: white;
+				margin-top: 22px;
+			}
+			.explorer-link {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				margin-top: 8px;
+				a {
+					font-family: "JetBrains Mono", monospace;
+					font-weight: 500;
+					font-size: 18px;
+					color: var(--elem-nonactive);
+					transition: 0.2s;
+				}
+				a:hover {
+					color: white;
+				}
+				.image-link {
+					background-image: url(/img/bridge/link.png);
+					background-size: cover;
+					background-repeat: no-repeat;
+					height: 28px;
+					width: 9px;
+				}
+			}
+		}
+		.token-icon {
+			width: 34px;
+			height: 34px;
+			background-size: cover;
+			background-repeat: no-repeat;
+			position: absolute;
+			left: 335px;
+			top: 290px;
+			transform-origin: 0 105px;
+			animation: moveToken 5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+		}
+		@keyframes moveToken {
+			0% {
+				opacity: 1;
+				transform: rotate(-35deg) translateY(-105px);
+			}
+			
+			85% {
+				opacity: 1;
+				transform: rotate(28deg) translateY(-105px);
+			}
+			
+			90% {
+				opacity: 0;
+				transform: rotate(28deg) translateY(-105px);
+			}
+			
+			91% {
+				opacity: 0;
+				transform: rotate(-35deg) translateY(-105px);
+			}
+			
+			100% {
+				opacity: 1;
+				transform: rotate(-35deg) translateY(-105px);
+			}
+		}
+		.line {
+			background-image: url(/img/bridge/bridge-line.png);
+			background-size: cover;
+			background-repeat: no-repeat;
+			height: 53px;
+			width: 234px;
+			position: absolute;
+			left: 220px;
+			top: 200px;
+		}
+		.right-network {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			.network-icon-right {
+				background-image: url(/img/header/network-menu/arbitrum.png);
+				background-size: cover;
+				background-repeat: no-repeat;
+				height: 105px;
+				width: 105px;
+			}
+			h4 {
+				font-family: "JetBrains Mono", monospace;
+				font-weight: 500;
+				font-size: 22px;
+				color: white;
+				margin-top: 22px;
+			}
+			.explorer-link {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				margin-top: 8px;
+				a {
+					font-family: "JetBrains Mono", monospace;
+					font-weight: 500;
+					font-size: 18px;
+					color: var(--elem-nonactive);
+					transition: 0.2s;
+				}
+				a:hover {
+					color: white;
+				}
+				.image-link {
+					background-image: url(/img/bridge/link.png);
+					background-size: cover;
+					background-repeat: no-repeat;
+					height: 28px;
+					width: 9px;
+				}
+			}
+		}
+	}
+	.tx-info {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 25px;
+		margin-top: 57px;
+		.elem {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			width: 100%;
+			h6 {
+				font-family: "JetBrains Mono", monospace;
+				font-weight: 500;
+				font-size: 20px;
+				color: white;
+			}
+			.tx-status {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 90px;
+				height: 26px;
+				background-color: var(--dark-yellow);
+				border-radius: 10px;
+				p {
+					font-family: "JetBrains Mono", monospace;
+					font-weight: 400;
+					font-size: 14px;
+					color: var(--yellow);
+				}
+			}
+			p {
+				font-family: "JetBrains Mono", monospace;
+				font-weight: 500;
+				font-size: 20px;
+				color: white;
+			}
+		}
+	}
+	.view-tx-button {
+		width: 100%;
+		height: 72px;
+		background-color: var(--elem-nonactive);
+		border-radius: 16px;
+		font-family: "JetBrains Mono", monospace;
+		font-weight: 500;
+		font-size: 21px;
+		color: white;
+		cursor: pointer;
+		transition: 0.2s;
+		margin-top: 52px;
+		&:hover {
+			background-color: var(--dark-select);
+		}
+	}
+}

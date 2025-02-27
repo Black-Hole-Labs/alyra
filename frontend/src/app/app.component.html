@@ -1,17 +1,5 @@
-<app-header 
-  [isPopupVisible]="isPopupVisible" 
-  [isNetworkPopupVisible]="isNetworkPopupVisible"
-  [selectedNetwork]="selectedNetwork"
-  (toggleMenu)="togglePopup()"
-  (toggleNetwork)="toggleNetworkPopup()">
-</app-header>
 
+<app-header></app-header>
 <router-outlet></router-outlet>
-
-<app-blackhole-menu *ngIf="isPopupVisible" (close)="togglePopup()"></app-blackhole-menu>
-
-<app-blackhole-network *ngIf="isNetworkPopupVisible" 
-                       (networkSelected)="onNetworkSelected($event)"
-                       (close)="toggleNetworkPopup()"></app-blackhole-network>
-
 <app-footer></app-footer>
+

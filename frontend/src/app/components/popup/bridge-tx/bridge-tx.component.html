@@ -1,0 +1,55 @@
+<div class="bridge-tx">
+  <div class="header">
+		<div class="heading">
+			<div class="icon-bridge"></div>
+      <h3>Transaction overview</h3>
+		</div>
+    <button class="close-button" (click)="closePopup()"></button>
+  </div>
+  
+	<div class="tx-visualization">
+		<div class="left-network">
+			<div class="network-icon-left" [style.backgroundImage]="'url(' + selectedNetworkImage + ')'"></div>
+			<h4>{{ selectedNetwork }}</h4>
+			<div class="explorer-link">
+				<a href="">View on Explorer</a>
+				<div class="image-link"></div>
+			</div>
+		</div>
+
+		<div class="line"></div>
+		<div class="token-icon" [style.backgroundImage]="'url(' + selectedToken.imageUrl + ')'"></div>
+
+		<div class="right-network">
+			<div class="network-icon-right" [style.backgroundImage]="'url(' + selectedNetworkToImage + ')'"></div>
+			<h4>{{ selectedNetworkTo }}</h4>
+			<div class="explorer-link">
+				<a href="">View on Explorer</a>
+				<div class="image-link"></div>
+			</div>
+		</div>
+	</div>
+
+  <div class="tx-info">
+		<div class="elem">
+			<h6>Status</h6>
+			<div class="tx-status">
+				<p>Pending</p>
+			</div>
+		</div>
+		<div class="elem">
+			<h6>Value</h6>
+			<p>{{ inputAmount || '0' }} {{ selectedToken.symbol }}</p>
+		</div>
+		<div class="elem">
+			<h6>Fee</h6>
+			<p>0.0003 ETH</p>
+		</div>
+		<div class="elem">
+			<h6>Total time</h6>
+			<p>00:00:03</p>
+		</div>
+	</div>
+
+	<button class="view-tx-button">View on Transaction page</button>
+</div>
