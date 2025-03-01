@@ -13,7 +13,7 @@ export class WalletBalanceService {
     this.solanaConnection = new Connection(this.solanaRpcUrl, 'confirmed');
   }
 
-  async getEvmBalance(walletAddress: string, providerUrl: string, tokenAddress?: string | null): Promise<string> {
+  async getEvmBalance(walletAddress: string, providerUrl: string, decimals: number,  tokenAddress?: string | null): Promise<string> {
     // console.log(`getEvmBalance(). Wallet: ${walletAddress}, Provider: ${providerUrl}, Token address (can be null): ${tokenAddress}`);
   
     const provider = new ethers.JsonRpcProvider(providerUrl);
@@ -22,8 +22,8 @@ export class WalletBalanceService {
       const abi = ["function balanceOf(address owner) view returns (uint256)"];
       const tokenContract = new ethers.Contract(tokenAddress, abi, provider);
       const balance = await tokenContract["balanceOf"](walletAddress);
-      console.log(`Token Balance: `, ethers.formatUnits(balance, 18));
-      return ethers.formatUnits(balance, 18);
+      console.log(`Token Balance: `, ethers.formatUnits(balance, decimals));
+      return ethers.formatUnits(balance, decimals);
     } else {
       const balance = await provider.getBalance(walletAddress);
       const ret = ethers.formatEther(balance);

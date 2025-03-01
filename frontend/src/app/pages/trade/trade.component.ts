@@ -263,10 +263,10 @@ export class TradeComponent {
         }
   
         if (token.symbol === "ETH") {
-          const balance = await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0]);
+          const balance = await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals));
           return balance;
         } else {
-          return await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], token.contractAddress);
+          return await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals), token.contractAddress);
         }
       } catch (error) {
         console.error(`Error loading networks`);

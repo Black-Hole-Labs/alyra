@@ -50,6 +50,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
         const { address } = await this.evmProvider.connect(this.evmProviderInstance);
         this.currentNetwork = 'EVM';
         console.log(`Connected to EVM address: `, address);
+        this.address = address;
       }
       await this.evmProvider.switchNetwork(selectedNetwork);
       this.network = await this.evmProvider.getNetwork() || '';
@@ -63,6 +64,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
         const { address } = await this.svmProvider.connect(this.svmProviderInstance);
         this.currentNetwork = 'SVM';
         console.log(`Connected to SVM address: `, address);
+        this.address = address;
       }
       await this.svmProvider.switchNetwork(selectedNetwork); 
       this.network = await this.svmProvider.getNetwork() || '';

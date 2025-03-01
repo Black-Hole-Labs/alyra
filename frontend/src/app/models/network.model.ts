@@ -93,7 +93,7 @@ export class MagicEdenProvider extends MultiChainWalletProvider {
   constructor(walletManager: WalletProviderManager) {
     super();
     this.evmProviderInstance = walletManager.getMagicEdenProvider();
-    this.svmProviderInstance = (window as any).magicEden.solana;
+    this.svmProviderInstance = (window as any).magicEden?.solana;
   }
 }
 
@@ -101,7 +101,7 @@ export class TrustWalletProvider extends MultiChainWalletProvider {
   constructor() {
     super();
     this.evmProviderInstance = window.trustwallet;
-    this.svmProviderInstance = (window as any).trustwallet.solana;
+    this.svmProviderInstance = (window as any).trustwallet?.solana;
   }
 }
 
@@ -109,7 +109,7 @@ export class OkxWalletProvider extends MultiChainWalletProvider {
   constructor() {
     super();
     this.evmProviderInstance = window.okexchain;
-    this.svmProviderInstance = (window as any).okexchain.solana;
+    this.svmProviderInstance = (window as any).okexchain?.solana;
   }
 }
 
