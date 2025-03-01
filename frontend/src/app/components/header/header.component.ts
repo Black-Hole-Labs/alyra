@@ -8,8 +8,9 @@ import { WalletComponent } from '../popup/wallet/wallet.component';
 import { WalletService } from '../../services/wallet.service';
 import { PopupService } from '../../services/popup.service';
 import { Subscription } from 'rxjs';
-import { Component, ElementRef, Renderer2, EventEmitter, Input, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, Renderer2, EventEmitter, Input, Output, OnInit, OnDestroy, computed } from '@angular/core';
 import { BlockchainConnectComponent } from "../blockchain-connect/blockchain-connect.component";
+import { BlockchainStateService } from '../../services/blockchain-state.service';
 
 
 @Component({
@@ -25,13 +26,13 @@ import { BlockchainConnectComponent } from "../blockchain-connect/blockchain-con
     WalletComponent
   ],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css'],
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   //@Input() isPopupVisible: boolean = false;
   //@Input() isNetworkPopupVisible: boolean = false;
   //@Input() selectedNetwork: string = 'ethereum';
-  @Input() selectedNetwork: { id: string; name: string; icon: string; } | null = null;
+  //@Input() selectedNetwork: { id: string; name: string; icon: string; } | null = null;
   gmCount: number | null = null;
   popupMessage: string = ''; // Сообщение для мини-попапа
   showPopup: boolean = false; // Управление отображением мини-попапа
@@ -49,7 +50,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     private renderer: Renderer2,
     private elRef: ElementRef,
-    private networkService: NetworkService,
+    //private networkService: NetworkService,
+    private blockchainStateService: BlockchainStateService,
     public walletService: WalletService,
     public popupService: PopupService
   ) {
@@ -75,13 +77,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
+  selectedNetwork = computed(() => {
+    const tokens = this.blockchainStateService.network();
+    return tokens;
+  });
+
   ngOnInit() {
     this.loadGmCount();
     // Подписываемся на изменения сети
-    this.networkService.selectedNetwork$.subscribe(network => {
-      this.selectedNetwork = network;
-      console.log('Header network updated:', network); // для отладки
-    });
+    // this.networkService.selectedNetwork$.subscribe(network => {
+    //   this.selectedNetwork = network;
+    //   console.log('Header network updated:', network); // для отладки
+    // });
   }
 
   ngOnDestroy() {
@@ -116,7 +123,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     const currentPopup = this.popupService.getCurrentPopup();
-    console.log('Current popup:', currentPopup);
 
     if (currentPopup === 'blackholeMenu') {
       console.log('Closing blackholeMenu');
@@ -241,11 +247,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  selectNetwork(network: { id: string; name: string; icon: string }): void {
-    console.log('Header selecting network:', network); // для отладки
-    this.networkService.setSelectedNetwork(network);
-    this.popupService.closePopup('networkPopup');
-  }
+  // selectNetwork(network: { id: string; name: string; icon: string }): void {
+  //   console.log('Header selecting network:', network); // для отладки
+  //   this.networkService.setSelectedNetwork(network);
+  //   this.popupService.closePopup('networkPopup');
+  // }
 
   openConnectWalletPopup(): void {
 		if (this.walletService.isConnected()) {

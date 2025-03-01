@@ -10,7 +10,7 @@ import { NetworkService } from '../../../services/network.service';
   selector: 'app-token-change',
   standalone: true,
   templateUrl: './token-change.component.html',
-  styleUrls: ['./token-change.component.css'],
+  styleUrls: ['./token-change.component.scss'],
   imports: [CommonModule, FormsModule, ScrollingModule],
 })
 export class TokenChangePopupComponent {

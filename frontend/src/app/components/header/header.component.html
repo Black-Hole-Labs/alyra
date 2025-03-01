@@ -31,19 +31,12 @@
 			{{ popupMessage }}
 		</div>
 
-		<!-- <div (click)="toggleNetworkPopup()" class="network">
-			<div class="network-icon" [ngClass]="selectedNetwork"></div>
-			<button (click)="toggleNetworkPopup()" [ngClass]="{'network-open': isNetworkPopupVisible, 'network-closed': !isNetworkPopupVisible}"></button>
-		</div>
 
-		<div class="wallet">
-			<div class="wallet-icon"></div>
-			<p class="">Connect Wallet</p>
-			
-		</div>
-		<app-blockchain-connect></app-blockchain-connect>
+							<!-- dev -->
+		 
+		<!-- <app-blockchain-connect></app-blockchain-connect> -->
 
-	</div> -->
+	<!-- </div>  -->
 		<!-- XP WIDGET -->
 		<div class="xp" *ngIf="walletService.isConnected()">
 			<p>0 XP</p>
@@ -51,9 +44,9 @@
 
 		<!-- NETWORK CHANGE -->
 		<div (click)="toggleNetworkPopup($event)" class="network">
-			<div class="network-icon" 
-				[style.background-image]="'url(' + selectedNetwork?.icon + ')'">
-			</div>
+			<!-- <div class="network-icon" 
+				[style.background-image]="'url(' + selectedNetwork()?.icon + ')'">
+			</div> -->
 			<button (click)="toggleNetworkPopup($event)" 
 				[ngClass]="{'network-open': isNetworkPopupVisible, 'network-closed': !isNetworkPopupVisible}">
 			</button>
@@ -72,7 +65,6 @@
 <!-- Добавляем компонент BlackholeNetwork -->
 <app-blackhole-network
 	*ngIf="isNetworkPopupVisible"
-	(networkSelected)="selectNetwork($event)"
 	(close)="toggleNetworkPopup()">
 </app-blackhole-network>
 

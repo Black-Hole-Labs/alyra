@@ -11,19 +11,19 @@ export class PopupService {
   activePopup$ = this.activePopupSubject.asObservable();
 
   openPopup(popupType: PopupType): void {
-    console.log('Opening popup:', popupType);
+    //console.log('Opening popup:', popupType);
     this.activePopupSubject.next(popupType);
   }
 
   closePopup(popupType: PopupType): void {
-    console.log('Closing popup:', popupType);
+    //console.log('Closing popup:', popupType);
     if (this.activePopupSubject.value === popupType) {
       this.activePopupSubject.next('none');
     }
   }
 
   closeAllPopups(): void {
-    console.log('Closing all popups');
+    //console.log('Closing all popups');
     this.activePopupSubject.next('none');
   }
 

@@ -15,7 +15,6 @@ export class ClosePopupsDirective {
 
     // Проверяем, есть ли открытый попап
     const currentPopup = this.popupService.getCurrentPopup();
-    console.log('Current popup:', currentPopup);
 
     // Если нет открытого попапа, не нужно ничего делать
     if (currentPopup === 'none') {
@@ -25,8 +24,8 @@ export class ClosePopupsDirective {
     const isPopupClick = target.closest('.popup-overlay, .popup-menu, .connect-wallet, .settings-popup, .wallet-popup, .network-popup');
     const isToggleClick = target.closest('.settings, .wallet, .network, button[class*="open"], button[class*="closed"], h3, .menu');
 
-    console.log('isPopupClick:', isPopupClick);
-    console.log('isToggleClick:', isToggleClick);
+    //console.log('isPopupClick:', isPopupClick);
+    //console.log('isToggleClick:', isToggleClick);
 
     if (!isPopupClick && !isToggleClick) {
       console.log('Closing all popups');

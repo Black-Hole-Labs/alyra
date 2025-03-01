@@ -106,7 +106,7 @@
         </div>
       </div>
 
-      <!-- <button class="main-button"   dev
+      <button class="main-button"   
       (click)="swap()"
       [disabled]="!swapButtonValidation() || loading()"
       >
@@ -127,9 +127,9 @@
       <div class="gas-fee" *ngIf="sellAmount">
         <p>Gas fee:</p>
         <p>$0.214</p>
-      </div> -->
-
-      <button 
+      </div>
+ <!-- //////////////////////////////// -->
+      <!-- <button 
         class="main-button" 
         *ngIf="isWalletConnected(); else connectWallet"
         [class.inactive]="!isSwapButtonActive()"
@@ -161,7 +161,7 @@
 					<div class="gas-img"></div>
 					<p class="gas-text">0.21</p>
 				</div>
-			</div>
+			</div> -->
 
     </div>
   </div>

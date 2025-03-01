@@ -43,10 +43,10 @@ export class BlockchainStateService {
     {
       throw new Error(`Invalid providerType: ${type}`);
     }
-    else
-    {
-      console.log(`Set Provider Type: ${type} for provider: ${id}`);
-    }
+    // else
+    // {
+    //   console.log(`Set Provider Type: ${type} for provider: ${id}`);
+    // }
 
     this.providers[id] = { provider, type };
   }
