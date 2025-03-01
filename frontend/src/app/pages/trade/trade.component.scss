@@ -305,6 +305,9 @@ p{
 .main-button:hover{
 	background-color: var(--elem-nonactive);
 }
+.main-button:disabled{
+	opacity: 0.3;
+}
 
 .info{
 	display: flex;

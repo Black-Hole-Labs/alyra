@@ -78,7 +78,7 @@ export class TradeComponent {
   );
 
   allFieldsReady = computed(() =>
-    !!this.blockchainStateService.network &&
+    !!this.blockchainStateService.network() &&
     !!this.blockchainStateService.walletAddress() &&
     this.selectedToken() !== undefined &&
     this.selectedBuyToken() !== undefined &&
@@ -311,8 +311,8 @@ export class TradeComponent {
   }
 
   async swap() {
-    this.loading.set(true);
-    console.log("a");
+    //this.loading.set(true);
+    
     if(this.blockchainStateService.network() === "1151111081099710")
     {
       console.log("b");
@@ -326,7 +326,7 @@ export class TradeComponent {
     
 
     //todo check for status from lifi
-    this.loading.set(false);
+    //this.loading.set(false);
   }
 
   async svmSwap() {
