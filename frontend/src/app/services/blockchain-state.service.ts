@@ -1,4 +1,5 @@
 import { Injectable, signal, effect, computed } from '@angular/core';
+import { Network } from '../models/wallet-provider.interface';
 
 @Injectable({ providedIn: 'root' })
 export class BlockchainStateService {
@@ -8,10 +9,12 @@ export class BlockchainStateService {
 
   // Сигналы состояния
   readonly walletAddress = signal<string | null>(null); // Адрес кошелька
-  readonly network = signal<string | null>(null); // Выбранная сеть
+  readonly network = signal<Network | null>(null); // Выбранная сеть
   readonly connected = signal<boolean>(false); // Статус подключения
   searchText = signal<string>('');
   // filteredTokens = [...this.tokens];
+
+  networks = signal<Network[]>([]);
 
   tokens = signal<{ symbol: string; name: string; contractAddress: string; imageUrl: string; decimals: string }[]>([]);
 
@@ -19,7 +22,9 @@ export class BlockchainStateService {
 
   constructor() {
     // Эффект для обновления статуса подключения
-    this.loadTokensForNetwork("1");
+    //this.loadTokensForNetwork("1");
+    this.loadNetworks("EVM", true);
+
 
     effect(() => {
       this.connected.set(this.walletAddress() !== null);
@@ -28,7 +33,8 @@ export class BlockchainStateService {
     // Эффект для загрузки токенов при изменении сети
     effect(() => {
       if (this.network()) {
-        this.loadTokensForNetwork(this.network()!);
+        console.log(this.network());
+        this.loadTokensForNetwork(this.network()!.id);
       }
     });
   }
@@ -73,7 +79,7 @@ export class BlockchainStateService {
   }
 
   // Методы управления состоянием
-  private loadTokensForNetwork(network: string): void {
+  private loadTokensForNetwork(network: number): void {
     fetch(`/data/tokens.json`)
       .then((response) => {
         if (!response.ok) {
@@ -82,6 +88,8 @@ export class BlockchainStateService {
         return response.json();
       })
       .then((data) => {
+        console.log("data",data);
+        console.log("network",network);
         const tokensForNetwork = data.tokensEVM[network] || data.tokensSVM[network];
 
         if (tokensForNetwork) {
@@ -108,6 +116,30 @@ export class BlockchainStateService {
       });
   }
 
+  private async loadNetworks(type: string, force?: boolean): Promise<void> {
+      try {
+        const response = await fetch('/data/networks.json');
+        const allNetworks: any[] = await response.json();
+  
+        if (type === 'multichain') { // Both EVM and SVM
+          this.networks.set(allNetworks);
+        } else {
+          this.networks.set(allNetworks.filter(
+            (network: Network) => network.chainType === type
+          ));
+        }
+
+        if(force){          
+          this.updateNetwork("1");
+          console.log("this.network());",this.network());
+        }
+  
+        console.log("this.networks",this.networks);
+      } catch (error) {
+        console.error('Failed to load networks:', error);
+      }
+  }
+
   updateWalletAddress(address: string | null): void {
     this.walletAddress.set(address);
   }
@@ -116,11 +148,12 @@ export class BlockchainStateService {
     return this.walletAddress();
   }
 
-  updateNetwork(networkId: string): void {
-    this.network.set(networkId);
+  updateNetwork(chainId: string): void {
+    const foundNetwork = this.networks().find(n => Number(n.id) === Number(chainId));
+    this.network.set(foundNetwork ?? null);
   }
 
-  getCurrentNetworkId(): string | null {
+  getCurrentNetworkId(): Network | null {
     return this.network();
   }
 

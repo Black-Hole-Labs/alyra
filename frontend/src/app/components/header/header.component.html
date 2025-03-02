@@ -44,9 +44,9 @@
 
 		<!-- NETWORK CHANGE -->
 		<div (click)="toggleNetworkPopup($event)" class="network">
-			<!-- <div class="network-icon" 
-				[style.background-image]="'url(' + selectedNetwork()?.icon + ')'">
-			</div> -->
+			<div class="network-icon" 
+				[style.background-image]="'url(' + selectedNetwork()?.logoURI + ')'">
+			</div>
 			<button (click)="toggleNetworkPopup($event)" 
 				[ngClass]="{'network-open': isNetworkPopupVisible, 'network-closed': !isNetworkPopupVisible}">
 			</button>
@@ -82,9 +82,9 @@
     (openWallet)="openWallet()">
   </app-connect-wallet>
 
-  <app-wallet 
+  <!-- <app-wallet 
     *ngIf="activePopup === 'wallet'"
     (close)="closeAllPopups()">
-  </app-wallet>
+  </app-wallet> -->
 
 </ng-container>

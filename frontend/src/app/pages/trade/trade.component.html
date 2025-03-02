@@ -60,7 +60,7 @@
 
           <div class="balance">
             <p>Balance:</p>
-            <p id="balance">{{ balance }}</p>
+            <p id="balance">{{ balance() }}</p>
             <p>${{ selectedToken()?.symbol }}</p>
 
             <button class="max" (click)="setMaxSellAmount()">MAX</button>
@@ -100,7 +100,7 @@
 
           <div class="balance">
             <p>Balance:</p>
-            <p id="balance">{{ balanceBuy }}</p>
+            <p id="balance">{{ balanceBuy() }}</p>
             <p>${{ selectedBuyToken()?.symbol }}</p>
           </div>
         </div>

@@ -6,10 +6,11 @@ export interface WalletProvider {
 }
 
 export interface Network {
-    id: string;
+    id: number;
     name: string;
     rpcUrls: string;
     chainId: string;
+    logoURI?: string;
     chainType: string; // Тип сети (EVM, SVM)
 }
 

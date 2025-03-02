@@ -78,8 +78,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   selectedNetwork = computed(() => {
-    const tokens = this.blockchainStateService.network();
-    return tokens;
+    const networks = this.blockchainStateService.network();
+    return networks;
   });
 
   ngOnInit() {

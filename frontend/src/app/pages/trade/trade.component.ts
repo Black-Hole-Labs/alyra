@@ -46,8 +46,8 @@ export class TradeComponent {
   price: number = 0.5637; // Цена обмена
   priceUsd: number = 921244; // Текущая стоимость в USD за единицу
   sellPriceUsd: string = ''; // Значение для отображения стоимости продажи в USD
-  balance: number = 0.0; // Баланс пользователя для продажи
-  balanceBuy: number = 0.0; // Баланс пользователя для покупки
+  balance = signal<number>(0.0); // Баланс пользователя для продажи
+  balanceBuy = signal<number>(0.0); // Баланс пользователя для покупки
   rotationCount: number = 0; // Счетчик для отслеживания вращений
 	slippage: string = 'Auto'; // Значение для отображения Slippage
 
@@ -100,6 +100,32 @@ export class TradeComponent {
     effect(() => {
       if (this.allFieldsReady()) {
         this.getTxData();
+      }
+    });
+
+    effect(() => {
+      if (this.blockchainStateService.connected() && this.selectedToken()) {
+        this.getBalanceForToken(this.selectedToken()!)
+        .then((balanceStr) => {
+          this.balance.set(parseFloat(balanceStr));
+        })
+        .catch((error) => {
+          console.error('Ошибка получения баланса', error);
+          this.balance.set(0.0);
+        });
+      }
+    });
+
+    effect(() => {
+      if (this.blockchainStateService.connected() && this.selectedBuyToken()) {
+        this.getBalanceForToken(this.selectedBuyToken()!)
+        .then((balanceStr) => {
+          this.balance.set(parseFloat(balanceStr));
+        })
+        .catch((error) => {
+          console.error('Ошибка получения баланса', error);
+          this.balance.set(0.0);
+        });
       }
     });
 
@@ -221,7 +247,7 @@ export class TradeComponent {
   async onTokenSelected(token: { symbol: string; imageUrl: string; contractAddress: string; decimals: string }): Promise<void> {
     this.txData.set(undefined);
     this.selectedToken.set(token);
-    this.balance = parseFloat(await this.getBalanceForToken(token));
+    this.balance.set(parseFloat(await this.getBalanceForToken(token)));
     // this.selectedToken = token.symbol;
     // this.selectedTokenImage = token.imageUrl;
     // this.selectedTokenAddress = token.contractAddress;
@@ -237,7 +263,7 @@ export class TradeComponent {
       return;
     }
 
-    if(this.blockchainStateService.getCurrentNetworkId() === "1151111081099710") { // SVM
+    if(this.blockchainStateService.getCurrentNetworkId()?.chainId === "1151111081099710") { // SVM
       if (token.symbol === "SOL") // change to adres
       {
         return this.walletBalanceService.getSolanaBalance(walletAddress);
@@ -256,7 +282,7 @@ export class TradeComponent {
   
         const data = await response.json();
   
-        const network = data.find((net: { id: number }) => net.id.toString() === this.blockchainStateService.getCurrentNetworkId());
+        const network = data.find((net: { id: number }) => net.id === this.blockchainStateService.getCurrentNetworkId()?.id);
   
         if (!network) {
           console.error('Network not found');
@@ -288,7 +314,7 @@ export class TradeComponent {
   async onBuyTokenSelected(token: { symbol: string; imageUrl: string; contractAddress: string; decimals: string }): Promise<void> {
     this.txData.set(undefined);
     this.selectedBuyToken.set(token);
-    this.balanceBuy = parseFloat(await this.getBalanceForToken(token));
+    this.balanceBuy.set(parseFloat(await this.getBalanceForToken(token)));
     // this.selectedBuyToken = token.symbol;
     // this.selectedBuyTokenImage = token.imageUrl;
     // this.selectedBuyTokenAddress = token.contractAddress;
@@ -313,7 +339,7 @@ export class TradeComponent {
   async swap() {
     //this.loading.set(true);
     
-    if(this.blockchainStateService.network() === "1151111081099710")
+    if(this.blockchainStateService.network()?.chainId === "1151111081099710")
     {
       console.log("b");
       await this.svmSwap();
@@ -401,8 +427,9 @@ export class TradeComponent {
   }
 
   getTxData() {
-    const fromChain = this.blockchainStateService.network()!;
-    const toChain = this.blockchainStateService.network()!;
+
+    const fromChain = this.blockchainStateService.network()!.id.toString();
+    const toChain = this.blockchainStateService.network()!.id.toString();
     const fromAddress = this.blockchainStateService.walletAddress()!;
     //const fromTokenDecimals = this.selectedTokendecimals;
     const fromTokenDecimals = this.selectedToken()!.decimals;
@@ -416,6 +443,8 @@ export class TradeComponent {
     // const toTokenDecimals = this.selectedTokenBuydecimals;
 
     const adjustedFromAmount = fromAmount.toString();
+
+    console.log("fromChain",fromChain);
   
     if (!fromChain || !toChain || !fromAddress || !fromAmount || !fromToken || !toToken || !fromTokenDecimals) {
       console.log("fromChain",fromChain);
@@ -458,7 +487,7 @@ export class TradeComponent {
 
         if(response.transactionRequest.data)
         {
-          if(this.blockchainStateService.network() === "1151111081099710")
+          if(this.blockchainStateService.network()?.chainId === "1151111081099710")
           {
             this.txData.set(response.transactionRequest as TransactionRequestSVM);
           }

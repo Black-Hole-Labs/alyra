@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 import { Network } from '../../../models/wallet-provider.interface';
@@ -12,7 +12,7 @@ import { Network } from '../../../models/wallet-provider.interface';
   imports: [CommonModule]
 })
 export class BlackholeNetworkComponent {
-  networks: any[] = [];
+  networks = computed(() => this.blockchainStateService.networks());
   selectedNetwork: string | null = null;
   @Output() close = new EventEmitter<void>();
 
@@ -21,41 +21,43 @@ export class BlackholeNetworkComponent {
   ) {}
 
   ngOnInit(): void {
-    this.loadNetworksForCurrentProvider();
+    //this.loadNetworksForCurrentProvider();
   }
 
-  private async loadNetworksForCurrentProvider(): Promise<void> {
-    const currentProvider = this.blockchainStateService.getCurrentProvider();
+  // private async loadNetworksForCurrentProvider(): Promise<void> {
+  //   const currentProvider = this.blockchainStateService.getCurrentProvider();
     
-    if (!currentProvider) {
-      console.error('No provider selected');
-      return;
-    }
+  //   if (!currentProvider) {
+  //     console.error('No provider selected');
+  //     return;
+  //   }
 
-    console.log("currentProvider",currentProvider);
-    // const type = this.blockchainStateService.getType(currentProvider);
-    await this.loadNetworks(currentProvider.type);
-  }
+  //   console.log("currentProvider",currentProvider);
+  //   // const type = this.blockchainStateService.getType(currentProvider);
+  //   await this.loadNetworks(currentProvider.type);
+  // }
 
-  private async loadNetworks(type: string): Promise<void> {
-    try {
-      const response = await fetch('/data/networks.json');
-      const allNetworks: any[] = await response.json();
+  // private async loadNetworks(type: string): Promise<void> {
+  //   try {
+  //     const response = await fetch('/data/networks.json');
+  //     const allNetworks: any[] = await response.json();
 
-      if (type === 'multichain') { // Both EVM and SVM
-        this.networks = allNetworks;
-      } else {
-        this.networks = allNetworks.filter(
-          (network: Network) => network.chainType === type
-        );
-      }
-    } catch (error) {
-      console.error('Failed to load networks:', error);
-    }
-  }
+  //     if (type === 'multichain') { // Both EVM and SVM
+  //       this.networks = allNetworks;
+  //     } else {
+  //       this.networks = allNetworks.filter(
+  //         (network: Network) => network.chainType === type
+  //       );
+  //     }
+
+  //     console.log("this.networks",this.networks);
+  //   } catch (error) {
+  //     console.error('Failed to load networks:', error);
+  //   }
+  // }
 
   async selectNetwork(networkId: string): Promise<void> {
-    const selectedNetwork = this.networks.find((network) => (network.id).toString() === networkId);
+    const selectedNetwork = this.networks().find((network) => (network.id).toString() === networkId);
     if (!selectedNetwork) {
       console.error('Network not found');
       return;
@@ -90,6 +92,6 @@ export class BlackholeNetworkComponent {
   // Method to get the current selected network object
   getCurrentNetwork(): any {
     if (!this.selectedNetwork) return null;
-    return this.networks.find(n => n.id.toString() === this.selectedNetwork);
+    return this.networks().find(n => n.id.toString() === this.selectedNetwork);
   }
 }

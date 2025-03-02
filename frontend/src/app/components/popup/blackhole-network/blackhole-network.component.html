@@ -4,8 +4,8 @@
   
 	<div class="network-container">
   
-	  <div *ngFor="let network of networks" class="network" (click)="selectNetwork(network.id.toString())">
-		<div class="network-icon" [style.backgroundImage]="'url(' + network.icon + ')'"></div>
+	  <div *ngFor="let network of networks()" class="network" (click)="selectNetwork(network.id.toString())">
+		<div class="network-icon" [style.backgroundImage]="'url(' + network.logoURI"></div>
 		<p>{{ network.name }}</p>
 	  </div>
   
