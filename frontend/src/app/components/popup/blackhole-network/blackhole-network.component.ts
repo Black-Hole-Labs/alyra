@@ -63,6 +63,8 @@ export class BlackholeNetworkComponent {
       return;
     }
 
+    this.blockchainStateService.updateNetwork(networkId);
+
     const currentProvider = this.blockchainStateService.getCurrentProvider();
     if (!currentProvider) {
       console.error('No provider selected');

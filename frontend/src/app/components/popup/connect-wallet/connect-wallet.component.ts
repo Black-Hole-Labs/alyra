@@ -56,7 +56,7 @@ export class ConnectWalletComponent {
     
     effect(() => {
       if (this.connected()) {
-        console.log('Wallet connected:', this.blockchainStateService.walletAddress());
+        console.log('Wallet connected!:', this.blockchainStateService.walletAddress());
       } else {
         console.log('Wallet disconnected');
       }
@@ -83,6 +83,7 @@ export class ConnectWalletComponent {
   
     try {
       const { address } = await provider.connect();
+      provider.switchNetwork(this.blockchainStateService.getCurrentNetworkId());
       this.blockchainStateService.updateWalletAddress(address);
       this.blockchainStateService.setCurrentProvider(providerId);
       
