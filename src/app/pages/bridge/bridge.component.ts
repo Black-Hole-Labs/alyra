@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Renderer2, ChangeDetectorRef, ViewChild, ElementRef, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { NetworkService } from '../../services/network.service';
 import { NetworkChangeFromPopupComponent } from '../../components/popup/network-change-from/network-change-from.component';
 import { NetworkChangeToPopupComponent } from '../../components/popup/network-change-to/network-change-to.component';
@@ -11,6 +12,7 @@ import { WalletService } from '../../services/wallet.service';
 import { PopupService } from '../../services/popup.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { TokenChangeBuyComponent } from '../../components/popup/token-change-buy/token-change-buy.component';
+import { SettingsBridgeComponent } from '../../components/popup/settings-bridge/settings-bridge.component';
 
 @Component({
   selector: 'app-bridge',
@@ -20,11 +22,13 @@ import { TokenChangeBuyComponent } from '../../components/popup/token-change-buy
   imports: [
     CommonModule, 
     FormsModule,
+    RouterModule,
     NetworkChangeFromPopupComponent,
     NetworkChangeToPopupComponent,
     TokenChangePopupComponent,
     TokenChangeBuyComponent,
-    BridgeTxComponent
+    BridgeTxComponent,
+    SettingsBridgeComponent
   ],
   animations: [
     trigger('receiveAnimation', [
@@ -641,21 +645,30 @@ export class BridgeComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   // Метод для проверки и запуска анимации текста
   private checkAndAnimateReceiveText() {
-    if (this.receiveTextElement && !this.receiveTextAnimated && this.isBridgeButtonActive()) {
-      const element = this.receiveTextElement.nativeElement;
-      
-      // Формируем текст вручную, чтобы гарантировать правильное содержимое
-      const formattedText = `${this.inputAmount} ${this.selectedReceiveToken.symbol} in ~2 seconds`;
-      
-      if (formattedText) {
-        this.receiveTextAnimated = true;
-        
-        // Устанавливаем начальное содержимое элемента
-        element.textContent = formattedText;
-        
-        // Запускаем анимацию с правильным текстом
-        this.animateText(element, formattedText, 'receiveText');
-      }
+    if (this.receiveTextElement && !this.receiveTextAnimated && this.selectedReceiveToken.symbol) {
+      // Добавляем информацию о времени в секундах (например, 30 секунд)
+      const finalText = `${this.inputAmount} ${this.selectedReceiveToken.symbol} in 30 sec`;
+      this.animateText(this.receiveTextElement.nativeElement, finalText, 'receiveText');
+      this.receiveTextAnimated = true;
     }
+  }
+
+  // Settings popup
+  get showSettingsBridgePopup(): boolean {
+    return this.popupService.getCurrentPopup() === 'settingsBridge';
+  }
+
+  toggleSettingsBridgePopup(): void {
+    if (this.showSettingsBridgePopup) {
+      this.popupService.closePopup('settingsBridge');
+    } else {
+      this.popupService.openPopup('settingsBridge');
+    }
+  }
+
+  onSlippageSave(value: string): void {
+    console.log('Slippage value saved:', value);
+    // Здесь можно добавить логику для сохранения значения slippage
+    // Не закрываем попап здесь, так как это уже происходит в компоненте settings-bridge
   }
 }

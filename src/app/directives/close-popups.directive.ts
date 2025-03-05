@@ -28,7 +28,7 @@ export class ClosePopupsDirective {
     if (!currentPopup) return;
 
     // Проверяем, кликнули ли мы по самому попапу или его содержимому
-    const isPopupClick = target.closest('.popup-menu, .connect-wallet, .settings-popup, .wallet-popup, .network-popup, .blackhole-menu, .token-change, .token-change-buy, .network-change-from, .network-change-to, .bridge-tx');
+    const isPopupClick = target.closest('.popup-menu, .connect-wallet, .settings-popup, .settings-bridge-popup, .wallet-popup, .network-popup, .blackhole-menu, .token-change, .token-change-buy, .network-change-from, .network-change-to, .bridge-tx');
     
     // Проверяем, кликнули ли мы по кнопке, которая открывает попап
     const isToggleClick = target.closest('.settings, .wallet, .network, .token, button[class*="open"], button[class*="closed"], h3, .menu, .main-button, .network-from, .network-to');

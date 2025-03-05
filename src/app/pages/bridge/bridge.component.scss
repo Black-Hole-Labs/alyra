@@ -7,7 +7,6 @@
 	border-radius: 28px;
 	box-sizing: border-box;
 	padding: 40px;
-	overflow: hidden;
 	transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	will-change: height;
 	display: flex;
@@ -44,23 +43,58 @@
 				color: white;
 			}
 		}
-		.custom-wallet-button {
-			width: 32px;
-			height: 32px;
-			background-image: url(/img/header/wallet.png);
-			background-size: cover;
-			background-repeat: no-repeat;
-			cursor: pointer;
-			opacity: 0.3;
-			transition: opacity 0.2s ease-in-out;
-			&:hover {
-				opacity: 1;
+		.icons {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			position: relative;
+			
+			/* Добавляем минимальную ширину, чтобы сохранить пространство даже когда кнопка скрыта */
+			min-width: 88px; /* 36px (ширина кнопки) + 40px (ширина settings) + 12px (gap) */
+			justify-content: flex-end; /* Выравниваем элементы по правому краю */
+			
+			.custom-wallet-button {
+				width: 36px;
+				height: 36px;
+				background-image: url(/img/header/wallet.png);
+				background-size: cover;
+				background-repeat: no-repeat;
+				cursor: pointer;
+				opacity: 0.3;
+				transition: opacity 0.2s ease-in-out;
+				&:hover {
+					opacity: 1;
+				}
+	
+				&.active {
+					opacity: 1;
+				}
+				
+				&.hidden {
+					opacity: 0;
+					pointer-events: none; /* Отключаем события мыши для скрытой кнопки */
+				}
 			}
-
-			&.active {
-				opacity: 1;
+			.settings {
+				background-image: url(/img/trade/settings.png);
+				background-size: cover;
+				background-repeat: no-repeat;
+				height: 40px;
+				width: 40px;
+				cursor: pointer;
+				opacity: 0.3;
+				transition: opacity 0.2s ease-in-out;
+			
+				&:hover {
+					opacity: 1;
+				}
+			
+				&.active {
+					opacity: 1;
+				}
 			}
 		}
+		
 	}
 	
 	.main {
@@ -742,4 +776,3 @@ animation: click-animation-down 1s linear;
   /* Добавляем padding внизу для плавного изменения высоты */
   padding-bottom: 40px;
 }
-

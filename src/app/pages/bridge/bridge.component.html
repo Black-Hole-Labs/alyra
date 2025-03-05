@@ -7,11 +7,26 @@
 				<div class="icon-bridge"></div>
         <h3>Bridge</h3>
 			</div>
-			<div class="custom-wallet-button" 
-				 *ngIf="isBridgeButtonActive()"
-				(click)="toggleCustomAddress()"
-				[class.active]="showCustomAddress">
+			<div class="icons">
+				<div class="custom-wallet-button" 
+					[class.hidden]="!isBridgeButtonActive()"
+					[class.active]="showCustomAddress"
+					(click)="isBridgeButtonActive() && toggleCustomAddress()">
+				</div>
+				<div class="settings" 
+					[class.active]="showSettingsBridgePopup"
+					(click)="toggleSettingsBridgePopup()">
+				</div>
+
+				<app-settings-bridge
+					*ngIf="showSettingsBridgePopup"
+					class="settings-bridge-popup open"
+					(close)="popupService.closePopup('settingsBridge')"
+					(save)="onSlippageSave($event)">
+				</app-settings-bridge>
+				
 			</div>
+			
     </div>
 
 		<div class="main" [ngClass]="{'has-custom-address': showCustomAddress}">
