@@ -1,0 +1,208 @@
+.connect-wallet {
+	width: 500px;
+  position: fixed;
+  top: 148px;
+  right: 40px;
+	height: 860px;
+	background-color: rgba(var(--dark-bg), 0.3);
+	backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(5px);
+	border-radius: 28px;
+  z-index: 1000;
+	padding: 40px;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	
+	.upper{
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 17px;
+		h6{
+			font-family: "JetBrains Mono", monospace;
+			font-weight: 500;
+			font-size: 22px;
+			color: white;
+			margin: 0;
+		}
+		button{
+			height: 15px;
+			width: 15px;
+			background: url(/img/header/popup-menu/close-icon.png);
+			opacity: 0.3;
+			background-size: cover;
+			background-repeat: no-repeat;
+			cursor: pointer;
+			transition: 0.2s ease-in-out;
+		}
+		button:hover{
+			opacity: 1;
+		}
+	}
+	
+	/* Создаем контейнер для прокрутки содержимого */
+	.scroll-container {
+		flex: 1;
+		overflow-y: auto;
+		margin-right: -10px; /* Компенсируем отступ для скроллбара */
+		padding-right: 10px;
+		margin-bottom: 20px; /* Отступ для дисклеймера */
+		
+		/* Стилизуем скроллбар */
+		&::-webkit-scrollbar {
+			width: 8px;
+		}
+		
+		&::-webkit-scrollbar-track {
+			background: rgba(var(--dark-bg), 0.3);
+			border-radius: 4px;
+		}
+		
+		&::-webkit-scrollbar-thumb {
+			background: var(--elem-nonactive);
+			border-radius: 4px;
+		}
+		
+		&::-webkit-scrollbar-thumb:hover {
+			background: var(--elem-active);
+		}
+	}
+	
+	.devider{
+		margin-top: 17px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		p{
+			font-family: "JetBrains Mono", monospace;
+			font-weight: 400;
+			font-size: 18px;
+			color: var(--elem-nonactive);
+		}
+		hr.hr1{
+			width: 302px;
+			border: 1px solid var(--elem-nonactive);
+		}
+		hr.hr2{
+			width: 259px;
+			border: 1px solid var(--elem-nonactive);
+		}
+	}
+	.inner-wallets{
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		margin-top: 20px;
+		
+		.wallet{
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			width: 100%;
+			height: 89px;
+			border-radius: 22px;
+			background-color: var(--dark-select);
+			box-sizing: border-box;
+			padding: 10px 20px 10px 10px;
+			cursor: pointer;
+			transition: 0.2s;
+			&:hover{
+				background-color: var(--btn-dark);
+			}
+			.name{
+				display: flex;
+				align-items: center;
+				gap: 18px;
+				.wallet-img{
+					width: 69px;
+					height: 69px;
+					border-radius: 16px;
+				}
+				p{
+					font-family: "JetBrains Mono", monospace;
+					font-weight: 700;
+					font-size: 20px;
+					color: white;
+				}
+				.metamask{
+					background: url(/img/wallet-icns/Metamask.png);
+					background-size: cover;
+					background-repeat: no-repeat;
+				}
+				.rabby-wallet{
+					background: url(/img/wallet-icns/Rabby.png);
+					background-size: cover;
+					background-repeat: no-repeat;
+				}
+				.backpack{
+					background: url(/img/wallet-icns/Backpack.png);
+					background-size: cover;
+					background-repeat: no-repeat;
+				}
+				.phantom{
+					background: url(/img/wallet-icns/Phantom.png);
+					background-size: cover;
+					background-repeat: no-repeat;
+				}
+				.walletconnect{	
+					background: url(/img/wallet-icns/WalletConnect.png);
+					background-size: cover;
+					background-repeat: no-repeat;
+				}
+				.magic-eden{
+					background: url(/img/wallet-icns/MagicEden.png);
+					background-size: cover;
+					background-repeat: no-repeat;
+				}
+			}
+			.status{
+				width: 90px;
+				height: 26px;
+				border-radius: 10px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				p, a{
+					font-family: "JetBrains Mono", monospace;
+					font-weight: 400;
+					font-size: 13px;
+				}
+			}
+			.recent{
+				background-color: var(--dark-yellow);
+				p{
+					color: var(--yellow);
+				}
+			}
+			.detected{
+				background-color: rgba(var(--dark-green), 1);
+				p{
+					color: var(--green);
+				}
+			}
+			.install{
+				background-color: var(--elem-nonactive);
+				a{
+					color: white;
+				}
+			}
+		}
+	}
+	
+	.disclaimer{
+		font-family: "JetBrains Mono", monospace;
+		font-weight: 400;
+		font-size: 11px;
+		color: var(--elem-nonactive);
+		margin: 0;
+		a{
+			color: white;
+			transition: 0.2s;
+			cursor: pointer;
+			&:hover{
+				color: var(--elem-active);
+			}
+		}		
+	}
+}

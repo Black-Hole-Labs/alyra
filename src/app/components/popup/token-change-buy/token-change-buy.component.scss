@@ -1,0 +1,213 @@
+.token-change{
+	width: 681px;
+	height: 792px;
+	background-color: rgba(var(--dark-bg), 0.6);
+	backdrop-filter: blur(25px);
+	-webkit-backdrop-filter: blur(5px);
+	border-radius: 28px;
+	box-sizing: border-box;
+	padding: 40px 20px;
+	z-index: 1000;
+}
+
+.header{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0px 20px;
+}
+h3{
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 500;
+	font-size: 32px;
+	color: white;
+}
+button{
+	height: 30px;
+	width: 30px;
+	background: url(/img/trade/close-icon30px.png);
+	opacity: 0.3;
+	background-size: cover;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	transition: 0.2s ease-in-out;
+}
+button:hover{
+	opacity: 1;
+}
+.search{
+	margin-top: 30px;
+	display: flex;
+	align-items: center;
+	width: 601px;
+	height: 76px;
+	background-color: var(--dark-select);
+	border-radius: 21px;
+	padding: 0px 30px;
+	box-sizing: border-box;
+	margin-left: 20px;
+}
+input{
+	width: 511px;
+	height: 26px;
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 400;
+	font-size: 20px;
+	color: white;
+	background-color: var(--dark-select);
+	outline: none;
+	border: none;
+}
+input::placeholder {
+	color: var(--elem-nonactive);
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 400;
+	font-size: 20px;
+}
+.search-button{
+	height: 30px;
+	width: 30px;
+	background: url(/img/trade/search-button.png);
+	opacity: 0.3;
+	background-size: cover;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	transition: 0.2s ease-in-out;
+}
+.search-button:hover{
+	opacity: 1;
+}
+.desc{
+	margin-top: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0px 20px;
+}
+.desc > p{
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 400;
+	font-size: 18px;
+	color: white;
+}
+.list{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 19px;
+	width: 637px;
+	height: 528px;
+	border-radius: 12px;
+	overflow: hidden;
+}
+.inner-list{
+	overflow-y: auto;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+.inner-list::-webkit-scrollbar {
+	display: none;
+}
+.token{
+	width: 637px;
+	height: 97px;
+	background: rgba(var(--dark-bg), 0.01);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 14px 20px;
+	transition: 0.2s;
+	box-sizing: border-box;
+	border-radius: 22px;
+	cursor: pointer;
+}
+.token:hover{
+	background: var(--dark-select);
+}
+.left{
+	display: flex;
+	align-items: center;
+}
+.image{
+	position: relative;
+}
+.token .image .token-image{
+	height: 69px;
+	width: 69px;
+	background: url(/img/trade/arbitrum.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+	margin-right: 21px;
+}
+.token .image .network-bg{
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	right: 10px;
+	top: -10px;
+	height: 30px;
+	width: 30px;
+	border-radius: 100px;
+}
+.token .image .network-image{
+	height: 30px;
+	width: 30px;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+.token .name h6{
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 700;
+	font-size: 20px;
+	color: white;
+}
+.token .name p{
+	margin-top: 1px;
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 700;
+	font-size: 20px;
+	color: white;
+}
+a{
+	display: flex;
+	align-items: center;
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 400;
+	font-size: 18px;
+	color: white;
+}
+a:hover{
+	text-decoration: underline;
+}
+.contract{
+	display: flex;
+	align-items: center;
+}
+.contract .image-copy{
+	height: 20px;
+	width: 20px;
+	background: url(/img/trade/copy-hover.png);
+	opacity: 0.3;
+	background-size: cover;
+	background-repeat: no-repeat;
+	margin-right: 12px;
+	transition: 0.2s ease-in-out;
+}
+.contract .image-copy:hover{
+	opacity: 1;
+}
+.token-change .contract > p{
+	font-family: "JetBrains Mono", monospace !important;
+	font-weight: 700;
+	font-size: 18px;
+	color: white;
+}
+.contract .image-link{
+	height: 24px;
+	width: 7px;
+	background: url(/img/trade/link.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+	margin-left: 4px;
+}

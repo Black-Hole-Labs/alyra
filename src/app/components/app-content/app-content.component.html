@@ -1,0 +1,27 @@
+<router-outlet></router-outlet>
+
+<!-- Попапы через PopupService -->
+<ng-container *ngIf="popupService.activePopup$ | async as activePopup">
+  <app-connect-wallet 
+    *ngIf="activePopup === 'connectWallet'"
+    (close)="popupService.closeAllPopups()"
+    (openWallet)="popupService.openPopup('wallet')">
+  </app-connect-wallet>
+
+  <app-wallet 
+    *ngIf="activePopup === 'wallet'"
+    (close)="popupService.closeAllPopups()">
+  </app-wallet>
+
+  <app-blackhole-menu
+    *ngIf="activePopup === 'blackholeMenu'"
+    (close)="popupService.closeAllPopups()">
+  </app-blackhole-menu>
+
+  <app-blackhole-network
+    *ngIf="activePopup === 'networkPopup'"
+    (networkSelected)="networkService.setSelectedNetwork($event)"
+    (close)="popupService.closeAllPopups()">
+  </app-blackhole-network>
+</ng-container>
+

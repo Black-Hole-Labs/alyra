@@ -1,55 +1,55 @@
-<header class="header">
+<header>
 
 	<div class="left">
-
-		<a href="/">
-			<div class="logo"></div>
-		</a>
-	
-		<h3 (click)="togglePopup()">Blackhole</h3>
-    <button (click)="togglePopup()" [ngClass]="{'open': isPopupVisible, 'closed': !isPopupVisible}"></button>
+		<div class="menu">
+			<a routerLink="/" class="logo"></a>
+			<h3 (click)="togglePopup($event)">Blackhole</h3>
+			<button (click)="togglePopup($event)" [ngClass]="{'open': isPopupVisible, 'closed': !isPopupVisible}"></button>
+		</div>
 	
 	
 		<nav>
-      <a routerLink="/trade" routerLinkActive="active-link">Trade</a>
-      <a routerLink="/bridge" routerLinkActive="active-link">Bridge</a>
-      <a routerLink="/fun" routerLinkActive="active-link">Fun</a>
-      <a routerLink="/launchpad" routerLinkActive="active-link">Launchpad</a>
-      <a routerLink="/quests" routerLinkActive="active-link">Quests</a>
-    </nav>
-
+			<a routerLink="/trade" routerLinkActive="active-link">Trade</a>
+			<a routerLink="/bridge" routerLinkActive="active-link">Bridge</a>
+			<!-- <a routerLink="/fun" routerLinkActive="active-link">Fun</a>
+			<a routerLink="/launchpad" routerLinkActive="active-link">Launchpad</a> -->
+			<a routerLink="/quests" routerLinkActive="active-link">Rewards</a>
+		</nav>
 	</div>
 
 	<div class="right">
 
-<!-- GM STRAK WIDGET -->
-		<div class="gm" (click)="incrementGmCount()">
+		<!-- GM STRAK WIDGET -->
+		<!-- <div class="gm" (click)="incrementGmCount()">
 			<p *ngIf="gmCount !== null">{{ gmCount }}</p>
 			<div class="fire-img"></div>
 			<div class="fireworks-container"></div>
-		</div>
+		</div> -->
 
 		<!-- Мини-попап -->
 		<div class="gm-popup" *ngIf="showPopup">
 			{{ popupMessage }}
 		</div>
 
-
-<!-- XP WIDGET -->
-		<div class="xp">
+		<!-- XP WIDGET -->
+		<div class="xp" *ngIf="walletService.isConnected()">
 			<p>0 XP</p>
 		</div>
 
-<!-- NETWORK CHANGE -->
-		<div (click)="toggleNetworkPopup()" class="network">
-			<div class="network-icon" [ngClass]="selectedNetwork"></div>
-			<button (click)="toggleNetworkPopup()" [ngClass]="{'network-open': isNetworkPopupVisible, 'network-closed': !isNetworkPopupVisible}"></button>
+		<!-- NETWORK CHANGE -->
+		<div (click)="toggleNetworkPopup($event)" class="network">
+			<div class="network-icon" 
+				[style.background-image]="'url(' + selectedNetwork?.icon + ')'">
+			</div>
+			<button (click)="toggleNetworkPopup($event)" 
+				[ngClass]="{'network-open': isNetworkPopupVisible, 'network-closed': !isNetworkPopupVisible}">
+			</button>
 		</div>
 
-<!-- WALLET -->
-		<div class="wallet">
+		<!-- WALLET -->
+		<div class="wallet" (click)="openConnectWalletPopup()">
 			<div class="wallet-icon"></div>
-			<p>Connect Wallet</p>
+			<p>{{ walletName }}</p>
 		</div>
 
 	</div>

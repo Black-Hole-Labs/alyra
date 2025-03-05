@@ -1,0 +1,16 @@
+<header class="header">
+
+	<div class="logo-container">
+		<a href="/" class="logo"></a>
+		<h3 (click)="togglePopup()">Blackhole</h3>
+    <button (click)="togglePopup()" [ngClass]="{'open': popupService.getCurrentPopup() === 'blackholeMenu', 'closed': popupService.getCurrentPopup() !== 'blackholeMenu'}"></button>
+  </div>
+	
+	<nav>
+    <a routerLink="introduction" routerLinkActive="active-link">/a/ Introduction</a>
+    <a routerLink="hyperstructure" routerLinkActive="active-link">/a/ Hyperstructure</a>
+    <a routerLink="valuable" routerLinkActive="active-link">/a/ Valuable</a>
+    <a routerLink="termsofuse" routerLinkActive="active-link">/a/ Terms of Use</a>
+    <a routerLink="privacypolicy" routerLinkActive="active-link">/a/ Privacy Policy</a>
+  </nav>
+</header>

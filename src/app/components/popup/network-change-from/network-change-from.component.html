@@ -1,0 +1,32 @@
+<div class="network-change-from">
+	<div class="header">
+		<h3>Select a network</h3>
+		<button (click)="closePopup()"></button>
+	</div>
+	<div class="search">
+		<input
+			type="text"
+			placeholder="Search by name"
+			[(ngModel)]="searchText"
+			(keydown.enter)="performSearch()"
+		/>
+		<button class="search-button" (click)="performSearch()"></button>
+	</div>
+	<div class="list">
+		<div class="inner-list">
+
+			<div class="network" *ngFor="let network of filteredNetworks" (click)="selectNetwork(network)">
+				<div class="left">
+					<div class="image">
+						<div class="network-image" [style.backgroundImage]="'url(' + network.icon + ')'"></div>
+					</div>
+					<div class="name">
+						<h6>{{ network.name }}</h6>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+</div>

@@ -1,0 +1,60 @@
+<div class="popup-container wallet-popup">
+  <div class="header">
+
+		<div class="left-header">
+			<div class="avatar"></div>
+			<div class="wallet-name">
+				<h3>{{ walletName }}</h3>
+				<div class="wallet-address">
+					<p>0xefe..45</p>
+					<div class="copy"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="right-header">
+			<div class="disconnect" (click)="onDisconnect()">
+				<p>Disconnect</p>
+			</div>
+			<button class="close-button" (click)="closePopup()"></button>
+		</div>
+  </div>
+
+	<div class="devider">
+		<p>Balance</p>
+		<hr class="hr1" />
+	</div>
+
+	<div class="balance">
+		<h2>${{ totalBalance.toFixed(2) }}</h2>
+		<div class="grow">
+			<p class="usd">{{ formattedUsdChange }}</p>
+			<p class="percent">{{ formattedPercentChange }}</p>
+		</div>
+	</div>
+
+	<div class="devider">
+		<p>Portfolio</p>
+		<hr class="hr2" />
+	</div>
+
+	<div class="token-portfolio">
+		<div class="token" *ngFor="let token of tokens">
+			<div class="token-left">
+				<div class="token-img" [style.background-image]="'url(' + token.image + ')'"></div>
+				<div class="token-info">
+					<p class="token-name">{{ token.name }}</p>
+					<p class="token-balance">{{ token.balance }}</p>
+				</div>
+			</div>
+			<div class="token-right">
+				<h5 class="usd-balance">${{ token.usdBalance }}</h5>
+				<div class="token-price-change">
+					<p class="usd-change">{{ token.usdChange }}</p>
+					<p class="percent-change">{{ token.percentChange }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>

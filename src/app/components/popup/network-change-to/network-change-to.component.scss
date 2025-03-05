@@ -1,0 +1,146 @@
+.network-change-to {
+  width: 681px;
+	height: 783px;
+	background-color: rgba(var(--dark-bg), 0.6);
+	backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(5px);
+	border-radius: 28px;
+	box-sizing: border-box;
+	padding: 40px 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 20px;
+}
+
+h3 {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 32px;
+  color: white;
+}
+
+button{
+	height: 30px;
+	width: 30px;
+	background: url(/img/trade/close-icon30px.png);
+	opacity: 0.3;
+	background-size: cover;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	transition: 0.2s ease-in-out;
+}
+button:hover{
+	opacity: 1;
+}
+
+.search {
+  margin-top: 30px;
+	display: flex;
+	align-items: center;
+	width: 601px;
+	height: 76px;
+	background-color: var(--dark-select);
+	border-radius: 21px;
+	padding: 0px 30px;
+	box-sizing: border-box;
+	margin-left: 20px;
+}
+
+input {
+  width: 511px;
+	height: 26px;
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 400;
+	font-size: 20px;
+	color: white;
+	background-color: var(--dark-select);
+	outline: none;
+	border: none;
+}
+
+input::placeholder {
+  color: var(--elem-nonactive);
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 20px;
+}
+
+.search-button {
+  height: 30px;
+  width: 30px;
+  background: url(/img/trade/search-button.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 19px;
+  width: 637px;
+  height: 571px;
+	border-radius: 12px;
+  overflow: hidden;
+}
+
+.inner-list{
+	overflow-y: auto;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+.inner-list::-webkit-scrollbar {
+	display: none;
+}
+
+.network {
+  width: 637px;
+	height: 97px;
+	background: rgba(var(--dark-bg), 0.01);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 14px 20px;
+	transition: 0.2s ease-in-out;
+	box-sizing: border-box;
+	border-radius: 22px;
+	cursor: pointer;
+
+  &:hover {
+    background: var(--dark-select);
+  }
+
+  .left {
+    display: flex;
+    align-items: center;
+    
+    .image {
+      position: relative;
+      width: 49px;
+      height: 49px;
+      margin-right: 21px;
+
+      .network-image {
+        width: 100%;
+        height: 100%;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+    }
+
+    .name {
+      h6 {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 20px;
+        color: white;
+      }
+    }
+  }
+}

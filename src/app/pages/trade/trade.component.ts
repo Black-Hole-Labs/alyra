@@ -4,18 +4,26 @@ import { CommonModule } from '@angular/common';
 import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
 import { TokenChangeBuyComponent } from '../../components/popup/token-change-buy/token-change-buy.component';
 import { SettingsComponent } from '../../components/popup/settings/settings.component'; // Импортируем SettingsComponent
+import { WalletService } from '../../services/wallet.service';
+import { PopupService } from '../../services/popup.service';
+import { SuccessNotificationComponent } from '../../components/notification/success-notification/success-notification.component';
+import { FailedNotificationComponent } from '../../components/notification/failed-notification/failed-notification.component';
+import { PendingNotificationComponent } from '../../components/notification/pending-notification/pending-notification.component';
 
 @Component({
   selector: 'app-trade',
   standalone: true,
   templateUrl: './trade.component.html',
-  styleUrls: ['./trade.component.css'],
+  styleUrls: ['./trade.component.scss'],
   imports: [
     FormsModule,
     CommonModule,
     TokenChangePopupComponent,
     TokenChangeBuyComponent,
     SettingsComponent, // Добавляем SettingsComponent в imports
+    SuccessNotificationComponent,
+    FailedNotificationComponent,
+    PendingNotificationComponent,
   ],
 })
 export class TradeComponent {
@@ -31,26 +39,78 @@ export class TradeComponent {
   // Управление попапами
   showTokenPopup = false; // Управляет отображением попапа для sell
   showTokenBuyPopup = false; // Управляет отображением попапа для buy
-	showSettingsPopup = false; // Управляет отображением попапа для settings
   selectedToken = 'ETH'; // Текущий выбранный токен для sell
   selectedBuyToken = 'USDT'; // Текущий выбранный токен для buy
   selectedTokenImage = '/img/trade/eth.png'; // Изображение для sell
   selectedBuyTokenImage = '/img/trade/usdt.png'; // Изображение для buy
 
-  constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) {}
+  // Добавляем новые свойства для управления состоянием кнопки
+  buttonState: 'swap' | 'finding' | 'approve' | 'wallet' | 'insufficient' = 'swap';
+  findingRoutesTimer: any = null;
+  walletTimer: any = null;
 
-  processInput(event: Event, isSell: boolean): void {
-    const inputElement = event.target as HTMLInputElement;
-    inputElement.value = inputElement.value
-      .replace(/[^0-9.,]/g, '') // Удаляем недопустимые символы
-      .replace(/(,|\.){2,}/g, '') // Удаляем лишние точки или запятые
-      .replace(/^(,|\.)/g, '') // Удаляем точку или запятую в начале
-      .replace(/,/g, '.'); // Заменяем запятую на точку
+  // Добавьте новое свойство
+  showSuccessNotification = false;
+  showFailedNotification = false;
+  showPendingNotification = false;
+  private isLastNotificationSuccess = false; // для отслеживания последнего состояния
 
-    if (isSell) {
-      this.sellAmount = inputElement.value;
-      this.updateBuyAmount();
-      this.updateSellPriceUsd();
+  constructor(
+    private renderer: Renderer2,
+    private cdr: ChangeDetectorRef,
+    private walletService: WalletService,
+    public popupService: PopupService
+  ) {}
+
+  processInput(event: Event, isSellInput: boolean): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    // Проверка на корректность ввода
+    if (value === '' || isNaN(Number(value))) {
+      if (isSellInput) {
+        this.sellAmount = '';
+        this.buyAmount = '';
+      } else {
+        this.buyAmount = '';
+        this.sellAmount = '';
+      }
+      this.sellPriceUsd = '';
+      this.buttonState = 'swap'; // Сбрасываем состояние кнопки
+      
+      // Очищаем оба таймера
+      if (this.findingRoutesTimer) {
+        clearTimeout(this.findingRoutesTimer);
+      }
+      if (this.walletTimer) {
+        clearTimeout(this.walletTimer);
+      }
+      return;
+    }
+
+    if (isSellInput) {
+      // Конвертация из sell в buy
+      this.sellAmount = value;
+      this.buyAmount = (Number(value) * this.price).toString();
+    } else {
+      // Конвертация из buy в sell
+      this.buyAmount = value;
+      this.sellAmount = (Number(value) / this.price).toString();
+    }
+
+    this.updateSellPriceUsd();
+    
+    // Проверяем баланс перед запуском процесса поиска маршрутов
+    if (Number(this.sellAmount) > this.balance) {
+      this.buttonState = 'insufficient';
+      // Очищаем таймеры, так как они нам не нужны в этом состоянии
+      this.resetTimers();
+      return;
+    }
+    
+    // Запускаем таймер для изменения состояния кнопки только если сумма в пределах баланса
+    if (Number(this.sellAmount) > 0 && Number(this.sellAmount) <= this.balance) {
+      this.startFindingRoutesProcess();
     }
   }
 
@@ -84,6 +144,11 @@ export class TradeComponent {
     this.sellAmount = this.balance.toString();
     this.updateBuyAmount();
     this.updateSellPriceUsd();
+    
+    // Добавляем запуск процесса изменения состояний кнопки
+    if (this.balance > 0) {
+      this.startFindingRoutesProcess();
+    }
   }
 
   rotateRefresh(): void {
@@ -136,41 +201,163 @@ export class TradeComponent {
 
   // Методы управления попапом для sell
   openTokenPopup(): void {
-    this.showTokenPopup = true;
+    this.popupService.openPopup('tokenChangeSell');
   }
 
   closeTokenPopup(): void {
-    this.showTokenPopup = false;
+    this.popupService.closePopup('tokenChangeSell');
   }
 
   onTokenSelected(token: { symbol: string; imageUrl: string }): void {
     this.selectedToken = token.symbol;
     this.selectedTokenImage = token.imageUrl;
-    this.closeTokenPopup();
+    this.popupService.closeAllPopups();
   }
 
   // Методы управления попапом для buy
   openTokenBuyPopup(): void {
-    this.showTokenBuyPopup = true;
+    this.popupService.openPopup('tokenChangeBuy');
   }
 
   closeTokenBuyPopup(): void {
-    this.showTokenBuyPopup = false;
+    this.popupService.closePopup('tokenChangeBuy');
   }
 
   onBuyTokenSelected(token: { symbol: string; imageUrl: string }): void {
     this.selectedBuyToken = token.symbol;
     this.selectedBuyTokenImage = token.imageUrl;
-    this.closeTokenBuyPopup();
+    this.popupService.closeAllPopups();
   }
 
 	// Settings popup
-	toggleSettingsPopup(): void {
-		this.showSettingsPopup = !this.showSettingsPopup;
-	}
+	get showSettingsPopup(): boolean {
+    return this.popupService.getCurrentPopup() === 'settings';
+  }
+
+  toggleSettingsPopup(): void {
+    if (this.showSettingsPopup) {
+      this.popupService.closePopup('settings');
+    } else {
+      this.popupService.openPopup('settings');
+    }
+  }
 
 	onSlippageSave(value: string): void {
-    this.slippage = value;
-    this.showSettingsPopup = false; // Закрываем popup после сохранения
+		this.slippage = value;
+  }
+
+  // Новый метод для управления состоянием кнопки
+  startFindingRoutesProcess(): void {
+    // Очищаем предыдущий таймер, если он существует
+    if (this.findingRoutesTimer) {
+      clearTimeout(this.findingRoutesTimer);
+    }
+    
+    // Устанавливаем состояние "Finding Routes..."
+    this.buttonState = 'finding';
+    
+    // Через 2 секунды меняем на "Approve"
+    this.findingRoutesTimer = setTimeout(() => {
+      this.buttonState = 'approve';
+      this.cdr.detectChanges(); // Обновляем представление
+    }, 2000);
+  }
+
+  // Обновляем метод для проверки активности кнопки
+  isSwapButtonActive(): boolean {
+    const amount = Number(this.sellAmount);
+    return !!(
+      this.sellAmount && 
+      amount > 0 && 
+      amount <= this.balance && 
+      this.buttonState !== 'insufficient'
+    );
+  }
+
+  // Обновляем метод для свапа
+  swap(): void {
+    if (this.buttonState === 'approve') {
+      console.log('Approving token...');
+      this.buttonState = 'wallet';
+      
+      this.walletTimer = setTimeout(() => {
+        this.buttonState = 'swap';
+        this.cdr.detectChanges();
+      }, 2000);
+    } else if (this.buttonState === 'swap') {
+      console.log('Swap initiated with amount:', this.sellAmount);
+      
+      // Сначала показываем только Pending
+      this.showPendingNotification = true;
+      this.showSuccessNotification = false;
+      this.showFailedNotification = false;
+      this.cdr.detectChanges();
+
+      // Через 3 секунды начинаем процесс закрытия
+      setTimeout(() => {
+        // Запускаем анимацию закрытия пендинга
+        const pendingNotification = document.querySelector('app-pending-notification .notification') as HTMLElement;
+        if (pendingNotification) {
+          pendingNotification.style.transform = 'translateX(100%)';
+          pendingNotification.style.opacity = '0';
+        }
+
+        // Ждем завершения анимации (300мс) перед скрытием и показом следующего уведомления
+        setTimeout(() => {
+          this.showPendingNotification = false;
+          
+          // Переключаем между Success и Failed
+          if (this.isLastNotificationSuccess) {
+            this.showFailedNotification = true;
+          } else {
+            this.showSuccessNotification = true;
+          }
+          this.isLastNotificationSuccess = !this.isLastNotificationSuccess;
+          this.cdr.detectChanges();
+        }, 300);
+      }, 3000);
+    }
+  }
+
+  isWalletConnected(): boolean {
+    return this.walletService.isConnected();
+  }
+
+  openConnectWalletPopup(): void {
+    if (!this.walletService.isConnected()) {
+      this.popupService.openPopup('connectWallet');
+    }
+  }
+
+  closeConnectWalletPopup(): void {
+    this.popupService.closePopup('connectWallet');
+  }
+
+  // Геттер для проверки состояния попапа
+  get showConnectWalletPopup(): boolean {
+    return this.popupService.getCurrentPopup() === 'connectWallet';
+  }
+
+  resetTimers(): void {
+    if (this.findingRoutesTimer) {
+      clearTimeout(this.findingRoutesTimer);
+    }
+    if (this.walletTimer) {
+      clearTimeout(this.walletTimer);
+    }
+  }
+
+  // Обновляем методы закрытия
+  closeSuccessNotification(): void {
+    this.showSuccessNotification = false;
+  }
+
+  closeFailedNotification(): void {
+    this.showFailedNotification = false;
+  }
+
+  // Добавьте метод закрытия для пендинга
+  closePendingNotification(): void {
+    this.showPendingNotification = false;
   }
 }
