@@ -9,7 +9,7 @@
   
 	<div class="tx-visualization">
 		<div class="left-network">
-			<div class="network-icon-left" [style.backgroundImage]="'url(' + selectedNetworkImage + ')'"></div>
+			<div class="network-icon-left" [style.backgroundImage]="'url(' + selectedNetwork?.logoURI + ')'"></div>
 			<h4>{{ selectedNetwork }}</h4>
 			<div class="explorer-link">
 				<a href="">View on Explorer</a>
@@ -18,10 +18,10 @@
 		</div>
 
 		<div class="line"></div>
-		<div class="token-icon" [style.backgroundImage]="'url(' + selectedToken.imageUrl + ')'"></div>
+		<div class="token-icon" [style.backgroundImage]="'url(' + selectedToken?.imageUrl + ')'"></div>
 
 		<div class="right-network">
-			<div class="network-icon-right" [style.backgroundImage]="'url(' + selectedNetworkToImage + ')'"></div>
+			<div class="network-icon-right" [style.backgroundImage]="'url(' + selectedNetworkTo?.logoURI"></div>
 			<h4>{{ selectedNetworkTo }}</h4>
 			<div class="explorer-link">
 				<a href="">View on Explorer</a>
@@ -39,7 +39,7 @@
 		</div>
 		<div class="elem">
 			<h6>Value</h6>
-			<p>{{ inputAmount || '0' }} {{ selectedToken.symbol }}</p>
+			<p>{{ inputAmount || '0' }} {{ selectedToken?.symbol }}</p>
 		</div>
 		<div class="elem">
 			<h6>Fee</h6>

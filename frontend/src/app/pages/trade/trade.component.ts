@@ -13,13 +13,13 @@ import { TokenChangeBuyComponent } from '../../components/popup/token-change-buy
 import { WalletService } from '../../services/wallet.service';
 import { ConnectWalletComponent } from '../../components/popup/connect-wallet/connect-wallet.component';
 import { PopupService } from '../../services/popup.service';
+
 export interface Token {
   symbol: string;
   imageUrl: string;
   contractAddress: string;
   decimals: string;
 }
-
 
 @Component({
   selector: 'app-trade',
@@ -46,26 +46,17 @@ export class TradeComponent {
   price: number = 0.5637; // Цена обмена
   priceUsd: number = 921244; // Текущая стоимость в USD за единицу
   sellPriceUsd: string = ''; // Значение для отображения стоимости продажи в USD
-  balance = signal<number>(0.0); // Баланс пользователя для продажи
-  balanceBuy = signal<number>(0.0); // Баланс пользователя для покупки
+  balance = signal<number>(0.0);
+  balanceBuy = signal<number>(0.0);
   rotationCount: number = 0; // Счетчик для отслеживания вращений
 	slippage: string = 'Auto'; // Значение для отображения Slippage
 
-  // Управление попапами
-  showTokenPopup = false; // Управляет отображением попапа для sell
-  showTokenBuyPopup = false; // Управляет отображением попапа для buy
-	//showSettingsPopup = false; // Управляет отображением попапа для settings
+  showTokenPopup = false;
+  showTokenBuyPopup = false;
+	//showSettingsPopup = false;
   selectedToken = signal<Token | undefined>(undefined);
   selectedBuyToken = signal<Token | undefined>(undefined);
   showConnectWalletPopup: boolean = false;
-  //selectedToken = 'ETH'; // Текущий выбранный токен для sell
-  //selectedBuyToken = 'USDT'; // Текущий выбранный токен для buy
-  //selectedTokenImage = '/img/trade/eth.png'; // Изображение для sell
-  //selectedBuyTokenImage = '/img/trade/usdt.png'; // Изображение для buy
-  //selectedTokenAddress = '';
-  //selectedBuyTokenAddress = '';
-  //selectedTokenBuydecimals = '';
-  //selectedTokendecimals = '';
   txData = signal<TransactionRequestEVM | TransactionRequestSVM | undefined> (undefined);
   
   firstToken = computed(() => {
@@ -104,30 +95,34 @@ export class TradeComponent {
     });
 
     effect(() => {
-      if (this.blockchainStateService.connected() && this.selectedToken()) {
-        this.getBalanceForToken(this.selectedToken()!)
-        .then((balanceStr) => {
-          this.balance.set(parseFloat(balanceStr));
-        })
-        .catch((error) => {
-          console.error('Ошибка получения баланса', error);
-          this.balance.set(0.0);
-        });
-      }
-    });
+        if (this.blockchainStateService.connected() && this.selectedToken()) {
+          this.getBalanceForToken(this.selectedToken()!)
+          .then((balanceStr) => {
+            this.balance.set(parseFloat(balanceStr));
+          })
+          .catch((error) => {
+            console.error('Ошибка получения баланса', error);
+            this.balance.set(0.0);
+          });
+        }
+      },
+      { allowSignalWrites: true }
+    );
 
     effect(() => {
-      if (this.blockchainStateService.connected() && this.selectedBuyToken()) {
-        this.getBalanceForToken(this.selectedBuyToken()!)
-        .then((balanceStr) => {
-          this.balance.set(parseFloat(balanceStr));
-        })
-        .catch((error) => {
-          console.error('Ошибка получения баланса', error);
-          this.balance.set(0.0);
-        });
-      }
-    });
+        if (this.blockchainStateService.connected() && this.selectedBuyToken()) {
+          this.getBalanceForToken(this.selectedBuyToken()!)
+          .then((balanceStr) => {
+            this.balanceBuy.set(parseFloat(balanceStr));
+          })
+          .catch((error) => {
+            console.error('Ошибка получения баланса', error);
+            this.balanceBuy.set(0.0);
+          });
+        }
+      },
+      { allowSignalWrites: true }
+    );
 
     effect(
       () => {
@@ -244,7 +239,7 @@ export class TradeComponent {
     this.showTokenPopup = false;
   }
 
-  async onTokenSelected(token: { symbol: string; imageUrl: string; contractAddress: string; decimals: string }): Promise<void> {
+  async onTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.selectedToken.set(token);
     this.balance.set(parseFloat(await this.getBalanceForToken(token)));
@@ -311,7 +306,7 @@ export class TradeComponent {
     this.showTokenBuyPopup = false;
   }
 
-  async onBuyTokenSelected(token: { symbol: string; imageUrl: string; contractAddress: string; decimals: string }): Promise<void> {
+  async onBuyTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.selectedBuyToken.set(token);
     this.balanceBuy.set(parseFloat(await this.getBalanceForToken(token)));

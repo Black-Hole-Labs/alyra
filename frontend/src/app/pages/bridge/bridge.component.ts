@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, signal, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NetworkService } from '../../services/network.service';
@@ -9,6 +9,10 @@ import { Subscription } from 'rxjs';
 import { BridgeTxComponent } from '../../components/popup/bridge-tx/bridge-tx.component';
 import { WalletService } from '../../services/wallet.service';
 import { ConnectWalletComponent } from '../../components/popup/connect-wallet/connect-wallet.component';
+import { Network, TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
+import { Token } from '../trade/trade.component';
+import { BlockchainStateService } from '../../services/blockchain-state.service';
+import { WalletBalanceService } from '../../services/wallet-balance.service';
 
 @Component({
   selector: 'app-bridge',
@@ -29,78 +33,146 @@ export class BridgeComponent implements OnInit, OnDestroy {
   private networkSubscription!: Subscription;
   feesVisible: boolean = false;
   isNetworkChosen: boolean = false;
-  networks: { id: string; name: string; icon: string; }[] = [];
+  //networks: { id: string; name: string; icon: string; }[] = [];
   openNetworkChangeFromPopup: boolean = false;
-  selectedNetworkImage: string = '';
-  selectedNetwork: string = '';
   showNetworkChangeFromPopup: boolean = false;
   showNetworkChangeToPopup: boolean = false;
   showTokenChangePopup: boolean = false;
-  selectedNetworkTo: string = 'Abstract';
-  selectedNetworkToImage: string = '/img/header/network-menu/Abstract.png';
-  selectedToken: any = {
-    symbol: 'ETH',
-    imageUrl: '/img/trade/eth.png'
-  };
+  //selectedNetworkTo: string = 'Abstract';
+  //selectedNetworkToImage: string = '/img/header/network-menu/Abstract.png';
+
   showBridgeTxPopup = false;
-  inputAmount: string = '';
   showConnectWalletPopup: boolean = false;
-	customAddress: string = '';
+	customAddress = signal<string>('');
   showCustomAddress: boolean = false;
 
-  constructor(
-    private networkService: NetworkService,
-    private walletService: WalletService,
-    private renderer: Renderer2
-  ) {
-    this.networks = this.networkService.getNetworks();
-		const abstractNetwork = this.networkService.getNetworks()
-      .find(network => network.id === 'abstract');
+  txData = signal<TransactionRequestEVM | TransactionRequestSVM | undefined> (undefined);
+  private inputTimeout: any;
+  sellAmount: string = '';
+  validatedSellAmount = signal<string>('');
 
-    if (abstractNetwork) {
-      this.selectedNetworkTo = abstractNetwork.name;
-      this.selectedNetworkToImage = abstractNetwork.icon;
+  selectedToken = signal<Token | undefined>(undefined);
+  selectedBuyToken = signal<Token | undefined>(undefined);
+
+  selectedNetwork = signal<Network | undefined>(undefined);
+  selectedBuyNetwork = signal<Network | undefined>(undefined);
+  //selectedNetwork: string = '';
+
+  balance = signal<number>(0.0);
+  balanceBuy = signal<number>(0.0);
+
+  constructor(
+    // private networkService: NetworkService,
+    // private walletService: WalletService,
+    private renderer: Renderer2,
+    private blockchainStateService: BlockchainStateService,
+    private walletBalanceService: WalletBalanceService,
+  ) {
+    // this.networks = this.networkService.getNetworks();
+		// const abstractNetwork = this.networkService.getNetworks()
+    //   .find(network => network.id === 'abstract');
+
+    // if (abstractNetwork) {
+    //   this.selectedNetworkTo = abstractNetwork.name;
+    //   this.selectedNetworkToImage = abstractNetwork.icon;
+    // }
+
+    effect(() => {
+        if (this.blockchainStateService.connected() && this.selectedToken()) {
+          this.getBalanceForToken(this.selectedToken()!)
+          .then((balanceStr) => {
+            this.balance.set(parseFloat(balanceStr));
+          })
+          .catch((error) => {
+            console.error('Ошибка получения баланса', error);
+            this.balance.set(0.0);
+          });
+        }
+      },
+      { allowSignalWrites: true }
+    );
+
+    effect(() => {
+        if (this.blockchainStateService.connected() && this.selectedBuyToken()) {
+          this.getBalanceForToken(this.selectedBuyToken()!)
+          .then((balanceStr) => {
+            this.balanceBuy.set(parseFloat(balanceStr));
+          })
+          .catch((error) => {
+            console.error('Ошибка получения баланса', error);
+            this.balanceBuy.set(0.0);
+          });
+        }
+      },
+      { allowSignalWrites: true }
+    );
+
+    effect(() => {
+        const tokens = this.blockchainStateService.filteredTokens();
+        this.selectedToken.set(tokens.length > 0 ? tokens[0] : undefined);
+        this.selectedBuyToken.set(tokens.length > 1 ? tokens[1] : undefined);
+      },
+      { allowSignalWrites: true }
+    );
+
+    effect(() => {
+        const tokens = this.blockchainStateService.networks();
+        this.selectedNetwork.set(tokens.length > 0 ? tokens[0] : undefined);
+        this.selectedBuyNetwork.set(tokens.length > 1 ? tokens[1] : undefined);
+      },
+      { allowSignalWrites: true }
+    );
+  }
+
+  async getBalanceForToken(token: Token): Promise<any> {
+    const walletAddress = this.blockchainStateService.getCurrentWalletAddress();
+    if (!walletAddress)
+    {
+      console.error(`Failed to get wallet address`);
+      return;
     }
+
+    if(this.blockchainStateService.getCurrentNetworkId()?.chainId === "1151111081099710") { // SVM
+      if (token.symbol === "SOL") // change to adres
+      {
+        return this.walletBalanceService.getSolanaBalance(walletAddress);
+      }
+      else
+      {
+        return this.walletBalanceService.getSolanaBalance(walletAddress, token.contractAddress);
+      }
+    }
+    else { // EVM
+      try {
+        const response = await fetch('/data/networks.json');
+        if (!response.ok) {
+          console.error('Failed to load networks');
+        }
+  
+        const data = await response.json();
+  
+        const network = data.find((net: { id: number }) => net.id === this.blockchainStateService.getCurrentNetworkId()?.id);
+  
+        if (!network) {
+          console.error('Network not found');
+        }
+  
+        if (token.symbol === "ETH") {
+          const balance = await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals));
+          return balance;
+        } else {
+          return await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals), token.contractAddress);
+        }
+      } catch (error) {
+        console.error(`Error loading networks`);
+        return "0";
+      }
+    }
+    
   }
 
   ngOnInit() {
-    // Подписываемся на изменения выбранной сети
-    this.networkSubscription = this.networkService.selectedNetwork$.subscribe(network => {
-      if (network) {
-        // Обновляем сеть "From" при изменении сети в хедере
-        this.selectedNetwork = network.name;
-        this.selectedNetworkImage = network.icon;
-        console.log('Network updated from header:', network); // для отладки
-      }
-    });
-
-    // Получаем текущую выбранную сеть при инициализации
-    const currentNetwork = this.networkService.getSelectedNetwork();
-    if (currentNetwork) {
-      this.selectedNetwork = currentNetwork.name;
-      this.selectedNetworkImage = currentNetwork.icon;
-    }
-
-    // Если у вас есть сервис с токенами, можно получить первый токен из него
-    // this.selectedToken = this.tokenService.getDefaultToken();
     
-    // Или установить напрямую
-    this.selectedToken = {
-      symbol: 'ETH',
-      imageUrl: '/img/trade/eth.png',
-      // другие необходимые свойства токена
-    };
-
-    // Если по какой-то причине сеть не была установлена в конструкторе
-    if (!this.selectedNetworkTo) {
-      const abstractNetwork = this.networkService.getNetworks()
-        .find(network => network.id === 'abstract');
-
-      if (abstractNetwork) {
-        this.selectedNetworkTo = abstractNetwork.name;
-        this.selectedNetworkToImage = abstractNetwork.icon;
-      }
-    }
   }
 
   ngOnDestroy() {
@@ -109,12 +181,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
     }
   }
 
-  get formattedNetworks() {
-    return this.networks.map(network => ({
-      name: network.name,
-      imageUrl: network.icon
-    }));
-  }
 
   toggleFeesVisibility(): void {
     this.feesVisible = !this.feesVisible;
@@ -130,15 +196,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
     this.showNetworkChangeFromPopup = false;
   }
 
-  onNetworkSelected(event: { name: string; imageUrl: string }): void {
-    // При выборе сети в попапе "From", обновляем также сеть в сервисе
-    this.selectedNetwork = event.name;
-    this.selectedNetworkImage = event.imageUrl;
-    this.networkService.setSelectedNetwork({
-      id: event.name.toLowerCase(), // или используйте соответствующий id
-      name: event.name,
-      icon: event.imageUrl
-    });
+  async onNetworkSelected(event: Network ): Promise<void> {
+    this.selectedNetwork.set(event);
     this.closeNetworkChangeFromPopup();
   }
 
@@ -146,9 +205,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
     this.showNetworkChangeToPopup = false;
   }
 
-  onNetworkToSelected(event: { name: string; imageUrl: string }): void {
-    this.selectedNetworkTo = event.name;
-    this.selectedNetworkToImage = event.imageUrl;
+  async onNetworkToSelected(event: Network): Promise<void> {
+    this.selectedBuyNetwork.set(event);
     this.closeNetworkChangeToPopup();
   }
 
@@ -156,52 +214,29 @@ export class BridgeComponent implements OnInit, OnDestroy {
     this.showTokenChangePopup = false;
   }
 
-  onTokenSelected(token: { symbol: string; imageUrl: string }): void {
-    this.selectedToken = token;
+  async onTokenSelected(token: Token): Promise<void> {
+    this.selectedToken.set(token);
     this.closeTokenChangePopup();
   }
 
-	processInput(event: Event, isAmount: boolean): void {
-    const input = event.target as HTMLInputElement;
-    if (isAmount) {
-      let value = input.value;
-      
-      // Заменяем запятые на точки
-      value = value.replace(/,/g, '.');
-      
-      // Если ввод начинается с точки, добавляем 0 перед ней
-      if (value.startsWith('.')) {
-        value = '0' + value;
-      }
-      
-      // Удаляем все символы, кроме цифр и точки
-      value = value.replace(/[^0-9.]/g, '');
-      
-      // Удаляем лишние точки, оставляя только первую
-      const firstDotIndex = value.indexOf('.');
-      if (firstDotIndex !== -1) {
-        value = value.slice(0, firstDotIndex + 1) + 
-              value.slice(firstDotIndex + 1).replace(/\./g, '');
-      }
-      
-      this.inputAmount = value;
-      input.value = value;
-    }
-  }
+	processInput(event: Event, isSell: boolean): void {
+    this.txData.set(undefined);
+    const inputElement = event.target as HTMLInputElement;
+    inputElement.value = inputElement.value
+      .replace(/[^0-9.,]/g, '')
+      .replace(/(,|\.){2,}/g, '')
+      .replace(/^(,|\.)/g, '')
+      .replace(/,/g, '.');
 
-  restrictInput(event: KeyboardEvent): void {
-    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', '.', ','];
-    
-    // Разрешаем цифры и некоторые управляющие клавиши
-    if (
-      (event.key >= '0' && event.key <= '9') || 
-      allowedKeys.includes(event.key)
-    ) {
-      return; // Разрешённый ввод
+    if (isSell) {
+      clearTimeout(this.inputTimeout);
+
+      this.inputTimeout = setTimeout(() => {
+        this.sellAmount = inputElement.value;
+        this.validatedSellAmount.set(inputElement.value);
+      }, 2000);
     }
-    
-    // Блокируем остальные символы
-    event.preventDefault();
+    console.log("some data");
   }
 
   // Управление анимацией
@@ -224,18 +259,19 @@ export class BridgeComponent implements OnInit, OnDestroy {
   
   swapNetworks(): void {
     console.log('Swapping networks...');
+    this.txData.set(undefined);
+
+    const tempNetwork = this.selectedNetwork();
+		const tempToken = this.selectedToken();
     
-    // Сохраняем временные значения
-    const tempNetwork = this.selectedNetwork;
-    const tempNetworkImage = this.selectedNetworkImage;
+		this.selectedToken.set(this.selectedBuyToken());
+		this.selectedBuyToken.set(tempToken);
     
-    // Меняем местами сети
-    this.selectedNetwork = this.selectedNetworkTo;
-    this.selectedNetworkImage = this.selectedNetworkToImage;
-    this.selectedNetworkTo = tempNetwork;
-    this.selectedNetworkToImage = tempNetworkImage;
+		this.selectedNetwork.set(this.selectedBuyNetwork());
+		this.selectedBuyNetwork.set(tempNetwork);
     
-    console.log('After swap:', this.selectedNetwork, this.selectedNetworkTo);
+    console.log('After swap:', this.selectedNetwork(), this.selectedBuyNetwork());
+		console.log('After swap:', this.selectedToken, this.selectedBuyToken);
   }
 
   openBridgeTxPopup(): void {
@@ -249,19 +285,25 @@ export class BridgeComponent implements OnInit, OnDestroy {
     this.showBridgeTxPopup = false;
   }
 
-  // Метод для проверки всех условий
-  isBridgeButtonActive(): boolean {
-    return !!(
-      this.selectedNetwork && 
-      this.selectedNetworkTo && 
-      this.selectedToken?.symbol && 
-      this.inputAmount && 
-      Number(this.inputAmount) > 0
+  //?
+  isBridgeButtonActive = computed(() =>
+      !!this.blockchainStateService.network() &&
+      !!this.blockchainStateService.walletAddress() &&
+      this.selectedToken() !== undefined &&
+      this.selectedNetwork() !== undefined &&
+      this.selectedBuyNetwork() !== undefined &&
+      this.selectedBuyToken() !== undefined &&
+      this.validatedSellAmount().trim() !== ''
     );
-  }
 
   isWalletConnected(): boolean {
-    return this.walletService.isConnected();
+    return this.blockchainStateService.connected();
+  }
+
+  setMaxSellAmount(): void {
+    this.sellAmount = this.balance.toString();
+    //this.updateBuyAmount(); todo
+    //this.updateSellPriceUsd();
   }
 
   openConnectWalletPopup(): void {
@@ -274,14 +316,14 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   validateAddress(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.customAddress = input.value;
+    this.customAddress.set(input.value);
   }
 
   get addressStatus(): 'none' | 'good' | 'bad' {
-    if (!this.customAddress) {
+    if (!this.customAddress()) {
       return 'none';
     }
-    return this.customAddress.length <= 2 ? 'good' : 'bad';
+    return this.customAddress().length <= 2 ? 'good' : 'bad';
   }
 
   toggleCustomAddress(): void {

@@ -18,7 +18,7 @@
 			<div class="network" *ngFor="let network of filteredNetworks" (click)="selectNetwork(network)">
 				<div class="left">
 					<div class="image">
-						<div class="network-image" [style.backgroundImage]="'url(' + network.icon + ')'"></div>
+						<div class="network-image" [style.backgroundImage]="'url(' + network.logoURI + ')'"></div>
 					</div>
 					<div class="name">
 						<h6>{{ network.name }}</h6>

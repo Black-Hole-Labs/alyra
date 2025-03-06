@@ -134,7 +134,7 @@ export class BlockchainStateService {
           console.log("this.network());",this.network());
         }
   
-        console.log("this.networks",this.networks);
+        console.log("this.networks",this.networks());
       } catch (error) {
         console.error('Failed to load networks:', error);
       }

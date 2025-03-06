@@ -18,21 +18,20 @@
 				<div class="choose">
 					<div class="token" (click)="showTokenChangePopup = true">
 						<div class="token-icon" 
-							 *ngIf="selectedToken.imageUrl" 
-                [style.backgroundImage]="'url(' + selectedToken.imageUrl + ')'">
+							 *ngIf="selectedToken()?.imageUrl" 
+                [style.backgroundImage]="'url(' + selectedToken()?.imageUrl + ')'">
 						</div>
-						<p>{{ selectedToken.symbol || 'Select Token' }}</p>
+						<p>{{ selectedToken()?.symbol || 'Select Token' }}</p>
 					</div>
 					<div class="bridge-amount">
 						<input
 							type="text"
 							id="number-input"
 							placeholder="Enter amount"
-							[value]="inputAmount"
+							[value]="sellAmount"
               (input)="processInput($event, true)"
-              (keydown)="restrictInput($event)"
 						/>
-						<h6 class="max-button">MAX</h6>
+						<h6 class="max-button" (click)="setMaxSellAmount()">MAX</h6>
 					</div>
 				</div>
 			</div>
@@ -40,24 +39,19 @@
 				<h4>From</h4>
 				<div class="choose-network" (click)="showNetworkChangeFromPopup = true">
 					<div class="network-from">
-						<div class="network-icon" [style.backgroundImage]="'url(' + selectedNetworkImage + ')'"></div>
-						<p>{{ selectedNetwork }}</p>
+						<div class="network-icon" [style.backgroundImage]="'url(' + selectedNetwork()?.logoURI + ')'"></div>
+						<p>{{ selectedNetwork()?.name }}</p>
 					</div>
 					<button></button>
 				</div>
 			</div>
 
 			<app-token-change
+				[mode]="'sell'"
 				*ngIf="showTokenChangePopup"
 				(close)="closeTokenChangePopup()"
 				(tokenSelected)="onTokenSelected($event)">
-			</app-token-change>
-
-			<app-network-change-from
-				*ngIf="showNetworkChangeFromPopup"
-				(close)="closeNetworkChangeFromPopup()"
-				(networkSelected)="onNetworkSelected($event)">
-			</app-network-change-from>
+			</app-token-change>			
 
 			<div class="changer">
 
@@ -79,10 +73,10 @@
 				<div class="choose-network" (click)="showNetworkChangeToPopup = true">
 					<div class="network-to">
 						<div class="network-icon" 
-							 *ngIf="selectedNetworkTo" 
-              [style.backgroundImage]="'url(' + selectedNetworkToImage + ')'">
+							 *ngIf="selectedBuyNetwork()" 
+              [style.backgroundImage]="'url(' + selectedBuyNetwork()?.logoURI + ')'">
 						</div>
-						<p>{{ selectedNetworkTo || 'Select Network' }}</p>
+						<p>{{ selectedBuyNetwork()?.name || 'Select Network' }}</p>
 					</div>
 					<button></button>
 				</div>
@@ -106,7 +100,7 @@
 				<h4>Receive</h4>
 				<div class="choose-network" [ngClass]="{'active': isNetworkChosen}">
 					<div class="receive-network">
-						<p *ngIf="selectedToken">{{ inputAmount }} {{ selectedToken.symbol }} in ~2 seconds</p>
+						<p *ngIf="selectedToken">{{ sellAmount }} {{ selectedToken()?.symbol }} in ~2 seconds</p>
 					</div>
 				</div>
 			</div>
@@ -138,6 +132,12 @@
   </button>
 </ng-template>
 
+<app-network-change-from
+	*ngIf="showNetworkChangeFromPopup"
+	(close)="closeNetworkChangeFromPopup()"
+	(networkSelected)="onNetworkSelected($event)">
+</app-network-change-from>
+
 <app-network-change-to
     *ngIf="showNetworkChangeToPopup"
     (close)="closeNetworkChangeToPopup()"
@@ -146,12 +146,10 @@
 
 <app-bridge-tx
   *ngIf="showBridgeTxPopup"
-  [selectedNetwork]="selectedNetwork"
-  [selectedNetworkImage]="selectedNetworkImage"
-  [selectedNetworkTo]="selectedNetworkTo"
-  [selectedNetworkToImage]="selectedNetworkToImage"
-  [selectedToken]="selectedToken"
-  [inputAmount]="inputAmount"
+  [selectedNetwork]="selectedNetwork()"
+  [selectedNetworkTo]="selectedBuyNetwork()"
+  [selectedToken]="selectedToken()"
+  [inputAmount]="sellAmount"
   (close)="closeBridgeTxPopup()">
 </app-bridge-tx>
 
