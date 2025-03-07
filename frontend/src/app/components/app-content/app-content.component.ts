@@ -1,16 +1,59 @@
 import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Router, NavigationEnd } from '@angular/router';  // Импортируем Router и NavigationEnd
+import { filter } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
-
+import { Network } from '../../models/wallet-provider.interface';
+import { NetworkService } from '../../services/network.service';
+import { PopupService } from '../../services/popup.service';
+import { HeaderComponent } from '../header/header.component';
+import { BlockchainConnectComponent } from '../blockchain-connect/blockchain-connect.component';
+import { FooterComponent } from '../footer/footer.component';
+import { BlackholeMenuComponent } from '../popup/blackhole-menu/blackhole-menu.component';
+import { BlackholeNetworkComponent } from '../popup/blackhole-network/blackhole-network.component';
 @Component({
   selector: 'app-app-content',
   standalone: true,
-  imports: [CommonModule, RouterModule],
-  template: `
-    <div class="app-content">
-      <router-outlet></router-outlet>
-    </div>
-  `,
-  styleUrls: ['./app-content.component.scss']
+  templateUrl: './app-content.component.html',
+  styleUrls: ['./app-content.component.scss'],
+  imports: [RouterOutlet, RouterModule,  HeaderComponent, FooterComponent, BlackholeMenuComponent, CommonModule, BlackholeNetworkComponent, BlockchainConnectComponent]
 })
-export class AppContentComponent {}
+export class AppContentComponent {
+  isPopupVisible = false;
+  isNetworkPopupVisible = false;
+  selectedNetwork = 'ethereum';
+  showDefaultLayout = true;
+  networks: Network[] = [];
+
+  constructor(
+    private router: Router, 
+    private popupService: PopupService,
+    public networkService: NetworkService
+    ) {
+      //this.networks = this.networkService.getNetworks();
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.closeAllPopups();
+    });
+  }
+
+  togglePopup() {
+    this.isPopupVisible = !this.isPopupVisible;
+  }
+
+  toggleNetworkPopup() {
+    this.isNetworkPopupVisible = !this.isNetworkPopupVisible;
+  }
+
+  closeAllPopups() {
+    this.isPopupVisible = false;
+    this.isNetworkPopupVisible = false;
+  }
+
+  onNetworkSelected(network: Network): void {
+    this.networkService.setSelectedNetwork(network);
+    this.popupService.closeAllPopups();
+  }
+}

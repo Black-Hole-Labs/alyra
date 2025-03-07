@@ -1,15 +1,13 @@
 .bridge-tx {
 	width: 681px;
 	height: auto;
-	position: fixed;
-	top: 148px;
-	left: 50%;
-	transform: translate(-50%, 0%);
-	background-color: black;
-	border: 1px solid var(--elem-nonactive);
+	background-color: rgba(var(--dark-bg), 0.6);
+	backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(5px);
 	border-radius: 28px;
 	box-sizing: border-box;
 	padding: 40px;
+	z-index: 9999;
 	.header {
 		display: flex;
 		align-items: center;
@@ -40,14 +38,19 @@
 			background: url(/img/trade/close-icon30px.png);
 			background-size: cover;
 			background-repeat: no-repeat;
+			opacity: 0.3;
 			cursor: pointer;
+			transition: 0.2s ease-in-out;
+		}
+		.close-button:hover {
+			opacity: 1;
 		}
 	}
 	.tx-visualization {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		margin-top: 76px;
+		margin-top: 80px;
 		gap: 190px;
 		.left-network {
 			display: flex;
@@ -98,7 +101,7 @@
 			background-repeat: no-repeat;
 			position: absolute;
 			left: 335px;
-			top: 290px;
+			top: 270px;
 			transform-origin: 0 105px;
 			animation: moveToken 5s infinite cubic-bezier(0.4, 0, 0.2, 1);
 		}
@@ -136,7 +139,7 @@
 			width: 234px;
 			position: absolute;
 			left: 220px;
-			top: 200px;
+			top: 180px;
 		}
 		.right-network {
 			display: flex;
@@ -224,17 +227,17 @@
 	.view-tx-button {
 		width: 100%;
 		height: 72px;
-		background-color: var(--elem-nonactive);
+		background-color: rgba(var(--white), 1);
 		border-radius: 16px;
 		font-family: "JetBrains Mono", monospace;
 		font-weight: 500;
 		font-size: 21px;
-		color: white;
+		color: black;
 		cursor: pointer;
-		transition: 0.2s;
+		transition: 0.2s ease-in-out;
 		margin-top: 52px;
 		&:hover {
-			background-color: var(--dark-select);
+			background-color: rgba(var(--white), 0.5);
 		}
 	}
 }

@@ -6,6 +6,7 @@ import { BlockchainStateService } from '../../../services/blockchain-state.servi
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { NetworkService } from '../../../services/network.service';
 import { Token } from '../../../pages/trade/trade.component';
+import { PopupService } from '../../../services/popup.service';
 
 @Component({
   selector: 'app-token-change',
@@ -64,5 +65,5 @@ export class TokenChangePopupComponent {
 
   trackByToken(index: number, token: any): string {
     return token.contractAddress || index.toString(); 
-  }
+  } //todo?
 }

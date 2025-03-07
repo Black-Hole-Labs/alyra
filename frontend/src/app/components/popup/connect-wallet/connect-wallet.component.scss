@@ -3,6 +3,7 @@
   position: fixed;
   top: 148px;
   right: 40px;
+	height: 860px;
 	background-color: rgba(var(--dark-bg), 0.3);
 	backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(5px);
@@ -10,15 +11,20 @@
   z-index: 1000;
 	padding: 40px;
 	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	
 	.upper{
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		margin-bottom: 17px;
 		h6{
 			font-family: "JetBrains Mono", monospace;
 			font-weight: 500;
 			font-size: 22px;
 			color: white;
+			margin: 0;
 		}
 		button{
 			height: 15px;
@@ -34,6 +40,35 @@
 			opacity: 1;
 		}
 	}
+	
+	/* Создаем контейнер для прокрутки содержимого */
+	.scroll-container {
+		flex: 1;
+		overflow-y: auto;
+		margin-right: -10px; /* Компенсируем отступ для скроллбара */
+		padding-right: 10px;
+		margin-bottom: 20px; /* Отступ для дисклеймера */
+		
+		/* Стилизуем скроллбар */
+		&::-webkit-scrollbar {
+			width: 8px;
+		}
+		
+		&::-webkit-scrollbar-track {
+			background: rgba(var(--dark-bg), 0.3);
+			border-radius: 4px;
+		}
+		
+		&::-webkit-scrollbar-thumb {
+			background: var(--elem-nonactive);
+			border-radius: 4px;
+		}
+		
+		&::-webkit-scrollbar-thumb:hover {
+			background: var(--elem-active);
+		}
+	}
+	
 	.devider{
 		margin-top: 17px;
 		display: flex;
@@ -59,6 +94,7 @@
 		flex-direction: column;
 		gap: 10px;
 		margin-top: 20px;
+		
 		.wallet{
 			display: flex;
 			align-items: center;
@@ -140,7 +176,7 @@
 				}
 			}
 			.detected{
-				background-color: var(--dark-green);
+				background-color: rgba(var(--dark-green), 1);
 				p{
 					color: var(--green);
 				}
@@ -153,12 +189,13 @@
 			}
 		}
 	}
+	
 	.disclaimer{
 		font-family: "JetBrains Mono", monospace;
 		font-weight: 400;
 		font-size: 11px;
 		color: var(--elem-nonactive);
-		margin-top: 20px;
+		margin: 0;
 		a{
 			color: white;
 			transition: 0.2s;

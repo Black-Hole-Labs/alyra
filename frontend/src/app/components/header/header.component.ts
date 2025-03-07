@@ -47,12 +47,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @Output() toggleMenu = new EventEmitter<void>();
   @Output() toggleNetwork = new EventEmitter<void>();
 
+  // Добавляем свойства для анимации текста
+  private menuItems: { element: HTMLElement, originalText: string }[] = [];
+  private possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}:"<>?|';
+  private glitchChars = '!@#$%^&*()_+{}:"<>?|\\';  // Символы для эффекта глитча
+  private cyberChars = '01010101110010101010101110101010'; // Кибер-символы
+  private animationFrames = 20; // Увеличиваем количество кадров для более плавной анимации
+  private animationSpeed = 20; // Немного ускоряем анимацию
+  private animationTimeouts: { [key: string]: number } = {};
+
   constructor(
     private renderer: Renderer2,
     private elRef: ElementRef,
-    //private networkService: NetworkService,
-    private blockchainStateService: BlockchainStateService,
+    private networkService: NetworkService,
     public walletService: WalletService,
+    private blockchainStateService: BlockchainStateService,
     public popupService: PopupService
   ) {
     this.walletService.walletName$.subscribe(name => {
@@ -84,17 +93,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadGmCount();
-    // Подписываемся на изменения сети
-    // this.networkService.selectedNetwork$.subscribe(network => {
-    //   this.selectedNetwork = network;
-    //   console.log('Header network updated:', network); // для отладки
-    // });
+
+    this.loadGmCount();
+    
+    setTimeout(() => {
+      this.initTextAnimation();
+    }, 0);
   }
 
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+    
+    Object.values(this.animationTimeouts).forEach(timeoutId => {
+      clearTimeout(timeoutId);
+    });
   }
 
   loadGmCount() {
@@ -117,18 +131,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   togglePopup(event?: Event): void {
-    // Если есть событие, предотвращаем его всплытие
     if (event) {
       event.stopPropagation();
     }
-
     const currentPopup = this.popupService.getCurrentPopup();
-
     if (currentPopup === 'blackholeMenu') {
-      console.log('Closing blackholeMenu');
       this.popupService.closeAllPopups();
     } else {
-      console.log('Opening blackholeMenu');
       this.popupService.openPopup('blackholeMenu');
     }
   }
@@ -141,11 +150,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (event) {
       event.stopPropagation();
     }
-
     const currentPopup = this.popupService.getCurrentPopup();
-    
     if (currentPopup === 'networkPopup') {
-      this.popupService.closePopup('networkPopup');
+      this.popupService.closeAllPopups();
     } else {
       this.popupService.openPopup('networkPopup');
     }
@@ -247,61 +254,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  // selectNetwork(network: { id: string; name: string; icon: string }): void {
-  //   console.log('Header selecting network:', network); // для отладки
-  //   this.networkService.setSelectedNetwork(network);
-  //   this.popupService.closePopup('networkPopup');
-  // }
-
   openConnectWalletPopup(): void {
-		if (this.walletService.isConnected()) {
-			this.popupService.openPopup('wallet');
-		} else {
-			this.popupService.openPopup('connectWallet');
-		}
-	}
-
-  closeConnectWalletPopup(): void {
-    this.showConnectWalletPopup = false;
-  }
-
-  openWalletPopup(): void {
-    this.showConnectWalletPopup = false; // закрываем connect-wallet попап
-    this.showWalletPopup = true;
-  }
-
-  closeWalletPopup(): void {
-    this.showWalletPopup = false;
-  }
-
-  onWalletDisconnect(): void {
-    this.walletService.disconnect();
-    this.showWalletPopup = false;
-    this.showConnectWalletPopup = true;
-  }
-
-  openMenu(): void {
-    this.popupService.openPopup('blackholeMenu');
-  }
-
-  closeMenu(): void {
-    this.showConnectWalletPopup = false;
-  }
-
-  openConnectWallet(): void {
-    this.popupService.openPopup('connectWallet');
-  }
-
-  closeConnectWallet(): void {
-    this.showConnectWalletPopup = false;
-  }
-
-  openWallet(): void {
-    this.popupService.openPopup('wallet');
-  }
-
-  closeWallet(): void {
-    this.showWalletPopup = false;
+    if (this.walletService.isConnected()) {
+      this.popupService.openPopup('wallet');
+    } else {
+      this.popupService.openPopup('connectWallet');
+    }
   }
 
   closeAllPopups(): void {
@@ -311,5 +269,129 @@ export class HeaderComponent implements OnInit, OnDestroy {
   // Геттер для проверки состояния blackholeMenu
   get isPopupVisible(): boolean {
     return this.popupService.getCurrentPopup() === 'blackholeMenu';
+  }
+
+  openNetwork(): void {
+    this.popupService.openPopup('network');
+  }
+
+  openSettings(): void {
+    this.popupService.openPopup('settings');
+  }
+
+  // Инициализация анимации текста
+  private initTextAnimation(): void {
+    const menuLinks = this.elRef.nativeElement.querySelectorAll('nav a');
+    
+    menuLinks.forEach((link: HTMLElement) => {
+      const originalText = link.textContent || '';
+      this.menuItems.push({ element: link, originalText });
+      
+      // Добавляем обработчики событий для наведения мыши
+      this.renderer.listen(link, 'mouseenter', () => {
+        this.animateText(link, originalText);
+      });
+      
+      this.renderer.listen(link, 'mouseleave', () => {
+        // Останавливаем анимацию и возвращаем оригинальный текст
+        link.textContent = originalText;
+      });
+    });
+  }
+  
+  // Анимация "подбора букв"
+  private animateText(element: HTMLElement, finalText: string): void {
+    // Отменяем предыдущую анимацию, если она есть
+    const elementId = element.getAttribute('data-animation-id') || Math.random().toString(36).substring(2, 9);
+    element.setAttribute('data-animation-id', elementId);
+    
+    if (this.animationTimeouts[elementId]) {
+      clearTimeout(this.animationTimeouts[elementId]);
+    }
+    
+    let frame = 0;
+    const totalFrames = this.animationFrames;
+    
+    // Создаем массив для отслеживания "глитч-эффекта" для каждой буквы
+    const glitchStates = Array(finalText.length).fill(false);
+    // Массив для отслеживания "подобранных" букв
+    const resolvedChars = Array(finalText.length).fill(false);
+    
+    const animate = () => {
+      if (frame >= totalFrames) {
+        element.textContent = finalText;
+        delete this.animationTimeouts[elementId];
+        return;
+      }
+      
+      let result = '';
+      const progress = frame / totalFrames;
+      
+      // Определяем, сколько букв должно быть "подобрано" на текущем кадре
+      const resolvedCount = Math.floor(finalText.length * Math.pow(progress, 0.8));
+      
+      // Обновляем состояние "подобранных" букв
+      for (let i = 0; i < resolvedCount; i++) {
+        if (!resolvedChars[i]) {
+          resolvedChars[i] = true;
+        }
+      }
+      
+      // Случайно выбираем несколько букв для глитча
+      if (frame % 3 === 0) {
+        for (let i = 0; i < finalText.length; i++) {
+          if (Math.random() < 0.1) {
+            glitchStates[i] = !glitchStates[i];
+          }
+        }
+      }
+      
+      for (let i = 0; i < finalText.length; i++) {
+        // Если буква уже "подобрана"
+        if (resolvedChars[i]) {
+          // Но может быть с глитчем
+          if (glitchStates[i] && frame < totalFrames * 0.9 && finalText[i] !== ' ') {
+            // Применяем глитч-эффект к уже подобранной букве
+            if (Math.random() < 0.3) {
+              // Используем кибер-символы для более футуристического вида
+              const cyberIndex = Math.floor(Math.random() * this.cyberChars.length);
+              result += this.cyberChars[cyberIndex];
+            } else {
+              const glitchIndex = Math.floor(Math.random() * this.glitchChars.length);
+              result += this.glitchChars[glitchIndex];
+            }
+          } else {
+            result += finalText[i];
+          }
+        } else {
+          // Буква еще не "подобрана"
+          if (finalText[i] === ' ') {
+            // Пробелы оставляем как есть для лучшей читаемости
+            result += ' ';
+          } else {
+            // Для букв выбираем случайный символ
+            // С вероятностью используем символы глитча или кибер-символы
+            const rand = Math.random();
+            if (rand < 0.2) {
+              const glitchIndex = Math.floor(Math.random() * this.glitchChars.length);
+              result += this.glitchChars[glitchIndex];
+            } else if (rand < 0.4) {
+              const cyberIndex = Math.floor(Math.random() * this.cyberChars.length);
+              result += this.cyberChars[cyberIndex];
+            } else {
+              const randomIndex = Math.floor(Math.random() * this.possibleChars.length);
+              result += this.possibleChars[randomIndex];
+            }
+          }
+        }
+      }
+      
+      element.textContent = result;
+      frame++;
+      
+      this.animationTimeouts[elementId] = window.setTimeout(animate, this.animationSpeed);
+    };
+    
+    animate();
   }
 }

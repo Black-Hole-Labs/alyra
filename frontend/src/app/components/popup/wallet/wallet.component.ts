@@ -17,7 +17,7 @@ interface Token {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './wallet.component.html',
-  styleUrl: './wallet.component.scss'
+  styleUrl: './wallet.component.scss',
 })
 export class WalletComponent {
   @Output() close = new EventEmitter<void>();
@@ -88,6 +88,7 @@ export class WalletComponent {
 
   onDisconnect(): void {
     this.walletService.disconnect();
+    this.popupService.closeAllPopups();  // Закрываем все попапы после отключения
     this.disconnect.emit();
   }
 }

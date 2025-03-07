@@ -5,7 +5,7 @@ import { BlockchainStateService } from './services/blockchain-state.service';
 import { routes } from './app.routes';
 import { BackpackProvider, CoinbaseWalletProvider, LedgerProvider, MagicEdenProvider, MetaMaskProvider, OkxWalletProvider, PhantomProvider, RabbyWalletProvider, SolflareProvider, TrustWalletProvider, WalletProviderManager } from './models/network.model';
 import { provideHttpClient } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { importProvidersFrom } from '@angular/core';
 
 function initializeApp(
@@ -73,6 +73,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes), // Обеспечивает маршрутизацию
     provideHttpClient(), // Обеспечивает HTTP-клиент для работы с API
     importProvidersFrom(BrowserAnimationsModule),
-    provideZoneChangeDetection({ eventCoalescing: true })
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideAnimations()
   ],
 }

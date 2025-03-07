@@ -13,6 +13,9 @@ import { TokenChangeBuyComponent } from '../../components/popup/token-change-buy
 import { WalletService } from '../../services/wallet.service';
 import { ConnectWalletComponent } from '../../components/popup/connect-wallet/connect-wallet.component';
 import { PopupService } from '../../services/popup.service';
+import { SuccessNotificationComponent } from '../../components/notification/success-notification/success-notification.component';
+import { FailedNotificationComponent } from '../../components/notification/failed-notification/failed-notification.component';
+import { PendingNotificationComponent } from '../../components/notification/pending-notification/pending-notification.component';
 
 export interface Token {
   symbol: string;
@@ -142,6 +145,14 @@ export class TradeComponent {
       .replace(/(,|\.){2,}/g, '') // Удаляем лишние точки или запятые
       .replace(/^(,|\.)/g, '') // Удаляем точку или запятую в начале
       .replace(/,/g, '.'); // Заменяем запятую на точку
+
+
+    // if (Number(this.sellAmount) > this.balance) {
+    //   this.buttonState = 'insufficient';
+    //   // Очищаем таймеры, так как они нам не нужны в этом состоянии
+    //   this.resetTimers();
+    //   return;
+    // } todo?
 
     if (isSell) {
       // this.updateBuyAmount();
@@ -299,11 +310,11 @@ export class TradeComponent {
 
   // Методы управления попапом для buy
   openTokenBuyPopup(): void {
-    this.showTokenBuyPopup = true;
+    this.popupService.openPopup('tokenChangeBuy');
   }
 
   closeTokenBuyPopup(): void {
-    this.showTokenBuyPopup = false;
+    this.popupService.closePopup('tokenChangeBuy');
   }
 
   async onBuyTokenSelected(token: Token): Promise<void> {
@@ -315,9 +326,11 @@ export class TradeComponent {
     // this.selectedBuyTokenAddress = token.contractAddress;
     // this.selectedTokenBuydecimals = token.decimals;
     this.closeTokenBuyPopup();
+    this.popupService.closeAllPopups();
   }
 
 	// Settings popup
+
   toggleSettingsPopup(): void {
     if (this.showSettingsPopup) {
       this.popupService.closePopup('settings');
@@ -517,15 +530,13 @@ export class TradeComponent {
   }
 
   openConnectWalletPopup(): void {
-    this.showConnectWalletPopup = true;
+    if (!this.walletService.isConnected()) {
+      this.popupService.openPopup('connectWallet');
+    }
   }
 
-  parseToAmount(toAmount: string, decimals: number): string {
-    return (Number(toAmount) / Math.pow(10, decimals)).toFixed(6);
-  }
-
-  get showSettingsPopup(): boolean {
-    return this.popupService.getCurrentPopup() === 'settings';
+  closeConnectWalletPopup(): void {
+    this.popupService.closePopup('connectWallet');
   }
 
   parseGasPriceUSD(gasPriceHex: string, gasLimitHex: string, token: { decimals: number; priceUSD: string }): string {
@@ -545,9 +556,107 @@ export class TradeComponent {
     // Форматируем результат
     return gasCostUSD.toFixed(2); // Округляем до 2 знаков после запятой
   }
-
-  closeConnectWalletPopup(): void {
-    this.showConnectWalletPopup = false;
-  }
   
+  // Геттер для проверки состояния попапа
+  get showConnectWalletPopup(): boolean {
+    return this.popupService.getCurrentPopup() === 'connectWallet';
+  }
+
+  resetTimers(): void {
+    if (this.findingRoutesTimer) {
+      clearTimeout(this.findingRoutesTimer);
+    }
+    if (this.walletTimer) {
+      clearTimeout(this.walletTimer);
+    }
+  }
+
+  // Обновляем методы закрытия
+  closeSuccessNotification(): void {
+    this.showSuccessNotification = false;
+  }
+
+  closeFailedNotification(): void {
+    this.showFailedNotification = false;
+  }
+
+  // Добавьте метод закрытия для пендинга
+  closePendingNotification(): void {
+    this.showPendingNotification = false;
+  }
 }
+
+
+
+
+//Egor example pendingNotification
+// startFindingRoutesProcess(): void {
+//   // Очищаем предыдущий таймер, если он существует
+//   if (this.findingRoutesTimer) {
+//     clearTimeout(this.findingRoutesTimer);
+//   }
+  
+//   // Устанавливаем состояние "Finding Routes..."
+//   this.buttonState = 'finding';
+  
+//   // Через 2 секунды меняем на "Approve"
+//   this.findingRoutesTimer = setTimeout(() => {
+//     this.buttonState = 'approve';
+//     this.cdr.detectChanges(); // Обновляем представление
+//   }, 2000);
+// }
+
+// // Обновляем метод для проверки активности кнопки
+// isSwapButtonActive(): boolean {
+//   const amount = Number(this.sellAmount);
+//   return !!(
+//     this.sellAmount && 
+//     amount > 0 && 
+//     amount <= this.balance && 
+//     this.buttonState !== 'insufficient'
+//   );
+// }
+
+// // Обновляем метод для свапа
+// swap(): void {
+//   if (this.buttonState === 'approve') {
+//     console.log('Approving token...');
+//     this.buttonState = 'wallet';
+    
+//     this.walletTimer = setTimeout(() => {
+//       this.buttonState = 'swap';
+//       this.cdr.detectChanges();
+//     }, 2000);
+//   } else if (this.buttonState === 'swap') {
+//     console.log('Swap initiated with amount:', this.sellAmount);
+    
+//     // Сначала показываем только Pending
+//     this.showPendingNotification = true;
+//     this.showSuccessNotification = false;
+//     this.showFailedNotification = false;
+//     this.cdr.detectChanges();
+
+//     // Через 3 секунды начинаем процесс закрытия
+//     setTimeout(() => {
+//       // Запускаем анимацию закрытия пендинга
+//       const pendingNotification = document.querySelector('app-pending-notification .notification') as HTMLElement;
+//       if (pendingNotification) {
+//         pendingNotification.style.transform = 'translateX(100%)';
+//         pendingNotification.style.opacity = '0';
+//       }
+
+//       // Ждем завершения анимации (300мс) перед скрытием и показом следующего уведомления
+//       setTimeout(() => {
+//         this.showPendingNotification = false;
+        
+//         // Переключаем между Success и Failed
+//         if (this.isLastNotificationSuccess) {
+//           this.showFailedNotification = true;
+//         } else {
+//           this.showSuccessNotification = true;
+//         }
+//         this.isLastNotificationSuccess = !this.isLastNotificationSuccess;
+//         this.cdr.detectChanges();
+//       }, 300);
+//     }, 3000);
+//   }

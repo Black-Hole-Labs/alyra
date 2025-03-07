@@ -1,27 +1,25 @@
-.bridge {
-	min-height: calc(100vh - 150px);
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	padding: 40px;
-	box-sizing: border-box;
-	background-color: none;
-}
-
 .bridge-window {
 	width: 681px;
-	height: auto;
-	position: fixed;
-	top: 148px;
-	left: 50%;
-	transform: translate(-50%, 0%);
+	height: 680px;
 	background-color: rgba(var(--dark-bg), 0.3);
 	backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(5px);
+	-webkit-backdrop-filter: blur(5px);
 	border-radius: 28px;
 	box-sizing: border-box;
 	padding: 40px;
+	transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	will-change: height;
+	display: flex;
+	flex-direction: column;
+	padding-bottom: 40px;
+	&.has-receive {
+		height: 780px;
+	}
+
+	&.has-custom-address.has-receive {
+		height: 860px;
+	}
+
 	.header {
 		display: flex;
 		align-items: center;
@@ -45,27 +43,70 @@
 				color: white;
 			}
 		}
-		.custom-wallet-button {
-			width: 32px;
-			height: 32px;
-			background-image: url(/img/header/wallet.png);
-			background-size: cover;
-			background-repeat: no-repeat;
-			cursor: pointer;
-			opacity: 0.3;
-			transition: opacity 0.2s ease-in-out;
-			&:hover {
-				opacity: 1;
-			}
+		.icons {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			position: relative;
+			
+			/* Добавляем минимальную ширину, чтобы сохранить пространство даже когда кнопка скрыта */
+			min-width: 88px; /* 36px (ширина кнопки) + 40px (ширина settings) + 12px (gap) */
+			justify-content: flex-end; /* Выравниваем элементы по правому краю */
+			
+			.custom-wallet-button {
+				width: 36px;
+				height: 36px;
+				background-image: url(/img/header/wallet.png);
+				background-size: cover;
+				background-repeat: no-repeat;
+				cursor: pointer;
+				opacity: 0.3;
+				transition: opacity 0.2s ease-in-out;
+				&:hover {
+					opacity: 1;
+				}
 	
-			&.active {
-				opacity: 1;
+				&.active {
+					opacity: 1;
+				}
+				
+				&.hidden {
+					opacity: 0;
+					pointer-events: none; /* Отключаем события мыши для скрытой кнопки */
+				}
+			}
+			.settings {
+				background-image: url(/img/trade/settings.png);
+				background-size: cover;
+				background-repeat: no-repeat;
+				height: 40px;
+				width: 40px;
+				cursor: pointer;
+				opacity: 0.3;
+				transition: opacity 0.2s ease-in-out;
+			
+				&:hover {
+					opacity: 1;
+				}
+			
+				&.active {
+					opacity: 1;
+				}
 			}
 		}
+		
 	}
 	
 	.main {
 		margin-top: 46px;
+		transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		will-change: transform;
+		display: flex;
+		flex-direction: column;
+		
+		> * {
+			transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		}
 		.send {
 			display: flex;
 			align-items: center;
@@ -122,7 +163,7 @@
 				width: 350px;
 				height: 60px;
 				background-color: var(--dark-select);
-				border: 1px solid var(--elem-nonactive);
+				// border: 1px solid var(--elem-nonactive);
 				border-radius: 15px;
 				padding: 17px 30px;
 				box-sizing: border-box;
@@ -161,7 +202,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		margin-top: 50px;
+		margin-top: 20px;
 		h4 {
 			font-family: "JetBrains Mono", monospace;
 			font-weight: 500;
@@ -173,9 +214,9 @@
 			align-items: center;
 			justify-content: space-between;
 			width: 469px;
-			height: 60px;
+			height: 61px;
 			background-color: var(--dark-select);
-			border: 1px solid var(--elem-nonactive);
+			// border: 1px solid var(--elem-nonactive);
 			border-radius: 15px;
 			padding: 13px 28px;
 			box-sizing: border-box;
@@ -183,14 +224,12 @@
 			.network-from {
 				display: flex;
 				align-items: center;
-				gap: 10px;
+				gap: 20px;
 				.network-icon {
-					background-image: url(/img/bridge/icon-bridge.png);
 					background-size: cover;
 					background-repeat: no-repeat;
 					height: 34px;
 					width: 34px;
-					border-radius: 100%;
 				}
 				p {
 					font-family: "JetBrains Mono", monospace;
@@ -210,6 +249,7 @@
 	}
 }
 .changer {
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -218,6 +258,98 @@
 	hr {
 		width: 255px;
 		border: 1px solid var(--elem-nonactive);
+	}
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.receive-token {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 20px;
+	h4 {
+		font-family: "JetBrains Mono", monospace;
+		font-weight: 500;
+		font-size: 24px;
+		color: white;
+	}
+	.choose {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		.token {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			height: 60px;
+			width: 110px;
+			border-radius: 15px;
+			cursor: pointer;
+			transition: 0.2s ease-in-out;
+			&:hover{
+				background-color: var(--btn-dark);
+			}
+			.token-icon {
+				background-image: url(/img/bridge/icon-bridge.png);
+				background-size: cover;
+				background-repeat: no-repeat;
+				height: 36px;
+				width: 36px;
+			}
+			p {
+				font-family: "JetBrains Mono", monospace;
+				font-weight: 500;
+				font-size: 20px;
+				color: white;
+			}
+			button {
+				background: url(/img/header/open-img.png);
+				width: 6px;
+				height: 3px;
+				background-size: cover;
+				background-repeat: no-repeat;
+			}
+		}
+	}
+	.bridge-amount {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 350px;
+		height: 60px;
+		background-color: var(--dark-select);
+		// border: 1px solid var(--elem-nonactive);
+		border-radius: 15px;
+		padding: 17px 30px;
+		box-sizing: border-box;
+		input {
+			width: 250px;
+			height: 26px;
+			font-family: "JetBrains Mono", monospace;
+			font-weight: 400;
+			font-size: 20px;
+			color: white;
+			background-color: var(--dark-select);
+			outline: none;
+			border: none;
+		}
+		input::placeholder {
+			color: var(--elem-nonactive);
+			font-family: "JetBrains Mono", monospace;
+			font-weight: 400;
+			font-size: 20px;
+		}
+		h6 {
+			color: white;
+			font-family: "JetBrains Mono", monospace;
+			font-weight: 500;
+			font-size: 16px;
+			cursor: pointer;
+			transition: 0.2s;
+		}
+		h6:hover {
+			color: var(--elem-nonactive);
+		}
 	}
 }
 .to {
@@ -235,9 +367,9 @@
 		align-items: center;
 		justify-content: space-between;
 		width: 469px;
-		height: 60px;
+		height: 61px;
 		background-color: var(--dark-select);
-		border: 1px solid var(--elem-nonactive);
+		// border: 1px solid var(--elem-nonactive);
 		border-radius: 15px;
 		padding: 13px 28px;
 		box-sizing: border-box;
@@ -252,7 +384,6 @@
 				background-repeat: no-repeat;
 				height: 34px;
 				width: 34px;
-				border-radius: 100%;
 			}
 			p {
 				font-family: "JetBrains Mono", monospace;
@@ -274,16 +405,20 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-top: 20px;
 	width: 601px;
 	height: 60px;
 	background-color: var(--dark-select);
-	border: 1px solid var(--elem-nonactive);
 	border-radius: 15px;
 	padding: 13px 28px;
 	box-sizing: border-box;
+	margin-top: 20px;
+	margin-bottom: 0;
+	overflow: hidden;
+	transform-origin: top;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	
 	input {
-		width: 531px;
+		width: 521px;
 		height: 26px;
 		font-family: "JetBrains Mono", monospace;
 		font-weight: 400;
@@ -292,13 +427,12 @@
 		background-color: var(--dark-select);
 		outline: none;
 		border: none;
+		
+		&::placeholder {
+			color: var(--elem-nonactive);
+		}
 	}
-	input::placeholder {
-		color: var(--elem-nonactive);
-		font-family: "JetBrains Mono", monospace;
-		font-weight: 400;
-		font-size: 20px;
-	}
+	
 	.address-status {
 		width: 24px;
 		height: 24px;
@@ -313,12 +447,35 @@
 			background-image: url(/img/bridge/status-bad.png);
 		}
 	}
+
+	&.hidden {
+		height: 0;
+		opacity: 0;
+		transform: translateY(-20px);
+		margin: 0;
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+}
+
+/* Добавляем плавный переход для всех элементов, которые будут сдвигаться */
+.main {
+  .receive, .to, .from, .send, .changer, .custom-address {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
 .receive {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-top: 40px;
+	margin-top: 20px;
+	margin-bottom: 0;
+	/* Улучшаем переход, добавляя все свойства, которые могут меняться */
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	/* Начальная высота 0, чтобы анимация была плавной */
+	max-height: 61px; /* Устанавливаем максимальную высоту равной фактической высоте элемента */
+	opacity: 1;
+	overflow: hidden;
 	h4 {
 		font-family: "JetBrains Mono", monospace;
 		font-weight: 500;
@@ -330,7 +487,7 @@
 		align-items: center;
 		justify-content: space-between;
 		width: 469px;
-		height: 60px;
+		height: 61px;
 		background-color: var(--btn-dark);
 		border-radius: 15px;
 		padding: 13px 28px;
@@ -339,14 +496,12 @@
 		.receive-network {
 			display: flex;
 			align-items: center;
-			gap: 10px;
+			gap: 20px;
 			.network-icon {
-				background-image: url(/img/bridge/icon-bridge.png);
 				background-size: cover;
 				background-repeat: no-repeat;
 				height: 34px;
 				width: 34px;
-				border-radius: 100%;
 			}
 			p {
 				font-family: "JetBrains Mono", monospace;
@@ -359,10 +514,50 @@
 	.choose-network.active {
 		background-color: var(--elem-nonactive);
 	}
+
+	&.hidden {
+		height: 0;
+		opacity: 0;
+		transform: translateY(-20px);
+		margin: 0;
+		padding-top: 0;
+		padding-bottom: 0;
+	}
 }
+
+/* Добавляем стили для анимации появления/исчезновения */
+.receive.ng-enter, .receive.ng-leave {
+  transition: all 0.3s ease-in-out;
+}
+
+.receive.ng-enter {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.receive.ng-enter-active {
+  max-height: 61px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.receive.ng-leave {
+  max-height: 61px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.receive.ng-leave-active {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
 .main-button {
 	margin-top: 40px;
 	height: 72px;
+	min-height: 72px;
 	width: 601px;
 	background-color: white;
 	border-radius: 16px;
@@ -371,7 +566,7 @@
 	font-size: 21px;
 	color: black;
 	cursor: pointer;
-	transition: 0.2s;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
 	&.inactive {
 		background-color: rgba(var(--dark-bg), 0.9);
@@ -379,25 +574,57 @@
 		color: var(--elem-nonactive);
 		opacity: 0.5;
 	}
+	
 	&.inactive:hover {
-    background-color: var(--dark-select);
-  }
-}
-.main-button:hover {
-	background-color: var(--elem-nonactive);
+		background-color: var(--dark-select);
+	}
+	
+	&.finding, &.wallet {
+		background-color: var(--dark-select);
+		color: var(--elem-nonactive);
+		cursor: wait;
+	}
+	
+	&.approve {
+		background-color: var(--green);
+		color: black;
+	}
+
+	&.wrong-address {
+		background-color: var(--red);
+		color: white;
+		cursor: not-allowed;
+	}
+
+	&.wrong-address:hover {
+		background-color: #ff6b6b; // Немного светлее красный при наведении
+	}
 }
 
-.gas-container{
+.main-button:hover {
+	background-color: var(--elem-nonactive);
+	
+	&.finding:hover, &.wallet:hover {
+		background-color: var(--dark-select);
+	}
+	
+	&.approve:hover {
+		background-color: #8aff8a;
+	}
+}
+
+.gas-container {
 	width: 601px;
 	display: flex;
 	align-items: center;
 	justify-content: flex-end;
+	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	margin-top: 10px;
 }
 .gas{
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	margin-top: 10px;
 }
 .gas-img{
 	background-image: url(/img/trade/gas-image.png);
@@ -431,15 +658,15 @@
 	height: 54px;
 	width: 54px;
 	position: absolute;
-	top: 325px;
+	top: 50%;
 	left: 50%;
-	transform: translate(-50%, 0%);
+	transform: translate(-50%, -50%);
 	display: flex;
 	justify-content: center;
 	cursor: pointer;
 	border-radius: 1000px;
 	overflow: hidden;
-	z-index: 0;
+	z-index: 1;
 }
 
 .arrow-up,
@@ -496,12 +723,56 @@ animation: click-animation-down 1s linear;
 	}
 }
 
-.network-icon {
-	width: 29px;
-	height: 29px;
-	background-size: cover;
-	background-repeat: no-repeat;
-	margin-right: 10px;
-	border-radius: 100%;
+/* Добавляем стили для сброса отступов */
+.main:not(.has-custom-address) {
+  .receive {
+    margin-top: 20px; /* Возвращаем стандартный отступ */
+  }
 }
 
+/* Добавляем плавный переход для всего контейнера */
+.bridge {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: height;
+}
+
+/* Обновляем анимации для custom-address */
+@keyframes customAddressAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 60px;
+  }
+}
+
+/* Удаляем старые стили для main.has-custom-address, так как они могут конфликтовать */
+.main {
+  &.has-custom-address {
+    transform: translateY(0);
+  }
+}
+
+/* Обновляем стили для main, чтобы все элементы внутри двигались плавно */
+.main {
+  display: flex;
+  flex-direction: column;
+  
+  /* Добавляем плавный переход для всего содержимого */
+  > * {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Обновляем стили для контейнера кнопки и gas */
+.bridge-window {
+  display: flex;
+  flex-direction: column;
+  
+  /* Добавляем padding внизу для плавного изменения высоты */
+  padding-bottom: 40px;
+}

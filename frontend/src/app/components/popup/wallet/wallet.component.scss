@@ -72,7 +72,7 @@
 			.disconnect{
 				padding: 4px 9px;
 				border-radius: 10px;
-				background-color: var(--dark-red);
+				background-color: rgba(var(--dark-red), 1);
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -93,8 +93,13 @@
 				width: 15px;
 				background: url(/img/header/popup-menu/close-icon.png);
 				background-size: cover;
+				opacity: 0.3;
 				background-repeat: no-repeat;
 				cursor: pointer;
+				transition: 0.2s ease-in-out;
+			}
+			button:hover{
+				opacity: 1;
 			}
 		}
 	}

@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { PopupService } from '../../../services/popup.service';
 
 @Component({
-  selector: 'app-settings',
+  selector: 'app-settings-bridge',
   standalone: true,
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss'],
+  templateUrl: './settings-bridge.component.html',
+  styleUrls: ['./settings-bridge.component.scss'],
   imports: [CommonModule],
 })
-export class SettingsComponent implements OnInit {
+export class SettingsBridgeComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<string>();
 
@@ -33,16 +33,16 @@ export class SettingsComponent implements OnInit {
   }
 
   onOpen(): void {
-    this.popupService.openPopup('settings');
+    this.popupService.openPopup('settingsBridge');
   }
 
   onClose(): void {
-    this.popupService.closePopup('settings');
+    this.popupService.closePopup('settingsBridge');
     this.close.emit();
   }
 
   closePopup(): void {
-    this.popupService.closePopup('settings');
+    this.popupService.closePopup('settingsBridge');
     this.close.emit();
   }
 
@@ -115,7 +115,8 @@ export class SettingsComponent implements OnInit {
       this.save.emit(value);
     }
     
-    this.popupService.closePopup('settings');
+    // Закрытие попапа теперь происходит только здесь, а не в обработчике события save
+    this.popupService.closePopup('settingsBridge');
     this.close.emit();
   }
 }

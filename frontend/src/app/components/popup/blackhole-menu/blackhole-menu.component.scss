@@ -1,4 +1,4 @@
-.popup-menu {
+.blackhole-menu {
   position: fixed;
 	width: 277px;
   top: 148px;
@@ -11,6 +11,7 @@
 	padding: 25px 30px;
 	box-sizing: border-box;
 }
+
 .upper{
 	display: flex;
 	align-items: center;
@@ -148,19 +149,6 @@ a:hover{
 	background-size: cover;
 	background-repeat: no-repeat;
 }
-
-// .popup-overlay {
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   height: 100%;
-//   background: rgba(0, 0, 0, 0.5);
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   z-index: 1000;
-// }
 
 .popup-content {
   background: black;

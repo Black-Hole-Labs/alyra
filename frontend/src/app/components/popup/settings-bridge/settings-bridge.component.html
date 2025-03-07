@@ -1,0 +1,38 @@
+<div class="settings-bridge-popup">
+  <div class="settings-header">
+    <h3>Bridge settings</h3>
+    <button class="close-button" (click)="closePopup()"></button>
+  </div>
+  <div class="settings-content">
+    <div class="limit">
+      <div class="limit-image"></div>
+      <p>Slippage limit</p>
+    </div>
+    <div class="buttons">
+			<button
+				*ngFor="let option of options; let i = index"
+				[class.selected]="i === selectedIndex"
+				(click)="selectOption(i)"
+			>
+				{{ option }}
+			</button>
+			<div
+				class="custom"
+				[class.selected]="customValue.length > 0 && selectedIndex === null"
+			>
+				<input
+					type="text"
+					placeholder="Custom"
+					[value]="customValue"
+					(focus)="selectCustom()"
+					(input)="onCustomInput($event)"
+					(keydown)="restrictInput($event)"
+					maxlength="4"
+				/>
+				<span class="percent" *ngIf="customValue.length > 0">%</span>
+			</div>
+		</div>
+		
+    <button class="main" (click)="saveValue()">Save</button>
+  </div>
+</div>

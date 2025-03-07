@@ -5,30 +5,28 @@
   --elem-nonactive: #5D5D5D;
 	--dark-violet: #39174F;
 	--violet: #BF57FF;
-	--dark-pink: #490647;
+	--dark-pink: 255, 0, 221;
 	--pink: #FF00DD;
 	--btn-dark: #2F2F2F;
 	--dark-select: #1B1B1B;
 	--red: #FF7E7E;
-	--dark-red: #3B1919;
+	--dark-red: 54, 24, 24;
 	--dark-red-hover: #723A3A;
 	--green: #5EC46C;
-	--dark-green: #2C5022;
+	--dark-green: 26, 36, 23;
 	--yellow: #FFBB00;
 	--dark-yellow: #4A3703;
   --dark-bg: 47, 47, 47;
+	--white: 255, 255, 255;
 }
 
 
 html{
 	background-color: black;
-	padding-top: 20px;
+	padding-top: 40px;
 	padding-bottom: 20px;
 	padding-left: 40px;
 	padding-right: 40px;
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
 
   &::before,
   &::after {
@@ -90,6 +88,24 @@ html{
   }
 }
 
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes popupFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 .documentation-page {
   app-header {
     display: none;
@@ -97,4 +113,113 @@ html{
   app-footer {
     display: none;
   }
+}
+
+// Базовые стили для всех попапов
+.popup-menu,
+.connect-wallet,
+.settings-popup,
+.wallet-popup,
+.network-popup,
+.blackhole-menu,
+.token-change,
+.token-change-buy,
+.network-change-from,
+.network-change-to,
+.bridge-tx {
+  opacity: 1;
+}
+
+// Анимации при открытии
+.popup-opening {
+  .popup-menu,
+  .connect-wallet,
+  .settings-popup,
+  .settings-bridge-popup,
+  .wallet-popup,
+  .network-popup,
+  .blackhole-menu,
+  .token-change,
+  .token-change-buy,
+  .network-change-from,
+  .network-change-to,
+  .bridge-tx,
+  app-token-change .token-change,
+  app-token-change-buy .token-change {
+    animation: popupFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
+// Анимации при закрытии
+.popup-closing {
+  .popup-menu,
+  .connect-wallet,
+  .settings-popup,
+  .settings-bridge-popup,
+  .wallet-popup,
+  .network-popup,
+  .blackhole-menu,
+  .token-change,
+  .token-change-buy,
+  .network-change-from,
+  .network-change-to,
+  .bridge-tx,
+  app-token-change .token-change,
+  app-token-change-buy .token-change {
+    animation: popupFadeOut 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
+// Позиционирование для разных попапов
+app-settings-bridge,
+app-settings{
+  top: -42px;
+  left: 155px;
+  position: absolute;
+}
+
+.wallet-popup,
+.connect-wallet {
+  top: 80px;
+  right: 20px;
+}
+
+.blackhole-menu {
+  top: 80px;
+  left: 20px;
+}
+
+.popup-network {
+  top: 80px;
+  right: 80px;
+}
+
+.bridge-tx,
+.network-change-from,
+.network-change-to,
+.token-change,
+.token-change-buy {
+	position: fixed;
+  top: 156px;
+  left: 50%;
+  transform: translate(-50%, 0%);
+}
+
+.popup-menu, 
+.connect-wallet, 
+.settings-popup, 
+.wallet-popup, 
+.network-popup,
+.blackhole-menu,
+.token-change,
+.token-change-buy,
+.network-change-from,
+.network-change-to,
+.bridge-tx {
+  pointer-events: all;
+}
+
+.documentation-page app-app-content {
+  display: block;
+	margin-top: -50px;
 }

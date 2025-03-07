@@ -2,7 +2,11 @@ header{
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-top: 20px;
+}
+.menu{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 .menu{
 	display: flex;
@@ -69,21 +73,55 @@ nav a {
 	font-size: 24px;
 	font-family: "JetBrains Mono", monospace;
 	font-weight: 400;
-	color: var(--elem-nonactive);
-	transition: 0.2s;
-}
-nav a:hover {
-	color: white;
+	color: rgba(var(--white), 0.25);
+	transition: 0.2s ease-in-out;
+	position: relative;
+	overflow: visible;
+	display: inline-block;
+	letter-spacing: 0.5px;
+	padding: 5px 10px;
+	margin: -5px -10px;
+	
+	&:hover {
+		color: rgba(var(--white), 1);
+	}
 }
 nav a.active-link {
-	color: white;
+	color: rgba(var(--white), 1);
 }
 
+/* Добавляем анимацию для пунктов меню */
+@keyframes menu-item-flash {
+	0% {
+		color: rgba(var(--white), 0.25);
+	}
+	50% {
+		color: rgba(var(--white), 1);
+	}
+	100% {
+		color: rgba(var(--white), 0.25);
+	}
+}
+
+.menu-item-animating {
+	animation: menu-item-flash 0.3s ease-in-out;
+}
+
+@keyframes character-shuffle {
+	0%, 100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	50% {
+		opacity: 0.8;
+		transform: translateY(-2px);
+	}
+}
 
 /* GM STREAK WIDGET */
 .gm {
-	position: relative; /* Нужно для правильного позиционирования */
-	overflow: visible; /* Позволяем искрам выходить за пределы */
+	position: relative;
+	overflow: visible;
 	padding: 13px;
 	background-color: var(--dark-violet);
 	border-radius: 14px;
@@ -117,7 +155,7 @@ nav a.active-link {
 	padding-bottom: 16px;
 	padding-left: 27px;
 	padding-right: 27px;
-	background-color: var(--dark-pink);
+	background-color: rgba(var(--dark-pink), 0.1);
 	border-radius: 14px;
 	display: flex;
 	align-items: center;
@@ -126,7 +164,7 @@ nav a.active-link {
 	transition: 0.2s;
 }
 .xp:hover{
-	background-color: #6D146A;
+	background-color: rgba(var(--dark-pink), 0.2);
 }
 .xp p{
 	font-size: 21px;
@@ -174,7 +212,6 @@ button.network-open {
   height: 34px;
   background-size: cover;
   background-repeat: no-repeat;
-  border-radius: 100%;
 }
 
 /* WALLET */
@@ -217,7 +254,7 @@ button.network-open {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	pointer-events: none; /* Искры не должны мешать клику */
+	pointer-events: none;
 	overflow: visible;
 }
 
@@ -265,3 +302,24 @@ button.network-open {
     opacity: 0;
   }
 }
+
+/* Удаляем ненужные анимации */
+/* Анимация для красного канала */
+/* @keyframes red-channel {
+	0%, 100% {
+		transform: translateX(-1px);
+	}
+	50% {
+		transform: translateX(-1.5px);
+	}
+}
+
+/* Анимация для голубого канала */
+/* @keyframes blue-channel {
+	0%, 100% {
+		transform: translateX(1px);
+	}
+	50% {
+		transform: translateX(1.5px);
+	}
+} */

@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
-import { BlockchainConnectComponent } from "../blockchain-connect/blockchain-connect.component";
 import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [BlockchainConnectComponent, RouterModule],
+	imports: [
+    RouterModule
+  ],
   templateUrl: './footer.component.html',
-  styleUrl: './footer.component.scss'
+  styleUrls: ['./footer.component.scss']
 })
-export class FooterComponent {
-
-}
+export class FooterComponent {}

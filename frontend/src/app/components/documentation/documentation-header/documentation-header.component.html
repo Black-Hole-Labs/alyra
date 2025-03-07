@@ -1,9 +1,9 @@
 <header class="header">
 
 	<div class="logo-container">
-		<div (click)="togglePopup()" class="logo"></div>
+		<a href="/" class="logo"></a>
 		<h3 (click)="togglePopup()">Blackhole</h3>
-    <button (click)="togglePopup()" [ngClass]="{'open': isPopupVisible, 'closed': !isPopupVisible}"></button>
+    <button (click)="togglePopup()" [ngClass]="{'open': popupService.getCurrentPopup() === 'blackholeMenu', 'closed': popupService.getCurrentPopup() !== 'blackholeMenu'}"></button>
   </div>
 	
 	<nav>
@@ -13,6 +13,4 @@
     <a routerLink="termsofuse" routerLinkActive="active-link">/a/ Terms of Use</a>
     <a routerLink="privacypolicy" routerLinkActive="active-link">/a/ Privacy Policy</a>
   </nav>
-
-	<app-blackhole-menu *ngIf="isPopupVisible" (close)="togglePopup()"></app-blackhole-menu>
 </header>

@@ -1,16 +1,12 @@
 .network-change-to {
   width: 681px;
-  height: 783px;
-  position: fixed;
-  top: 148px;
-  left: 50%;
-  transform: translate(-50%, 0);
-  background-color: black;
-  border: 1px solid var(--elem-nonactive);
-  border-radius: 28px;
-  box-sizing: border-box;
-  padding: 40px 20px;
-  z-index: 10;
+	height: 783px;
+	background-color: rgba(var(--dark-bg), 0.6);
+	backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(5px);
+	border-radius: 28px;
+	box-sizing: border-box;
+	padding: 40px 20px;
 }
 
 .header {
@@ -27,39 +23,43 @@ h3 {
   color: white;
 }
 
-button {
-  height: 30px;
-  width: 30px;
-  background: url(/img/trade/close-icon30px.png);
-  background-size: cover;
-  background-repeat: no-repeat;
-  cursor: pointer;
+button{
+	height: 30px;
+	width: 30px;
+	background: url(/img/trade/close-icon30px.png);
+	opacity: 0.3;
+	background-size: cover;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	transition: 0.2s ease-in-out;
+}
+button:hover{
+	opacity: 1;
 }
 
 .search {
   margin-top: 30px;
-  display: flex;
-  align-items: center;
-  width: 601px;
-  height: 76px;
-  background-color: black;
-  border: 1px solid var(--elem-nonactive);
-  border-radius: 21px;
-  padding: 0px 30px;
-  box-sizing: border-box;
-  margin-left: 20px;
+	display: flex;
+	align-items: center;
+	width: 601px;
+	height: 76px;
+	background-color: var(--dark-select);
+	border-radius: 21px;
+	padding: 0px 30px;
+	box-sizing: border-box;
+	margin-left: 20px;
 }
 
 input {
   width: 511px;
-  height: 26px;
-  font-family: "JetBrains Mono", monospace;
-  font-weight: 400;
-  font-size: 20px;
-  color: white;
-  background-color: black;
-  outline: none;
-  border: none;
+	height: 26px;
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 400;
+	font-size: 20px;
+	color: white;
+	background-color: var(--dark-select);
+	outline: none;
+	border: none;
 }
 
 input::placeholder {
@@ -100,16 +100,16 @@ input::placeholder {
 
 .network {
   width: 637px;
-  height: 97px;
-  background: black;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 20px;
-  transition: 0.2s;
-  box-sizing: border-box;
-  border-radius: 22px;
-  cursor: pointer;
+	height: 97px;
+	background: rgba(var(--dark-bg), 0.01);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 14px 20px;
+	transition: 0.2s ease-in-out;
+	box-sizing: border-box;
+	border-radius: 22px;
+	cursor: pointer;
 
   &:hover {
     background: var(--dark-select);
@@ -131,7 +131,6 @@ input::placeholder {
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
-        border-radius: 100%;
       }
     }
 

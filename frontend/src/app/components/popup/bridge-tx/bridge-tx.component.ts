@@ -25,4 +25,16 @@ export class BridgeTxComponent implements OnInit {
   closePopup(): void {
     this.close.emit();
   }
+  //todo
+  // closePopup(): void {
+  //   this.popupService.closePopup('bridgeTx');
+  // }
+
+  // getFromAddress(): string {
+  //   return this.walletService.getAddress();
+  // }
+
+  // getToAddress(): string {
+  //   return this.customAddress || this.walletService.getAddress();
+  // }
 }

@@ -16,13 +16,13 @@ h1{
 	margin-bottom: 80px;
 }
 hr{
-	border: 1px solid var(--elem-nonactive);
+	border: 1px solid rgba(var(--white), 0.25);
 	width: 1518px;
 }
 p{
 	font-family: "JetBrains Mono", monospace;
 	font-size: 20px;
 	font-weight: 400;
-	color: var(--elem-nonactive);
+	color: rgba(var(--white), 0.25);
 	margin-top: 20px;
 }

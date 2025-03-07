@@ -1,16 +1,12 @@
 .network-change-from{
 	width: 681px;
 	height: 783px;
-	position: fixed;
-  top: -1px;
-  left: 50%;
-	transform: translate(-50%, 0%);
-	background-color: black;
-  border: 1px solid var(--elem-nonactive);
+	background-color: rgba(var(--dark-bg), 0.6);
+	backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(5px);
 	border-radius: 28px;
 	box-sizing: border-box;
 	padding: 40px 20px;
-	z-index: 10;
 }
 
 .header{
@@ -29,9 +25,14 @@ button{
 	height: 30px;
 	width: 30px;
 	background: url(/img/trade/close-icon30px.png);
+	opacity: 0.3;
 	background-size: cover;
 	background-repeat: no-repeat;
 	cursor: pointer;
+	transition: 0.2s ease-in-out;
+}
+button:hover{
+	opacity: 1;
 }
 .search{
 	margin-top: 30px;
@@ -39,8 +40,7 @@ button{
 	align-items: center;
 	width: 601px;
 	height: 76px;
-	background-color: black;
-	border: 1px solid var(--elem-nonactive);
+	background-color: var(--dark-select);
 	border-radius: 21px;
 	padding: 0px 30px;
 	box-sizing: border-box;
@@ -53,7 +53,7 @@ input{
 	font-weight: 400;
 	font-size: 20px;
 	color: white;
-	background-color: black;
+	background-color: var(--dark-select);
 	outline: none;
 	border: none;
 }
@@ -67,9 +67,14 @@ input::placeholder {
 	height: 30px;
 	width: 30px;
 	background: url(/img/trade/search-button.png);
+	opacity: 0.3;
 	background-size: cover;
 	background-repeat: no-repeat;
 	cursor: pointer;
+	transition: 0.2s ease-in-out;
+}
+.search-button:hover{
+	opacity: 1;
 }
 .desc{
 	margin-top: 30px;
@@ -105,12 +110,12 @@ input::placeholder {
 .network{
 	width: 637px;
 	height: 97px;
-	background: black;
+	background: rgba(var(--dark-bg), 0.01);
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	padding: 14px 20px;
-	transition: 0.2s;
+	transition: 0.2s ease-in-out;
 	box-sizing: border-box;
 	border-radius: 22px;
 	cursor: pointer;
@@ -134,7 +139,6 @@ input::placeholder {
 	background-size: contain;
 	background-position: center;
 	background-repeat: no-repeat;
-	border-radius: 100%;
 }
 .network .name h6{
 	font-family: "JetBrains Mono", monospace;

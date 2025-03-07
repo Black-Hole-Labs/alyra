@@ -2,7 +2,6 @@ header{
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
-	margin-top: 20px;
 	position: relative;
 	width: 100%;
 }
@@ -41,7 +40,7 @@ button.open {
 	background-size: cover;
 	background-repeat: no-repeat;
 }
-div.logo{
+.logo{
 	width: 65px;
 	height: 65px;
 	background: url(/img/header/logo.png);
@@ -63,13 +62,13 @@ nav a {
 	font-size: 20px;
 	font-family: "JetBrains Mono", monospace;
 	font-weight: 400;
-	color: var(--elem-nonactive);
-	transition: 0.2s;
+	color: rgba(var(--white), 0.25);
+	transition: 0.2s ease-in-out;
 	cursor: pointer;
 }
 nav a:hover {
-	color: white;
+	color: rgba(var(--white), 1);
 }
 nav a.active-link {
-	color: white;
+	color: rgba(var(--white), 1);
 }
