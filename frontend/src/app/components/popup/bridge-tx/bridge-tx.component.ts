@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Token } from '../../../pages/trade/trade.component';
+import { Network } from '../../../models/wallet-provider.interface';
 
 @Component({
   selector: 'app-bridge-tx',
@@ -9,11 +11,10 @@ import { CommonModule } from '@angular/common';
   styleUrl: './bridge-tx.component.scss'
 })
 export class BridgeTxComponent implements OnInit {
-  @Input() selectedNetwork: string = '';
-  @Input() selectedNetworkImage: string = '';
-  @Input() selectedNetworkTo: string = '';
-  @Input() selectedNetworkToImage: string = '';
-  @Input() selectedToken: { symbol: string; imageUrl: string } = { symbol: '', imageUrl: '' };
+  @Input() selectedNetwork: Network | undefined = undefined; //??
+  @Input() selectedNetworkTo: Network | undefined = undefined;
+  //<Token | undefined>(undefined);
+  @Input() selectedToken: Token | undefined = undefined;
   @Input() inputAmount: string = '';
   @Output() close = new EventEmitter<void>();
 

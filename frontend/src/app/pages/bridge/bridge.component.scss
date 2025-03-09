@@ -190,6 +190,7 @@
 					background-repeat: no-repeat;
 					height: 34px;
 					width: 34px;
+					border-radius: 100%;
 				}
 				p {
 					font-family: "JetBrains Mono", monospace;
@@ -251,6 +252,7 @@
 				background-repeat: no-repeat;
 				height: 34px;
 				width: 34px;
+				border-radius: 100%;
 			}
 			p {
 				font-family: "JetBrains Mono", monospace;
@@ -344,6 +346,7 @@
 				background-repeat: no-repeat;
 				height: 34px;
 				width: 34px;
+				border-radius: 100%;
 			}
 			p {
 				font-family: "JetBrains Mono", monospace;
@@ -499,5 +502,6 @@ animation: click-animation-down 1s linear;
 	background-size: cover;
 	background-repeat: no-repeat;
 	margin-right: 10px;
+	border-radius: 100%;
 }
 

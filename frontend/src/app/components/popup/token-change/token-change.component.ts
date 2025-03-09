@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { NetworkService } from '../../../services/network.service';
+import { Token } from '../../../pages/trade/trade.component';
 
 @Component({
   selector: 'app-token-change',
@@ -16,7 +17,7 @@ import { NetworkService } from '../../../services/network.service';
 export class TokenChangePopupComponent {
   @Input() mode!: 'sell' | 'buy';
   @Output() close = new EventEmitter<void>();
-  @Output() tokenSelected = new EventEmitter<{ symbol: string; imageUrl: string; contractAddress: string; decimals: string }>();
+  @Output() tokenSelected = new EventEmitter<Token>();
 
   searchText: string = '';
   public blockchainStateService = inject(BlockchainStateService);
