@@ -49,7 +49,7 @@ export class TradeComponent {
   balance = signal<number>(0.0); // Баланс пользователя для продажи
   balanceBuy = signal<number>(0.0); // Баланс пользователя для покупки
   rotationCount: number = 0; // Счетчик для отслеживания вращений
-	slippage: string = 'Auto'; // Значение для отображения Slippage
+	slippage: number = 0.005; //  // 0.005 is default for LIFI
 
   // Управление попапами
   showTokenPopup = false; // Управляет отображением попапа для sell
@@ -332,7 +332,23 @@ export class TradeComponent {
   }
 
 	onSlippageSave(value: string): void {
-    this.slippage = value;
+    if (value === "Auto")
+    {
+      console.log("Slippate is Auto. Default value is 0.005 (0.5%)");
+      this.slippage = 0.005;
+    }
+    else
+    {
+      const val = parseFloat(value.replace('%', ''));
+      if (val > 49.9)
+      {
+          throw "Slippage is too high!";
+      }
+  
+      this.slippage = val / 100;
+      console.log(`Slippage set: ${this.slippage}; (${val}%)`);
+    }
+
     //this.showSettingsPopup = false; // Закрываем popup после сохранения
   }
 
@@ -462,7 +478,10 @@ export class TradeComponent {
     }
     
     console.log("fromAddress",fromAddress);
-    this.transactionsService.getQuote(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress)
+
+    const slippageValue = this.slippage !== 0.005 ? this.slippage: undefined; // 0.005 is default for LIFI
+
+    this.transactionsService.getQuote(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, slippageValue)
     .subscribe({
       next: (response: any) => {
         console.log('Quote received:', response);

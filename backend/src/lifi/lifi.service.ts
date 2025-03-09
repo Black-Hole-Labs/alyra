@@ -30,21 +30,32 @@ export class LifiService {
     return result.data;
   }
 
-  async getQuote (fromChain: string, toChain: string, fromToken: string, toToken: string, fromAmount: string, fromAddress: string) {
+  async getQuote(
+    fromChain: string,
+    toChain: string,
+    fromToken: string,
+    toToken: string,
+    fromAmount: string,
+    fromAddress: string,
+    slippage?: number
+  ) {
     try {
-      const result = await axios.get('https://li.quest/v1/quote', {
-          params: {
-              fromChain,
-              toChain,
-              fromToken,
-              toToken,
-              fromAmount,
-              fromAddress,
-          }
-      });
+      const params: any = {
+        fromChain,
+        toChain,
+        fromToken,
+        toToken,
+        fromAmount,
+        fromAddress,
+      };
+  
+      if (slippage) {
+        params.slippage = slippage;
+      }
+  
+      const result = await axios.get('https://li.quest/v1/quote', { params });
       return result.data;
-    }
-    catch (error) {
+    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const statusCode = error.response.status;
         const errorMessage = error.response.data?.message || 'An error occurred';
@@ -54,19 +65,17 @@ export class LifiService {
           errorMessage,
         });
   
-        throw new HttpException(
-          { statusCode, message: errorMessage },
-          statusCode,
-        );
+        throw new HttpException({ statusCode, message: errorMessage }, statusCode);
       }
   
       console.error('Unexpected error:', error);
       throw new HttpException(
         { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Internal Server Error' },
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
   }
+  
 
   async getQuoteByReceivingAmount (fromChain: string, toChain: string, fromToken: string, toToken: string, toAmount: string, fromAddress: string) {
     const result = await axios.get('https://li.quest/v1/quote/toAmount', {
