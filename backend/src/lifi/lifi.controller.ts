@@ -28,13 +28,12 @@ export class LifiController {
     @Query('toToken') toToken: string,
     @Query('fromAmount') fromAmount: string,
     @Query('fromAddress') fromAddress: string,
+    @Query('slippage') slippage?: number,
   ) {
-        if (!fromChain || !toChain || !fromToken || !toToken || !fromAmount || !fromAddress) {
-          throw new HttpException('Missing required query parameters', HttpStatus.BAD_REQUEST);
-        }
-        const quote = await this.lifiService.getQuote(fromChain, toChain, fromToken, toToken, fromAmount, fromAddress);
-
-        return quote;
+    if (!fromChain || !toChain || !fromToken || !toToken || !fromAmount || !fromAddress) {
+      throw new HttpException('Missing required query parameters', HttpStatus.BAD_REQUEST);
+    }
+    return await this.lifiService.getQuote(fromChain, toChain, fromToken, toToken, fromAmount, fromAddress, slippage);
     }
 
   @Get('quote-bridge')

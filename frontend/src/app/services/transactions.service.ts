@@ -42,9 +42,10 @@ export class TransactionsService {
     fromToken: string,
     toToken: string,
     fromAmount: string,
-    fromAddress: string
+    fromAddress: string,
+    slippage?: number
   ): Observable<{ quote: any }> {
-    const params = {
+    const params: any = {
       fromChain,
       toChain,
       fromToken,
@@ -52,6 +53,10 @@ export class TransactionsService {
       fromAmount,
       fromAddress,
     };
+
+    if (slippage) {
+      params.slippage = slippage;
+    }
   
     return this.http.get<{ quote: any }>(`${this.apiUrl}/lifi/quote`, { params }); //todo rename?
   }

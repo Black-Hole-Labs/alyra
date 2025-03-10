@@ -37,7 +37,8 @@ export class LifiService {
     toToken: string,
     fromAmount: string,
     fromAddress: string,
-    toAddress?: string
+    toAddress?: string,
+    slippage?: number
   ) {
     try {
       // Формируем объект параметров с обязательными полями
@@ -54,6 +55,10 @@ export class LifiService {
       if (toAddress) {
         params.toAddress = toAddress;
       }
+
+      if (slippage) {
+        params.slippage = slippage;
+      }
   
       const result = await axios.get('https://li.quest/v1/quote', { params });
       return result.data;
@@ -67,16 +72,13 @@ export class LifiService {
           errorMessage,
         });
   
-        throw new HttpException(
-          { statusCode, message: errorMessage },
-          statusCode,
-        );
+        throw new HttpException({ statusCode, message: errorMessage }, statusCode);
       }
   
       console.error('Unexpected error:', error);
       throw new HttpException(
         { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Internal Server Error' },
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
   }

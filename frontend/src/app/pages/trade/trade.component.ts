@@ -43,15 +43,19 @@ export class TradeComponent {
   validatedSellAmount = signal<string>('');
   loading = signal<boolean>(false);
 
-  buyAmount: string = ''; // Значение для поля покупки, рассчитывается автоматически
+  buyAmount = signal<number>(0.0);
   price: number = 0.5637; // Цена обмена
   priceUsd: number = 921244; // Текущая стоимость в USD за единицу
-  sellPriceUsd: string = ''; // Значение для отображения стоимости продажи в USD
+  sellPriceUsd = signal<string>('');
+  buyPriceUsd = signal<string>('');
   balance = signal<number>(0.0);
   balanceBuy = signal<number>(0.0);
   rotationCount: number = 0; // Счетчик для отслеживания вращений
-	slippage: string = 'Auto'; // Значение для отображения Slippage
-	
+	slippage: number = 0.005; //  // 0.005 is default for LIFI
+
+  // showTokenPopup = false;
+  // showTokenBuyPopup = false;
+	//showSettingsPopup = false;
   selectedToken = signal<Token | undefined>(undefined);
   selectedBuyToken = signal<Token | undefined>(undefined);
   //showConnectWalletPopup: boolean = false;
@@ -105,7 +109,7 @@ export class TradeComponent {
         if (this.blockchainStateService.connected() && this.selectedToken()) {
           this.getBalanceForToken(this.selectedToken()!)
           .then((balanceStr) => {
-            this.balance.set(parseFloat(balanceStr));
+            this.balance.set(Number(parseFloat(balanceStr).toFixed(6)));
           })
           .catch((error) => {
             console.error('Ошибка получения баланса', error);
@@ -120,7 +124,7 @@ export class TradeComponent {
         if (this.blockchainStateService.connected() && this.selectedBuyToken()) {
           this.getBalanceForToken(this.selectedBuyToken()!)
           .then((balanceStr) => {
-            this.balanceBuy.set(parseFloat(balanceStr));
+            this.balanceBuy.set(Number(parseFloat(balanceStr).toFixed(6)));
           })
           .catch((error) => {
             console.error('Ошибка получения баланса', error);
@@ -159,8 +163,8 @@ export class TradeComponent {
     // } todo?
 
     if (isSell) {
-      // this.updateBuyAmount();
-      // this.updateSellPriceUsd();
+      //this.updateBuyAmount();
+      //this.updateSellPriceUsd();
       clearTimeout(this.inputTimeout);
 
       this.inputTimeout = setTimeout(() => {
@@ -171,36 +175,34 @@ export class TradeComponent {
     console.log("some data");
   }
 
-  updateBuyAmount(): void {
-    if (this.sellAmount) {
-      const sellValue = parseFloat(this.sellAmount);
-      if (!isNaN(sellValue)) {
-        this.buyAmount = (sellValue * this.price).toFixed(4);
-      } else {
-        this.buyAmount = '';
-      }
+  updateBuyAmount(value: number): void {
+    if (!isNaN(value)) {
+      this.buyAmount.set(Number((value).toFixed(6)));
     } else {
-      this.buyAmount = '';
+      this.buyAmount.set(0);
     }
   }
 
-  updateSellPriceUsd(): void {
-    if (this.sellAmount) {
-      const sellValue = parseFloat(this.sellAmount);
-      if (!isNaN(sellValue)) {
-        this.sellPriceUsd = `$${(sellValue * this.priceUsd).toFixed(2)}`;
-      } else {
-        this.sellPriceUsd = '';
-      }
+  updateSellPriceUsd(price: number): void {
+    if (!isNaN(price)) {
+      this.sellPriceUsd.set(`$${Number(price).toFixed(2)}`);
     } else {
-      this.sellPriceUsd = '';
+      this.sellPriceUsd.set('');
+    }
+  }
+
+  updateBuyPriceUsd(price: number): void {
+    if (!isNaN(price)) {
+      this.buyPriceUsd.set(`$${Number(price).toFixed(2)}`);
+    } else {
+      this.buyPriceUsd.set('');
     }
   }
 
   setMaxSellAmount(): void {
     this.sellAmount = this.balance.toString();
-    this.updateBuyAmount();
-    this.updateSellPriceUsd();
+    //this.updateBuyAmount();
+    //this.updateSellPriceUsd();
   }
 
   rotateRefresh(): void {
@@ -254,7 +256,7 @@ export class TradeComponent {
   async onTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.selectedToken.set(token);
-    this.balance.set(parseFloat(await this.getBalanceForToken(token)));
+    this.balance.set(Number((parseFloat(await this.getBalanceForToken(token))).toFixed(6)));
     // this.selectedToken = token.symbol;
     // this.selectedTokenImage = token.imageUrl;
     // this.selectedTokenAddress = token.contractAddress;
@@ -321,7 +323,7 @@ export class TradeComponent {
   async onBuyTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.selectedBuyToken.set(token);
-    this.balanceBuy.set(parseFloat(await this.getBalanceForToken(token)));
+    this.balanceBuy.set(Number(parseFloat(await this.getBalanceForToken(token)).toFixed(6)));
     // this.selectedBuyToken = token.symbol;
     // this.selectedBuyTokenImage = token.imageUrl;
     // this.selectedBuyTokenAddress = token.contractAddress;
@@ -343,7 +345,23 @@ export class TradeComponent {
   }
 
 	onSlippageSave(value: string): void {
-    this.slippage = value;
+    if (value === "Auto")
+    {
+      console.log("Slippate is Auto. Default value is 0.005 (0.5%)");
+      this.slippage = 0.005;
+    }
+    else
+    {
+      const val = parseFloat(value.replace('%', ''));
+      if (val > 49.9)
+      {
+          throw "Slippage is too high!";
+      }
+  
+      this.slippage = val / 100;
+      console.log(`Slippage set: ${this.slippage}; (${val}%)`);
+    }
+
     //this.showSettingsPopup = false; // Закрываем popup после сохранения
   }
 
@@ -464,15 +482,21 @@ export class TradeComponent {
     }
     
     console.log("fromAddress",fromAddress);
-    this.transactionsService.getQuote(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress)
+
+    const slippageValue = this.slippage !== 0.005 ? this.slippage: undefined; // 0.005 is default for LIFI
+
+    this.transactionsService.getQuote(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, slippageValue)
     .subscribe({
       next: (response: any) => {
         console.log('Quote received:', response);
         if (response.estimate && response.transactionRequest) 
         {
-          const readableToAmount = this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals));
-        
+          console.log(`fromUSD: ${response.estimate.fromAmountUSD}; toUSD: ${response.estimate.toAmountUSD}`);
+          this.updateSellPriceUsd(response.estimate.fromAmountUSD);
+          this.updateBuyPriceUsd(response.estimate.toAmountUSD);
+          const readableToAmount = Number(this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals)));
           console.log('readableToAmount:', readableToAmount);
+          this.updateBuyAmount(readableToAmount);
 
           const gasPriceHex = response.transactionRequest.gasPrice;
           const gasLimitHex = response.transactionRequest.gasLimit;

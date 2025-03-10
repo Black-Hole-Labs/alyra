@@ -48,7 +48,7 @@
       </div>
 
       <div class="bottom">
-        <p id="sell-price-usd">{{ sellPriceUsd }}</p>
+        <p id="sell-price-usd">{{ sellPriceUsd() }}</p>
 
         <div class="balance" *ngIf="isWalletConnected()">
           <p>Balance:</p>
@@ -84,7 +84,7 @@
       </div>
 
       <div class="bottom">
-        <p id="buy-price-usd">{{ sellPriceUsd }}</p>
+        <p id="buy-price-usd">{{ buyPriceUsd() }}</p>
 
         <div class="balance" *ngIf="isWalletConnected()">
           <p>Balance:</p>
