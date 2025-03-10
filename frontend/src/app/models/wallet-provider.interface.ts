@@ -11,6 +11,7 @@ export interface Network {
     rpcUrls: string;
     chainId: string;
     logoURI?: string;
+    idHex?:string;
     chainType: string; // Тип сети (EVM, SVM)
 }
 

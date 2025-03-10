@@ -3,8 +3,7 @@ import { Component, EventEmitter, Output, inject, effect, Input } from '@angular
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
-import { ScrollingModule } from '@angular/cdk/scrolling';
-import { NetworkService } from '../../../services/network.service';
+import { ScrollingModule } from '@angular/cdk/scrolling'
 import { Token } from '../../../pages/trade/trade.component';
 import { PopupService } from '../../../services/popup.service';
 
@@ -27,6 +26,7 @@ export class TokenChangePopupComponent {
     if (!this.mode) {
       throw new Error('Mode is required! Pass "sell" or "buy" to the mode input.');
     }
+
     
   }
   

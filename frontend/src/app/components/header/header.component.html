@@ -38,7 +38,7 @@
 
 	<!-- </div>  -->
 		<!-- XP WIDGET -->
-		<div class="xp" *ngIf="walletService.isConnected()">
+		<div class="xp" *ngIf="blockchainStateService.connected()">
 			<p>0 XP</p>
 		</div>
 
@@ -55,7 +55,7 @@
 		<!-- WALLET -->
 		<div class="wallet" (click)="openConnectWalletPopup()">
 			<div class="wallet-icon"></div>
-			<p>{{ walletName }}</p>
+			<p>{{ walletName().length > 20 ? walletName().slice(0, 6) + '...' + walletName().slice(-3) : walletName()}}</p>
 		</div>
 
 	</div>

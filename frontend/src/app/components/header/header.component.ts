@@ -1,11 +1,9 @@
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { NetworkService } from '../../services/network.service';
 import { BlackholeNetworkComponent } from '../popup/blackhole-network/blackhole-network.component';
 import { BlackholeMenuComponent } from '../popup/blackhole-menu/blackhole-menu.component';
 import { ConnectWalletComponent } from '../popup/connect-wallet/connect-wallet.component';
 import { WalletComponent } from '../popup/wallet/wallet.component';
-import { WalletService } from '../../services/wallet.service';
 import { PopupService } from '../../services/popup.service';
 import { Subscription } from 'rxjs';
 import { Component, ElementRef, Renderer2, EventEmitter, Input, Output, OnInit, OnDestroy, computed } from '@angular/core';
@@ -19,11 +17,6 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
   imports: [
     RouterModule,
     CommonModule,
-    BlockchainConnectComponent,
-    BlackholeNetworkComponent,
-    BlackholeMenuComponent,
-    ConnectWalletComponent,
-    WalletComponent
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
@@ -41,7 +34,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showBlackholeMenu = false;
   showConnectWalletPopup = false;
   showWalletPopup = false;
-  walletName: string = 'Connect Wallet';
+  //walletName: string = 'Connect Wallet';
+  walletName = computed(() => this.blockchainStateService.walletAddress() ?? 'Connect Wallet');
   private subscription: Subscription;
 
   @Output() toggleMenu = new EventEmitter<void>();
@@ -59,14 +53,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     private renderer: Renderer2,
     private elRef: ElementRef,
-    private networkService: NetworkService,
-    public walletService: WalletService,
-    private blockchainStateService: BlockchainStateService,
+    public blockchainStateService: BlockchainStateService,
     public popupService: PopupService
   ) {
-    this.walletService.walletName$.subscribe(name => {
-      this.walletName = name || 'Connect Wallet';
-    });
     this.subscription = this.popupService.activePopup$.subscribe(popupType => {
       this.showBlackholeMenu = false;
       this.showConnectWalletPopup = false;
@@ -255,7 +244,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   openConnectWalletPopup(): void {
-    if (this.walletService.isConnected()) {
+    if (this.blockchainStateService.connected()) {
       this.popupService.openPopup('wallet');
     } else {
       this.popupService.openPopup('connectWallet');

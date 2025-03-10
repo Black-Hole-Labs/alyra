@@ -5,19 +5,20 @@ import { Router, NavigationEnd } from '@angular/router';  // Импортиру�
 import { filter } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
 import { Network } from '../../models/wallet-provider.interface';
-import { NetworkService } from '../../services/network.service';
 import { PopupService } from '../../services/popup.service';
 import { HeaderComponent } from '../header/header.component';
 import { BlockchainConnectComponent } from '../blockchain-connect/blockchain-connect.component';
 import { FooterComponent } from '../footer/footer.component';
 import { BlackholeMenuComponent } from '../popup/blackhole-menu/blackhole-menu.component';
 import { BlackholeNetworkComponent } from '../popup/blackhole-network/blackhole-network.component';
+import { WalletComponent } from "../popup/wallet/wallet.component";
+import { ConnectWalletComponent } from "../popup/connect-wallet/connect-wallet.component";
 @Component({
   selector: 'app-app-content',
   standalone: true,
   templateUrl: './app-content.component.html',
   styleUrls: ['./app-content.component.scss'],
-  imports: [RouterOutlet, RouterModule,  HeaderComponent, FooterComponent, BlackholeMenuComponent, CommonModule, BlackholeNetworkComponent, BlockchainConnectComponent]
+  imports: [RouterOutlet, RouterModule, HeaderComponent, FooterComponent, BlackholeMenuComponent, CommonModule, BlackholeNetworkComponent, BlockchainConnectComponent, WalletComponent, ConnectWalletComponent]
 })
 export class AppContentComponent {
   isPopupVisible = false;
@@ -28,8 +29,7 @@ export class AppContentComponent {
 
   constructor(
     private router: Router, 
-    private popupService: PopupService,
-    public networkService: NetworkService
+    public popupService: PopupService,
     ) {
       //this.networks = this.networkService.getNetworks();
     this.router.events.pipe(
@@ -52,8 +52,4 @@ export class AppContentComponent {
     this.isNetworkPopupVisible = false;
   }
 
-  onNetworkSelected(network: Network): void {
-    this.networkService.setSelectedNetwork(network);
-    this.popupService.closeAllPopups();
-  }
 }

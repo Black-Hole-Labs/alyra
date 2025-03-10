@@ -2,7 +2,6 @@ import { Component, Output, EventEmitter, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PopupService } from '../../../services/popup.service';
-import { WalletService } from '../../../services/wallet.service';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 
 interface WalletProvider {
@@ -47,7 +46,6 @@ export class ConnectWalletComponent {
   ];
 
   constructor(
-    private walletService: WalletService,
     private popupService: PopupService,
     private blockchainStateService: BlockchainStateService
   ) 

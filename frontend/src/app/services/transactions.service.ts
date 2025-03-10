@@ -53,6 +53,54 @@ export class TransactionsService {
       fromAddress,
     };
   
-    return this.http.get<{ quote: any }>(`${this.apiUrl}/lifi/quote`, { params });
+    return this.http.get<{ quote: any }>(`${this.apiUrl}/lifi/quote`, { params }); //todo rename?
+  }
+
+  getQuoteBridge(
+    fromChain: string,
+    toChain: string,
+    fromToken: string,
+    toToken: string,
+    fromAmount: string,
+    fromAddress: string,
+    toAddress?: string
+  ): Observable<{ quote: any }> {
+    const params: any = {
+      fromChain,
+      toChain,
+      fromToken,
+      toToken,
+      fromAmount,
+      fromAddress
+    };
+  
+    if (toAddress) {
+      params.toAddress = toAddress;
+    }
+  
+    return this.http.get<{ quote: any }>(`${this.apiUrl}/lifi/quote-bridge`, { params });
+  }
+  
+
+  parseToAmount(toAmount: string, decimals: number): string {
+    return (Number(toAmount) / Math.pow(10, decimals)).toFixed(6);
+  }
+
+  parseGasPriceUSD(gasPriceHex: string, gasLimitHex: string, token: { decimals: number; priceUSD: string }): string {
+    // Конвертируем gasPrice и gasLimit из hex в десятичное число
+    const gasPriceWei = parseInt(gasPriceHex, 16);
+    const gasLimit = parseInt(gasLimitHex, 16);
+  
+    // Рассчитываем общую стоимость газа в Wei
+    const gasCostWei = gasPriceWei * gasLimit;
+  
+    // Переводим Wei в токены, используя decimals токена
+    const gasCostInToken = gasCostWei / Math.pow(10, token.decimals);
+  
+    // Умножаем на цену токена в USD
+    const gasCostUSD = gasCostInToken * parseFloat(token.priceUSD);
+  
+    // Форматируем результат
+    return gasCostUSD.toFixed(2); // Округляем до 2 знаков после запятой
   }
 }

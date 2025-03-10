@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NetworkService } from '../../../services/network.service';
 import { Network } from '../../../models/wallet-provider.interface';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 

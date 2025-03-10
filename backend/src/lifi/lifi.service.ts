@@ -30,21 +30,34 @@ export class LifiService {
     return result.data;
   }
 
-  async getQuote (fromChain: string, toChain: string, fromToken: string, toToken: string, fromAmount: string, fromAddress: string) {
+  async getQuote(
+    fromChain: string,
+    toChain: string,
+    fromToken: string,
+    toToken: string,
+    fromAmount: string,
+    fromAddress: string,
+    toAddress?: string
+  ) {
     try {
-      const result = await axios.get('https://li.quest/v1/quote', {
-          params: {
-              fromChain,
-              toChain,
-              fromToken,
-              toToken,
-              fromAmount,
-              fromAddress,
-          }
-      });
+      // Формируем объект параметров с обязательными полями
+      const params: any = {
+        fromChain,
+        toChain,
+        fromToken,
+        toToken,
+        fromAmount,
+        fromAddress,
+      };
+  
+      // Если toAddress передан, добавляем его
+      if (toAddress) {
+        params.toAddress = toAddress;
+      }
+  
+      const result = await axios.get('https://li.quest/v1/quote', { params });
       return result.data;
-    }
-    catch (error) {
+    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const statusCode = error.response.status;
         const errorMessage = error.response.data?.message || 'An error occurred';
@@ -67,6 +80,7 @@ export class LifiService {
       );
     }
   }
+  
 
   async getQuoteByReceivingAmount (fromChain: string, toChain: string, fromToken: string, toToken: string, toAmount: string, fromAddress: string) {
     const result = await axios.get('https://li.quest/v1/quote/toAmount', {

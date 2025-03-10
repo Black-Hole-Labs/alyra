@@ -36,6 +36,24 @@ export class LifiController {
 
         return quote;
     }
+
+  @Get('quote-bridge')
+  async getQuoteBridge(
+    @Query('fromChain') fromChain: string,
+    @Query('toChain') toChain: string,
+    @Query('fromToken') fromToken: string,
+    @Query('toToken') toToken: string,
+    @Query('fromAmount') fromAmount: string,
+    @Query('fromAddress') fromAddress: string,
+    @Query('toAddress') toAddress?: string,
+  ) {
+        if (!fromChain || !toChain || !fromToken || !toToken || !fromAmount || !fromAddress) {
+          throw new HttpException('Missing required query parameters', HttpStatus.BAD_REQUEST);
+        }
+        const quote = await this.lifiService.getQuote(fromChain, toChain, fromToken, toToken, fromAmount, fromAddress, toAddress);
+
+        return quote;
+    }
   
   @Get('quote-toamount')
   async getQuoteByReceivingAmount(

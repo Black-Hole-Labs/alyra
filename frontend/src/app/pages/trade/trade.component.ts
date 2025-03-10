@@ -9,9 +9,6 @@ import { TransactionsService } from '../../services/transactions.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
 import { ethers, parseUnits, ZeroAddress } from 'ethers';
-import { TokenChangeBuyComponent } from '../../components/popup/token-change-buy/token-change-buy.component';
-import { WalletService } from '../../services/wallet.service';
-import { ConnectWalletComponent } from '../../components/popup/connect-wallet/connect-wallet.component';
 import { PopupService } from '../../services/popup.service';
 import { SuccessNotificationComponent } from '../../components/notification/success-notification/success-notification.component';
 import { FailedNotificationComponent } from '../../components/notification/failed-notification/failed-notification.component';
@@ -33,10 +30,11 @@ export interface Token {
     FormsModule,
     CommonModule,
     TokenChangePopupComponent,
-    TokenChangeBuyComponent,
-    ConnectWalletComponent,
-    SettingsComponent, // Добавляем SettingsComponent в imports
-  ],
+    SettingsComponent,
+    SuccessNotificationComponent,
+    FailedNotificationComponent,
+    PendingNotificationComponent
+],
 })
 export class TradeComponent {
 //[x: string]: any;
@@ -53,14 +51,21 @@ export class TradeComponent {
   balanceBuy = signal<number>(0.0);
   rotationCount: number = 0; // Счетчик для отслеживания вращений
 	slippage: string = 'Auto'; // Значение для отображения Slippage
-
-  showTokenPopup = false;
-  showTokenBuyPopup = false;
-	//showSettingsPopup = false;
+	
   selectedToken = signal<Token | undefined>(undefined);
   selectedBuyToken = signal<Token | undefined>(undefined);
-  showConnectWalletPopup: boolean = false;
+  //showConnectWalletPopup: boolean = false;
   txData = signal<TransactionRequestEVM | TransactionRequestSVM | undefined> (undefined);
+
+  walletTimer: any = null;
+  findingRoutesTimer: any = null;
+
+  showSuccessNotification = false;
+  showFailedNotification = false;
+  showPendingNotification = false;
+  private isLastNotificationSuccess = false;
+
+  buttonState: 'swap' | 'finding' | 'approve' | 'wallet' | 'insufficient' = 'swap';
   
   firstToken = computed(() => {
     const tokens = this.blockchainStateService.filteredTokens();
@@ -88,7 +93,6 @@ export class TradeComponent {
     private blockchainStateService: BlockchainStateService,
     private walletBalanceService: WalletBalanceService,
     private transactionsService: TransactionsService,
-    private walletService: WalletService,
     public popupService: PopupService
   ) {
     effect(() => {
@@ -238,16 +242,13 @@ export class TradeComponent {
 
     //this.getTxData();
 	}
-	
-	
 
-  // Методы управления попапом для sell
   openTokenPopup(): void {
-    this.showTokenPopup = true;
+    this.popupService.openPopup('tokenChangeSell');
   }
 
   closeTokenPopup(): void {
-    this.showTokenPopup = false;
+    this.popupService.closePopup('tokenChangeSell');
   }
 
   async onTokenSelected(token: Token): Promise<void> {
@@ -329,7 +330,9 @@ export class TradeComponent {
     this.popupService.closeAllPopups();
   }
 
-	// Settings popup
+	get showSettingsPopup(): boolean {
+    return this.popupService.getCurrentPopup() === 'settings';
+  }
 
   toggleSettingsPopup(): void {
     if (this.showSettingsPopup) {
@@ -349,9 +352,7 @@ export class TradeComponent {
     
     if(this.blockchainStateService.network()?.chainId === "1151111081099710")
     {
-      console.log("b");
       await this.svmSwap();
-      console.log("c");
     }
     else
     {
@@ -364,20 +365,13 @@ export class TradeComponent {
   }
 
   async svmSwap() {
-    const txData = this.txData(); // Ожидаем тип TransactionRequestSVM
+    const txData = this.txData(); 
     if (!txData) {
       throw new Error("missing data transaction");
     }
-    console.log("d");
     const provider = this.blockchainStateService.getCurrentProvider().provider;
   
-    // Если требуется, здесь можно дополнительно подготовить транзакцию через @solana/web3.js.
-    // Например, если txData.data содержит закодированные инструкции,
-    // можно создать Transaction, установить recentBlockhash и feePayer.
-    // Для простоты предполагаем, что provider.sendTx умеет работать с объектом txData напрямую.
-    console.log("e");
     const txHash = await provider.sendTx(txData);
-    console.log("z");
     console.log("SVM Swap транзакция отправлена:", txHash);
   }
 
@@ -476,7 +470,7 @@ export class TradeComponent {
         console.log('Quote received:', response);
         if (response.estimate && response.transactionRequest) 
         {
-          const readableToAmount = this.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals));
+          const readableToAmount = this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals));
         
           console.log('readableToAmount:', readableToAmount);
 
@@ -484,7 +478,7 @@ export class TradeComponent {
           const gasLimitHex = response.transactionRequest.gasLimit;
           const gasToken = response.estimate.gasCosts?.[0]?.token;
 
-          const gasPriceUSD = this.parseGasPriceUSD(gasPriceHex, gasLimitHex, gasToken);
+          const gasPriceUSD = this.transactionsService.parseGasPriceUSD(gasPriceHex, gasLimitHex, gasToken);
           
           console.log('gasPriceUSD:', gasPriceUSD);
         }
@@ -526,11 +520,11 @@ export class TradeComponent {
   }
 
   isWalletConnected(): boolean {
-    return this.walletService.isConnected();
+    return this.blockchainStateService.connected();
   }
 
   openConnectWalletPopup(): void {
-    if (!this.walletService.isConnected()) {
+    if (!this.blockchainStateService.connected()) {
       this.popupService.openPopup('connectWallet');
     }
   }
@@ -539,24 +533,8 @@ export class TradeComponent {
     this.popupService.closePopup('connectWallet');
   }
 
-  parseGasPriceUSD(gasPriceHex: string, gasLimitHex: string, token: { decimals: number; priceUSD: string }): string {
-    // Конвертируем gasPrice и gasLimit из hex в десятичное число
-    const gasPriceWei = parseInt(gasPriceHex, 16);
-    const gasLimit = parseInt(gasLimitHex, 16);
   
-    // Рассчитываем общую стоимость газа в Wei
-    const gasCostWei = gasPriceWei * gasLimit;
-  
-    // Переводим Wei в токены, используя decimals токена
-    const gasCostInToken = gasCostWei / Math.pow(10, token.decimals);
-  
-    // Умножаем на цену токена в USD
-    const gasCostUSD = gasCostInToken * parseFloat(token.priceUSD);
-  
-    // Форматируем результат
-    return gasCostUSD.toFixed(2); // Округляем до 2 знаков после запятой
-  }
-  
+
   // Геттер для проверки состояния попапа
   get showConnectWalletPopup(): boolean {
     return this.popupService.getCurrentPopup() === 'connectWallet';

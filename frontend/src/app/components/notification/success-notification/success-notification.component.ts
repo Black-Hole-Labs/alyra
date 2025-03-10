@@ -1,6 +1,7 @@
 import { Component, Output, EventEmitter, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { Token } from '../../../pages/trade/trade.component';
 
 @Component({
   selector: 'app-success-notification',
@@ -27,8 +28,8 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 })
 export class SuccessNotificationComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
-  @Input() selectedToken: string = 'ETH';
-  @Input() selectedBuyToken: string = 'USDT';
+  @Input() selectedToken: Token | undefined = undefined;
+  @Input() selectedBuyToken: Token | undefined = undefined;
   @Input() sellAmount: string = '0';
   @Input() buyAmount: string = '0';
   isVisible = true;

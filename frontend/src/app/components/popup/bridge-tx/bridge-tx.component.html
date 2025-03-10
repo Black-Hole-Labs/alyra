@@ -9,8 +9,8 @@
   
 	<div class="tx-visualization">
 		<div class="left-network">
-			<div class="network-icon-left" [style.backgroundImage]="'url(' + selectedNetwork?.logoURI + ')'"></div>
-			<h4>{{ selectedNetwork }}</h4>
+			<div class="network-icon-left network-icon" [style.backgroundImage]="'url(' + selectedNetwork?.logoURI + ')'"></div>
+			<h4>{{ selectedNetwork!.name }}</h4>
 			<div class="explorer-link">
 				<a href="">View on Explorer</a>
 				<div class="image-link"></div>
@@ -21,8 +21,8 @@
 		<div class="token-icon" [style.backgroundImage]="'url(' + selectedToken?.imageUrl + ')'"></div>
 
 		<div class="right-network">
-			<div class="network-icon-right" [style.backgroundImage]="'url(' + selectedNetworkTo?.logoURI"></div>
-			<h4>{{ selectedNetworkTo }}</h4>
+			<div class="network-icon-right network-icon" [style.backgroundImage]="'url(' + selectedNetworkTo?.logoURI"></div>
+			<h4>{{ selectedNetworkTo!.name }}</h4>
 			<div class="explorer-link">
 				<a href="">View on Explorer</a>
 				<div class="image-link"></div>

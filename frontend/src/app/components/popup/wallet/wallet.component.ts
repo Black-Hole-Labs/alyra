@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WalletService } from '../../../services/wallet.service';
 import { PopupService } from '../../../services/popup.service';
+import { BlockchainStateService } from '../../../services/blockchain-state.service';
 
 interface Token {
   name: string;
@@ -44,8 +44,8 @@ export class WalletComponent {
     // ... добавьте остальные токены
   ];
 
-  constructor(private walletService: WalletService, private popupService: PopupService) {
-    this.walletName = this.walletService.getWalletName();
+  constructor(private blockchainStateService: BlockchainStateService, private popupService: PopupService) {
+    this.walletName = this.blockchainStateService.getCurrentWalletAddress()!;
   }
 
   get totalBalance(): number {
@@ -87,7 +87,7 @@ export class WalletComponent {
   }
 
   onDisconnect(): void {
-    this.walletService.disconnect();
+    this.blockchainStateService.disconnect();
     this.popupService.closeAllPopups();  // Закрываем все попапы после отключения
     this.disconnect.emit();
   }

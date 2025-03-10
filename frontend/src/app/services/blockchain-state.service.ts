@@ -1,5 +1,6 @@
 import { Injectable, signal, effect, computed } from '@angular/core';
 import { Network } from '../models/wallet-provider.interface';
+import { Token } from '../pages/trade/trade.component';
 
 @Injectable({ providedIn: 'root' })
 export class BlockchainStateService {
@@ -88,8 +89,6 @@ export class BlockchainStateService {
         return response.json();
       })
       .then((data) => {
-        console.log("data",data);
-        console.log("network",network);
         const tokensForNetwork = data.tokensEVM[network] || data.tokensSVM[network];
 
         if (tokensForNetwork) {
@@ -115,6 +114,34 @@ export class BlockchainStateService {
         //this.filteredTokens = [];
       });
   }
+
+  async fetchTokensForNetwork(networkId: number): Promise<Token[]> {
+    try {
+        const response = await fetch(`/data/tokens.json`);
+        if (!response.ok) {
+            throw new Error(`Failed to load tokens for network ${networkId}`);
+        }
+        const data = await response.json();
+        const tokensForNetwork = data.tokensEVM[networkId] || data.tokensSVM[networkId];
+
+        if (tokensForNetwork) {
+            return tokensForNetwork.map((token: any) => ({
+                symbol: token.symbol,
+                name: token.name,
+                contractAddress: token.address,
+                imageUrl: token.logoURI,
+                decimals: token.decimals
+            }));
+        } else {
+            console.warn(`No tokens found for network ${networkId}`);
+            return [];
+        }
+    } catch (error) {
+        console.error(`Error loading tokens: ${error}`);
+        return [];
+    }
+}
+
 
   private async loadNetworks(type: string, force?: boolean): Promise<void> {
       try {

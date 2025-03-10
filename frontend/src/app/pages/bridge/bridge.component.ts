@@ -1,14 +1,11 @@
 import { Component, OnInit, OnDestroy, Renderer2, signal, effect, computed, ChangeDetectorRef, ViewChild, ElementRef, AfterViewInit, AfterViewChecked  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { NetworkService } from '../../services/network.service';
 import { NetworkChangeFromPopupComponent } from '../../components/popup/network-change-from/network-change-from.component';
 import { NetworkChangeToPopupComponent } from '../../components/popup/network-change-to/network-change-to.component';
 import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
 import { Subscription } from 'rxjs';
 import { BridgeTxComponent } from '../../components/popup/bridge-tx/bridge-tx.component';
-import { WalletService } from '../../services/wallet.service';
 import { ConnectWalletComponent } from '../../components/popup/connect-wallet/connect-wallet.component';
 import { Network, TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
 import { Token } from '../trade/trade.component';
@@ -16,8 +13,10 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
 import { WalletBalanceService } from '../../services/wallet-balance.service';
 import { PopupService } from '../../services/popup.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { TokenChangeBuyComponent } from '../../components/popup/token-change-buy/token-change-buy.component';
 import { SettingsBridgeComponent } from '../../components/popup/settings-bridge/settings-bridge.component';
+import { ethers, parseUnits } from 'ethers';
+import { TransactionsService } from '../../services/transactions.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-bridge',
@@ -25,14 +24,14 @@ import { SettingsBridgeComponent } from '../../components/popup/settings-bridge/
   templateUrl: './bridge.component.html',
   styleUrls: ['./bridge.component.scss'],
   imports: [
-    CommonModule, 
+    CommonModule,
     FormsModule,
     NetworkChangeFromPopupComponent,
     NetworkChangeToPopupComponent,
     TokenChangePopupComponent,
     BridgeTxComponent,
-    ConnectWalletComponent
-  ],
+    SettingsBridgeComponent
+],
   animations: [
     trigger('receiveAnimation', [
       transition(':enter', [
@@ -104,14 +103,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   private networkSubscription!: Subscription;
   feesVisible: boolean = false;
   isNetworkChosen: boolean = false;
-  //networks: { id: string; name: string; icon: string; }[] = [];
-  openNetworkChangeFromPopup: boolean = false;
-  showNetworkChangeFromPopup: boolean = false;
-  showNetworkChangeToPopup: boolean = false;
   showTokenChangePopup: boolean = false;
-  //selectedNetworkTo: string = 'Abstract';
-  //selectedNetworkToImage: string = '/img/header/network-menu/Abstract.png';
-
   showBridgeTxPopup = false;
   showConnectWalletPopup: boolean = false;
 	customAddress = signal<string>('');
@@ -135,6 +127,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   txData = signal<TransactionRequestEVM | TransactionRequestSVM | undefined> (undefined);
   private inputTimeout: any;
   sellAmount: string = '';
+  buyAmount: string = '';
   validatedSellAmount = signal<string>('');
 
   selectedToken = signal<Token | undefined>(undefined);
@@ -142,26 +135,27 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   selectedNetwork = signal<Network | undefined>(undefined);
   selectedBuyNetwork = signal<Network | undefined>(undefined);
-  //selectedNetwork: string = '';
 
   balance = signal<number>(0.0);
   balanceBuy = signal<number>(0.0);
+  
+  networkTokens = new Map<number, Token[]>();
 
   constructor(
-    // private networkService: NetworkService,
-    // private walletService: WalletService,
     private renderer: Renderer2,
     private blockchainStateService: BlockchainStateService,
     private walletBalanceService: WalletBalanceService,
+    public popupService: PopupService,
+    private transactionsService: TransactionsService,
+    private cdr: ChangeDetectorRef
   ) {
-    // this.networks = this.networkService.getNetworks();
-		// const abstractNetwork = this.networkService.getNetworks()
-    //   .find(network => network.id === 'abstract');
 
-    // if (abstractNetwork) {
-    //   this.selectedNetworkTo = abstractNetwork.name;
-    //   this.selectedNetworkToImage = abstractNetwork.icon;
-    // }
+    effect(() => {
+      if (this.isBridgeButtonActive()) {
+        this.setButtonState('finding');
+        this.getTxData();
+      }
+    });
 
     effect(() => {
         if (this.blockchainStateService.connected() && this.selectedToken()) {
@@ -202,12 +196,47 @@ export class BridgeComponent implements OnInit, OnDestroy {
     );
 
     effect(() => {
-        const tokens = this.blockchainStateService.networks();
-        this.selectedNetwork.set(tokens.length > 0 ? tokens[0] : undefined);
-        this.selectedBuyNetwork.set(tokens.length > 1 ? tokens[1] : undefined);
+        const networks = this.blockchainStateService.networks();
+        this.selectedNetwork.set(networks.length > 0 ? networks[0] : undefined);
+        this.selectedBuyNetwork.set(networks.length > 1 ? networks[1] : undefined);
       },
       { allowSignalWrites: true }
     );
+
+    effect(() => {
+        const network = this.selectedNetwork();
+        if (network) {
+            if (!this.networkTokens.has(network.id)) {
+                this.blockchainStateService.fetchTokensForNetwork(network.id).then((tokens) => {
+                    this.networkTokens.set(network.id, tokens);
+                    this.selectedToken.set(tokens.length > 0 ? tokens[0] : undefined);
+                });
+            } else {
+                const tokens = this.networkTokens.get(network.id) || [];
+                this.selectedToken.set(tokens.length > 0 ? tokens[0] : undefined);
+            }
+        }
+      },
+      { allowSignalWrites: true }
+    );
+
+    effect(() => {
+        const network = this.selectedBuyNetwork();
+        if (network) {
+            if (!this.networkTokens.has(network.id)) {
+                this.blockchainStateService.fetchTokensForNetwork(network.id).then((tokens) => {
+                    this.networkTokens.set(network.id, tokens);
+                    this.selectedBuyToken.set(tokens.length > 0 ? tokens[0] : undefined);
+                });
+            } else {
+                const tokens = this.networkTokens.get(network.id) || [];
+                this.selectedBuyToken.set(tokens.length > 0 ? tokens[0] : undefined);
+            }
+        }
+      },
+      { allowSignalWrites: true }
+    );
+
   }
 
   async getBalanceForToken(token: Token): Promise<any> {
@@ -255,6 +284,92 @@ export class BridgeComponent implements OnInit, OnDestroy {
       }
     }
     
+  }
+
+  getTxData() {
+    const fromChain = this.selectedNetwork()?.idHex;
+    const toChain = this.selectedBuyNetwork()?.idHex;
+    console.log("this.selectedNetwork()?",this.selectedNetwork());
+    console.log("this.selectedNetwork()?",this.selectedBuyNetwork());
+
+    //const fromChain = this.blockchainStateService.network()!.id.toString();
+    //const toChain = this.blockchainStateService.network()!.id.toString();
+    const fromAddress = this.blockchainStateService.walletAddress()!;
+    const fromTokenDecimals = this.selectedToken()!.decimals;
+    const fromAmount = parseUnits(this.validatedSellAmount(), fromTokenDecimals);
+    const fromToken = this.selectedToken()!.contractAddress;
+    const toToken = this.selectedBuyToken()!.contractAddress;
+    const toTokenDecimals = this.selectedBuyToken()!.decimals;
+    const adjustedFromAmount = fromAmount.toString();
+  
+    if (!fromChain || !toChain || !fromAddress || !fromAmount || !fromToken || !toToken || !fromTokenDecimals) {
+      console.log("fromChain",fromChain);
+      console.log("toChain",toChain);
+      console.log("fromAddress",fromAddress);
+      console.log("fromAmount",fromAmount);
+      console.log("fromToken",fromToken);
+      console.log("toToken",toToken);
+      console.log("fromTokenDecimals",fromTokenDecimals);
+      
+      console.log("adjusted From Amount",adjustedFromAmount);
+
+      console.error('Missing required parameters');
+      this.setButtonState('bridge');
+      return;
+    }
+    
+    console.log("fromAddress",fromAddress);
+    const toAddress = this.customAddress() !== '' ? this.customAddress() : undefined;
+    this.transactionsService.getQuoteBridge(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress)
+    .subscribe({
+      next: (response: any) => {
+        console.log('Quote received:', response);
+        if (response.estimate && response.transactionRequest) 
+        {
+          const readableToAmount = this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals));
+        
+          console.log('readableToAmount:', readableToAmount);
+
+          const gasPriceHex = response.transactionRequest.gasPrice;
+          const gasLimitHex = response.transactionRequest.gasLimit;
+          const gasToken = response.estimate.gasCosts?.[0]?.token;
+
+          const gasPriceUSD = this.transactionsService.parseGasPriceUSD(gasPriceHex, gasLimitHex, gasToken);
+          
+          console.log('gasPriceUSD:', gasPriceUSD);
+        }
+        else 
+        {
+          console.error("Missing estimate or transactionRequest in response.");
+        }
+
+        if(response.transactionRequest.data)
+        {
+          if(this.blockchainStateService.network()?.chainId === "1151111081099710")
+          {
+            this.txData.set(response.transactionRequest as TransactionRequestSVM);
+          }
+          else
+          {
+            this.txData.set(response.transactionRequest as TransactionRequestEVM);
+          }
+        }
+        
+      },
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          console.error('Custom error message:', error || 'Unknown error');
+          console.error('Custom error message:', error.error?.message || 'Unknown error');
+        } else {
+          console.error('Unexpected error:', error);
+        }
+      },
+      complete: () => {
+        this.setButtonState('bridge');
+        console.log('Quote request completed');
+      }
+    });
+
   }
 
   ngOnInit() {
@@ -314,6 +429,11 @@ export class BridgeComponent implements OnInit, OnDestroy {
     this.receiveTextAnimated = false;
   }
 
+  async onTokenBuySelected(token: Token): Promise<void> {
+    this.selectedBuyToken.set(token);
+    this.receiveTextAnimated = false;
+  }
+
 	processInput(event: Event, isSell: boolean): void {
     this.txData.set(undefined);
     const inputElement = event.target as HTMLInputElement;
@@ -364,9 +484,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
     
 		this.selectedNetwork.set(this.selectedBuyNetwork());
 		this.selectedBuyNetwork.set(tempNetwork);
-    
-    console.log('After swap:', this.selectedNetwork(), this.selectedBuyNetwork());
-		console.log('After swap:', this.selectedToken, this.selectedBuyToken);
 
     this.receiveTextAnimated = false;
   }
@@ -405,7 +522,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   openConnectWalletPopup(): void {
-    if (!this.walletService.isConnected()) {
+    if (!this.blockchainStateService.connected()) {
       this.popupService.openPopup('connectWallet');
     }
   }
@@ -416,7 +533,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   validateAddress(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.customAddress = input.value;
+    this.customAddress.set(input.value);
   }
 
   get addressStatus(): 'none' | 'good' | 'bad' {
@@ -471,20 +588,95 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
   
   // Метод для обработки нажатия на кнопку
-  handleButtonClick(): void {
-    if (this.buttonState === 'approve') {
-      this.setButtonState('wallet');
+  async handleButtonClick(): Promise<void> {
+      //this.loading.set(true);
       
-      this.walletTimer = setTimeout(() => {
-        this.setButtonState('bridge');
-        if (this.cdr) {
-          this.cdr.detectChanges();
-        }
-      }, 2000);
-    } else if (this.buttonState === 'bridge') {
-      this.openBridgeTxPopup();
+    if(this.blockchainStateService.network()?.chainId === "1151111081099710")
+    {
+      await this.svmSwap();
     }
+    else
+    {
+      await this.evmSwap();
+    }
+
+    this.openBridgeTxPopup();
+    this.setButtonState('bridge');
+      
+  
+      //todo check for status from lifi
+      //this.loading.set(false);
+    
+    // if (this.buttonState === 'approve') {
+    //   this.setButtonState('wallet'); //todo ?? useful?
+      
+    //   this.walletTimer = setTimeout(() => {
+    //     this.setButtonState('bridge');
+    //     if (this.cdr) {
+    //       this.cdr.detectChanges();
+    //     }
+    //   }, 2000);
+    // } else if (this.buttonState === 'bridge') {
+    //   this.openBridgeTxPopup();
+    // }
   }
+
+  async svmSwap() {
+      const txData = this.txData(); 
+      if (!txData) {
+        throw new Error("missing data transaction");
+      }
+      const provider = this.blockchainStateService.getCurrentProvider().provider;
+    
+      const txHash = await provider.sendTx(txData);
+      console.log("SVM Swap транзакция отправлена:", txHash);
+      
+    }
+  
+    async evmSwap(){
+      const provider = this.blockchainStateService.getCurrentProvider().provider;
+  
+      const signer = await provider.signer;
+  
+      const fromToken = this.selectedToken()!.contractAddress;
+      if(fromToken === ethers.ZeroAddress){
+        const txHash = await provider.sendTx(this.txData());
+        return;
+      }
+
+      this.setButtonState('approve');
+  
+      const erc20Contract = new ethers.Contract(
+        fromToken,
+        [
+          "function approve(address spender, uint256 amount) public returns (bool)",
+          "function allowance(address owner, address spender) public view returns (uint256)"
+        ],
+        signer
+      );
+  
+      //const fromAddress = this.blockchainStateService.walletAddress()!;
+      const fromTokenDecimals = this.selectedToken()!.decimals;
+      const approveAmount = parseUnits(this.validatedSellAmount(), fromTokenDecimals)
+  
+      // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
+      // console.log("allowance",allowance);
+  
+      const approveTx = await erc20Contract["approve"]((this.txData() as TransactionRequestEVM).to, approveAmount);
+      
+      console.log("a");
+  
+      await approveTx.wait();
+  
+      console.log("Approve успешно выполнен:", approveTx.hash);
+  
+      const txHash = await provider.sendTx(this.txData(), true);
+
+      this.buttonState === 'bridge'
+  
+      console.log("txHash",txHash);
+      // console.log("this.loading()",this.loading()); 
+    }
   
   // Метод для сброса таймеров
   resetTimers(): void {
@@ -502,6 +694,16 @@ export class BridgeComponent implements OnInit, OnDestroy {
   resetButtonState(): void {
     this.resetTimers();
     this.setButtonState('bridge');
+  }
+
+  openNetworkChangeFromPopup(): void {
+    console.log('Opening networkChangeFrom popup');
+    this.popupService.openPopup('networkChangeFrom');
+  }
+
+  openNetworkChangeToPopup(): void {
+    console.log('Opening networkChangeTo popup');
+    this.popupService.openPopup('networkChangeTo');
   }
 
   get buttonState(): 'bridge' | 'finding' | 'approve' | 'wallet' | 'wrong-address' {
@@ -647,9 +849,9 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   // Метод для проверки и запуска анимации текста
   private checkAndAnimateReceiveText() {
-    if (this.receiveTextElement && !this.receiveTextAnimated && this.selectedReceiveToken.symbol) {
+    if (this.receiveTextElement && !this.receiveTextAnimated && this.selectedBuyToken()!.symbol) {
       // Добавляем информацию о времени в секундах (например, 30 секунд)
-      const finalText = `${this.inputAmount} ${this.selectedReceiveToken.symbol} in 30 sec`;
+      const finalText = `${this.validatedSellAmount} ${this.selectedBuyToken()!.symbol} in 30 sec`;
       this.animateText(this.receiveTextElement.nativeElement, finalText, 'receiveText');
       this.receiveTextAnimated = true;
     }

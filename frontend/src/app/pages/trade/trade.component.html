@@ -41,8 +41,8 @@
 
       <div class="right">
         <div class="token" (click)="openTokenPopup()">
-          <div class="token-icon" [style.backgroundImage]="'url(' + selectedTokenImage + ')'"></div>
-          <p>{{ selectedToken }}</p>
+          <div class="token-icon" [style.backgroundImage]="'url(' + selectedToken()?.imageUrl + ')'"></div>
+          <p>{{ selectedToken()?.symbol }}</p>
           <button></button>
         </div>
       </div>
@@ -52,8 +52,8 @@
 
         <div class="balance" *ngIf="isWalletConnected()">
           <p>Balance:</p>
-          <p id="balance">{{ balance }}</p>
-          <p>${{ selectedToken }}</p>
+          <p id="balance">{{ balance() }}</p>
+          <p>${{ selectedToken()?.symbol }}</p>
 
           <button class="max" (click)="setMaxSellAmount()">MAX</button>
         </div>
@@ -77,8 +77,8 @@
 
       <div class="right">
         <div class="token" (click)="openTokenBuyPopup()">
-          <div class="token-icon" [style.backgroundImage]="'url(' + selectedBuyTokenImage + ')'"></div>
-          <p>{{ selectedBuyToken }}</p>
+          <div class="token-icon" [style.backgroundImage]="'url(' + selectedBuyToken()?.imageUrl + ')'"></div>
+          <p>{{ selectedBuyToken()?.symbol }}</p>
           <button></button>
         </div>
       </div>
@@ -88,8 +88,8 @@
 
         <div class="balance" *ngIf="isWalletConnected()">
           <p>Balance:</p>
-          <p>0.1465</p>
-          <p>${{ selectedBuyToken }}</p>
+          <p>???todo</p>
+          <p>${{ selectedBuyToken()?.symbol }}</p>
         </div>
         <!-- Показываем сообщение, если кошелек не подключен -->
         <div class="balance-not-connected" *ngIf="!isWalletConnected()">
@@ -125,10 +125,10 @@
 		<div class="info">
 			<div class="price">
 				<p>1</p>
-				<p>{{ selectedToken }}</p>
+				<p>{{ selectedToken()?.symbol }}</p>
 				<p>=</p>
 				<p id="price">{{ price }}</p>
-				<p>{{ selectedBuyToken }}</p>
+				<p>{{ selectedBuyToken()?.symbol }}</p>
 				<p class="price-usd">($</p>
 				<p class="price-usd" id="price-usd">{{ priceUsd }}</p>
 				<p class="price-usd">)</p>
@@ -143,21 +143,23 @@
 </div>
 
 <app-token-change
+  [mode]="'sell'"
   *ngIf="popupService.getCurrentPopup() === 'tokenChangeSell'"
   (tokenSelected)="onTokenSelected($event)"
   (close)="closeTokenPopup()">
 </app-token-change>
 
-<app-token-change-buy
+<app-token-change
+  [mode]="'buy'"
   *ngIf="popupService.getCurrentPopup() === 'tokenChangeBuy'"
   (tokenSelected)="onBuyTokenSelected($event)"
   (close)="closeTokenBuyPopup()">
-</app-token-change-buy>
+</app-token-change>
 
 <app-success-notification
   *ngIf="showSuccessNotification"
-  [selectedToken]="selectedToken"
-  [selectedBuyToken]="selectedBuyToken"
+  [selectedToken]="selectedToken()"
+  [selectedBuyToken]="selectedBuyToken()"
   [sellAmount]="sellAmount"
   [buyAmount]="buyAmount"
   (close)="closeSuccessNotification()">
@@ -165,8 +167,8 @@
 
 <app-failed-notification
   *ngIf="showFailedNotification"
-  [selectedToken]="selectedToken"
-  [selectedBuyToken]="selectedBuyToken"
+  [selectedToken]="selectedToken()"
+  [selectedBuyToken]="selectedBuyToken()"
   [sellAmount]="sellAmount"
   [buyAmount]="buyAmount"
   (close)="closeFailedNotification()">
@@ -174,8 +176,8 @@
 
 <app-pending-notification
   *ngIf="showPendingNotification"
-  [selectedToken]="selectedToken"
-  [selectedBuyToken]="selectedBuyToken"
+  [selectedToken]="selectedToken()"
+  [selectedBuyToken]="selectedBuyToken()"
   [sellAmount]="sellAmount"
   [buyAmount]="buyAmount"
   (close)="closePendingNotification()">

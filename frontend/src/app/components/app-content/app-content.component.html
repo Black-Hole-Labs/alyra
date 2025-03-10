@@ -20,7 +20,6 @@
 
   <app-blackhole-network
     *ngIf="activePopup === 'networkPopup'"
-    (networkSelected)="networkService.setSelectedNetwork($event)"
     (close)="popupService.closeAllPopups()">
   </app-blackhole-network>
 </ng-container>
