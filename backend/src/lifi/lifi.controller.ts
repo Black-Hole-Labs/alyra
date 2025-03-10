@@ -33,7 +33,7 @@ export class LifiController {
     if (!fromChain || !toChain || !fromToken || !toToken || !fromAmount || !fromAddress) {
       throw new HttpException('Missing required query parameters', HttpStatus.BAD_REQUEST);
     }
-    return await this.lifiService.getQuote(fromChain, toChain, fromToken, toToken, fromAmount, fromAddress, slippage);
+    return await this.lifiService.getQuote(fromChain, toChain, fromToken, toToken, fromAmount, fromAddress, undefined, slippage);
     }
 
   @Get('quote-bridge')

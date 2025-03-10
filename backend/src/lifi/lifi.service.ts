@@ -41,7 +41,6 @@ export class LifiService {
     slippage?: number
   ) {
     try {
-      // Формируем объект параметров с обязательными полями
       const params: any = {
         fromChain,
         toChain,
@@ -51,7 +50,6 @@ export class LifiService {
         fromAddress,
       };
   
-      // Если toAddress передан, добавляем его
       if (toAddress) {
         params.toAddress = toAddress;
       }
@@ -59,7 +57,7 @@ export class LifiService {
       if (slippage) {
         params.slippage = slippage;
       }
-  
+
       const result = await axios.get('https://li.quest/v1/quote', { params });
       return result.data;
     } catch (error) {
