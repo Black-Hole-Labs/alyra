@@ -4,11 +4,11 @@
 		<div class="left-header">
 			<div class="avatar"></div>
 			<div class="wallet-name">
-				<h3>{{ walletName }}</h3>
-				<div class="wallet-address">
+				<h3>{{ walletName().length > 20 ? walletName().slice(0, 6) + '...' + walletName().slice(-3) : walletName()}}</h3>
+				<!-- <div class="wallet-address">
 					<p>0xefe..45</p>
 					<div class="copy"></div>
-				</div>
+				</div> -->
 			</div>
 		</div>
 
@@ -20,7 +20,7 @@
 		</div>
   </div>
 
-	<div class="devider">
+	<!-- <div class="devider">
 		<p>Balance</p>
 		<hr class="hr1" />
 	</div>
@@ -55,6 +55,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 	
 </div>
