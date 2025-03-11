@@ -24,7 +24,7 @@ export class BlockchainStateService {
   constructor() {
     // Эффект для обновления статуса подключения
     //this.loadTokensForNetwork("1");
-    this.loadNetworks("EVM", true);
+    this.loadNetworks("multichain", true);
 
 
     effect(() => {
@@ -143,11 +143,12 @@ export class BlockchainStateService {
 }
 
 
-  private async loadNetworks(type: string, force?: boolean): Promise<void> {
+  public async loadNetworks(type: string, force?: boolean): Promise<void> {
       try {
         const response = await fetch('/data/networks.json');
         const allNetworks: any[] = await response.json();
-  
+        console.log(type);
+        console.log(allNetworks);
         if (type === 'multichain') { // Both EVM and SVM
           this.networks.set(allNetworks);
         } else {
@@ -186,7 +187,8 @@ export class BlockchainStateService {
 
   disconnect(): void {
     this.walletAddress.set(null);
-    this.network.set(null);
+    this.loadNetworks("multichain", true);
+    //this.network.set(null);
     this.connected.set(false);
   }
 }

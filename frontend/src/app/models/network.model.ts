@@ -1,3 +1,4 @@
+import { Injector } from '@angular/core';
 import { EvmWalletProvider } from './evm-wallet-provider';
 import { MultiChainWalletProvider } from './multichain-wallet-provider';
 import { SvmWalletProvider } from './svm-wallet-provider';
@@ -56,66 +57,66 @@ export class WalletProviderManager {
 
 /***************EVM***************/
 export class MetaMaskProvider extends EvmWalletProvider {
-  constructor(walletManager: WalletProviderManager) {
-    super(walletManager.getMetaMaskProvider());
+  constructor(walletManager: WalletProviderManager, injector: Injector) {
+    super(walletManager.getMetaMaskProvider(), injector);
   }
 }
 
 export class RabbyWalletProvider extends EvmWalletProvider {
-  constructor(walletManager: WalletProviderManager) {
-    super(walletManager.getRabbyWalletProvider());
+  constructor(walletManager: WalletProviderManager, injector: Injector) {
+    super(walletManager.getRabbyWalletProvider(), injector);
   }
 }
 
 /***************SVM***************/
 export class SolflareProvider extends SvmWalletProvider {
-  constructor() {
-    super((window as any).solflare);
+  constructor(injector: Injector) {
+    super((window as any).solflare, injector);
   }
 }
 
 export class BackpackProvider extends SvmWalletProvider {
-  constructor() {
-    super((window as any).backpack);
+  constructor(injector: Injector) {
+    super((window as any).backpack, injector);
   }
 }
 
 /***************MULTICHAIN***************/
 export class PhantomProvider extends MultiChainWalletProvider {
-  constructor(walletManager: WalletProviderManager) {
-    super();
+  constructor(walletManager: WalletProviderManager,injector: Injector) {
+    super(injector);
     this.evmProviderInstance = walletManager.getPhantomProvider();
     this.svmProviderInstance = (window as any).phantom?.solana;
   }
 }
 
 export class MagicEdenProvider extends MultiChainWalletProvider {
-  constructor(walletManager: WalletProviderManager) {
-    super();
+  constructor(walletManager: WalletProviderManager, injector: Injector) {
+    super(injector);
     this.evmProviderInstance = walletManager.getMagicEdenProvider();
     this.svmProviderInstance = (window as any).magicEden?.solana;
   }
 }
 
 export class TrustWalletProvider extends MultiChainWalletProvider {
-  constructor() {
-    super();
+  constructor(injector: Injector) {
+    super(injector);
     this.evmProviderInstance = window.trustwallet;
     this.svmProviderInstance = (window as any).trustwallet?.solana;
   }
 }
 
 export class OkxWalletProvider extends MultiChainWalletProvider {
-  constructor() {
-    super();
+  constructor(injector: Injector) {
+    super(injector);
     this.evmProviderInstance = window.okexchain;
     this.svmProviderInstance = (window as any).okexchain?.solana;
   }
 }
 
 export class CoinbaseWalletProvider extends MultiChainWalletProvider {
-  constructor() {
-    super();
+  constructor(injector: Injector) {
+    super(injector);
     this.evmProviderInstance = window.coinbaseWalletExtension;
     this.svmProviderInstance = (window as any).coinbaseSolana;
   }
