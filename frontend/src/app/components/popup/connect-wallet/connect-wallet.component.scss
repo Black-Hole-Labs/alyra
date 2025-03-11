@@ -1,8 +1,5 @@
 .connect-wallet {
 	width: 500px;
-  position: fixed;
-  top: 148px;
-  right: 40px;
 	height: 860px;
 	background-color: rgba(var(--dark-bg), 0.3);
 	backdrop-filter: blur(25px);
@@ -45,27 +42,13 @@
 	.scroll-container {
 		flex: 1;
 		overflow-y: auto;
-		margin-right: -10px; /* Компенсируем отступ для скроллбара */
-		padding-right: 10px;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
 		margin-bottom: 20px; /* Отступ для дисклеймера */
 		
 		/* Стилизуем скроллбар */
 		&::-webkit-scrollbar {
-			width: 8px;
-		}
-		
-		&::-webkit-scrollbar-track {
-			background: rgba(var(--dark-bg), 0.3);
-			border-radius: 4px;
-		}
-		
-		&::-webkit-scrollbar-thumb {
-			background: var(--elem-nonactive);
-			border-radius: 4px;
-		}
-		
-		&::-webkit-scrollbar-thumb:hover {
-			background: var(--elem-active);
+			display: none;
 		}
 	}
 	

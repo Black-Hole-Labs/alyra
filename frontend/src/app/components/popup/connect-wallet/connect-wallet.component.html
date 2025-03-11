@@ -4,55 +4,58 @@
 	  <button (click)="closePopup()"></button>
 	</div>
   
-	<div class="devider">
-	  <p>Available</p>
-	  <hr class="hr1" />
-	</div>
-  
-	<div class="inner-wallets">
-	  @for (wallet of availableWallets; track wallet.id) {
-		<div class="wallet" (click)="onWalletClick(wallet.id)">
-		  <div class="name">
-			<div class="wallet-img {{wallet.cssClass}}"></div>
-			<p>{{wallet.name}}</p>
-		  </div>
-		  @if (wallet.status) {
-			<div class="status {{wallet.status}}">
-			  @if (wallet.status === 'install' && wallet.installUrl) {
-				<a href="{{wallet.installUrl}}" target="_blank" (click)="$event.stopPropagation()">Install</a>
-			  } @else {
-				<p>{{wallet.status | titlecase}}</p>
-			  }
-			</div>
-		  }
+	<div class="scroll-container">
+		<div class="devider">
+			<p>Available</p>
+			<hr class="hr1" />
 		</div>
-	  }
-	</div>
-  
-	<div class="devider">
-	  <p>Other Wallets</p>
-	  <hr class="hr2" />
+		
+		<div class="inner-wallets">
+			@for (wallet of availableWallets; track wallet.id) {
+			<div class="wallet" (click)="onWalletClick(wallet.id)">
+				<div class="name">
+				<div class="wallet-img {{wallet.cssClass}}"></div>
+				<p>{{wallet.name}}</p>
+				</div>
+				@if (wallet.status) {
+				<div class="status {{wallet.status}}">
+					@if (wallet.status === 'install' && wallet.installUrl) {
+					<a href="{{wallet.installUrl}}" target="_blank" (click)="$event.stopPropagation()">Install</a>
+					} @else {
+					<p>{{wallet.status | titlecase}}</p>
+					}
+				</div>
+				}
+			</div>
+			}
+		</div>
+		
+		<div class="devider">
+			<p>Other Wallets</p>
+			<hr class="hr2" />
+		</div>
+		
+		<div class="inner-wallets">
+			@for (wallet of otherWallets; track wallet.id) {
+			<div class="wallet" (click)="onWalletClick(wallet.id)">
+				<div class="name">
+				<div class="wallet-img {{wallet.cssClass}}"></div>
+				<p>{{wallet.name}}</p>
+				</div>
+				@if (wallet.status) {
+				<div class="status {{wallet.status}}">
+					@if (wallet.status === 'install' && wallet.installUrl) {
+					<a href="{{wallet.installUrl}}" target="_blank" (click)="$event.stopPropagation()">Install</a>
+					} @else {
+					<p>{{wallet.status | titlecase}}</p>
+					}
+				</div>
+				}
+			</div>
+			}
+		</div>
 	</div>
 	
-	<div class="inner-wallets">
-	  @for (wallet of otherWallets; track wallet.id) {
-		<div class="wallet" (click)="onWalletClick(wallet.id)">
-		  <div class="name">
-			<div class="wallet-img {{wallet.cssClass}}"></div>
-			<p>{{wallet.name}}</p>
-		  </div>
-		  @if (wallet.status) {
-			<div class="status {{wallet.status}}">
-			  @if (wallet.status === 'install' && wallet.installUrl) {
-				<a href="{{wallet.installUrl}}" target="_blank" (click)="$event.stopPropagation()">Install</a>
-			  } @else {
-				<p>{{wallet.status | titlecase}}</p>
-			  }
-			</div>
-		  }
-		</div>
-	  }
-	</div>
   
 	<p class="disclaimer">By connecting a wallet, you agree to Blackhole Aggregator's <a routerLink="/documentation/termsofuse">Terms of Use</a> and consent to its <a routerLink="/documentation/privacypolicy">Privacy Policy</a>.</p>
   </div>
