@@ -123,7 +123,6 @@ html{
 .network-popup,
 .blackhole-menu,
 .token-change,
-.token-change-buy,
 .network-change-from,
 .network-change-to,
 .bridge-tx {
@@ -140,7 +139,6 @@ html{
   .network-popup,
   .blackhole-menu,
   .token-change,
-  .token-change-buy,
   .network-change-from,
   .network-change-to,
   .bridge-tx,
@@ -160,7 +158,6 @@ html{
   .network-popup,
   .blackhole-menu,
   .token-change,
-  .token-change-buy,
   .network-change-from,
   .network-change-to,
   .bridge-tx,
@@ -180,25 +177,27 @@ app-settings{
 
 .wallet-popup,
 .connect-wallet {
-  top: 80px;
-  right: 20px;
+	position: fixed;
+  top: 155px;
+  right: 40px;
 }
 
 .blackhole-menu {
-  top: 80px;
-  left: 20px;
+	position: fixed;
+  top: 155px;
+  left: 40px;
 }
 
 .popup-network {
-  top: 80px;
-  right: 80px;
+	position: fixed;
+  top: 155px;
+  right: 130px;
 }
 
 .bridge-tx,
 .network-change-from,
 .network-change-to,
-.token-change,
-.token-change-buy {
+.token-change {
 	position: fixed;
   top: 156px;
   left: 50%;
@@ -212,7 +211,6 @@ app-settings{
 .network-popup,
 .blackhole-menu,
 .token-change,
-.token-change-buy,
 .network-change-from,
 .network-change-to,
 .bridge-tx {

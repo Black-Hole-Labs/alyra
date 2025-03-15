@@ -1,5 +1,7 @@
 import { ethers, JsonRpcSigner } from 'ethers';
 import { TransactionRequestEVM, WalletProvider } from './wallet-provider.interface';
+import { inject, Injector } from '@angular/core';
+import { BlockchainStateService } from '../services/blockchain-state.service';
 
 export class EvmWalletProvider implements WalletProvider {
   protected address: string = '';
@@ -7,11 +9,16 @@ export class EvmWalletProvider implements WalletProvider {
   protected provider: any;
   public signer?: JsonRpcSigner;
 
-  constructor(provider: any) {
+  protected blockchainStateService: BlockchainStateService;
+  protected injector: Injector;
+
+  constructor(provider: any, injector: Injector) {
+    this.injector = injector;
+    this.blockchainStateService = injector.get(BlockchainStateService);
     this.provider = provider;
   }
 
-  async connect(_provider?: any): Promise<{ address: string; network: string }> {
+  async connect(_provider?: any, isMultichain?: boolean): Promise<{ address: string; network: string }> {
     if (_provider) this.provider = _provider;
     if (!this.provider) throw new Error('Provider not installed');
     const accounts = await this.provider.request({ method: 'eth_requestAccounts' });
@@ -19,6 +26,14 @@ export class EvmWalletProvider implements WalletProvider {
     this.network = await this.getNetwork();
     const ethersProvider = new ethers.BrowserProvider(this.provider);
     this.signer = await ethersProvider.getSigner();
+    
+    console.log("isMultichain",isMultichain);
+    console.log("!!isMultichain",!!isMultichain);
+
+    if(!isMultichain){
+      this.blockchainStateService.loadNetworks("EVM");
+    }
+
     return { address: this.address, network: this.network };
   }
 

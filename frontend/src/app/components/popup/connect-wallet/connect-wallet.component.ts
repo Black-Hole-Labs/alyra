@@ -33,6 +33,11 @@ export class ConnectWalletComponent {
     { id: 'rabby-wallet', name: 'Rabby Wallet', cssClass: 'rabby-wallet', status: 'detected' },
     { id: 'backpack', name: 'Backpack', cssClass: 'backpack', status: 'detected' },
     { id: 'phantom', name: 'Phantom', cssClass: 'phantom', status: 'detected' },
+    { id: 'solflare', name: 'Solflare', cssClass: 'solflare', status: 'detected' },
+    { id: 'trust-wallet', name: 'Trust Wallet', cssClass: 'trust-wallet', status: 'detected' },
+    { id: 'okx-wallet', name: 'OKX Wallet', cssClass: 'okx-wallet', status: 'detected' },
+    { id: 'coinbase-wallet', name: 'Coinbase Wallet', cssClass: 'coinbase-wallet', status: 'detected' },
+    { id: 'ledger', name: 'Ledger', cssClass: 'ledger'},
     { id: 'walletconnect', name: 'WalletConnect', cssClass: 'walletconnect' }
   ];
 

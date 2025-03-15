@@ -161,7 +161,7 @@
   [selectedToken]="selectedToken()"
   [selectedBuyToken]="selectedBuyToken()"
   [sellAmount]="sellAmount"
-  [buyAmount]="buyAmount().toString()"
+  [buyAmount]="buyAmount()!.toString()"
   (close)="closeSuccessNotification()">
 </app-success-notification>
 
@@ -170,7 +170,7 @@
   [selectedToken]="selectedToken()"
   [selectedBuyToken]="selectedBuyToken()"
   [sellAmount]="sellAmount"
-  [buyAmount]="buyAmount().toString()"
+  [buyAmount]="buyAmount()!.toString()"
   (close)="closeFailedNotification()">
 </app-failed-notification>
 
@@ -179,6 +179,6 @@
   [selectedToken]="selectedToken()"
   [selectedBuyToken]="selectedBuyToken()"
   [sellAmount]="sellAmount"
-  [buyAmount]="buyAmount().toString()"
+  [buyAmount]="buyAmount()!.toString()"
   (close)="closePendingNotification()">
 </app-pending-notification>

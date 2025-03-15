@@ -1,17 +1,22 @@
 import { Connection, VersionedTransaction } from '@solana/web3.js';
 import { TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
+import { BlockchainStateService } from '../services/blockchain-state.service';
+import { Injector } from '@angular/core';
 
 export class SvmWalletProvider implements WalletProvider {
   protected address: string = '';
   protected network: string = '';
   protected provider: any;
 
-  constructor(provider: any) {
+  protected blockchainStateService!: BlockchainStateService;
+
+  constructor(provider: any, injector: Injector) {
+    this.blockchainStateService = injector.get(BlockchainStateService);
     this.provider = provider;
   }
 
   // Provide a default implementation that forces override
-  async connect(_provider?: any): Promise<{ address: string; network: string }>  {
+  async connect(_provider?: any, isMultichain?: boolean): Promise<{ address: string; network: string }>  {
     if (_provider) this.provider = _provider;
     if (!this.provider) throw new Error('Solana not installed');
     if (!this.provider.isConnected) {
@@ -21,6 +26,11 @@ export class SvmWalletProvider implements WalletProvider {
     if (!account) throw new Error('Failed to retrieve Solana account');
     this.address = account;
     this.network = await this.getNetwork();
+
+    if(!isMultichain){
+      this.blockchainStateService.loadNetworks("SVM");
+    }
+
     return { address: this.address, network: this.network };
   }
 

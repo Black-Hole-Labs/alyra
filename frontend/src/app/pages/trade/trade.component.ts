@@ -43,7 +43,7 @@ export class TradeComponent {
   validatedSellAmount = signal<string>('');
   loading = signal<boolean>(false);
 
-  buyAmount = signal<number>(0.0);
+  buyAmount = signal<number | undefined>(undefined);
   price: number = 0.5637; // Цена обмена
   priceUsd: number = 921244; // Текущая стоимость в USD за единицу
   sellPriceUsd = signal<string>('');
