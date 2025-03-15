@@ -67,7 +67,6 @@ export class TradeComponent {
   showSuccessNotification = false;
   showFailedNotification = false;
   showPendingNotification = false;
-  private isLastNotificationSuccess = false;
 
   buttonState: 'swap' | 'finding' | 'approve' | 'wallet' | 'insufficient' = 'swap';
   
@@ -366,23 +365,37 @@ export class TradeComponent {
   }
 
   async swap() {
-    //this.loading.set(true);
+    this.showPendingNotification = true;
+    this.showSuccessNotification = false;
+    this.showFailedNotification = false;
+    this.cdr.detectChanges();
+  
     
-    if(this.blockchainStateService.network()?.chainId === "1151111081099710")
-    {
-      await this.svmSwap();
-    }
-    else
-    {
-      await this.evmSwap();
+    let txHash: string;
+    if (this.blockchainStateService.network()?.chainId === "1151111081099710") {
+      txHash = await this.svmSwap();
+    } else {
+      txHash = await this.evmSwap();
     }
     
+    const finalStatus = await this.transactionsService.pollStatus(txHash);
+    
+    this.showPendingNotification = false;
+    if (finalStatus === 'DONE') {
+      this.showSuccessNotification = true;
+    } else {
+      this.showFailedNotification = true;
+    }
+    this.cdr.detectChanges();
 
-    //todo check for status from lifi
-    //this.loading.set(false);
+    setTimeout(() => {
+      this.showSuccessNotification = false;
+      this.showFailedNotification = false;
+      this.cdr.detectChanges();
+    }, 5000);
   }
 
-  async svmSwap() {
+  async svmSwap(): Promise<string> {
     const txData = this.txData(); 
     if (!txData) {
       throw new Error("missing data transaction");
@@ -390,10 +403,12 @@ export class TradeComponent {
     const provider = this.blockchainStateService.getCurrentProvider().provider;
   
     const txHash = await provider.sendTx(txData);
+
     console.log("SVM Swap транзакция отправлена:", txHash);
+    return txHash;
   }
 
-  async evmSwap(){
+  async evmSwap(): Promise<string>{
     const provider = this.blockchainStateService.getCurrentProvider().provider;
 
     const signer = await provider.signer;
@@ -401,7 +416,7 @@ export class TradeComponent {
     const fromToken = this.selectedToken()!.contractAddress;
     if(fromToken === ethers.ZeroAddress){
       const txHash = await provider.sendTx(this.txData());
-      return;
+      return txHash;
     }
 
     const erc20Contract = new ethers.Contract(
@@ -426,12 +441,20 @@ export class TradeComponent {
 
     await approveTx.wait();
 
+    this.showPendingNotification = false;
+
     console.log("Approve успешно выполнен:", approveTx.hash);
+
+    this.buttonState = 'swap';
+
+    this.showPendingNotification = true;
 
     const txHash = await provider.sendTx(this.txData(), true);
 
+
     console.log("txHash",txHash);
     console.log("this.loading()",this.loading());
+    return txHash;
   }
 
   test(){
@@ -519,7 +542,11 @@ export class TradeComponent {
           }
           else
           {
-            this.txData.set(response.transactionRequest as TransactionRequestEVM);
+            this.txData.set(response.transactionRequest as TransactionRequestEVM);            
+            if(fromToken !== ethers.ZeroAddress){
+              console.log("this.buttonState = 'approve'");
+              this.buttonState = 'approve';
+            }
           }
         }
         

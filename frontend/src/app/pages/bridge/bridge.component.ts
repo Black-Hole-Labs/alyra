@@ -142,6 +142,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
   networkTokens = new Map<number, Token[]>();
   slippage: number = 0.005; //  // 0.005 is default for LIFI
 
+  bridgeTxHash: string = '';
+
   constructor(
     private renderer: Renderer2,
     private blockchainStateService: BlockchainStateService,
@@ -355,7 +357,11 @@ export class BridgeComponent implements OnInit, OnDestroy {
           }
           else
           {
-            this.txData.set(response.transactionRequest as TransactionRequestEVM);
+            this.txData.set(response.transactionRequest as TransactionRequestEVM);            
+            if(fromToken !== ethers.ZeroAddress){
+              console.log("this.buttonState = 'approve'");
+              this.setButtonState('approve');
+            }
           }
         }
         
@@ -593,94 +599,80 @@ export class BridgeComponent implements OnInit, OnDestroy {
   
   // Метод для обработки нажатия на кнопку
   async handleButtonClick(): Promise<void> {
-      //this.loading.set(true);
-      
+    let txHash: string;
     if(this.blockchainStateService.network()?.chainId === "1151111081099710")
     {
-      await this.svmSwap();
+      txHash = await this.svmSwap();
     }
     else
     {
-      await this.evmSwap();
+      txHash = await this.evmSwap();
     }
 
+    this.bridgeTxHash = txHash;
     this.openBridgeTxPopup();
-    this.setButtonState('bridge');
-      
-  
-      //todo check for status from lifi
-      //this.loading.set(false);
     
-    // if (this.buttonState === 'approve') {
-    //   this.setButtonState('wallet'); //todo ?? useful?
-      
-    //   this.walletTimer = setTimeout(() => {
-    //     this.setButtonState('bridge');
-    //     if (this.cdr) {
-    //       this.cdr.detectChanges();
-    //     }
-    //   }, 2000);
-    // } else if (this.buttonState === 'bridge') {
-    //   this.openBridgeTxPopup();
-    // }
+    this.setButtonState('bridge');
   }
 
-  async svmSwap() {
-      const txData = this.txData(); 
-      if (!txData) {
-        throw new Error("missing data transaction");
-      }
-      const provider = this.blockchainStateService.getCurrentProvider().provider;
+  async svmSwap(): Promise<string> {
+    const txData = this.txData(); 
+    if (!txData) {
+      throw new Error("missing data transaction");
+    }
+    const provider = this.blockchainStateService.getCurrentProvider().provider;
+  
+    const txHash = await provider.sendTx(txData);
+    console.log("SVM Swap транзакция отправлена:", txHash);
+    return txHash;
+  }
+  
+  async evmSwap(): Promise<string>{
+    const provider = this.blockchainStateService.getCurrentProvider().provider;
+
+    const signer = await provider.signer;
+
+    const fromToken = this.selectedToken()!.contractAddress;
+    if(fromToken === ethers.ZeroAddress){
+      const txHash = await provider.sendTx(this.txData());
+      return txHash;
+    }
+
+    this.setButtonState('approve');
+
+    const erc20Contract = new ethers.Contract(
+      fromToken,
+      [
+        "function approve(address spender, uint256 amount) public returns (bool)",
+        "function allowance(address owner, address spender) public view returns (uint256)"
+      ],
+      signer
+    );
+
+    //const fromAddress = this.blockchainStateService.walletAddress()!;
+    const fromTokenDecimals = this.selectedToken()!.decimals;
+    const approveAmount = parseUnits(this.validatedSellAmount(), fromTokenDecimals)
+
+    // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
+    // console.log("allowance",allowance);
+
+    const approveTx = await erc20Contract["approve"]((this.txData() as TransactionRequestEVM).to, approveAmount);
     
-      const txHash = await provider.sendTx(txData);
-      console.log("SVM Swap транзакция отправлена:", txHash);
-      
-    }
-  
-    async evmSwap(){
-      const provider = this.blockchainStateService.getCurrentProvider().provider;
-  
-      const signer = await provider.signer;
-  
-      const fromToken = this.selectedToken()!.contractAddress;
-      if(fromToken === ethers.ZeroAddress){
-        const txHash = await provider.sendTx(this.txData());
-        return;
-      }
+    console.log("a");
 
-      this.setButtonState('approve');
-  
-      const erc20Contract = new ethers.Contract(
-        fromToken,
-        [
-          "function approve(address spender, uint256 amount) public returns (bool)",
-          "function allowance(address owner, address spender) public view returns (uint256)"
-        ],
-        signer
-      );
-  
-      //const fromAddress = this.blockchainStateService.walletAddress()!;
-      const fromTokenDecimals = this.selectedToken()!.decimals;
-      const approveAmount = parseUnits(this.validatedSellAmount(), fromTokenDecimals)
-  
-      // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
-      // console.log("allowance",allowance);
-  
-      const approveTx = await erc20Contract["approve"]((this.txData() as TransactionRequestEVM).to, approveAmount);
-      
-      console.log("a");
-  
-      await approveTx.wait();
-  
-      console.log("Approve успешно выполнен:", approveTx.hash);
-  
-      const txHash = await provider.sendTx(this.txData(), true);
+    await approveTx.wait();
 
-      this.buttonState === 'bridge'
-  
-      console.log("txHash",txHash);
-      // console.log("this.loading()",this.loading()); 
-    }
+    console.log("Approve успешно выполнен:", approveTx.hash);
+
+    const txHash = await provider.sendTx(this.txData(), true);
+
+    this.setButtonState('bridge');
+    this.buttonState === 'bridge'
+
+    console.log("txHash",txHash);
+    // console.log("this.loading()",this.loading()); 
+    return txHash;
+  }
   
   // Метод для сброса таймеров
   resetTimers(): void {
