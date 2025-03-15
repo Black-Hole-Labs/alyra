@@ -140,6 +140,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   balanceBuy = signal<number>(0.0);
   
   networkTokens = new Map<number, Token[]>();
+  slippage: number = 0.005; //  // 0.005 is default for LIFI
 
   constructor(
     private renderer: Renderer2,
@@ -320,7 +321,10 @@ export class BridgeComponent implements OnInit, OnDestroy {
     
     console.log("fromAddress",fromAddress);
     const toAddress = this.customAddress() !== '' ? this.customAddress() : undefined;
-    this.transactionsService.getQuoteBridge(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress)
+    const slippageValue = this.slippage !== 0.005 ? this.slippage: undefined; // 0.005 is default for LIFI
+
+    this.transactionsService.getQuoteBridge(
+      fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress, slippageValue)
     .subscribe({
       next: (response: any) => {
         console.log('Quote received:', response);
@@ -870,9 +874,23 @@ export class BridgeComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSlippageSave(value: string): void {
-    console.log('Slippage value saved:', value);
-    // Здесь можно добавить логику для сохранения значения slippage
+	onSlippageSave(value: string): void {
+    if (value === "Auto")
+    {
+      console.log("Slippate is Auto. Default value is 0.005 (0.5%)");
+      this.slippage = 0.005;
+    }
+    else
+    {
+      const val = parseFloat(value.replace('%', ''));
+      if (val > 49.9)
+      {
+          throw "Slippage is too high!";
+      }
+  
+      this.slippage = val / 100;
+      console.log(`Slippage set: ${this.slippage}; (${val}%)`);
+    }
     // Не закрываем попап здесь, так как это уже происходит в компоненте settings-bridge
   }
 }
