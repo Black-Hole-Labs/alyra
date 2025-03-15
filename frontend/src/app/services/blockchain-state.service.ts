@@ -1,5 +1,5 @@
 import { Injectable, signal, effect, computed } from '@angular/core';
-import { Network } from '../models/wallet-provider.interface';
+import { Network, Wallets } from '../models/wallet-provider.interface';
 import { Token } from '../pages/trade/trade.component';
 
 @Injectable({ providedIn: 'root' })
@@ -74,7 +74,7 @@ export class BlockchainStateService {
     return this.currentProviderId ? this.providers[this.currentProviderId] : null;
   }
 
-  async loadProviders(): Promise<{ id: string; name: string; type: string }[]> {
+  async loadProviders(): Promise<Wallets[]> {
     const response = await fetch('/data/providers.json');
     return await response.json();
   }

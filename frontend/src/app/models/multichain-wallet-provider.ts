@@ -20,6 +20,10 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
     this.blockchainStateService = injector.get(BlockchainStateService);
   }
 
+  isAvailable(): boolean {
+    return !!this.evmProviderInstance || !!this.svmProviderInstance;
+  }
+
   async connect(): Promise<{ address: string; network: string }> {
     if (this.evmProviderInstance) {
       this.evmProvider = new EvmWalletProvider(this.evmProviderInstance, this.injector);
@@ -58,7 +62,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
 
       if(this.currentNetwork !== 'EVM')
       {
-        const { address } = await this.evmProvider.connect(this.evmProviderInstance);
+        const { address } = await this.evmProvider.connect(this.evmProviderInstance, true);
         this.currentNetwork = 'EVM';
         console.log(`Connected to EVM address: `, address);
         this.address = address;
@@ -72,7 +76,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
       
       if(this.currentNetwork != 'SVM')
       {
-        const { address } = await this.svmProvider.connect(this.svmProviderInstance);
+        const { address } = await this.svmProvider.connect(this.svmProviderInstance, true);
         this.currentNetwork = 'SVM';
         console.log(`Connected to SVM address: `, address);
         this.address = address;

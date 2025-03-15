@@ -2,56 +2,78 @@
   {
     "id": "metamask",
     "name": "MetaMask",
-    "type": "EVM"
-  },
-  {
-    "id": "solflare",
-    "name": "Solflare",
-    "type": "SVM"
-  },
-  {
-    "id": "phantom",
-    "name": "Phantom",
-    "type": "multichain"
-  },
-  {
-    "id": "magic-eden",
-    "name": "Magic Eden",
-    "type": "multichain"
-  },
-  {
-    "id": "backpack",
-    "name": "Backpack",
-    "type": "SVM"
-  },
-  {
-    "id": "ledger",
-    "name": "Ledger",
-    "type": "multichain"
-  },
-  {
-    "id": "trust-wallet",
-    "name": "Trust Wallet",
-    "type": "multichain"
-  },
-  {
-    "id": "okx-wallet",
-    "name": "OKX Wallet",
-    "type": "multichain"
-  },
-  {
-    "id": "walletConnect",
-    "name": "WalletConnect",
-    "type": "multichain"
-  },
-  {
-    "id": "coinbase-wallet",
-    "name": "Coinbase Wallet",
-    "type": "multichain"
+    "type": "EVM",
+    "cssClass": "metamask",
+    "installUrl": "https://metamask.io/download/"
   },
   {
     "id": "rabby-wallet",
     "name": "Rabby Wallet",
-    "type": "EVM"
+    "type": "EVM",
+    "cssClass": "rabby-wallet",
+    "installUrl": "https://rabby.io/"
+  },
+  {
+    "id": "backpack",
+    "name": "Backpack",
+    "type": "SVM",
+    "cssClass": "backpack",
+    "installUrl": "https://backpack.app/"
+  },
+  {
+    "id": "phantom",
+    "name": "Phantom",
+    "type": "multichain",
+    "cssClass": "phantom",
+    "installUrl": "https://phantom.app/"
+  },
+  {
+    "id": "solflare",
+    "name": "Solflare",
+    "type": "SVM",
+    "cssClass": "solflare",
+    "installUrl": "https://solflare.com/"
+  },
+  {
+    "id": "trust-wallet",
+    "name": "Trust Wallet",
+    "type": "multichain",
+    "cssClass": "trust-wallet",
+    "installUrl": "https://trustwallet.com/"
+  },
+  {
+    "id": "okx-wallet",
+    "name": "OKX Wallet",
+    "type": "multichain",
+    "cssClass": "okx-wallet",
+    "installUrl": "https://www.okx.com/web3"
+  },
+  {
+    "id": "coinbase-wallet",
+    "name": "Coinbase Wallet",
+    "type": "multichain",
+    "cssClass": "coinbase-wallet",
+    "installUrl": "https://www.coinbase.com/wallet"
+  },
+  {
+    "id": "ledger",
+    "name": "Ledger",
+    "type": "multichain",
+    "cssClass": "ledger",
+    "installUrl": ""
+  },
+  {
+    "id": "walletconnect",
+    "name": "WalletConnect",
+    "type": "multichain",
+    "cssClass": "walletconnect",
+    "installUrl": ""
+  },
+  {
+    "id": "magic-eden",
+    "name": "Magic Eden",
+    "type": "multichain",
+    "cssClass": "magic-eden",
+    "installUrl": "https://magiceden.io/download"
   }
 ]

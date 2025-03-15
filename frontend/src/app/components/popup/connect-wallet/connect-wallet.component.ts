@@ -1,62 +1,34 @@
-import { Component, Output, EventEmitter, effect } from '@angular/core';
+import { Component, Output, EventEmitter, effect, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PopupService } from '../../../services/popup.service';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
-
-interface WalletProvider {
-  id: string;
-  name: string;
-  cssClass: string;
-  status?: 'recent' | 'detected' | 'install';
-  installUrl?: string;
-}
+import { Wallets } from '../../../models/wallet-provider.interface';
 
 @Component({
   selector: 'app-connect-wallet',
   standalone: true,
-  imports: [
-		CommonModule, 
-		RouterModule
-	],
+  imports: [CommonModule, RouterModule],
   templateUrl: './connect-wallet.component.html',
   styleUrl: './connect-wallet.component.scss'
 })
-export class ConnectWalletComponent {
+export class ConnectWalletComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() openWallet = new EventEmitter<void>();
 
   readonly connected: any;
+  allWallets: Wallets[] = [];
+  availableWallets: Wallets[] = [];
+  otherWallets: Wallets[] = [];
 
-  availableWallets: WalletProvider[] = [
-    { id: 'metamask', name: 'Metamask', cssClass: 'metamask', status: 'recent' },
-    { id: 'rabby-wallet', name: 'Rabby Wallet', cssClass: 'rabby-wallet', status: 'detected' },
-    { id: 'backpack', name: 'Backpack', cssClass: 'backpack', status: 'detected' },
-    { id: 'phantom', name: 'Phantom', cssClass: 'phantom', status: 'detected' },
-    { id: 'solflare', name: 'Solflare', cssClass: 'solflare', status: 'detected' },
-    { id: 'trust-wallet', name: 'Trust Wallet', cssClass: 'trust-wallet', status: 'detected' },
-    { id: 'okx-wallet', name: 'OKX Wallet', cssClass: 'okx-wallet', status: 'detected' },
-    { id: 'coinbase-wallet', name: 'Coinbase Wallet', cssClass: 'coinbase-wallet', status: 'detected' },
-    { id: 'ledger', name: 'Ledger', cssClass: 'ledger'},
-    { id: 'walletconnect', name: 'WalletConnect', cssClass: 'walletconnect' }
-  ];
-
-  otherWallets: WalletProvider[] = [
-    { id: 'magic-eden', name: 'Magic Eden', cssClass: 'magic-eden', status: 'install', installUrl: 'https://magiceden.io/download' }
-  ];
-
-  private allProviders = [
-    'metamask', 'solflare', 'phantom', 'magic-eden', 'backpack', 'ledger', 
-    'trust-wallet', 'okx-wallet', 'coinbase-wallet', 'rabby-wallet', 'walletconnect'
-  ];
+  private allProviders: string[] = [];
 
   constructor(
     private popupService: PopupService,
     private blockchainStateService: BlockchainStateService
-  ) 
-  {
+  ) {
     this.connected = this.blockchainStateService.connected;
-    
+
     effect(() => {
       if (this.connected()) {
         console.log('Wallet connected!:', this.blockchainStateService.walletAddress());
@@ -64,6 +36,41 @@ export class ConnectWalletComponent {
         console.log('Wallet disconnected');
       }
     }, { allowSignalWrites: true });
+  }
+
+  async ngOnInit(): Promise<void> {
+    this.allWallets = await this.blockchainStateService.loadProviders();
+    this.allProviders = this.allWallets.map(wallet => wallet.id);
+
+    this.availableWallets = [];
+    this.otherWallets = [];
+
+    this.allWallets.forEach(wallet => {
+      if (['ledger', 'walletconnect'].includes(wallet.id)) {
+        wallet.status = 'connect';
+        this.availableWallets.push(wallet);
+      } else {
+        const isDetected = this.isWalletDetected(wallet.id);
+        wallet.status = isDetected ? 'detected' : 'install';
+
+        if (wallet.status === 'detected') {
+          this.availableWallets.push(wallet);
+        } else {
+          this.otherWallets.push(wallet);
+        }
+      }
+    });
+
+    // TODO recent logic
+    const recentWallet = this.availableWallets.find(w => w.id === 'metamask');
+    if (recentWallet) {
+      recentWallet.status = 'recent';
+    }
+  }
+
+  private isWalletDetected(providerId: string): boolean {
+    const provider = this.blockchainStateService.getProvider(providerId);
+    return provider && provider.isAvailable();
   }
 
   closePopup(): void {
@@ -76,20 +83,19 @@ export class ConnectWalletComponent {
       alert('Provider not supported');
       return;
     }
-  
+
     const provider = this.blockchainStateService.getProvider(providerId);
     if (!provider) {
       alert('Provider not registered');
       return;
     }
-    //const type = this.blockchainStateService.getType(providerId);
-  
+
     try {
       const { address } = await provider.connect();
       provider.switchNetwork(this.blockchainStateService.getCurrentNetworkId());
       this.blockchainStateService.updateWalletAddress(address);
       this.blockchainStateService.setCurrentProvider(providerId);
-      
+
       this.closePopup();
     } catch (error) {
       console.error('Connection error:', error);
