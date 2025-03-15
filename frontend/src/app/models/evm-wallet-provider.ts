@@ -18,6 +18,10 @@ export class EvmWalletProvider implements WalletProvider {
     this.provider = provider;
   }
 
+  isAvailable(): boolean {
+    return !!this.provider;
+  }
+
   async connect(_provider?: any, isMultichain?: boolean): Promise<{ address: string; network: string }> {
     if (_provider) this.provider = _provider;
     if (!this.provider) throw new Error('Provider not installed');
@@ -26,9 +30,6 @@ export class EvmWalletProvider implements WalletProvider {
     this.network = await this.getNetwork();
     const ethersProvider = new ethers.BrowserProvider(this.provider);
     this.signer = await ethersProvider.getSigner();
-    
-    console.log("isMultichain",isMultichain);
-    console.log("!!isMultichain",!!isMultichain);
 
     if(!isMultichain){
       this.blockchainStateService.loadNetworks("EVM");

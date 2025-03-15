@@ -127,6 +127,10 @@ export class LedgerProvider implements WalletProvider {
   private network: string = '';
   private ledger: any;
 
+  isAvailable(): boolean {
+    return !!this.ledger;
+  }
+
   async connect(): Promise<{ address: string; network: string }> {
     // Предполагаем, что для работы с Ledger используется Web3 или специальный SDK
     this.ledger = (window as any).ledger; // Подключение к глобальному объекту или SDK
