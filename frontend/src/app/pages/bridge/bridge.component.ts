@@ -160,35 +160,35 @@ export class BridgeComponent implements OnInit, OnDestroy {
       }
     });
 
-    effect(() => {
-        if (this.blockchainStateService.connected() && this.selectedToken()) {
-          this.getBalanceForToken(this.selectedToken()!)
-          .then((balanceStr) => {
-            this.balance.set(parseFloat(balanceStr));
-          })
-          .catch((error) => {
-            console.error('Ошибка получения баланса', error);
-            this.balance.set(0.0);
-          });
-        }
-      },
-      { allowSignalWrites: true }
-    );
+    // effect(() => {
+    //     if (this.blockchainStateService.connected() && this.selectedToken()) {
+    //       this.getBalanceForToken(this.selectedToken()!)
+    //       .then((balanceStr) => {
+    //         this.balance.set(parseFloat(balanceStr));
+    //       })
+    //       .catch((error) => {
+    //         console.error('Ошибка получения баланса', error);
+    //         this.balance.set(0.0);
+    //       });
+    //     }
+    //   },
+    //   { allowSignalWrites: true }
+    // );
 
-    effect(() => {
-        if (this.blockchainStateService.connected() && this.selectedBuyToken()) {
-          this.getBalanceForToken(this.selectedBuyToken()!)
-          .then((balanceStr) => {
-            this.balanceBuy.set(parseFloat(balanceStr));
-          })
-          .catch((error) => {
-            console.error('Ошибка получения баланса', error);
-            this.balanceBuy.set(0.0);
-          });
-        }
-      },
-      { allowSignalWrites: true }
-    );
+    // effect(() => {
+    //     if (this.blockchainStateService.connected() && this.selectedBuyToken()) {
+    //       this.getBalanceForToken(this.selectedBuyToken()!)
+    //       .then((balanceStr) => {
+    //         this.balanceBuy.set(parseFloat(balanceStr));
+    //       })
+    //       .catch((error) => {
+    //         console.error('Ошибка получения баланса', error);
+    //         this.balanceBuy.set(0.0);
+    //       });
+    //     }
+    //   },
+    //   { allowSignalWrites: true }
+    // );
 
     effect(() => {
         const tokens = this.blockchainStateService.filteredTokens();
@@ -242,51 +242,61 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   }
 
-  async getBalanceForToken(token: Token): Promise<any> {
-    const walletAddress = this.blockchainStateService.getCurrentWalletAddress();
-    if (!walletAddress)
-    {
-      console.error(`Failed to get wallet address`);
-      return;
-    }
+  // async getBalanceForToken(token: Token): Promise<any> {
+  //   const walletAddress = this.blockchainStateService.getCurrentWalletAddress();
+  //   if (!walletAddress)
+  //   {
+  //     console.error(`Failed to get wallet address`);
+  //     return;
+  //   }
 
-    if(this.blockchainStateService.getCurrentNetworkId()?.chainId === "1151111081099710") { // SVM
-      if (token.symbol === "SOL") // change to adres
-      {
-        return this.walletBalanceService.getSolanaBalance(walletAddress);
-      }
-      else
-      {
-        return this.walletBalanceService.getSolanaBalance(walletAddress, token.contractAddress);
-      }
-    }
-    else { // EVM
-      try {
-        const response = await fetch('/data/networks.json');
-        if (!response.ok) {
-          console.error('Failed to load networks');
-        }
+  //   if(this.blockchainStateService.getCurrentNetworkId()?.chainId === "1151111081099710") { // SVM
+  //     if (token.symbol === "SOL") // change to adres
+  //     {
+  //       return this.walletBalanceService.getSolanaBalance(walletAddress);
+  //     }
+  //     else
+  //     {
+  //       return this.walletBalanceService.getSolanaBalance(walletAddress, token.contractAddress);
+  //     }
+  //   }
+  //   else { // EVM
+  //     try {
+  //       const response = await fetch('/data/networks.json');
+  //       if (!response.ok) {
+  //         console.error('Failed to load networks');
+  //       }
   
-        const data = await response.json();
+  //       const data = await response.json();
   
-        const network = data.find((net: { id: number }) => net.id === this.blockchainStateService.getCurrentNetworkId()?.id);
+  //       const network = data.find((net: { id: number }) => net.id === this.blockchainStateService.getCurrentNetworkId()?.id);
   
-        if (!network) {
-          console.error('Network not found');
-        }
+  //       if (!network) {
+  //         console.error('Network not found');
+  //       }
   
-        if (token.symbol === "ETH") {
-          const balance = await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals));
-          return balance;
-        } else {
-          return await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals), token.contractAddress);
-        }
-      } catch (error) {
-        console.error(`Error loading networks`);
-        return "0";
-      }
-    }
+  //       if (token.symbol === "ETH") {
+  //         const balance = await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals));
+  //         return balance;
+  //       } else {
+  //         return await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals), token.contractAddress);
+  //       }
+  //     } catch (error) {
+  //       console.error(`Error loading networks`);
+  //       return "0";
+  //     }
+  //   }
     
+  // }
+
+  getTokensForNetwork(): Token[] | undefined {
+    const chainId = this.selectedNetwork()?.id;
+    return chainId ? this.networkTokens.get((chainId)) : undefined;
+  }
+
+  getTokensForNetworkBuy(): Token[] | undefined {
+    const chainId = this.selectedBuyNetwork()?.id;
+    return chainId ? this.networkTokens.get((chainId)) : undefined;
   }
 
   getTxData() {
@@ -547,7 +557,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   get addressStatus(): 'none' | 'good' | 'bad' {
-    if (!this.customAddress) {
+    if (!this.customAddress()) {
       return 'none';
     }
     // Для примера используем простую проверку длины

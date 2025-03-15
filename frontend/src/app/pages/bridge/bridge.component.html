@@ -181,6 +181,7 @@
 <app-token-change
 	[mode]="'sell'"
 	*ngIf="popupService.getCurrentPopup() === 'tokenChange'"
+	[networkTokens]="getTokensForNetwork()"
 	(close)="popupService.closePopup('tokenChange')"
 	(tokenSelected)="onTokenSelected($event)">
 </app-token-change>
@@ -188,6 +189,7 @@
 <app-token-change
 	[mode]="'buy'"
 	*ngIf="popupService.getCurrentPopup() === 'tokenChangeBuy'"
+	[networkTokens]="getTokensForNetworkBuy()"
 	(close)="popupService.closePopup('tokenChangeBuy')"
 	(tokenSelected)="onTokenBuySelected($event)">
 </app-token-change>

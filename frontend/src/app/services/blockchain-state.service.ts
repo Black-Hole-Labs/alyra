@@ -12,12 +12,13 @@ export class BlockchainStateService {
   readonly walletAddress = signal<string | null>(null); // Адрес кошелька
   readonly network = signal<Network | null>(null); // Выбранная сеть
   readonly connected = signal<boolean>(false); // Статус подключения
+  readonly allNetworks = signal<Network[]>([]);
   searchText = signal<string>('');
   // filteredTokens = [...this.tokens];
 
   networks = signal<Network[]>([]);
 
-  tokens = signal<{ symbol: string; name: string; contractAddress: string; imageUrl: string; decimals: string }[]>([]);
+  tokens = signal<Token[]>([]);
 
   filteredTokens = computed(() => [...this.tokens()]);
 
@@ -146,9 +147,10 @@ export class BlockchainStateService {
   public async loadNetworks(type: string, force?: boolean): Promise<void> {
       try {
         const response = await fetch('/data/networks.json');
-        const allNetworks: any[] = await response.json();
+        const allNetworks: Network[] = await response.json();
         console.log(type);
         console.log(allNetworks);
+        this.allNetworks.set(allNetworks);
         if (type === 'multichain') { // Both EVM and SVM
           this.networks.set(allNetworks);
         } else {
