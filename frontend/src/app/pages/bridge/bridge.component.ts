@@ -110,7 +110,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   showCustomAddress: boolean = false;
 
   findingRoutesTimer: any = null;
-  walletTimer: any = null;
+  //walletTimer: any = null;
   private _buttonState: 'bridge' | 'finding' | 'approve' | 'wallet' = 'bridge';
 
   // Свойства для анимации текста
@@ -300,8 +300,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   getTxData() {
-    const fromChain = this.selectedNetwork()?.idHex;
-    const toChain = this.selectedBuyNetwork()?.idHex;
+    const fromChain = (this.selectedNetwork()?.id)?.toString();
+    const toChain = (this.selectedBuyNetwork()?.id)?.toString();
     console.log("this.selectedNetwork()?",this.selectedNetwork());
     console.log("this.selectedNetwork()?",this.selectedBuyNetwork());
 
@@ -400,7 +400,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
     if (this.networkSubscription) {
       this.networkSubscription.unsubscribe();
     }
-    this.resetTimers();
+    //this.resetTimers();
   }
 
   ngAfterViewChecked() {
@@ -562,7 +562,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
     }
     // Для примера используем простую проверку длины
     // В реальном приложении здесь должна быть более сложная валидация адреса
-    return this.customAddress.length > 2 ? 'good' : 'bad';
+    return this.customAddress().length > 2 ? 'good' : 'bad';
   }
 
   toggleCustomAddress(): void {
@@ -590,22 +590,22 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   // Новый метод для управления состоянием кнопки
-  startFindingRoutesProcess(): void {
-    this.resetTimers();
+  // startFindingRoutesProcess(): void {
+  //   this.resetTimers();
     
-    if (this.showCustomAddress && this.addressStatus === 'bad') {
-      return;
-    }
+  //   if (this.showCustomAddress && this.addressStatus === 'bad') {
+  //     return;
+  //   }
     
-    this.setButtonState('finding');
+  //   this.setButtonState('finding');
     
-    this.findingRoutesTimer = setTimeout(() => {
-      this.setButtonState('approve');
-      if (this.cdr) {
-        this.cdr.detectChanges();
-      }
-    }, 2000);
-  }
+  //   this.findingRoutesTimer = setTimeout(() => {
+  //     this.setButtonState('approve');
+  //     if (this.cdr) {
+  //       this.cdr.detectChanges();
+  //     }
+  //   }, 2000);
+  // }
   
   // Метод для обработки нажатия на кнопку
   async handleButtonClick(): Promise<void> {
@@ -685,20 +685,20 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
   
   // Метод для сброса таймеров
-  resetTimers(): void {
-    if (this.findingRoutesTimer) {
-      clearTimeout(this.findingRoutesTimer);
-      this.findingRoutesTimer = null;
-    }
-    if (this.walletTimer) {
-      clearTimeout(this.walletTimer);
-      this.walletTimer = null;
-    }
-  }
+  // resetTimers(): void {
+  //   if (this.findingRoutesTimer) {
+  //     clearTimeout(this.findingRoutesTimer);
+  //     this.findingRoutesTimer = null;
+  //   }
+  //   if (this.walletTimer) {
+  //     clearTimeout(this.walletTimer);
+  //     this.walletTimer = null;
+  //   }
+  // }
   
   // Метод для сброса состояния кнопки
   resetButtonState(): void {
-    this.resetTimers();
+    //this.resetTimers();
     this.setButtonState('bridge');
   }
 
@@ -713,6 +713,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   get buttonState(): 'bridge' | 'finding' | 'approve' | 'wallet' | 'wrong-address' {
+    //console.log("uncoment, auto load fix???"); todo
+
     if (this.showCustomAddress && this.addressStatus === 'bad') {
       return 'wrong-address';
     }
@@ -857,7 +859,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   private checkAndAnimateReceiveText() {
     if (this.receiveTextElement && !this.receiveTextAnimated && this.selectedBuyToken()!.symbol) {
       // Добавляем информацию о времени в секундах (например, 30 секунд)
-      const finalText = `${this.validatedSellAmount} ${this.selectedBuyToken()!.symbol} in 30 sec`;
+      const finalText = `${this.validatedSellAmount()} ${this.selectedBuyToken()!.symbol} in 30 sec`;
       this.animateText(this.receiveTextElement.nativeElement, finalText, 'receiveText');
       this.receiveTextAnimated = true;
     }

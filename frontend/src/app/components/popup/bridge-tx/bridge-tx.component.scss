@@ -1,6 +1,23 @@
 .network-icon{
 	border-radius: 100%;
 }
+.success {
+  background-color: var(--green) !important;
+}
+
+.failed {
+  background-color: var(--red) !important;
+}// todo color black on red back?//
+
+.stop-animation{
+	top:164px !important;
+	animation: none !important;
+}
+
+.pending-change{
+	color: #000000 !important;
+}
+
 .bridge-tx {
 	width: 681px;
 	height: auto;
@@ -208,8 +225,9 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				width: 90px;
-				height: 26px;
+				width: 108px;
+				height: 40px;
+				padding: 0px 8px;
 				background-color: var(--dark-yellow);
 				border-radius: 10px;
 				p {

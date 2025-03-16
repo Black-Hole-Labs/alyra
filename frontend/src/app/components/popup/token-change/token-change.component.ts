@@ -31,6 +31,11 @@ export class TokenChangePopupComponent {
 
     
   }
+
+  get tokenList(): Token[] {
+    return this.networkTokens?.length ? this.networkTokens : this.blockchainStateService.filteredTokens();
+  }
+  
   
 
   performSearch(): void {
