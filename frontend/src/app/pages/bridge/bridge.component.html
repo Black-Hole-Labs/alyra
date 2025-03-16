@@ -9,6 +9,8 @@
 			</div>
 			<div class="icons">
 				<div class="custom-wallet-button" 					
+					[class.active]="showCustomAddress"
+					[class.hidden]="!isWalletConnected()"
 					(click)="toggleCustomAddress()">
 				</div>
 				<div class="settings" 

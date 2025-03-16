@@ -1,6 +1,6 @@
 .settings-popup {
   width: 380px;
-  height: 268px;
+  height: 280px;
   background-color: rgba(var(--dark-bg), 0.3);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(5px);
@@ -80,11 +80,13 @@
   padding: 6px 20px;
   border: 1px solid var(--elem-nonactive);
   border-radius: 16px;
+	box-sizing: border-box;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.2s ease-in-out;
 }
 
 .buttons > button:hover {
+  background-color: var(--elem-nonactive);
   color: white;
 }
 
@@ -97,7 +99,7 @@
 .custom {
   position: relative;
   width: 75px;
-  height: 31px;
+  height: 35px;
   border: 1px solid var(--elem-nonactive);
   border-radius: 16px;
   display: flex;

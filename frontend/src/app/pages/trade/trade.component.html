@@ -51,7 +51,6 @@
         <p id="sell-price-usd">{{ sellPriceUsd() }}</p>
 
         <div class="balance" *ngIf="isWalletConnected()">
-          <p>Balance:</p>
           <p id="balance">{{ balance() }}</p>
           <p>${{ selectedToken()?.symbol }}</p>
 
@@ -88,7 +87,6 @@
         <p id="buy-price-usd">{{ buyPriceUsd() }}</p>
 
         <div class="balance" *ngIf="isWalletConnected()">
-          <p>Balance:</p>
           <p>{{balanceBuy()}}</p>
           <p>${{ selectedBuyToken()?.symbol }}</p>
         </div>

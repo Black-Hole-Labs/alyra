@@ -1,12 +1,12 @@
 .token-change {
-  width: 681px;
-  height: 792px;
+  width: 600px;
+  height: 786px;
   background-color: rgba(var(--dark-bg), 0.6);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(5px);
   border-radius: 28px;
   box-sizing: border-box;
-  padding: 40px 20px;
+  padding: 30px;
   z-index: 10;
 }
 
@@ -14,13 +14,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
 }
 
 h3 {
   font-family: "JetBrains Mono", monospace;
   font-weight: 500;
-  font-size: 32px;
+  font-size: 28px;
   color: white;
 }
 
@@ -43,21 +42,20 @@ button:hover {
   margin-top: 30px;
   display: flex;
   align-items: center;
-  width: 601px;
-  height: 76px;
+  width: 540px;
+  height: 60px;
   background-color: var(--dark-select);
-  border-radius: 21px;
-  padding: 0 30px;
+  border-radius: 18px;
+  padding: 0 20px;
   box-sizing: border-box;
-  margin-left: 20px;
 }
 
 input {
-  width: 511px;
-  height: 26px;
+  width: 476px;
+  height: 24px;
   font-family: "JetBrains Mono", monospace;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 18px;
   color: white;
   background-color: var(--dark-select);
   outline: none;
@@ -68,12 +66,12 @@ input::placeholder {
   color: var(--elem-nonactive);
   font-family: "JetBrains Mono", monospace;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .search-button {
-  height: 30px;
-  width: 30px;
+  height: 24px;
+  width: 24px;
   background: url(/img/trade/search-button.png);
   opacity: 0.3;
   background-size: cover;
@@ -91,22 +89,24 @@ input::placeholder {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
 }
 
 .desc > p {
   font-family: "JetBrains Mono", monospace;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 15px;
   color: white;
 }
 
 .list {
   flex-direction: column;
   align-items: center;
-  margin-top: 19px;
-  width: 637px;
-  height: 522px;
+  position: absolute;
+  top: 210px;
+  left: 16px;
+  margin-top: 20px;
+  width: 567px;
+  height: 555px;
   border-radius: 12px;
   overflow: hidden;
 }
@@ -131,16 +131,16 @@ input::placeholder {
 }
 
 .token {
-  width: 637px;
-  height: 97px;
+  width: 566px;
+  height: 92px;
   background: rgba(var(--dark-bg), 0.01);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 20px;
+  padding: 10px 22px;
   transition: 0.2s;
   box-sizing: border-box;
-  border-radius: 22px;
+  border-radius: 18px;
   cursor: pointer;
 }
 
@@ -155,15 +155,15 @@ input::placeholder {
 
 .image {
   position: relative;
-  height: 69px;
-  width: 69px;
-  margin-right: 21px;
+  height: 60px;
+  width: 60px;
+  margin-right: 18px;
   border-radius: 100%;
 }
 
 .token .image .token-image {
-  height: 69px;
-  width: 69px;
+  height: 60px;
+  width: 60px;
   background: url(/img/trade/arbitrum.png);
   background-size: cover;
   background-repeat: no-repeat;
@@ -183,8 +183,8 @@ input::placeholder {
 }
 
 .token .image .network-image {
-  height: 30px;
-  width: 30px;
+  height: 24px;
+  width: 24px;
   background-size: cover;
   background-repeat: no-repeat;
   border-radius: 100%;
@@ -193,7 +193,7 @@ input::placeholder {
 .token .name h6 {
   font-family: "JetBrains Mono", monospace;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 18px;
   color: white;
 }
 
@@ -201,17 +201,13 @@ input::placeholder {
   margin-top: 1px;
   font-family: "JetBrains Mono", monospace;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 18px;
   color: white;
 }
 
 a {
   display: flex;
   align-items: center;
-  font-family: "JetBrains Mono", monospace;
-  font-weight: 400;
-  font-size: 18px;
-  color: white;
 }
 
 a:hover {
@@ -224,13 +220,13 @@ a:hover {
 }
 
 .contract .image-copy {
-  height: 20px;
-  width: 20px;
+  height: 18px;
+  width: 18px;
   background: url(/img/trade/copy-hover.png);
   opacity: 0.3;
   background-size: cover;
   background-repeat: no-repeat;
-  margin-right: 12px;
+  margin-right: 10px;
   transition: 0.2s ease-in-out;
 }
 
@@ -241,15 +237,15 @@ a:hover {
 .token-change .contract > p {
   font-family: "JetBrains Mono", monospace !important;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 15px;
   color: white;
 }
 
 .contract .image-link {
-  height: 24px;
-  width: 7px;
+  height: 21px;
+  width: 6px;
   background: url(/img/trade/link.png);
   background-size: cover;
   background-repeat: no-repeat;
-  margin-left: 4px;
+  margin-left: 8px;
 }

@@ -1,9 +1,9 @@
 .trade-window {
-	width: 681px;
+	width: 600px;
 	background-color: rgba(var(--dark-bg), 0.3);
 	border-radius: 28px;
 	box-sizing: border-box;
-	padding: 40px;
+	padding: 30px;
 }
 .header{
 	display: flex;
@@ -13,20 +13,20 @@
 h3{
 	font-family: "JetBrains Mono", monospace;
 	font-weight: 500;
-	font-size: 32px;
+	font-size: 28px;
 	color: white;
 }
 .icons{
 	display: flex;
-	gap: 12px;
+	gap: 15px;
 	position: relative;
 }
 
 .refresh, .settings {
   background-size: cover;
   background-repeat: no-repeat;
-  height: 40px;
-  width: 40px;
+  height: 35px;
+  width: 35px;
   cursor: pointer;
   opacity: 0.3;
   transition: opacity 0.2s ease-in-out;
@@ -58,7 +58,7 @@ h3{
   height: 54px;
   width: 54px;
   position: absolute;
-  top: 160px;
+  top: 137px;
   left: 50%;
   transform: translate(-50%, 0%);
   display: flex;
@@ -116,7 +116,7 @@ h3{
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-between;
-	margin-top: 38px;
+	margin-top: 30px;
 	position: relative;
 }
 
@@ -124,11 +124,11 @@ h3{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  width: 601px;
-  height: 174px;
-  background-color: rgba(var(--dark-bg), 0.6);
-  border-radius: 28px;
-  padding: 20px 30px;
+  width: 540px;
+  height: 157px;
+  background-color: var(--dark-select);
+  border-radius: 16px;
+  padding: 20px 25px 15px 25px;
   box-sizing: border-box;
 }
 
@@ -139,8 +139,8 @@ h3{
 .sell-h6, .buy-h6 {
   font-family: "JetBrains Mono", monospace;
   font-weight: 700;
-  font-size: 21px;
-  margin-bottom: 8px;
+  font-size: 18px;
+  margin-bottom: 5px;
 }
 
 .sell-h6 {
@@ -164,14 +164,13 @@ h3{
 }
 
 input {
-  height: 73px;
-  width: 300px;
+  height: 63px;
+  width: 290px;
   font-family: "JetBrains Mono", monospace;
   font-weight: 400;
-  font-size: 55px;
+  font-size: 48px;
   color: white;
   background-color: var(--dark-bg);
-  margin-bottom: 1px;
 }
 
 input::placeholder {
@@ -180,50 +179,47 @@ input::placeholder {
 
 p {
   font-family: "JetBrains Mono", monospace;
-  font-weight: 800;
-  font-size: 18px;
+  font-weight: 600;
+  font-size: 15px;
   color: var(--elem-nonactive);
 }
 
 .token {
-  border-radius: 100px;
   box-sizing: border-box;
-  margin-top: 40px;
-  margin-right: 15px;
+  margin-top: 36px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
+	gap: 15px;
 }
 
 .token-icon {
   background-image: url(/img/header/ethereum.png);
   background-size: cover;
   background-repeat: no-repeat;
-  height: 50px;
-  width: 50px;
-  margin-right: 15px;
+  height: 45px;
+  width: 45px;
   border-radius: 100%;
 }
 
 .token > p {
   font-family: "JetBrains Mono", monospace;
   font-weight: 800;
-  font-size: 24px;
+  font-size: 20px;
   color: white;
 }
 
 .token > button {
   background: url(/img/header/open-img.png);
-  width: 12px;
-  height: 7px;
-  margin-left: 15px;
+  width: 11px;
+  height: 6px;
   background-size: cover;
   background-repeat: no-repeat;
 }
 
 .bottom {
-  width: 525px;
+  width: 490px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -231,15 +227,14 @@ p {
 
 .balance {
   display: flex;
-  align-items: center;
+	gap: 10px;
 }
 
 .max {
   font-family: "JetBrains Mono", monospace;
-  font-weight: 800;
-  font-size: 18px;
+  font-weight: 700;
+  font-size: 15px;
   color: white;
-  margin-left: 20px;
   cursor: pointer;
   transition: 0.2s;
 }
@@ -249,14 +244,14 @@ p {
 }
 
 .main-button {
-  margin-top: 40px;
-  height: 72px;
-  width: 601px;
+  margin-top: 30px;
+	width: 540px;
+  height: 62px;
   background-color: white;
   border-radius: 16px;
   font-family: "JetBrains Mono", monospace;
   font-weight: 500;
-  font-size: 21px;
+  font-size: 18px;
   color: black;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
@@ -310,8 +305,8 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 601px;
-  margin-top: 13px;
+  width: 540px;
+  margin-top: 20px;
 }
 
 .price {
@@ -321,7 +316,7 @@ p {
 .price > p {
   font-family: "JetBrains Mono", monospace;
   font-weight: 400;
-  font-size: 17px;
+  font-size: 15px;
   color: white;
 }
 
@@ -332,20 +327,20 @@ p {
 .gas {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
 }
 
 .gas-img {
   background-image: url(/img/trade/gas-image.png);
   background-size: cover;
   background-repeat: no-repeat;
-  height: 20px;
-  width: 20px;
+  height: 18px;
+  width: 18px;
 }
 
 .gas-text {
   font-family: "JetBrains Mono", monospace;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 15px;
   color: var(--elem-nonactive);
 }

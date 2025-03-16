@@ -1,25 +1,29 @@
 .bridge-window {
-  width: 681px;
-  height: 680px;
+  width: 600px;
+  height: 596px;
   background-color: rgba(var(--dark-bg), 0.3);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(5px);
   border-radius: 28px;
   box-sizing: border-box;
-  padding: 40px;
+  padding: 30px;
   transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: height;
   display: flex;
   flex-direction: column;
-  padding-bottom: 40px;
+  padding-bottom: 30px;
 }
 
 .bridge-window.has-receive {
-  height: 780px;
+  height: 701px;
+}
+
+.bridge-window.has-custom-address {
+  height: 671px;
 }
 
 .bridge-window.has-custom-address.has-receive {
-  height: 860px;
+  height: 776px;
 }
 
 .header {
@@ -32,36 +36,36 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 10px;
+  gap: 15px;
 }
 
 .icon-bridge {
   background-image: url(/img/bridge/icon-bridge.png);
   background-size: cover;
   background-repeat: no-repeat;
-  height: 24px;
-  width: 24px;
+  height: 21px;
+  width: 21px;
 }
 
 .title h3 {
   font-family: "JetBrains Mono", monospace;
   font-weight: 500;
-  font-size: 32px;
+  font-size: 28px;
   color: white;
 }
 
 .icons {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
   position: relative;
   min-width: 88px;
   justify-content: flex-end;
 }
 
 .custom-wallet-button {
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   background-image: url(/img/header/wallet.png);
   background-size: cover;
   background-repeat: no-repeat;
@@ -84,8 +88,8 @@
   background-image: url(/img/trade/settings.png);
   background-size: cover;
   background-repeat: no-repeat;
-  height: 40px;
-  width: 40px;
+  height: 35px;
+  width: 35px;
   cursor: pointer;
   opacity: 0.3;
   transition: opacity 0.2s ease-in-out;
@@ -97,7 +101,7 @@
 }
 
 .main {
-  margin-top: 46px;
+  margin-top: 30px;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
   display: flex;
@@ -121,24 +125,24 @@
 .receive-token h4 {
   font-family: "JetBrains Mono", monospace;
   font-weight: 500;
-  font-size: 24px;
+  font-size: 21px;
   color: white;
 }
 
 .choose {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
 }
 
 .token {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  height: 60px;
-  width: 110px;
-  border-radius: 15px;
+  gap: 5px;
+	width: 100px;
+  height: 55px;
+  border-radius: 14px;
   cursor: pointer;
   transition: 0.2s ease-in-out;
 }
@@ -147,47 +151,31 @@
   background-color: var(--btn-dark);
 }
 
-.token-icon {
-  background-image: url(/img/bridge/icon-bridge.png);
-  background-size: cover;
-  background-repeat: no-repeat;
-  height: 36px;
-  width: 36px;
-}
-
 .token p {
   font-family: "JetBrains Mono", monospace;
   font-weight: 500;
-  font-size: 20px;
+  font-size: 18px;
   color: white;
-}
-
-.token button {
-  background: url(/img/header/open-img.png);
-  width: 6px;
-  height: 3px;
-  background-size: cover;
-  background-repeat: no-repeat;
 }
 
 .bridge-amount {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 350px;
-  height: 60px;
+  width: 309px;
+  height: 55px;
   background-color: var(--dark-select);
-  border-radius: 15px;
-  padding: 17px 30px;
+  border-radius: 14px;
+  padding: 15px 20px;
   box-sizing: border-box;
 }
 
 .bridge-amount input {
-  width: 250px;
-  height: 26px;
+  width: 235px;
+  height: 24px;
   font-family: "JetBrains Mono", monospace;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 18px;
   color: white;
   background-color: var(--dark-select);
   outline: none;
@@ -198,14 +186,14 @@
   color: var(--elem-nonactive);
   font-family: "JetBrains Mono", monospace;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .bridge-amount h6 {
   color: white;
   font-family: "JetBrains Mono", monospace;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
   transition: 0.2s;
 }
@@ -225,13 +213,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 469px;
-  height: 61px;
+  width: 414px;
+  height: 55px;
   background-color: var(--dark-select);
-  border-radius: 15px;
-  padding: 13px 28px;
+  border-radius: 14px;
+  padding: 12px 20px;
   box-sizing: border-box;
   cursor: pointer;
+	transition: 0.2s ease-in-out;
+}
+
+.choose-network:hover {
+  background-color: var(--btn-dark);
 }
 
 .network-from,
@@ -239,14 +232,15 @@
 .receive-network {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
 }
 
+.token-icon,
 .network-icon {
   background-size: cover;
   background-repeat: no-repeat;
-  height: 34px;
-  width: 34px;
+  height: 30px;
+  width: 30px;
   border-radius: 100%;
 }
 
@@ -255,14 +249,14 @@
 .receive-network p {
   font-family: "JetBrains Mono", monospace;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 18px;
   color: white;
 }
 
 .choose-network button {
   background: url(/img/header/open-img.png);
-  width: 15px;
-  height: 9px;
+  width: 13px;
+  height: 7px;
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -278,7 +272,7 @@
 }
 
 .changer hr {
-  width: 255px;
+  width: 210px;
   border: 1px solid var(--elem-nonactive);
 }
 
@@ -299,11 +293,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 601px;
-  height: 60px;
+  width: 540px;
+  height: 55px;
   background-color: var(--dark-select);
-  border-radius: 15px;
-  padding: 13px 28px;
+  border-radius: 14px;
+  padding: 15px 20px;
   box-sizing: border-box;
   margin-top: 20px;
   margin-bottom: 0;
@@ -313,11 +307,11 @@
 }
 
 .custom-address input {
-  width: 521px;
-  height: 26px;
+  width: 470px;
+  height: 24px;
   font-family: "JetBrains Mono", monospace;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 18px;
   color: white;
   background-color: var(--dark-select);
   outline: none;
@@ -420,15 +414,14 @@
 }
 
 .main-button {
-  margin-top: 40px;
-  height: 72px;
-  min-height: 72px;
-  width: 601px;
+  margin-top: 30px;
+	width: 540px;
+  min-height: 65px;
   background-color: white;
   border-radius: 16px;
   font-family: "JetBrains Mono", monospace;
   font-weight: 500;
-  font-size: 21px;
+  font-size: 18px;
   color: black;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -481,32 +474,32 @@
 }
 
 .gas-container {
-  width: 601px;
+  width: 540px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .gas {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
 }
 
 .gas-img {
   background-image: url(/img/trade/gas-image.png);
   background-size: cover;
   background-repeat: no-repeat;
-  height: 20px;
-  width: 20px;
+  height: 18px;
+  width: 18px;
 }
 
 .gas-text {
   font-family: "JetBrains Mono", monospace;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 15px;
   color: var(--elem-nonactive);
 }
 
