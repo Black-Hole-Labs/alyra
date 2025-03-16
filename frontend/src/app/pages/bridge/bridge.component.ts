@@ -110,7 +110,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   showCustomAddress: boolean = false;
 
   findingRoutesTimer: any = null;
-  walletTimer: any = null;
+  //walletTimer: any = null;
   private _buttonState: 'bridge' | 'finding' | 'approve' | 'wallet' = 'bridge';
 
   // Свойства для анимации текста
@@ -140,6 +140,9 @@ export class BridgeComponent implements OnInit, OnDestroy {
   balanceBuy = signal<number>(0.0);
   
   networkTokens = new Map<number, Token[]>();
+  slippage: number = 0.005; //  // 0.005 is default for LIFI
+
+  bridgeTxHash: string = '';
 
   constructor(
     private renderer: Renderer2,
@@ -157,35 +160,35 @@ export class BridgeComponent implements OnInit, OnDestroy {
       }
     });
 
-    effect(() => {
-        if (this.blockchainStateService.connected() && this.selectedToken()) {
-          this.getBalanceForToken(this.selectedToken()!)
-          .then((balanceStr) => {
-            this.balance.set(parseFloat(balanceStr));
-          })
-          .catch((error) => {
-            console.error('Ошибка получения баланса', error);
-            this.balance.set(0.0);
-          });
-        }
-      },
-      { allowSignalWrites: true }
-    );
+    // effect(() => {
+    //     if (this.blockchainStateService.connected() && this.selectedToken()) {
+    //       this.getBalanceForToken(this.selectedToken()!)
+    //       .then((balanceStr) => {
+    //         this.balance.set(parseFloat(balanceStr));
+    //       })
+    //       .catch((error) => {
+    //         console.error('Ошибка получения баланса', error);
+    //         this.balance.set(0.0);
+    //       });
+    //     }
+    //   },
+    //   { allowSignalWrites: true }
+    // );
 
-    effect(() => {
-        if (this.blockchainStateService.connected() && this.selectedBuyToken()) {
-          this.getBalanceForToken(this.selectedBuyToken()!)
-          .then((balanceStr) => {
-            this.balanceBuy.set(parseFloat(balanceStr));
-          })
-          .catch((error) => {
-            console.error('Ошибка получения баланса', error);
-            this.balanceBuy.set(0.0);
-          });
-        }
-      },
-      { allowSignalWrites: true }
-    );
+    // effect(() => {
+    //     if (this.blockchainStateService.connected() && this.selectedBuyToken()) {
+    //       this.getBalanceForToken(this.selectedBuyToken()!)
+    //       .then((balanceStr) => {
+    //         this.balanceBuy.set(parseFloat(balanceStr));
+    //       })
+    //       .catch((error) => {
+    //         console.error('Ошибка получения баланса', error);
+    //         this.balanceBuy.set(0.0);
+    //       });
+    //     }
+    //   },
+    //   { allowSignalWrites: true }
+    // );
 
     effect(() => {
         const tokens = this.blockchainStateService.filteredTokens();
@@ -239,56 +242,66 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   }
 
-  async getBalanceForToken(token: Token): Promise<any> {
-    const walletAddress = this.blockchainStateService.getCurrentWalletAddress();
-    if (!walletAddress)
-    {
-      console.error(`Failed to get wallet address`);
-      return;
-    }
+  // async getBalanceForToken(token: Token): Promise<any> {
+  //   const walletAddress = this.blockchainStateService.getCurrentWalletAddress();
+  //   if (!walletAddress)
+  //   {
+  //     console.error(`Failed to get wallet address`);
+  //     return;
+  //   }
 
-    if(this.blockchainStateService.getCurrentNetworkId()?.chainId === "1151111081099710") { // SVM
-      if (token.symbol === "SOL") // change to adres
-      {
-        return this.walletBalanceService.getSolanaBalance(walletAddress);
-      }
-      else
-      {
-        return this.walletBalanceService.getSolanaBalance(walletAddress, token.contractAddress);
-      }
-    }
-    else { // EVM
-      try {
-        const response = await fetch('/data/networks.json');
-        if (!response.ok) {
-          console.error('Failed to load networks');
-        }
+  //   if(this.blockchainStateService.getCurrentNetworkId()?.chainId === "1151111081099710") { // SVM
+  //     if (token.symbol === "SOL") // change to adres
+  //     {
+  //       return this.walletBalanceService.getSolanaBalance(walletAddress);
+  //     }
+  //     else
+  //     {
+  //       return this.walletBalanceService.getSolanaBalance(walletAddress, token.contractAddress);
+  //     }
+  //   }
+  //   else { // EVM
+  //     try {
+  //       const response = await fetch('/data/networks.json');
+  //       if (!response.ok) {
+  //         console.error('Failed to load networks');
+  //       }
   
-        const data = await response.json();
+  //       const data = await response.json();
   
-        const network = data.find((net: { id: number }) => net.id === this.blockchainStateService.getCurrentNetworkId()?.id);
+  //       const network = data.find((net: { id: number }) => net.id === this.blockchainStateService.getCurrentNetworkId()?.id);
   
-        if (!network) {
-          console.error('Network not found');
-        }
+  //       if (!network) {
+  //         console.error('Network not found');
+  //       }
   
-        if (token.symbol === "ETH") {
-          const balance = await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals));
-          return balance;
-        } else {
-          return await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals), token.contractAddress);
-        }
-      } catch (error) {
-        console.error(`Error loading networks`);
-        return "0";
-      }
-    }
+  //       if (token.symbol === "ETH") {
+  //         const balance = await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals));
+  //         return balance;
+  //       } else {
+  //         return await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals), token.contractAddress);
+  //       }
+  //     } catch (error) {
+  //       console.error(`Error loading networks`);
+  //       return "0";
+  //     }
+  //   }
     
+  // }
+
+  getTokensForNetwork(): Token[] | undefined {
+    const chainId = this.selectedNetwork()?.id;
+    return chainId ? this.networkTokens.get((chainId)) : undefined;
+  }
+
+  getTokensForNetworkBuy(): Token[] | undefined {
+    const chainId = this.selectedBuyNetwork()?.id;
+    return chainId ? this.networkTokens.get((chainId)) : undefined;
   }
 
   getTxData() {
-    const fromChain = this.selectedNetwork()?.idHex;
-    const toChain = this.selectedBuyNetwork()?.idHex;
+    const fromChain = (this.selectedNetwork()?.id)?.toString();
+    const toChain = (this.selectedBuyNetwork()?.id)?.toString();
     console.log("this.selectedNetwork()?",this.selectedNetwork());
     console.log("this.selectedNetwork()?",this.selectedBuyNetwork());
 
@@ -320,7 +333,10 @@ export class BridgeComponent implements OnInit, OnDestroy {
     
     console.log("fromAddress",fromAddress);
     const toAddress = this.customAddress() !== '' ? this.customAddress() : undefined;
-    this.transactionsService.getQuoteBridge(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress)
+    const slippageValue = this.slippage !== 0.005 ? this.slippage: undefined; // 0.005 is default for LIFI
+
+    this.transactionsService.getQuoteBridge(
+      fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress, slippageValue)
     .subscribe({
       next: (response: any) => {
         console.log('Quote received:', response);
@@ -351,7 +367,11 @@ export class BridgeComponent implements OnInit, OnDestroy {
           }
           else
           {
-            this.txData.set(response.transactionRequest as TransactionRequestEVM);
+            this.txData.set(response.transactionRequest as TransactionRequestEVM);            
+            if(fromToken !== ethers.ZeroAddress){
+              console.log("this.buttonState = 'approve'");
+              this.setButtonState('approve');
+            }
           }
         }
         
@@ -380,7 +400,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
     if (this.networkSubscription) {
       this.networkSubscription.unsubscribe();
     }
-    this.resetTimers();
+    //this.resetTimers();
   }
 
   ngAfterViewChecked() {
@@ -537,12 +557,12 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   get addressStatus(): 'none' | 'good' | 'bad' {
-    if (!this.customAddress) {
+    if (!this.customAddress()) {
       return 'none';
     }
     // Для примера используем простую проверку длины
     // В реальном приложении здесь должна быть более сложная валидация адреса
-    return this.customAddress.length > 2 ? 'good' : 'bad';
+    return this.customAddress().length > 2 ? 'good' : 'bad';
   }
 
   toggleCustomAddress(): void {
@@ -570,129 +590,115 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   // Новый метод для управления состоянием кнопки
-  startFindingRoutesProcess(): void {
-    this.resetTimers();
+  // startFindingRoutesProcess(): void {
+  //   this.resetTimers();
     
-    if (this.showCustomAddress && this.addressStatus === 'bad') {
-      return;
-    }
+  //   if (this.showCustomAddress && this.addressStatus === 'bad') {
+  //     return;
+  //   }
     
-    this.setButtonState('finding');
+  //   this.setButtonState('finding');
     
-    this.findingRoutesTimer = setTimeout(() => {
-      this.setButtonState('approve');
-      if (this.cdr) {
-        this.cdr.detectChanges();
-      }
-    }, 2000);
-  }
+  //   this.findingRoutesTimer = setTimeout(() => {
+  //     this.setButtonState('approve');
+  //     if (this.cdr) {
+  //       this.cdr.detectChanges();
+  //     }
+  //   }, 2000);
+  // }
   
   // Метод для обработки нажатия на кнопку
   async handleButtonClick(): Promise<void> {
-      //this.loading.set(true);
-      
+    let txHash: string;
     if(this.blockchainStateService.network()?.chainId === "1151111081099710")
     {
-      await this.svmSwap();
+      txHash = await this.svmSwap();
     }
     else
     {
-      await this.evmSwap();
+      txHash = await this.evmSwap();
     }
 
+    this.bridgeTxHash = txHash;
     this.openBridgeTxPopup();
-    this.setButtonState('bridge');
-      
-  
-      //todo check for status from lifi
-      //this.loading.set(false);
     
-    // if (this.buttonState === 'approve') {
-    //   this.setButtonState('wallet'); //todo ?? useful?
-      
-    //   this.walletTimer = setTimeout(() => {
-    //     this.setButtonState('bridge');
-    //     if (this.cdr) {
-    //       this.cdr.detectChanges();
-    //     }
-    //   }, 2000);
-    // } else if (this.buttonState === 'bridge') {
-    //   this.openBridgeTxPopup();
-    // }
+    this.setButtonState('bridge');
   }
 
-  async svmSwap() {
-      const txData = this.txData(); 
-      if (!txData) {
-        throw new Error("missing data transaction");
-      }
-      const provider = this.blockchainStateService.getCurrentProvider().provider;
+  async svmSwap(): Promise<string> {
+    const txData = this.txData(); 
+    if (!txData) {
+      throw new Error("missing data transaction");
+    }
+    const provider = this.blockchainStateService.getCurrentProvider().provider;
+  
+    const txHash = await provider.sendTx(txData);
+    console.log("SVM Swap транзакция отправлена:", txHash);
+    return txHash;
+  }
+  
+  async evmSwap(): Promise<string>{
+    const provider = this.blockchainStateService.getCurrentProvider().provider;
+
+    const signer = await provider.signer;
+
+    const fromToken = this.selectedToken()!.contractAddress;
+    if(fromToken === ethers.ZeroAddress){
+      const txHash = await provider.sendTx(this.txData());
+      return txHash;
+    }
+
+    this.setButtonState('approve');
+
+    const erc20Contract = new ethers.Contract(
+      fromToken,
+      [
+        "function approve(address spender, uint256 amount) public returns (bool)",
+        "function allowance(address owner, address spender) public view returns (uint256)"
+      ],
+      signer
+    );
+
+    //const fromAddress = this.blockchainStateService.walletAddress()!;
+    const fromTokenDecimals = this.selectedToken()!.decimals;
+    const approveAmount = parseUnits(this.validatedSellAmount(), fromTokenDecimals)
+
+    // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
+    // console.log("allowance",allowance);
+
+    const approveTx = await erc20Contract["approve"]((this.txData() as TransactionRequestEVM).to, approveAmount);
     
-      const txHash = await provider.sendTx(txData);
-      console.log("SVM Swap транзакция отправлена:", txHash);
-      
-    }
-  
-    async evmSwap(){
-      const provider = this.blockchainStateService.getCurrentProvider().provider;
-  
-      const signer = await provider.signer;
-  
-      const fromToken = this.selectedToken()!.contractAddress;
-      if(fromToken === ethers.ZeroAddress){
-        const txHash = await provider.sendTx(this.txData());
-        return;
-      }
+    console.log("a");
 
-      this.setButtonState('approve');
-  
-      const erc20Contract = new ethers.Contract(
-        fromToken,
-        [
-          "function approve(address spender, uint256 amount) public returns (bool)",
-          "function allowance(address owner, address spender) public view returns (uint256)"
-        ],
-        signer
-      );
-  
-      //const fromAddress = this.blockchainStateService.walletAddress()!;
-      const fromTokenDecimals = this.selectedToken()!.decimals;
-      const approveAmount = parseUnits(this.validatedSellAmount(), fromTokenDecimals)
-  
-      // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
-      // console.log("allowance",allowance);
-  
-      const approveTx = await erc20Contract["approve"]((this.txData() as TransactionRequestEVM).to, approveAmount);
-      
-      console.log("a");
-  
-      await approveTx.wait();
-  
-      console.log("Approve успешно выполнен:", approveTx.hash);
-  
-      const txHash = await provider.sendTx(this.txData(), true);
+    await approveTx.wait();
 
-      this.buttonState === 'bridge'
-  
-      console.log("txHash",txHash);
-      // console.log("this.loading()",this.loading()); 
-    }
+    console.log("Approve успешно выполнен:", approveTx.hash);
+
+    const txHash = await provider.sendTx(this.txData(), true);
+
+    this.setButtonState('bridge');
+    this.buttonState === 'bridge'
+
+    console.log("txHash",txHash);
+    // console.log("this.loading()",this.loading()); 
+    return txHash;
+  }
   
   // Метод для сброса таймеров
-  resetTimers(): void {
-    if (this.findingRoutesTimer) {
-      clearTimeout(this.findingRoutesTimer);
-      this.findingRoutesTimer = null;
-    }
-    if (this.walletTimer) {
-      clearTimeout(this.walletTimer);
-      this.walletTimer = null;
-    }
-  }
+  // resetTimers(): void {
+  //   if (this.findingRoutesTimer) {
+  //     clearTimeout(this.findingRoutesTimer);
+  //     this.findingRoutesTimer = null;
+  //   }
+  //   if (this.walletTimer) {
+  //     clearTimeout(this.walletTimer);
+  //     this.walletTimer = null;
+  //   }
+  // }
   
   // Метод для сброса состояния кнопки
   resetButtonState(): void {
-    this.resetTimers();
+    //this.resetTimers();
     this.setButtonState('bridge');
   }
 
@@ -707,6 +713,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   get buttonState(): 'bridge' | 'finding' | 'approve' | 'wallet' | 'wrong-address' {
+    //console.log("uncoment, auto load fix???"); todo
+
     if (this.showCustomAddress && this.addressStatus === 'bad') {
       return 'wrong-address';
     }
@@ -851,7 +859,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   private checkAndAnimateReceiveText() {
     if (this.receiveTextElement && !this.receiveTextAnimated && this.selectedBuyToken()!.symbol) {
       // Добавляем информацию о времени в секундах (например, 30 секунд)
-      const finalText = `${this.validatedSellAmount} ${this.selectedBuyToken()!.symbol} in 30 sec`;
+      const finalText = `${this.validatedSellAmount()} ${this.selectedBuyToken()!.symbol} in 30 sec`;
       this.animateText(this.receiveTextElement.nativeElement, finalText, 'receiveText');
       this.receiveTextAnimated = true;
     }
@@ -870,9 +878,23 @@ export class BridgeComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSlippageSave(value: string): void {
-    console.log('Slippage value saved:', value);
-    // Здесь можно добавить логику для сохранения значения slippage
+	onSlippageSave(value: string): void {
+    if (value === "Auto")
+    {
+      console.log("Slippate is Auto. Default value is 0.005 (0.5%)");
+      this.slippage = 0.005;
+    }
+    else
+    {
+      const val = parseFloat(value.replace('%', ''));
+      if (val > 49.9)
+      {
+          throw "Slippage is too high!";
+      }
+  
+      this.slippage = val / 100;
+      console.log(`Slippage set: ${this.slippage}; (${val}%)`);
+    }
     // Не закрываем попап здесь, так как это уже происходит в компоненте settings-bridge
   }
 }

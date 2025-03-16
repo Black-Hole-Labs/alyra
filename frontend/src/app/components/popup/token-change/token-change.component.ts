@@ -18,6 +18,8 @@ export class TokenChangePopupComponent {
   @Input() mode!: 'sell' | 'buy';
   @Output() close = new EventEmitter<void>();
   @Output() tokenSelected = new EventEmitter<Token>();
+  @Input() networkTokens: Token[] | undefined;
+  
 
   searchText: string = '';
   public blockchainStateService = inject(BlockchainStateService);
@@ -29,6 +31,11 @@ export class TokenChangePopupComponent {
 
     
   }
+
+  get tokenList(): Token[] {
+    return this.networkTokens?.length ? this.networkTokens : this.blockchainStateService.filteredTokens();
+  }
+  
   
 
   performSearch(): void {

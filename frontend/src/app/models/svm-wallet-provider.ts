@@ -15,6 +15,10 @@ export class SvmWalletProvider implements WalletProvider {
     this.provider = provider;
   }
 
+  isAvailable(): boolean {
+    return !!this.provider;
+  }
+
   // Provide a default implementation that forces override
   async connect(_provider?: any, isMultichain?: boolean): Promise<{ address: string; network: string }>  {
     if (_provider) this.provider = _provider;
@@ -51,7 +55,7 @@ export class SvmWalletProvider implements WalletProvider {
   }
 
   async sendTx(txData: TransactionRequestSVM): Promise<string> {
-    const connection = new Connection('https://api.mainnet-beta.solana.com', 'confirmed');
+    const connection = new Connection('https://solana-rpc.publicnode.com"', 'confirmed');
     const decodedTx = Uint8Array.from(atob(txData.data.toString()), c => c.charCodeAt(0));
     const versionedTx = VersionedTransaction.deserialize(decodedTx);
     const signedTx = await this.provider.signAndSendTransaction(versionedTx);

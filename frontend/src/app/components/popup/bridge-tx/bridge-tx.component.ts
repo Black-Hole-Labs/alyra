@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Token } from '../../../pages/trade/trade.component';
 import { Network } from '../../../models/wallet-provider.interface';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
+import { TransactionsService } from '../../../services/transactions.service';
 
 @Component({
   selector: 'app-bridge-tx',
@@ -17,18 +18,27 @@ export class BridgeTxComponent implements OnInit {
   @Input() selectedToken: Token | undefined = undefined;
   @Input() selectedReceiveToken: Token | undefined = undefined;
   @Input() inputAmount: string = '';
+  @Input() txHash: string = '';
   @Input() customAddress: string = '';
   @Output() close = new EventEmitter<void>();
+  txStatusText = 'Pending';
 
   constructor(
       private blockchainStateService: BlockchainStateService,
+      private transactionsService: TransactionsService
   )
   {
-
+    
   }
 
-  ngOnInit() {
-    console.log('BridgeTx initialized with amount:', this.inputAmount); // Добавим для отладки
+  async ngOnInit() {
+    console.log('BridgeTx initialized with amount:', this.inputAmount);
+    const finalStatus = await this.transactionsService.pollStatus(this.txHash);
+    if (finalStatus === 'DONE') {
+      this.txStatusText = 'Transaction Successful';
+    } else {
+      this.txStatusText = 'Transaction Failed';
+    }
   }
 
   closePopup(): void {

@@ -561,8 +561,8 @@
     "idHex": "0x41103230303302e",
     "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/solana.svg",
     "rpcUrls": [
-      "https://api.mainnet-beta.solana.com",
-      "https://solana-rpc.publicnode.com"
+      "https://solana-rpc.publicnode.com",
+      "https://api.mainnet-beta.solana.com"
     ],
     "nativeCurrency": {
       "name": "SOL",

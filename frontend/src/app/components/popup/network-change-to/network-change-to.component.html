@@ -14,7 +14,7 @@
   </div>
   <div class="list">
     <div class="inner-list">
-      <div class="network" *ngFor="let network of filteredNetworks" (click)="selectNetwork(network)">
+      <div class="network" *ngFor="let network of networks" (click)="selectNetwork(network)">
         <div class="left">
           <div class="image">
             <div class="network-image" [style.backgroundImage]="'url(' + network.logoURI + ')'"></div>

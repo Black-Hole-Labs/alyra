@@ -8,10 +8,8 @@
         <h3>Bridge</h3>
 			</div>
 			<div class="icons">
-				<div class="custom-wallet-button" 
-					[class.hidden]="!isBridgeButtonActive()"
-					[class.active]="showCustomAddress"
-					(click)="isBridgeButtonActive() && toggleCustomAddress()">
+				<div class="custom-wallet-button" 					
+					(click)="toggleCustomAddress()">
 				</div>
 				<div class="settings" 
 					[class.active]="showSettingsBridgePopup"
@@ -181,6 +179,7 @@
 <app-token-change
 	[mode]="'sell'"
 	*ngIf="popupService.getCurrentPopup() === 'tokenChange'"
+	[networkTokens]="getTokensForNetwork()"
 	(close)="popupService.closePopup('tokenChange')"
 	(tokenSelected)="onTokenSelected($event)">
 </app-token-change>
@@ -188,6 +187,7 @@
 <app-token-change
 	[mode]="'buy'"
 	*ngIf="popupService.getCurrentPopup() === 'tokenChangeBuy'"
+	[networkTokens]="getTokensForNetworkBuy()"
 	(close)="popupService.closePopup('tokenChangeBuy')"
 	(tokenSelected)="onTokenBuySelected($event)">
 </app-token-change>
@@ -211,6 +211,7 @@
 	[selectedToken]="selectedToken()"
 	[selectedReceiveToken]="selectedBuyToken()"
 	[inputAmount]="validatedSellAmount()"
+	[txHash]="bridgeTxHash"
 	[customAddress]="showCustomAddress ? customAddress() : ''"
 	(close)="closeBridgeTxPopup()">
 </app-bridge-tx>

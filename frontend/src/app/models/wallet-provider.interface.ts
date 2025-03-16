@@ -3,7 +3,8 @@ export interface WalletProvider {
     switchNetwork(network: any): Promise<void>;
     getNetwork(): Promise<string>;
     getAddress(): string;
-}
+    isAvailable(): boolean;
+  }
 
 export interface Network {
     id: number;
@@ -27,4 +28,12 @@ export interface TransactionRequestEVM {
 
 export interface TransactionRequestSVM {
     data: string; 
+}
+
+export interface Wallets {
+  id: string;
+  name: string;
+  cssClass: string;
+  installUrl: string;
+  status?: string;
 }

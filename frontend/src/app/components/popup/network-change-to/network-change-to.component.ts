@@ -17,24 +17,14 @@ export class NetworkChangeToPopupComponent {
   @Output() networkSelected = new EventEmitter<Network>();
 
   searchText: string = '';
-  filteredNetworks: Network[] = [];
 
   constructor(private blockchainStateService: BlockchainStateService) {
-    if (this.networks.length === 0) {
-      this.networks = this.blockchainStateService.networks();
-    }
-    this.filteredNetworks = [...this.networks];
-  }
-
-  ngOnChanges() {
-    this.filteredNetworks = [...this.networks];
+    this.networks = this.blockchainStateService.allNetworks();
   }
 
   performSearch(): void {
     const search = this.searchText.toLowerCase().trim();
-    this.filteredNetworks = this.networks.filter(
-      network => network.name.toLowerCase().includes(search)
-    );
+
   }
 
   closePopup(): void {

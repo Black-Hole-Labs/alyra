@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom, interval, Observable, switchMap, takeWhile } from 'rxjs';
+import { firstValueFrom, interval, lastValueFrom, Observable, switchMap, takeWhile } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -68,7 +68,8 @@ export class TransactionsService {
     toToken: string,
     fromAmount: string,
     fromAddress: string,
-    toAddress?: string
+    toAddress?: string,
+    slippage?: number
   ): Observable<{ quote: any }> {
     const params: any = {
       fromChain,
@@ -82,11 +83,36 @@ export class TransactionsService {
     if (toAddress) {
       params.toAddress = toAddress;
     }
+
+    if (slippage) {
+      params.slippage = slippage;
+    }
   
     return this.http.get<{ quote: any }>(`${this.apiUrl}/lifi/quote-bridge`, { params });
   }
-  
 
+  public async pollStatus(txHash: string): Promise<'DONE' | 'FAILED'> {
+    let result: any;
+    do {
+      result = await this.getStatus(txHash);
+      await this.delay(1000);
+    } while (result.status !== 'DONE' && result.status !== 'FAILED');
+
+    console.log(`Transfer completed with state ${result.status}`);
+    return result.status;
+  }
+
+  private async getStatus(txHash: string): Promise<any> {
+    const request = this.http.get('https://li.quest/v1/status', {
+      params: { txHash }
+    });
+    return await lastValueFrom(request);
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  
   parseToAmount(toAmount: string, decimals: number): string {
     return (Number(toAmount) / Math.pow(10, decimals)).toFixed(6);
   }

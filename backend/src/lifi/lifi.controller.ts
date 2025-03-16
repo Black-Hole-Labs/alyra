@@ -45,11 +45,12 @@ export class LifiController {
     @Query('fromAmount') fromAmount: string,
     @Query('fromAddress') fromAddress: string,
     @Query('toAddress') toAddress?: string,
+    @Query('slippage') slippage?: number,
   ) {
         if (!fromChain || !toChain || !fromToken || !toToken || !fromAmount || !fromAddress) {
           throw new HttpException('Missing required query parameters', HttpStatus.BAD_REQUEST);
         }
-        const quote = await this.lifiService.getQuote(fromChain, toChain, fromToken, toToken, fromAmount, fromAddress, toAddress);
+        const quote = await this.lifiService.getQuote(fromChain, toChain, fromToken, toToken, fromAmount, fromAddress, toAddress, slippage);
 
         return quote;
     }

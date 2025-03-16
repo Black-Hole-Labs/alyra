@@ -22,7 +22,7 @@
 			<cdk-virtual-scroll-viewport itemSize="50" class="scroll-container">
 				<div 
 				  class="token" 
-				  *cdkVirtualFor="let token of blockchainStateService.filteredTokens(); trackBy: trackByToken"
+				  *cdkVirtualFor="let token of tokenList; trackBy: trackByToken"
 				  (click)="selectToken(token)"
 				>
 				  <div class="left">

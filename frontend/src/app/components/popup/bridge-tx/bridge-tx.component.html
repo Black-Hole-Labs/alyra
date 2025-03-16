@@ -12,19 +12,19 @@
 			<div class="network-icon-left network-icon" [style.backgroundImage]="'url(' + selectedNetwork?.logoURI + ')'"></div>
 			<h4>{{ selectedNetwork!.name }}</h4>
 			<div class="explorer-link">
-				<a href="">View on Explorer</a>
+				<a href="">View on Explorer</a><!-- todo -->
 				<div class="image-link"></div>
 			</div>
 		</div>
 
 		<div class="line"></div>
-		<div class="token-icon" [style.backgroundImage]="'url(' + selectedToken?.imageUrl + ')'"></div>
+		<div class="token-icon" [ngClass]="{'stop-animation': txStatusText !== 'Pending'}" [style.backgroundImage]="'url(' + selectedToken?.imageUrl + ')'"></div>
 
 		<div class="right-network">
 			<div class="network-icon-right network-icon" [style.backgroundImage]="'url(' + selectedNetworkTo?.logoURI"></div>
 			<h4>{{ selectedNetworkTo!.name }}</h4>
 			<div class="explorer-link">
-				<a href="">View on Explorer</a>
+				<a href="">View on Explorer</a><!-- todo -->
 				<div class="image-link"></div>
 			</div>
 		</div>
@@ -33,22 +33,22 @@
   <div class="tx-info">
 		<div class="elem">
 			<h6>Status</h6>
-			<div class="tx-status">
-				<p>Pending</p>
-			</div>
+			<div class="tx-status" [ngClass]="{'success': txStatusText === 'Transaction Successful', 'failed': txStatusText === 'Transaction Failed'}">
+				<p [ngClass]="{'pending-change': txStatusText !== 'Pending'}">{{ txStatusText }}</p>
+			  </div>			  
 		</div>
 		<div class="elem">
 			<h6>Value</h6>
 			<p>{{ inputAmount || '0' }} {{ selectedToken?.symbol }}</p>
 		</div>
-		<div class="elem">
+		<!-- <div class="elem"> todo
 			<h6>Fee</h6>
 			<p>0.0003 ETH</p>
-		</div>
-		<div class="elem">
+		</div> -->
+		<!-- <div class="elem">
 			<h6>Total time</h6>
 			<p>00:00:03</p>
-		</div>
+		</div> -->
 		<div class="elem">
 			<h6>From</h6>
 			<p>{{ getFromAddress() }}</p>
