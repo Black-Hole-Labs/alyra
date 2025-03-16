@@ -1,212 +1,209 @@
-header{
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-.menu{
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-.menu{
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-.left{
-	display: flex;
-	align-items: center;
-}
-.right{
-	height: 60px;
-	display: flex;
-	align-items: center;
-	gap: 20px;
-}
-h3{
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 800;
-	font-size: 24px;
-	color: white;
-	margin-left: 8px;
-	cursor: pointer;
-}
-button{
-	width: 12px;
-	height: 7px;
-	cursor: pointer;
-}
-button.closed {
-  background: url(/img/header/open-img.png);
-	width: 12px;
-	height: 7px;
-	margin-left: 15px;
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-button.open {
-  background: url(/img/header/close-img.png);
-	width: 12px;
-	height: 7px;
-	margin-left: 15px;
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-a.logo{
-	width: 65px;
-	height: 65px;
-	background: url(/img/header/logo.png);
-	background-size: cover;
-	cursor: pointer;
-}
-img{
-	height: 65px;
-	width: 65px;
-}
-nav{
-	display: flex;
-	align-items: center;
-	gap: 70px;
-	margin-left: 80px;
-}
-nav a {
-	font-size: 24px;
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 400;
-	color: rgba(var(--white), 0.25);
-	transition: 0.2s ease-in-out;
-	position: relative;
-	overflow: visible;
-	display: inline-block;
-	letter-spacing: 0.5px;
-	padding: 5px 10px;
-	margin: -5px -10px;
-	
-	&:hover {
-		color: rgba(var(--white), 1);
-	}
-}
-nav a.active-link {
-	color: rgba(var(--white), 1);
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/* Добавляем анимацию для пунктов меню */
+.menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+}
+
+.right {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+h3 {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 800;
+  font-size: 24px;
+  color: white;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+a.logo {
+  width: 65px;
+  height: 65px;
+  background: url(/img/header/logo.png);
+  background-size: cover;
+  cursor: pointer;
+}
+
+img {
+  height: 65px;
+  width: 65px;
+}
+
+button {
+  width: 12px;
+  height: 7px;
+  cursor: pointer;
+}
+
+button.closed,
+button.network-closed {
+  background: url(/img/header/open-img.png);
+  width: 12px;
+  height: 7px;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+button.closed {
+  margin-left: 15px;
+}
+
+button.network-closed {
+  margin-right: 5px;
+}
+
+button.open,
+button.network-open {
+  background: url(/img/header/close-img.png);
+  width: 12px;
+  height: 7px;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+button.open {
+  margin-left: 15px;
+}
+
+button.network-open {
+  margin-right: 5px;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 70px;
+  margin-left: 80px;
+}
+
+nav a {
+  font-size: 24px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  color: rgba(var(--white), 0.25);
+  transition: 0.2s ease-in-out;
+  position: relative;
+  overflow: visible;
+  display: inline-block;
+  letter-spacing: 0.5px;
+  padding: 5px 10px;
+  margin: -5px -10px;
+}
+
+nav a:hover {
+  color: rgba(var(--white), 1);
+}
+
+nav a.active-link {
+  color: rgba(var(--white), 1);
+}
+
 @keyframes menu-item-flash {
-	0% {
-		color: rgba(var(--white), 0.25);
-	}
-	50% {
-		color: rgba(var(--white), 1);
-	}
-	100% {
-		color: rgba(var(--white), 0.25);
-	}
+  0% { color: rgba(var(--white), 0.25); }
+  50% { color: rgba(var(--white), 1); }
+  100% { color: rgba(var(--white), 0.25); }
 }
 
 .menu-item-animating {
-	animation: menu-item-flash 0.3s ease-in-out;
+  animation: menu-item-flash 0.3s ease-in-out;
 }
 
 @keyframes character-shuffle {
-	0%, 100% {
-		opacity: 1;
-		transform: translateY(0);
-	}
-	50% {
-		opacity: 0.8;
-		transform: translateY(-2px);
-	}
+  0%, 100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-2px);
+  }
 }
 
-/* GM STREAK WIDGET */
 .gm {
-	position: relative;
-	overflow: visible;
-	padding: 13px;
-	background-color: var(--dark-violet);
-	border-radius: 14px;
-	display: flex;
-	align-items: center;
-	gap: 5px;
-	cursor: pointer;
-	transition: 0.2s;
-}
-.gm:hover{
-	background-color: #581A7F;
-}
-.gm p{
-	font-size: 21px;
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 500;
-	color: var(--violet);
-}
-.fire-img{
-	width: 34px;
-	height: 34px;
-	background: url(/img/header/ufo.png);
-	background-size: cover;
-	background-repeat: no-repeat;
+  position: relative;
+  overflow: visible;
+  padding: 13px;
+  background-color: var(--dark-violet);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-
-/* XP WIDGET */
-.xp{
-	padding-top: 16px;
-	padding-bottom: 16px;
-	padding-left: 27px;
-	padding-right: 27px;
-	background-color: rgba(var(--dark-pink), 0.1);
-	border-radius: 14px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	transition: 0.2s;
-}
-.xp:hover{
-	background-color: rgba(var(--dark-pink), 0.2);
-}
-.xp p{
-	font-size: 21px;
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 500;
-	color: var(--pink);
+.gm:hover {
+  background-color: #581A7F;
 }
 
-/* NETWORK CHANGE */
-.network{
-	padding-top: 13px;
-	padding-bottom: 13px;
-	padding-left: 13px;
-	padding-right: 13px;
-	background-color: rgba(var(--dark-bg), 0.3);
-	border-radius: 14px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 8px;
-	cursor: pointer;
-	transition: 0.2s;
+.gm p {
+  font-size: 21px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  color: var(--violet);
 }
-.network:hover{
-	background-color: rgba(var(--dark-bg), 1);
+
+.fire-img {
+  width: 34px;
+  height: 34px;
+  background: url(/img/header/ufo.png);
+  background-size: cover;
+  background-repeat: no-repeat;
 }
-button.network-closed {
-  background: url(/img/header/open-img.png);
-	width: 12px;
-	height: 7px;
-	margin-right: 5px;
-	background-size: cover;
-	background-repeat: no-repeat;
+
+.xp {
+  padding: 16px 27px;
+  background-color: rgba(var(--dark-pink), 0.1);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s;
 }
-button.network-open {
-  background: url(/img/header/close-img.png);
-	width: 12px;
-	height: 7px;
-	margin-right: 5px;
-	background-size: cover;
-	background-repeat: no-repeat;
+
+.xp:hover {
+  background-color: rgba(var(--dark-pink), 0.2);
 }
+
+.xp p {
+  font-size: 21px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  color: var(--pink);
+}
+
+.network {
+  padding: 13px;
+  background-color: rgba(var(--dark-bg), 0.3);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.network:hover {
+  background-color: rgba(var(--dark-bg), 1);
+}
+
 .network-icon {
   width: 34px;
   height: 34px;
@@ -215,51 +212,47 @@ button.network-open {
   border-radius: 100%;
 }
 
-/* WALLET */
-.wallet{
-	padding-top: 14px;
-	padding-bottom: 14px;
-	padding-left: 18px;
-	padding-right: 18px;
-	background-color: rgba(var(--dark-bg), 0.3);
-	border-radius: 14px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	transition: 0.2s;
-}
-.wallet:hover{
-	background-color: rgba(var(--dark-bg), 1);
-}
-.wallet-icon{
-	width: 32px;
-	height: 32px;
-	background: url(/img/header/wallet.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-	margin-right: 16px;
-}
-.wallet p{
-	font-size: 21px;
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 500;
-	color: white;
+.wallet {
+  padding: 14px 18px;
+  background-color: rgba(var(--dark-bg), 0.3);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
+.wallet:hover {
+  background-color: rgba(var(--dark-bg), 1);
+}
 
+.wallet-icon {
+  width: 32px;
+  height: 32px;
+  background: url(/img/header/wallet.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin-right: 16px;
+}
+
+.wallet p {
+  font-size: 21px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  color: white;
+}
 
 .fireworks-container {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	pointer-events: none;
-	overflow: visible;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
 }
 
-/* Базовый стиль для искры */
 .spark {
   position: absolute;
   left: 50%;
@@ -271,7 +264,7 @@ button.network-open {
   background-repeat: no-repeat;
   transform: translate(-50%, -50%);
   animation: move ease-out forwards;
-	z-index: 1001;
+  z-index: 1001;
 }
 
 .gm-popup {
@@ -290,37 +283,8 @@ button.network-open {
 }
 
 @keyframes fadeInOut {
-  0% {
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
 }
-
-/* Удаляем ненужные анимации */
-/* Анимация для красного канала */
-/* @keyframes red-channel {
-	0%, 100% {
-		transform: translateX(-1px);
-	}
-	50% {
-		transform: translateX(-1.5px);
-	}
-}
-
-/* Анимация для голубого канала */
-/* @keyframes blue-channel {
-	0%, 100% {
-		transform: translateX(1px);
-	}
-	50% {
-		transform: translateX(1.5px);
-	}
-} */

@@ -21,26 +21,8 @@ h3{
 	gap: 12px;
 	position: relative;
 }
-.refresh {
-  background-image: url(/img/trade/refresh.png);
-	opacity: 0.3;
-  background-size: cover;
-  background-repeat: no-repeat;
-  height: 40px;
-  width: 40px;
-  cursor: pointer;
-	transform: rotate(0deg);
-	transform-origin: center;
-	transition: opacity 0.2s ease-in-out, transform 1s ease-in-out;
-}
-.refresh:hover{
-	opacity: 1;
-}
-.rotate {
-  transform: rotate(-720deg);
-}
-.settings {
-  background-image: url(/img/trade/settings.png);
+
+.refresh, .settings {
   background-size: cover;
   background-repeat: no-repeat;
   height: 40px;
@@ -48,85 +30,85 @@ h3{
   cursor: pointer;
   opacity: 0.3;
   transition: opacity 0.2s ease-in-out;
+}
 
-  &:hover {
-    opacity: 1;
-  }
+.refresh {
+  background-image: url(/img/trade/refresh.png);
+  transform: rotate(0deg);
+  transform-origin: center;
+  transition: opacity 0.2s ease-in-out, transform 1s ease-in-out;
+}
 
-  &.active {
-    opacity: 1;
-  }
+.settings {
+  background-image: url(/img/trade/settings.png);
+}
+
+.refresh:hover, .settings:hover, .settings.active {
+  opacity: 1;
+}
+
+.rotate {
+  transform: rotate(-720deg);
 }
 
 .change-button {
-	background-image: url(/img/trade/change.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-	height: 54px;
-	width: 54px;
-	position: absolute;
-	top: 160px;
-	left: 50%;
-	transform: translate(-50%, 0%);
-	display: flex;
-	justify-content: center;
-	cursor: pointer;
-	border-radius: 1000px;
-	overflow: hidden;
+  background-image: url(/img/trade/change.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 54px;
+  width: 54px;
+  position: absolute;
+  top: 160px;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 1000px;
+  overflow: hidden;
 }
 
-.arrow-up,
-.arrow-down {
-    background-image: url(/img/trade/change-arrow.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-    width: 14px;
-    height: 21px;
-    margin-top: 16px;
-    transition: 0.2s;
+.arrow-up, .arrow-down {
+  background-image: url(/img/trade/change-arrow.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 14px;
+  height: 21px;
+  margin-top: 16px;
+  transition: 0.2s;
 }
 
 .arrow-down {
-    transform: rotate(180deg);
-    transform-origin: center;
+  transform: rotate(180deg);
+  transform-origin: center;
 }
-.change-button:hover .arrow-up{
-	margin-top: 20px;
+
+.change-button:hover .arrow-up {
+  margin-top: 20px;
 }
-.change-button:hover .arrow-down{
-	margin-top: 12px;
+
+.change-button:hover .arrow-down {
+  margin-top: 12px;
 }
 
 .animate .arrow-up {
-	animation: click-animation-up 1s linear;
+  animation: click-animation-up 1s linear;
 }
 
 .animate .arrow-down {
-	animation: click-animation-down 1s linear;
+  animation: click-animation-down 1s linear;
 }
 
 @keyframes click-animation-up {
-	0% {
-			margin-top: 20px;
-	}
-	50% {
-			margin-top: -120px;
-	}
-	100% {
-			margin-top: 20px;
-	}
+  0% { margin-top: 20px; }
+  50% { margin-top: -120px; }
+  100% { margin-top: 20px; }
 }
 
 @keyframes click-animation-down {
-	0% {
-			margin-top: 12px;
-	}
-	50% {
-			margin-top: 132px;
-	}
-	100% {
-			margin-top: 12px;
-	}
+  0% { margin-top: 12px; }
+  50% { margin-top: 132px; }
+  100% { margin-top: 12px; }
 }
 
 .swap-container{
@@ -137,224 +119,233 @@ h3{
 	margin-top: 38px;
 	position: relative;
 }
-.sell{
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-	width: 601px;
-	height: 174px;
-	background-color: rgba(var(--dark-bg), 0.6);
-	border-radius: 28px;
-	padding: 20px 30px 20px 30px;
-	box-sizing: border-box;
-	margin-bottom: 20px;
+
+.sell, .buy {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 601px;
+  height: 174px;
+  background-color: rgba(var(--dark-bg), 0.6);
+  border-radius: 28px;
+  padding: 20px 30px;
+  box-sizing: border-box;
 }
-.left{
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
+
+.sell {
+  margin-bottom: 20px;
 }
-.sell-h6{
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 700;
-	font-size: 21px;
-	color: var(--red);
-	margin-bottom: 8px;
+
+.sell-h6, .buy-h6 {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  font-size: 21px;
+  margin-bottom: 8px;
 }
-input{
-	height: 73px;
-	width: 300px;
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 400;
-	font-size: 55px;
-	color: white;
-	background-color: var(--dark-bg);
-	margin-bottom: 1px;
+
+.sell-h6 {
+  color: var(--red);
 }
-input::placeholder{
-	color: var(--elem-nonactive);
+
+.buy-h6 {
+  color: var(--green);
 }
-p{
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 800;
-	font-size: 18px;
-	color: var(--elem-nonactive);
+
+.left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
-.right{
-	display: flex;
-	flex-direction: column;
-	align-items: flex-end;
+
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
-.token{
-	border-radius: 100px;
-	box-sizing: border-box;
-	margin-top: 40px;
-	margin-right: 15px;
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+
+input {
+  height: 73px;
+  width: 300px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 55px;
+  color: white;
+  background-color: var(--dark-bg);
+  margin-bottom: 1px;
 }
-.token-icon{
-	background-image: url(/img/header/ethereum.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-	height: 50px;
-	width: 50px;
-	margin-right: 15px;
-	border-radius: 100%;
+
+input::placeholder {
+  color: var(--elem-nonactive);
 }
-.token > p{
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 800;
-	font-size: 24px;
-	color: white;
+
+p {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--elem-nonactive);
 }
+
+.token {
+  border-radius: 100px;
+  box-sizing: border-box;
+  margin-top: 40px;
+  margin-right: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.token-icon {
+  background-image: url(/img/header/ethereum.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 50px;
+  width: 50px;
+  margin-right: 15px;
+  border-radius: 100%;
+}
+
+.token > p {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 800;
+  font-size: 24px;
+  color: white;
+}
+
 .token > button {
   background: url(/img/header/open-img.png);
-	width: 12px;
-	height: 7px;
-	margin-left: 15px;
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-.bottom{
-	width: 525px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-.balance{
-	display: flex;
-	align-items: center;
-}
-.max{
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 800;
-	font-size: 18px;
-	color: white;
-	margin-left: 20px;
-	cursor: pointer;
-	transition: 0.2s;
-}
-.max:hover{
-	color: var(--elem-nonactive);
+  width: 12px;
+  height: 7px;
+  margin-left: 15px;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
-.buy{
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-	width: 601px;
-	height: 174px;
-	background-color: rgba(var(--dark-bg), 0.6);
-	border-radius: 28px;
-	padding: 20px 30px 20px 30px;
-	box-sizing: border-box;
-}
-.buy-h6{
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 700;
-	font-size: 21px;
-	color: var(--green);
-	margin-bottom: 8px;
-}
-.main-button{
-	margin-top: 40px;
-	height: 72px;
-	width: 601px;
-	background-color: white;
-	border-radius: 16px;
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 500;
-	font-size: 21px;
-	color: black;
-	cursor: pointer;
-	transition: all 0.3s ease-in-out;
-	
-	&.inactive {
-    background-color: rgba(var(--dark-bg), 0.9);
-    cursor: not-allowed;
-		color: var(--elem-nonactive);
-    opacity: 0.5;
-  }
-
-  &.inactive:hover {
-    background-color: var(--dark-select);
-  }
-  
-  &.finding, &.wallet {
-    background-color: var(--dark-select);
-    color: var(--elem-nonactive);
-    cursor: wait;
-  }
-  
-  &.approve {
-    background-color: var(--green);
-    color: black;
-  }
-
-  &.insufficient {
-    background-color: var(--red);
-    color: white;
-    cursor: not-allowed;
-  }
-
-  &.insufficient:hover {
-    background-color: #ff6b6b;
-  }
-}
-.main-button:hover{
-	background-color: var(--elem-nonactive);
-	
-	&.finding:hover, &.wallet:hover {
-    background-color: var(--dark-select);
-  }
-  
-	&.approve:hover {
-    background-color: #8aff8a;
-  }
+.bottom {
+  width: 525px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.info{
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	width: 601px;
-	margin-top: 13px;
+.balance {
+  display: flex;
+  align-items: center;
 }
 
-.price{
-	display: flex;
-}
-.price > p{
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 400;
-	font-size: 17px;
-	color: white;
-}
-.price > p.price-usd{
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 400;
-	font-size: 17px;
-	color: var(--elem-nonactive);
+.max {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 800;
+  font-size: 18px;
+  color: white;
+  margin-left: 20px;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-.gas{
-	display: flex;
-	align-items: center;
-	gap: 8px;
+.max:hover {
+  color: var(--elem-nonactive);
 }
-.gas-img{
-	background-image: url(/img/trade/gas-image.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-	height: 20px;
-	width: 20px;
+
+.main-button {
+  margin-top: 40px;
+  height: 72px;
+  width: 601px;
+  background-color: white;
+  border-radius: 16px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 21px;
+  color: black;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
-.gas-text{
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 400;
-	font-size: 18px;
-	color: var(--elem-nonactive);
+
+.main-button:hover {
+  background-color: var(--elem-nonactive);
+}
+
+.main-button.inactive {
+  background-color: rgba(var(--dark-bg), 0.9);
+  cursor: not-allowed;
+  color: var(--elem-nonactive);
+  opacity: 0.5;
+}
+
+.main-button.inactive:hover {
+  background-color: var(--dark-select);
+}
+
+.main-button.finding, .main-button.wallet {
+  background-color: var(--dark-select);
+  color: var(--elem-nonactive);
+  cursor: wait;
+}
+
+.main-button.finding:hover, .main-button.wallet:hover {
+  background-color: var(--dark-select);
+}
+
+.main-button.approve {
+  background-color: var(--green);
+  color: black;
+}
+
+.main-button.approve:hover {
+  background-color: #8aff8a;
+}
+
+.main-button.insufficient {
+  background-color: var(--red);
+  color: white;
+  cursor: not-allowed;
+}
+
+.main-button.insufficient:hover {
+  background-color: #ff6b6b;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 601px;
+  margin-top: 13px;
+}
+
+.price {
+  display: flex;
+}
+
+.price > p {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 17px;
+  color: white;
+}
+
+.price > p.price-usd {
+  color: var(--elem-nonactive);
+}
+
+.gas {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gas-img {
+  background-image: url(/img/trade/gas-image.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 20px;
+  width: 20px;
+}
+
+.gas-text {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--elem-nonactive);
 }

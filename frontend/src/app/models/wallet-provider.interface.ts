@@ -33,7 +33,9 @@ export interface TransactionRequestSVM {
 export interface Wallets {
   id: string;
   name: string;
+  type: string;
   cssClass: string;
-  installUrl: string;
+  installUrl?: string;
+  iconUrl: string;
   status?: string;
 }
