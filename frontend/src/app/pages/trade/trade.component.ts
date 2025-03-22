@@ -270,8 +270,8 @@ export class TradeComponent {
       console.error(`Failed to get wallet address`);
       return;
     }
-
-    if(this.blockchainStateService.getCurrentNetworkId()?.chainId === "1151111081099710") { // SVM
+    console.log("Chain ID: ", this.blockchainStateService.getCurrentNetworkId()?.id);
+    if(this.blockchainStateService.getCurrentNetworkId()?.id === 1151111081099710) { // SVM
       if (token.symbol === "SOL") // change to adres
       {
         return this.walletBalanceService.getSolanaBalance(walletAddress);
@@ -372,7 +372,7 @@ export class TradeComponent {
   
     
     let txHash: string;
-    if (this.blockchainStateService.network()?.chainId === "1151111081099710") {
+    if (this.blockchainStateService.network()?.id === 1151111081099710) {
       txHash = await this.svmSwap();
     } else {
       txHash = await this.evmSwap();
@@ -536,7 +536,7 @@ export class TradeComponent {
 
         if(response.transactionRequest.data)
         {
-          if(this.blockchainStateService.network()?.chainId === "1151111081099710")
+          if(this.blockchainStateService.network()?.id === 1151111081099710)
           {
             this.txData.set(response.transactionRequest as TransactionRequestSVM);
           }

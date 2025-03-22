@@ -361,7 +361,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
         if(response.transactionRequest.data)
         {
-          if(this.blockchainStateService.network()?.chainId === "1151111081099710")
+          if(this.blockchainStateService.network()?.id === 1151111081099710)
           {
             this.txData.set(response.transactionRequest as TransactionRequestSVM);
           }
@@ -610,7 +610,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   // Метод для обработки нажатия на кнопку
   async handleButtonClick(): Promise<void> {
     let txHash: string;
-    if(this.blockchainStateService.network()?.chainId === "1151111081099710")
+    if(this.blockchainStateService.network()?.id === 1151111081099710)
     {
       txHash = await this.svmSwap();
     }
