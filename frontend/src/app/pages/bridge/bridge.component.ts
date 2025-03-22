@@ -250,7 +250,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   //     return;
   //   }
 
-  //   if(this.blockchainStateService.getCurrentNetworkId()?.chainId === "1151111081099710") { // SVM
+  //   if(this.blockchainStateService.getCurrentNetwork()?.chainId === "1151111081099710") { // SVM
   //     if (token.symbol === "SOL") // change to adres
   //     {
   //       return this.walletBalanceService.getSolanaBalance(walletAddress);
@@ -269,7 +269,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   
   //       const data = await response.json();
   
-  //       const network = data.find((net: { id: number }) => net.id === this.blockchainStateService.getCurrentNetworkId()?.id);
+  //       const network = data.find((net: { id: number }) => net.id === this.blockchainStateService.getCurrentNetwork()?.id);
   
   //       if (!network) {
   //         console.error('Network not found');

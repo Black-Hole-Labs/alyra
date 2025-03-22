@@ -1,8 +1,6 @@
 import { Component, Output, EventEmitter, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
-import { Network } from '../../../models/wallet-provider.interface';
-
 
 @Component({
   selector: 'app-blackhole-network',
@@ -13,7 +11,7 @@ import { Network } from '../../../models/wallet-provider.interface';
 })
 export class BlackholeNetworkComponent {
   networks = computed(() => this.blockchainStateService.networks());
-  selectedNetwork: string | null = null;
+  selectedNetwork: number | null = null;
   @Output() close = new EventEmitter<void>();
 
   constructor(
@@ -56,8 +54,8 @@ export class BlackholeNetworkComponent {
   //   }
   // }
 
-  async selectNetwork(networkId: string): Promise<void> {
-    const selectedNetwork = this.networks().find((network) => (network.id).toString() === networkId);
+  async selectNetwork(networkId: number): Promise<void> {
+    const selectedNetwork = this.networks().find((network) => network.id === networkId);
     if (!selectedNetwork) {
       console.error('Network not found');
       return;
@@ -94,6 +92,6 @@ export class BlackholeNetworkComponent {
   // Method to get the current selected network object
   getCurrentNetwork(): any {
     if (!this.selectedNetwork) return null;
-    return this.networks().find(n => n.id.toString() === this.selectedNetwork);
+    return this.networks().find(n => n.id === this.selectedNetwork);
   }
 }

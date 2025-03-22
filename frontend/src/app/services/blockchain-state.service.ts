@@ -160,7 +160,7 @@ export class BlockchainStateService {
         }
 
         if(force){          
-          this.updateNetwork("1");
+          this.updateNetwork(1);
           console.log("this.network());",this.network());
         }
   
@@ -178,12 +178,12 @@ export class BlockchainStateService {
     return this.walletAddress();
   }
 
-  updateNetwork(chainId: string): void {
-    const foundNetwork = this.networks().find(n => Number(n.id) === Number(chainId));
+  updateNetwork(chainId: number): void {
+    const foundNetwork = this.networks().find(n => n.id === chainId);
     this.network.set(foundNetwork ?? null);
   }
 
-  getCurrentNetworkId(): Network | null {
+  getCurrentNetwork(): Network | null {
     return this.network();
   }
 
