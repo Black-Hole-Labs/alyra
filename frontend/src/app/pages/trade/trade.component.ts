@@ -98,50 +98,56 @@ export class TradeComponent {
     private transactionsService: TransactionsService,
     public popupService: PopupService
   ) {
-    effect(() => {
-      if (this.allFieldsReady()) {
-        this.getTxData();
-      }
-    });
-
-    effect(() => {
-        if (this.blockchainStateService.connected() && this.selectedToken()) {
-          this.getBalanceForToken(this.selectedToken()!)
-          .then((balanceStr) => {
-            this.balance.set(Number(parseFloat(balanceStr).toFixed(6)));
-          })
-          .catch((error) => {
-            console.error('Ошибка получения баланса', error);
-            this.balance.set(0.0);
-          });
+      effect(() => 
+      {
+        if (this.allFieldsReady()) 
+        {
+          this.getTxData();
         }
-      },
-      { allowSignalWrites: true }
-    );
+      });
 
-    effect(() => {
-        if (this.blockchainStateService.connected() && this.selectedBuyToken()) {
-          this.getBalanceForToken(this.selectedBuyToken()!)
-          .then((balanceStr) => {
-            this.balanceBuy.set(Number(parseFloat(balanceStr).toFixed(6)));
-          })
-          .catch((error) => {
-            console.error('Ошибка получения баланса', error);
-            this.balanceBuy.set(0.0);
-          });
-        }
-      },
-      { allowSignalWrites: true }
-    );
-
-    effect(
-      () => {
+      effect(() => 
+      {
+        const isConnected = this.blockchainStateService.connected();
         const tokens = this.blockchainStateService.filteredTokens();
-        this.selectedToken.set(tokens.length > 0 ? tokens[0] : undefined);
-        this.selectedBuyToken.set(tokens.length > 1 ? tokens[1] : undefined);
-      },
-      { allowSignalWrites: true }
-    );
+        
+        const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
+        const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
+    
+        this.selectedToken.set(newSelectedToken);
+        this.selectedBuyToken.set(newSelectedBuyToken);
+
+        Promise.resolve().then(() =>
+          {
+            if (isConnected && this.selectedToken()) 
+            {
+                this.getBalanceForToken(this.selectedToken()!)
+                    .then((balanceStr) => 
+                    {
+                        this.balance.set(Number(parseFloat(balanceStr).toFixed(6)));
+                    })
+                    .catch((error) => 
+                    {
+                        console.error('Error getting balance sell: ', error);
+                        this.balance.set(0.0);
+                    });
+            }
+    
+            if (isConnected && this.selectedBuyToken()) 
+            {
+                this.getBalanceForToken(this.selectedBuyToken()!)
+                    .then((balanceStr) => 
+                    {
+                        this.balanceBuy.set(Number(parseFloat(balanceStr).toFixed(6)));
+                    })
+                    .catch((error) => 
+                    {
+                        console.error('Error getting balance buy: ', error);
+                        this.balanceBuy.set(0.0);
+                    });
+            }
+        });
+    }, { allowSignalWrites: true });
   }
 
   processInput(event: Event, isSell: boolean): void {
@@ -270,7 +276,7 @@ export class TradeComponent {
       console.error(`Failed to get wallet address`);
       return;
     }
-    console.log("Chain ID: ", this.blockchainStateService.getCurrentNetwork()?.id);
+
     if(this.blockchainStateService.getCurrentNetwork()?.id === 1151111081099710) { // SVM
       if (token.symbol === "SOL") // change to adres
       {

@@ -35,7 +35,6 @@ export class BlockchainStateService {
     // Эффект для загрузки токенов при изменении сети
     effect(() => {
       if (this.network()) {
-        console.log(this.network());
         this.loadTokensForNetwork(this.network()!.id);
       }
     });
