@@ -52,6 +52,7 @@ export class TradeComponent {
   balanceBuy = signal<number>(0.0);
   rotationCount: number = 0; // Счетчик для отслеживания вращений
 	slippage: number = 0.005; //  // 0.005 is default for LIFI
+  gasPriceUSD: number | undefined;
 
   // showTokenPopup = false;
   // showTokenBuyPopup = false;
@@ -532,8 +533,9 @@ export class TradeComponent {
           const gasToken = response.estimate.gasCosts?.[0]?.token;
 
           const gasPriceUSD = this.transactionsService.parseGasPriceUSD(gasPriceHex, gasLimitHex, gasToken);
+          this.gasPriceUSD = Number(gasPriceUSD);
           
-          console.log('gasPriceUSD:', gasPriceUSD);
+          console.log('gasPriceUSD:', this.gasPriceUSD);
         }
         else 
         {

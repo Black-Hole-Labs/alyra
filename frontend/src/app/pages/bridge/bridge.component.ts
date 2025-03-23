@@ -141,6 +141,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   
   networkTokens = new Map<number, Token[]>();
   slippage: number = 0.005; //  // 0.005 is default for LIFI
+  gasPriceUSD: number | undefined;
 
   bridgeTxHash: string = '';
 
@@ -351,8 +352,9 @@ export class BridgeComponent implements OnInit, OnDestroy {
           const gasToken = response.estimate.gasCosts?.[0]?.token;
 
           const gasPriceUSD = this.transactionsService.parseGasPriceUSD(gasPriceHex, gasLimitHex, gasToken);
+          this.gasPriceUSD = Number(gasPriceUSD);
           
-          console.log('gasPriceUSD:', gasPriceUSD);
+          console.log('gasPriceUSD:', this.gasPriceUSD);
         }
         else 
         {
