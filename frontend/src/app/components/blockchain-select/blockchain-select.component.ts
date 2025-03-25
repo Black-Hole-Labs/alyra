@@ -13,7 +13,7 @@ import { Network } from '../../models/wallet-provider.interface';
 })
 export class BlockchainSelectComponent implements OnInit {
   networks: any[] = [];
-  selectedNetwork: string | null = null;
+  selectedNetwork: number | null = null;
 
   constructor(
     private blockchainStateService: BlockchainStateService
@@ -38,14 +38,14 @@ export class BlockchainSelectComponent implements OnInit {
     if (type === 'SVM') {
       const solanaNetwork = this.networks.find(network => network.name === 'Solana');
       if (solanaNetwork) {
-        this.onNetworkChange(solanaNetwork.id.toString());
+        this.onNetworkChange(solanaNetwork.id);
       } else {
         console.error('Network for SVM not found!');
       }
     } else { // EVM / multichain -> default Ethereum
       const ethereumNetwork = this.networks.find(network => network.name === 'Ethereum');
       if (ethereumNetwork) {
-        this.onNetworkChange(ethereumNetwork.id.toString());
+        this.onNetworkChange(ethereumNetwork.id);
       } else {
         console.error('Network for EVM not found!');
       }
@@ -69,8 +69,8 @@ export class BlockchainSelectComponent implements OnInit {
     }
   }
 
-  async onNetworkChange(networkId: string): Promise<void> {
-    const selectedNetwork = this.networks.find((network) => (network.id).toString() === networkId);
+  async onNetworkChange(networkId: number): Promise<void> {
+    const selectedNetwork = this.networks.find((network) => network.id === networkId);
     if (!selectedNetwork) {
       console.error('Network not found');
       return;

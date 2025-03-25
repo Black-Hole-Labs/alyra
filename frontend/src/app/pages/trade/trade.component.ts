@@ -52,6 +52,7 @@ export class TradeComponent {
   balanceBuy = signal<number>(0.0);
   rotationCount: number = 0; // Счетчик для отслеживания вращений
 	slippage: number = 0.005; //  // 0.005 is default for LIFI
+  gasPriceUSD: number | undefined;
 
   // showTokenPopup = false;
   // showTokenBuyPopup = false;
@@ -98,50 +99,56 @@ export class TradeComponent {
     private transactionsService: TransactionsService,
     public popupService: PopupService
   ) {
-    effect(() => {
-      if (this.allFieldsReady()) {
-        this.getTxData();
-      }
-    });
-
-    effect(() => {
-        if (this.blockchainStateService.connected() && this.selectedToken()) {
-          this.getBalanceForToken(this.selectedToken()!)
-          .then((balanceStr) => {
-            this.balance.set(Number(parseFloat(balanceStr).toFixed(6)));
-          })
-          .catch((error) => {
-            console.error('Ошибка получения баланса', error);
-            this.balance.set(0.0);
-          });
+      effect(() => 
+      {
+        if (this.allFieldsReady()) 
+        {
+          this.getTxData();
         }
-      },
-      { allowSignalWrites: true }
-    );
+      });
 
-    effect(() => {
-        if (this.blockchainStateService.connected() && this.selectedBuyToken()) {
-          this.getBalanceForToken(this.selectedBuyToken()!)
-          .then((balanceStr) => {
-            this.balanceBuy.set(Number(parseFloat(balanceStr).toFixed(6)));
-          })
-          .catch((error) => {
-            console.error('Ошибка получения баланса', error);
-            this.balanceBuy.set(0.0);
-          });
-        }
-      },
-      { allowSignalWrites: true }
-    );
-
-    effect(
-      () => {
+      effect(() => 
+      {
+        const isConnected = this.blockchainStateService.connected();
         const tokens = this.blockchainStateService.filteredTokens();
-        this.selectedToken.set(tokens.length > 0 ? tokens[0] : undefined);
-        this.selectedBuyToken.set(tokens.length > 1 ? tokens[1] : undefined);
-      },
-      { allowSignalWrites: true }
-    );
+        
+        const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
+        const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
+    
+        this.selectedToken.set(newSelectedToken);
+        this.selectedBuyToken.set(newSelectedBuyToken);
+
+        Promise.resolve().then(() =>
+          {
+            if (isConnected && this.selectedToken()) 
+            {
+                this.getBalanceForToken(this.selectedToken()!)
+                    .then((balanceStr) => 
+                    {
+                        this.balance.set(Number(parseFloat(balanceStr).toFixed(6)));
+                    })
+                    .catch((error) => 
+                    {
+                        console.error('Error getting balance sell: ', error);
+                        this.balance.set(0.0);
+                    });
+            }
+    
+            if (isConnected && this.selectedBuyToken()) 
+            {
+                this.getBalanceForToken(this.selectedBuyToken()!)
+                    .then((balanceStr) => 
+                    {
+                        this.balanceBuy.set(Number(parseFloat(balanceStr).toFixed(6)));
+                    })
+                    .catch((error) => 
+                    {
+                        console.error('Error getting balance buy: ', error);
+                        this.balanceBuy.set(0.0);
+                    });
+            }
+        });
+    }, { allowSignalWrites: true });
   }
 
   processInput(event: Event, isSell: boolean): void {
@@ -272,7 +279,7 @@ export class TradeComponent {
       return;
     }
 
-    if(this.blockchainStateService.getCurrentNetworkId()?.chainId === "1151111081099710") { // SVM
+    if(this.blockchainStateService.getCurrentNetwork()?.id === 1151111081099710) { // SVM
       if (token.symbol === "SOL") // change to adres
       {
         return this.walletBalanceService.getSolanaBalance(walletAddress);
@@ -291,7 +298,7 @@ export class TradeComponent {
   
         const data = await response.json();
   
-        const network = data.find((net: { id: number }) => net.id === this.blockchainStateService.getCurrentNetworkId()?.id);
+        const network = data.find((net: { id: number }) => net.id === this.blockchainStateService.getCurrentNetwork()?.id);
   
         if (!network) {
           console.error('Network not found');
@@ -373,7 +380,7 @@ export class TradeComponent {
   
     
     let txHash: string;
-    if (this.blockchainStateService.network()?.chainId === "1151111081099710") {
+    if (this.blockchainStateService.network()?.id === 1151111081099710) {
       txHash = await this.svmSwap();
     } else {
       txHash = await this.evmSwap();
@@ -527,8 +534,9 @@ export class TradeComponent {
           const gasToken = response.estimate.gasCosts?.[0]?.token;
 
           const gasPriceUSD = this.transactionsService.parseGasPriceUSD(gasPriceHex, gasLimitHex, gasToken);
+          this.gasPriceUSD = Number(gasPriceUSD);
           
-          console.log('gasPriceUSD:', gasPriceUSD);
+          console.log('gasPriceUSD:', this.gasPriceUSD);
         }
         else 
         {
@@ -537,7 +545,7 @@ export class TradeComponent {
 
         if(response.transactionRequest.data)
         {
-          if(this.blockchainStateService.network()?.chainId === "1151111081099710")
+          if(this.blockchainStateService.network()?.id === 1151111081099710)
           {
             this.txData.set(response.transactionRequest as TransactionRequestSVM);
           }

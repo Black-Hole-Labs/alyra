@@ -10,7 +10,6 @@ export interface Network {
     id: number;
     name: string;
     rpcUrls: string;
-    chainId: string;
     logoURI?: string;
     idHex?:string;
     chainType: string; // Тип сети (EVM, SVM)

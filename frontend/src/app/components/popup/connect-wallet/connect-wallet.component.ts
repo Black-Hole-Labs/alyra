@@ -92,7 +92,27 @@ export class ConnectWalletComponent implements OnInit {
 
     try {
       const { address } = await provider.connect();
-      provider.switchNetwork(this.blockchainStateService.getCurrentNetworkId());
+
+      try
+      {
+        await provider.switchNetwork(this.blockchainStateService.getCurrentNetwork());
+      }
+      catch(e: unknown)
+      {
+        console.log("caught error: ", e);
+        console.log("Force switching to available network Etherium or Solana");
+        if (this.blockchainStateService.getType(providerId) == "SVM")
+        {
+          this.blockchainStateService.updateNetwork(1151111081099710);
+        }
+        else
+        {
+          this.blockchainStateService.updateNetwork(1);
+        }
+
+        provider.switchNetwork(this.blockchainStateService.getCurrentNetwork());
+      }
+      
       this.blockchainStateService.updateWalletAddress(address);
       this.blockchainStateService.setCurrentProvider(providerId);
 
