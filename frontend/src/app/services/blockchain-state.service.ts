@@ -39,6 +39,10 @@ export class BlockchainStateService {
         this.loadTokensForNetwork(this.network()!.id);
       }
     });
+
+    effect(() => {
+      console.log("netowrk", this.network());
+    });
   }
 
   setSearchText(value: string) {

@@ -199,7 +199,8 @@ export class TradeComponent {
   }
 
   setMaxSellAmount(): void {
-    this.sellAmount = this.balance.toString();
+    this.sellAmount = this.balance().toString();
+    this.validatedSellAmount.set(this.balance().toString());
     //this.updateBuyAmount();
     //this.updateSellPriceUsd();
   }
