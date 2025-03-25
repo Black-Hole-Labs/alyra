@@ -19,9 +19,9 @@
   </div>
 
   <div class="swap-container">
-		<div class="change-button" id="change-button" 
-				(mousedown)="onMouseDown()" 
-				(animationend)="onAnimationEnd()">
+		<div class="change-button" id="change-button" (click)="swapTokens()">
+      <!-- (mousedown)="onMouseDown()" 
+				(animationend)="onAnimationEnd()"> -->
 			<div class="arrow-up"></div>
 			<div class="arrow-down"></div>
 		</div>
@@ -36,6 +36,7 @@
 					placeholder="0.0"
           [(ngModel)]="sellAmount"
           (input)="processInput($event, true)"
+          (keydown)="handleKeyDown($event)"
         />
       </div>
 
@@ -99,12 +100,12 @@
     <button 
       class="main-button" 
       *ngIf="isWalletConnected(); else connectWallet"
-      [class.inactive]="!isSwapButtonActive() || txData() === undefined"
+      [class.inactive]="!isSwapButtonActive() || txData() === undefined || loading() === true"
       [class.finding]="buttonState === 'finding'"
       [class.approve]="buttonState === 'approve'"
       [class.wallet]="buttonState === 'wallet'"
       [class.insufficient]="buttonState === 'insufficient'"
-      [disabled]="!isSwapButtonActive() || txData() === undefined || buttonState === 'wallet' || buttonState === 'insufficient'"
+      [disabled]="!isSwapButtonActive() || txData() === undefined || buttonState === 'wallet' || loading() === true || buttonState === 'insufficient'"
       (click)="isSwapButtonActive() && swap()">
       <ng-container *ngIf="buttonState === 'finding'">Finding Routes...</ng-container>
       <ng-container *ngIf="buttonState === 'approve'">Approve</ng-container>

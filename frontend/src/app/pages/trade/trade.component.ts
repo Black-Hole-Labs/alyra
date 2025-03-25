@@ -151,14 +151,32 @@ export class TradeComponent {
     }, { allowSignalWrites: true });
   }
 
+  
+handleKeyDown(event: KeyboardEvent): void {
+  const inputElement = event.target as HTMLInputElement;
+  const cursorPos = inputElement.selectionStart ?? inputElement.value.length;
+
+  const replaceKeys = [',', '.', '/', 'б', 'ю']; 
+
+  if (replaceKeys.includes(event.key)) {
+    event.preventDefault(); 
+
+    if (inputElement.value.includes('.')) return;
+
+    inputElement.value =
+      inputElement.value.slice(0, cursorPos) + '.' + inputElement.value.slice(cursorPos);
+
+    setTimeout(() => inputElement.setSelectionRange(cursorPos + 1, cursorPos + 1), 0);
+  }
+}
+
   processInput(event: Event, isSell: boolean): void {
     this.txData.set(undefined);
     const inputElement = event.target as HTMLInputElement;
     inputElement.value = inputElement.value
-      .replace(/[^0-9.,]/g, '') // Удаляем недопустимые символы
-      .replace(/(,|\.){2,}/g, '') // Удаляем лишние точки или запятые
-      .replace(/^(,|\.)/g, '') // Удаляем точку или запятую в начале
-      .replace(/,/g, '.'); // Заменяем запятую на точку
+    .replace(/[^0-9.]/g, '')
+    .replace(/\.+/g, '.') 
+    .replace(/^(\.)/g, '');
 
 
     // if (Number(this.sellAmount) > this.balance) {
@@ -220,34 +238,34 @@ export class TradeComponent {
     }
   }
 
-  // Управление анимацией
-  onMouseDown(): void {
-		console.log('Mouse down triggered');
-		const changeButton = document.getElementById('change-button');
-		if (changeButton && !changeButton.classList.contains('animate')) {
-			this.renderer.addClass(changeButton, 'animate');
-		}
-	}
+  // // Управление анимацией
+  // onMouseDown(): void {
+	// 	console.log('Mouse down triggered');
+	// 	const changeButton = document.getElementById('change-button');
+	// 	if (changeButton && !changeButton.classList.contains('animate')) {
+	// 		this.renderer.addClass(changeButton, 'animate');
+	// 	}
+	// }
 	
-	onAnimationEnd(): void {
-		console.log('Animation ended, swapping tokens...');
-		const changeButton = document.getElementById('change-button');
-		if (changeButton && changeButton.classList.contains('animate')) {
-			this.renderer.removeClass(changeButton, 'animate');
-			this.swapTokens();
-		}
-	}
+	// onAnimationEnd(): void {
+	// 	console.log('Animation ended, swapping tokens...');
+	// 	const changeButton = document.getElementById('change-button');
+	// 	if (changeButton && changeButton.classList.contains('animate')) {
+	// 		this.renderer.removeClass(changeButton, 'animate');
+	// 		this.swapTokens();
+	// 	}
+	// }
 	
 	swapTokens(): void {
-		console.log('Swapping tokens...');
-		console.log('Before swap:', this.selectedToken, this.selectedBuyToken());
     this.txData.set(undefined);
 	
 		const tempToken = this.selectedToken();
 		this.selectedToken.set(this.selectedBuyToken());
 		this.selectedBuyToken.set(tempToken);
-	
-		console.log('After swap:', this.selectedToken, this.selectedBuyToken);
+
+    const tempBalance = this.balance(); 
+    this.balance.set(this.balanceBuy());
+    this.balanceBuy.set(tempBalance);
 
     //this.getTxData();
 	}
@@ -373,18 +391,22 @@ export class TradeComponent {
   }
 
   async swap() {
-    this.showPendingNotification = true;
+    this.loading.set(true);
+
+    this.buttonState = 'wallet';
+    this.showPendingNotification = false;
     this.showSuccessNotification = false;
     this.showFailedNotification = false;
     this.cdr.detectChanges();
   
-    
     let txHash: string;
     if (this.blockchainStateService.network()?.id === 1151111081099710) {
       txHash = await this.svmSwap();
     } else {
       txHash = await this.evmSwap();
     }
+
+    await this.sleep(1000);
     
     const finalStatus = await this.transactionsService.pollStatus(txHash);
     
@@ -401,6 +423,18 @@ export class TradeComponent {
       this.showFailedNotification = false;
       this.cdr.detectChanges();
     }, 5000);
+    
+    try
+    {
+      this.balance.set(Number((parseFloat(await this.getBalanceForToken(this.selectedToken()!))).toFixed(6)));
+      this.balanceBuy.set(Number((parseFloat(await this.getBalanceForToken(this.selectedBuyToken()!))).toFixed(6)));
+    }
+    catch (error) 
+    {
+      console.log("error setting balance",error);
+    }
+
+    this.loading.set(false);
   }
 
   async svmSwap(): Promise<string> {
@@ -411,6 +445,9 @@ export class TradeComponent {
     const provider = this.blockchainStateService.getCurrentProvider().provider;
   
     const txHash = await provider.sendTx(txData);
+    
+    this.showPendingNotification = true;
+    this.buttonState = 'swap';
 
     console.log("SVM Swap транзакция отправлена:", txHash);
     return txHash;
@@ -424,6 +461,8 @@ export class TradeComponent {
     const fromToken = this.selectedToken()!.contractAddress;
     if(fromToken === ethers.ZeroAddress){
       const txHash = await provider.sendTx(this.txData());
+      this.showPendingNotification = true;
+      this.buttonState = 'swap';
       return txHash;
     }
 
@@ -449,20 +488,19 @@ export class TradeComponent {
 
     await approveTx.wait();
 
-    this.showPendingNotification = false;
-
     console.log("Approve успешно выполнен:", approveTx.hash);
 
+    const txHash = await provider.sendTx(this.txData(), true);
+    
+    this.showPendingNotification = true;
     this.buttonState = 'swap';
 
-    this.showPendingNotification = true;
-
-    const txHash = await provider.sendTx(this.txData(), true);
-
-
     console.log("txHash",txHash);
-    console.log("this.loading()",this.loading());
     return txHash;
+  }
+
+  sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   test(){
@@ -478,7 +516,7 @@ export class TradeComponent {
   }
 
   getTxData() {
-
+    this.buttonState = 'finding';
     const fromChain = this.blockchainStateService.network()!.id.toString();
     const toChain = this.blockchainStateService.network()!.id.toString();
     const fromAddress = this.blockchainStateService.walletAddress()!;
@@ -548,10 +586,12 @@ export class TradeComponent {
           if(this.blockchainStateService.network()?.id === 1151111081099710)
           {
             this.txData.set(response.transactionRequest as TransactionRequestSVM);
+            this.buttonState = 'swap';  
           }
           else
           {
-            this.txData.set(response.transactionRequest as TransactionRequestEVM);            
+            this.txData.set(response.transactionRequest as TransactionRequestEVM);
+            this.buttonState = 'swap';
             if(fromToken !== ethers.ZeroAddress){
               console.log("this.buttonState = 'approve'");
               this.buttonState = 'approve';
@@ -561,6 +601,7 @@ export class TradeComponent {
         
       },
       error: (error: HttpErrorResponse) => {
+        this.buttonState = 'swap'
         if (error.status === 404) {
           console.error('Custom error message:', error || 'Unknown error');
           console.error('Custom error message:', error.error?.message || 'Unknown error');

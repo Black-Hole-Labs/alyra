@@ -600,7 +600,9 @@ export class BridgeComponent implements OnInit, OnDestroy {
   //     }
   //   }, 2000);
   // }
-  
+  sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
   // Метод для обработки нажатия на кнопку
   async handleButtonClick(): Promise<void> {
     let txHash: string;
@@ -612,6 +614,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
     {
       txHash = await this.evmSwap();
     }
+
+    await this.sleep(1000);
 
     this.bridgeTxHash = txHash;
     this.openBridgeTxPopup();
