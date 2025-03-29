@@ -346,12 +346,21 @@ export class BridgeComponent implements OnInit, OnDestroy {
           const readableToAmount = this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals));
         
           console.log('readableToAmount:', readableToAmount);
+          
+          // if(this.blockchainStateService.network()!.id == 1151111081099710) // SVM
+          // {
+          //   gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
+          // }
+          // else // EVM
+          // {
+          //   const gasPriceHex = response.transactionRequest.gasPrice;
+          //   const gasLimitHex = response.transactionRequest.gasLimit;
+          //   const gasToken = response.estimate.gasCosts?.[0]?.token;
+          //   gasPriceUSD = this.transactionsService.parseGasPriceUSD(gasPriceHex, gasLimitHex, gasToken);
+          // }
 
-          const gasPriceHex = response.transactionRequest.gasPrice;
-          const gasLimitHex = response.transactionRequest.gasLimit;
-          const gasToken = response.estimate.gasCosts?.[0]?.token;
+          const gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
 
-          const gasPriceUSD = this.transactionsService.parseGasPriceUSD(gasPriceHex, gasLimitHex, gasToken);
           this.gasPriceUSD = Number(gasPriceUSD);
           
           console.log('gasPriceUSD:', this.gasPriceUSD);
