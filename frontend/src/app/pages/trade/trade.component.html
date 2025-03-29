@@ -52,8 +52,8 @@
         <p id="sell-price-usd">{{ sellPriceUsd() }}</p>
 
         <div class="balance" *ngIf="isWalletConnected()">
-          <p id="balance">{{ balance() }}</p>
-          <p>${{ selectedToken()?.symbol }}</p>
+          <p id="balance">{{ truncateTo6Decimals(balance()) }}</p>
+          <p>{{ selectedToken()?.symbol }}</p>
 
           <button class="max" (click)="setMaxSellAmount()">MAX</button>
         </div>
@@ -88,8 +88,8 @@
         <p id="buy-price-usd">{{ buyPriceUsd() }}</p>
 
         <div class="balance" *ngIf="isWalletConnected()">
-          <p>{{balanceBuy()}}</p>
-          <p>${{ selectedBuyToken()?.symbol }}</p>
+          <p>{{truncateTo6Decimals(balanceBuy())}}</p>
+          <p>{{ selectedBuyToken()?.symbol }}</p>
         </div>
         <!-- Показываем сообщение, если кошелек не подключен -->
         <div class="balance-not-connected" *ngIf="!isWalletConnected()">
@@ -105,7 +105,7 @@
       [class.approve]="buttonState === 'approve'"
       [class.wallet]="buttonState === 'wallet'"
       [class.insufficient]="buttonState === 'insufficient'"
-      [disabled]="!isSwapButtonActive() || txData() === undefined || buttonState === 'wallet' || loading() === true || buttonState === 'insufficient'"
+      [disabled]="!isSwapButtonActive() || txData() === undefined || loading() === true || buttonState === 'insufficient'"
       (click)="isSwapButtonActive() && swap()">
       <ng-container *ngIf="buttonState === 'finding'">Finding Routes...</ng-container>
       <ng-container *ngIf="buttonState === 'approve'">Approve</ng-container>

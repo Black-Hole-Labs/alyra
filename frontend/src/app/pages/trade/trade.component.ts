@@ -40,7 +40,7 @@ export class TradeComponent {
 //[x: string]: any;
   sellAmount: string = ''; // Значение, которое пользователь вводит в поле продажи
   //validatedSellAmount: string = ''; 
-  validatedSellAmount = signal<string>('');
+  validatedSellAmount = signal<number>(0);
   loading = signal<boolean>(false);
 
   buyAmount = signal<number | undefined>(undefined);
@@ -85,7 +85,8 @@ export class TradeComponent {
     !!this.blockchainStateService.walletAddress() &&
     this.selectedToken() !== undefined &&
     this.selectedBuyToken() !== undefined &&
-    this.validatedSellAmount().trim() !== ''
+    this.validatedSellAmount() !== 0 &&
+    this.buttonState === "swap"
   );
 
   private inputTimeout: any;
@@ -125,7 +126,7 @@ export class TradeComponent {
                 this.getBalanceForToken(this.selectedToken()!)
                     .then((balanceStr) => 
                     {
-                        this.balance.set(Number(parseFloat(balanceStr).toFixed(6)));
+                        this.balance.set(Number(parseFloat(balanceStr)));
                     })
                     .catch((error) => 
                     {
@@ -139,7 +140,7 @@ export class TradeComponent {
                 this.getBalanceForToken(this.selectedBuyToken()!)
                     .then((balanceStr) => 
                     {
-                        this.balanceBuy.set(Number(parseFloat(balanceStr).toFixed(6)));
+                        this.balanceBuy.set(Number(parseFloat(balanceStr)));
                     })
                     .catch((error) => 
                     {
@@ -178,14 +179,6 @@ handleKeyDown(event: KeyboardEvent): void {
     .replace(/\.+/g, '.') 
     .replace(/^(\.)/g, '');
 
-
-    // if (Number(this.sellAmount) > this.balance) {
-    //   this.buttonState = 'insufficient';
-    //   // Очищаем таймеры, так как они нам не нужны в этом состоянии
-    //   this.resetTimers();
-    //   return;
-    // } todo?
-
     if (isSell) {
       //this.updateBuyAmount();
       //this.updateSellPriceUsd();
@@ -193,15 +186,23 @@ handleKeyDown(event: KeyboardEvent): void {
 
       this.inputTimeout = setTimeout(() => {
         this.sellAmount = inputElement.value;
-        this.validatedSellAmount.set(inputElement.value);
+        this.validatedSellAmount.update(value => (Number(inputElement.value)));
+        if (this.validatedSellAmount() > this.balance()) {
+          this.buttonState = 'insufficient';
+        }
+        else
+        {
+          this.buttonState = 'swap';
+        }
       }, 2000);
     }
+
     console.log("some data");
   }
 
   updateBuyAmount(value: number): void {
     if (!isNaN(value)) {
-      this.buyAmount.set(Number((value).toFixed(6)));
+      this.buyAmount.set(value);
     } else {
       this.buyAmount.set(0);
     }
@@ -225,7 +226,14 @@ handleKeyDown(event: KeyboardEvent): void {
 
   setMaxSellAmount(): void {
     this.sellAmount = this.balance().toString();
-    this.validatedSellAmount.set(this.balance().toString());
+    this.validatedSellAmount.update(value => this.balance());
+    if (Number(this.validatedSellAmount()) > this.balance()) {
+      this.buttonState = 'insufficient';
+    }
+    else
+    {
+      this.buttonState = 'swap';
+    }
     //this.updateBuyAmount();
     //this.updateSellPriceUsd();
   }
@@ -281,7 +289,7 @@ handleKeyDown(event: KeyboardEvent): void {
   async onTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.selectedToken.set(token);
-    this.balance.set(Number((parseFloat(await this.getBalanceForToken(token))).toFixed(6)));
+    this.balance.set(Number((parseFloat(await this.getBalanceForToken(token)))));
     // this.selectedToken = token.symbol;
     // this.selectedTokenImage = token.imageUrl;
     // this.selectedTokenAddress = token.contractAddress;
@@ -399,11 +407,35 @@ handleKeyDown(event: KeyboardEvent): void {
     this.showFailedNotification = false;
     this.cdr.detectChanges();
   
-    let txHash: string;
-    if (this.blockchainStateService.network()?.id === 1151111081099710) {
-      txHash = await this.svmSwap();
-    } else {
-      txHash = await this.evmSwap();
+    let txHash: string = "";
+    try
+    {
+      if (this.blockchainStateService.network()?.id === 1151111081099710) 
+      {
+        txHash = await this.svmSwap();
+      } 
+      else 
+      {
+        txHash = await this.evmSwap();
+      }
+    }
+    catch (error:any)
+    {
+      this.showFailedNotification = true;
+      
+      this.loading.set(false);
+      //console.log(error);
+
+      this.cdr.detectChanges();
+      setTimeout(() => {
+        this.showSuccessNotification = false;
+        this.showFailedNotification = false;
+        this.cdr.detectChanges();
+      }, 2000);
+
+      this.buttonState = 'swap';
+
+      return;
     }
 
     await this.sleep(1000);
@@ -426,8 +458,8 @@ handleKeyDown(event: KeyboardEvent): void {
     
     try
     {
-      this.balance.set(Number((parseFloat(await this.getBalanceForToken(this.selectedToken()!))).toFixed(6)));
-      this.balanceBuy.set(Number((parseFloat(await this.getBalanceForToken(this.selectedBuyToken()!))).toFixed(6)));
+      this.balance.set(Number((parseFloat(await this.getBalanceForToken(this.selectedToken()!)))));
+      this.balanceBuy.set(Number((parseFloat(await this.getBalanceForToken(this.selectedBuyToken()!)))));
     }
     catch (error) 
     {
@@ -477,7 +509,7 @@ handleKeyDown(event: KeyboardEvent): void {
 
     //const fromAddress = this.blockchainStateService.walletAddress()!;
     const fromTokenDecimals = this.selectedToken()!.decimals;
-    const approveAmount = parseUnits(this.validatedSellAmount(), fromTokenDecimals)
+    const approveAmount = parseUnits(this.validatedSellAmount().toString(), fromTokenDecimals)
 
     // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
     // console.log("allowance",allowance);
@@ -523,7 +555,7 @@ handleKeyDown(event: KeyboardEvent): void {
     //const fromTokenDecimals = this.selectedTokendecimals;
     const fromTokenDecimals = this.selectedToken()!.decimals;
     //const fromAmount = this.validatedSellAmount;
-    const fromAmount = parseUnits(this.validatedSellAmount(), fromTokenDecimals);
+    const fromAmount = parseUnits(this.validatedSellAmount().toString(), fromTokenDecimals);
     //const fromToken = this.selectedTokenAddress;
     const fromToken = this.selectedToken()!.contractAddress;
     const toToken = this.selectedBuyToken()!.contractAddress;
@@ -641,15 +673,6 @@ handleKeyDown(event: KeyboardEvent): void {
     return this.popupService.getCurrentPopup() === 'connectWallet';
   }
 
-  resetTimers(): void {
-    if (this.findingRoutesTimer) {
-      clearTimeout(this.findingRoutesTimer);
-    }
-    if (this.walletTimer) {
-      clearTimeout(this.walletTimer);
-    }
-  }
-
   // Обновляем методы закрытия
   closeSuccessNotification(): void {
     this.showSuccessNotification = false;
@@ -663,79 +686,9 @@ handleKeyDown(event: KeyboardEvent): void {
   closePendingNotification(): void {
     this.showPendingNotification = false;
   }
+
+  truncateTo6Decimals(value: number): number {
+    return Math.trunc(value * 1e6) / 1e6;
+  }
 }
 
-
-
-
-//Egor example pendingNotification
-// startFindingRoutesProcess(): void {
-//   // Очищаем предыдущий таймер, если он существует
-//   if (this.findingRoutesTimer) {
-//     clearTimeout(this.findingRoutesTimer);
-//   }
-  
-//   // Устанавливаем состояние "Finding Routes..."
-//   this.buttonState = 'finding';
-  
-//   // Через 2 секунды меняем на "Approve"
-//   this.findingRoutesTimer = setTimeout(() => {
-//     this.buttonState = 'approve';
-//     this.cdr.detectChanges(); // Обновляем представление
-//   }, 2000);
-// }
-
-// // Обновляем метод для проверки активности кнопки
-// isSwapButtonActive(): boolean {
-//   const amount = Number(this.sellAmount);
-//   return !!(
-//     this.sellAmount && 
-//     amount > 0 && 
-//     amount <= this.balance && 
-//     this.buttonState !== 'insufficient'
-//   );
-// }
-
-// // Обновляем метод для свапа
-// swap(): void {
-//   if (this.buttonState === 'approve') {
-//     console.log('Approving token...');
-//     this.buttonState = 'wallet';
-    
-//     this.walletTimer = setTimeout(() => {
-//       this.buttonState = 'swap';
-//       this.cdr.detectChanges();
-//     }, 2000);
-//   } else if (this.buttonState === 'swap') {
-//     console.log('Swap initiated with amount:', this.sellAmount);
-    
-//     // Сначала показываем только Pending
-//     this.showPendingNotification = true;
-//     this.showSuccessNotification = false;
-//     this.showFailedNotification = false;
-//     this.cdr.detectChanges();
-
-//     // Через 3 секунды начинаем процесс закрытия
-//     setTimeout(() => {
-//       // Запускаем анимацию закрытия пендинга
-//       const pendingNotification = document.querySelector('app-pending-notification .notification') as HTMLElement;
-//       if (pendingNotification) {
-//         pendingNotification.style.transform = 'translateX(100%)';
-//         pendingNotification.style.opacity = '0';
-//       }
-
-//       // Ждем завершения анимации (300мс) перед скрытием и показом следующего уведомления
-//       setTimeout(() => {
-//         this.showPendingNotification = false;
-        
-//         // Переключаем между Success и Failed
-//         if (this.isLastNotificationSuccess) {
-//           this.showFailedNotification = true;
-//         } else {
-//           this.showSuccessNotification = true;
-//         }
-//         this.isLastNotificationSuccess = !this.isLastNotificationSuccess;
-//         this.cdr.detectChanges();
-//       }, 300);
-//     }, 3000);
-//   }

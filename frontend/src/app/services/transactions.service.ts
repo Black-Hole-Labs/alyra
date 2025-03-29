@@ -114,7 +114,7 @@ export class TransactionsService {
   }
   
   parseToAmount(toAmount: string, decimals: number): string {
-    return (Number(toAmount) / Math.pow(10, decimals)).toFixed(6);
+    return (Number(toAmount) / Math.pow(10, decimals)).toString();
   }
 
   parseGasPriceUSD(gasPriceHex: string, gasLimitHex: string, token: { decimals: number; priceUSD: string }): string {
