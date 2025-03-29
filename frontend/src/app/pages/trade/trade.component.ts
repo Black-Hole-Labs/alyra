@@ -44,8 +44,8 @@ export class TradeComponent {
   loading = signal<boolean>(false);
 
   buyAmount = signal<number | undefined>(undefined);
-  price: number = 0.5637; // Цена обмена
-  priceUsd: number = 921244; // Текущая стоимость в USD за единицу
+  price: number = 0; // Цена обмена
+  priceUsd: number = 0; // Текущая стоимость в USD за единицу
   sellPriceUsd = signal<string>('');
   buyPriceUsd = signal<string>('');
   balance = signal<number>(0.0);
@@ -584,6 +584,22 @@ handleKeyDown(event: KeyboardEvent): void {
           this.gasPriceUSD = Number(gasPriceUSD);
           
           console.log('gasPriceUSD:', this.gasPriceUSD);
+
+          const fromDecimal = parseFloat(
+            this.transactionsService.parseToAmount(response.estimate.fromAmount, Number(fromTokenDecimals))
+          );
+          const toDecimal = parseFloat(
+            this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals))
+          );
+
+          if (fromDecimal > 0)
+          {
+            const ratio = toDecimal / fromDecimal;
+            this.price = Number(ratio.toFixed(3));
+
+            const ratioUsd = Number(response.estimate.toAmountUSD) / fromDecimal;
+            this.priceUsd = Number(ratioUsd.toFixed(3));
+          }
         }
         else 
         {
