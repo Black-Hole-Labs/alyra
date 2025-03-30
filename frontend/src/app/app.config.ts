@@ -7,6 +7,7 @@ import { BackpackProvider, CoinbaseWalletProvider, LedgerProvider, MagicEdenProv
 import { provideHttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { importProvidersFrom } from '@angular/core';
+import { Network } from './models/wallet-provider.interface';
 
 function initializeApp(
   injector: Injector
@@ -56,6 +57,12 @@ function initializeApp(
           console.warn(`Provider ${provider.id} is not yet implemented.`);
       }
     });
+
+    const responseNetworks = await fetch('/data/networks.json');
+    const allNetworks: Network[] = await responseNetworks.json();
+    stateService.allNetworks.set(allNetworks);
+    stateService.networks.set(allNetworks);
+    stateService.updateNetwork(1);
   };
 }
 

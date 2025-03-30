@@ -289,51 +289,33 @@ handleKeyDown(event: KeyboardEvent): void {
     this.closeTokenPopup();
   }
 
-  async getBalanceForToken(token: Token): Promise<any> {
+  async getBalanceForToken(token: Token): Promise<string> {
     const walletAddress = this.blockchainStateService.getCurrentWalletAddress();
-    if (!walletAddress)
-    {
+    if (!walletAddress) {
       console.error(`Failed to get wallet address`);
-      return;
+      return "0";
     }
-
-    if(this.blockchainStateService.getCurrentNetwork()?.id === 1151111081099710) { // SVM
-      if (token.symbol === "SOL") // change to adres
-      {
+  
+    const currentNetwork = this.blockchainStateService.getCurrentNetwork();
+    if (!currentNetwork) {
+      console.error('Current network not found');
+      return "0";
+    }
+  
+    if (currentNetwork.id === 1151111081099710) { // SVM
+      if (token.symbol === "SOL") {
         return this.walletBalanceService.getSolanaBalance(walletAddress);
-      }
-      else
-      {
+      } else {
         return this.walletBalanceService.getSolanaBalance(walletAddress, token.contractAddress);
       }
-    }
-    else { // EVM
-      try {
-        const response = await fetch('/data/networks.json');
-        if (!response.ok) {
-          console.error('Failed to load networks');
-        }
-  
-        const data = await response.json();
-  
-        const network = data.find((net: { id: number }) => net.id === this.blockchainStateService.getCurrentNetwork()?.id);
-  
-        if (!network) {
-          console.error('Network not found');
-        }
-  
-        if (token.symbol === "ETH") {
-          const balance = await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals));
-          return balance;
-        } else {
-          return await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals), token.contractAddress);
-        }
-      } catch (error) {
-        console.error(`Error loading networks`);
-        return "0";
+    } else { // EVM
+      if (token.symbol === "ETH") {
+        const balance = await this.walletBalanceService.getEvmBalance(walletAddress, currentNetwork.rpcUrls[0], Number(token.decimals));
+        return balance;
+      } else {
+        return await this.walletBalanceService.getEvmBalance(walletAddress, currentNetwork.rpcUrls[0], Number(token.decimals), token.contractAddress);
       }
     }
-    
   }
 
   // Методы управления попапом для buy
