@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { ethers, Provider } from 'ethers';
+import { ethers } from 'ethers';
 
 @Injectable()
 export class LifiService {
