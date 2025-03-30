@@ -59,8 +59,6 @@ function initializeApp(
   };
 }
 
-
-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),

@@ -2,7 +2,7 @@ import { Component, Renderer2, ChangeDetectorRef, computed, signal, effect } fro
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
-import { SettingsComponent } from '../../components/popup/settings/settings.component'; // Импортируем SettingsComponent
+import { SettingsComponent } from '../../components/popup/settings/settings.component';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
 import { WalletBalanceService } from '../../services/wallet-balance.service';
 import { TransactionsService } from '../../services/transactions.service';

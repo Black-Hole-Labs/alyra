@@ -6,13 +6,12 @@ import { NetworkChangeToPopupComponent } from '../../components/popup/network-ch
 import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
 import { Subscription } from 'rxjs';
 import { BridgeTxComponent } from '../../components/popup/bridge-tx/bridge-tx.component';
-import { ConnectWalletComponent } from '../../components/popup/connect-wallet/connect-wallet.component';
 import { Network, TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
 import { Token } from '../trade/trade.component';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
 import { WalletBalanceService } from '../../services/wallet-balance.service';
 import { PopupService } from '../../services/popup.service';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import { trigger, style, animate, transition } from '@angular/animations';
 import { SettingsBridgeComponent } from '../../components/popup/settings-bridge/settings-bridge.component';
 import { ethers, parseUnits } from 'ethers';
 import { TransactionsService } from '../../services/transactions.service';

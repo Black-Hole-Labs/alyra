@@ -1,6 +1,6 @@
 import { ethers, JsonRpcSigner } from 'ethers';
 import { TransactionRequestEVM, WalletProvider } from './wallet-provider.interface';
-import { inject, Injector } from '@angular/core';
+import { Injector } from '@angular/core';
 import { BlockchainStateService } from '../services/blockchain-state.service';
 
 export class EvmWalletProvider implements WalletProvider {

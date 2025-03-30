@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom, interval, lastValueFrom, Observable, switchMap, takeWhile } from 'rxjs';
+import { interval, lastValueFrom, Observable, switchMap, takeWhile } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
