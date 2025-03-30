@@ -6,7 +6,7 @@ import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
   providedIn: 'root'
 })
 export class WalletBalanceService {
-  private solanaRpcUrl = 'https://solana-rpc.publicnode.com';
+  private solanaRpcUrl = 'https://frosty-nameless-sunset.solana-mainnet.quiknode.pro/74791b866a6fa352e6b6a8026df34dc0b4f4475f/';
   private solanaConnection: Connection;
 
   constructor() {
