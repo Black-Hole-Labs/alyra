@@ -83,10 +83,17 @@ export class BackpackProvider extends SvmWalletProvider {
 
 /***************MULTICHAIN***************/
 export class PhantomProvider extends MultiChainWalletProvider {
-  constructor(walletManager: WalletProviderManager,injector: Injector) {
+  constructor(walletManager: WalletProviderManager, injector: Injector) {
     super(injector);
     this.evmProviderInstance = walletManager.getPhantomProvider();
     this.svmProviderInstance = (window as any).phantom?.solana;
+  }
+
+  override async connect(): Promise<{ address: string; network: string }> {
+    this.blockchainStateService.updateNetwork(1151111081099710); // Solana is default for Phantom
+    const connection = await super.connect();
+
+    return connection;
   }
 }
 

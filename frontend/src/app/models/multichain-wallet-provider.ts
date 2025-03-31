@@ -42,10 +42,12 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
       const { address, network } = await this.evmProvider.connect(this.evmProviderInstance, true);
       this.address = address;
       this.network = network;
+      this.currentNetwork = 'EVM';
     } else if (this.blockchainStateService.network()!.chainType === 'SVM' && this.svmProvider) {
       const { address, network } = await this.svmProvider.connect(this.svmProviderInstance, true);
       this.address = address;
       this.network = network;
+      this.currentNetwork = 'SVM';
     } else {
       throw new Error('No provider available');
     }
