@@ -6,7 +6,10 @@ import { PopupService } from '../../../services/popup.service';
   selector: 'app-settings-bridge',
   standalone: true,
   templateUrl: './settings-bridge.component.html',
-  styleUrls: ['./settings-bridge.component.scss'],
+  styleUrls: [
+		'./settings-bridge.component.scss', 
+		'./settings-bridge.component.adaptives.scss'
+	],
   imports: [CommonModule],
 })
 export class SettingsBridgeComponent implements OnInit {

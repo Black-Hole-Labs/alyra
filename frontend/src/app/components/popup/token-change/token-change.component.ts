@@ -11,7 +11,10 @@ import { PopupService } from '../../../services/popup.service';
   selector: 'app-token-change',
   standalone: true,
   templateUrl: './token-change.component.html',
-  styleUrls: ['./token-change.component.scss'],
+  styleUrls: [
+		'./token-change.component.scss',
+		'./token-change.component.adaptives.scss'
+	],
   imports: [CommonModule, FormsModule, ScrollingModule],
 })
 export class TokenChangePopupComponent {

@@ -19,7 +19,10 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
     CommonModule,
   ],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+  styleUrls: [
+	'./header.component.scss',
+	'./header.component.adaptives.scss'
+	],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   //@Input() isPopupVisible: boolean = false;

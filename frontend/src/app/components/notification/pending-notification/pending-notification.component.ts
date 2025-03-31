@@ -10,7 +10,10 @@ import { Token } from '../../../pages/trade/trade.component';
     CommonModule
   ],
   templateUrl: './pending-notification.component.html',
-  styleUrls: ['./pending-notification.component.scss'],
+  styleUrls: [
+		'./pending-notification.component.scss',
+		'./pending-notification.component.adaptives.scss'
+	],
   animations: [
     trigger('slideInOut', [
       state('void', style({

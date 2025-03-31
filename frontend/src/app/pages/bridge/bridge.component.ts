@@ -22,7 +22,10 @@ import { HttpErrorResponse } from '@angular/common/http';
   selector: 'app-bridge',
   standalone: true,
   templateUrl: './bridge.component.html',
-  styleUrls: ['./bridge.component.scss'],
+  styleUrls: [
+		'./bridge.component.scss',
+		'./bridge.component.adaptives.scss'
+	],
   imports: [
     CommonModule,
     FormsModule,

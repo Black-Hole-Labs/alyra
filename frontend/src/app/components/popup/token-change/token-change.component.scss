@@ -8,6 +8,7 @@
   box-sizing: border-box;
   padding: 30px;
   z-index: 10;
+	overflow: hidden;
 }
 
 .header {
@@ -99,16 +100,12 @@ input::placeholder {
 }
 
 .list {
-  flex-direction: column;
-  align-items: center;
   position: absolute;
-  top: 210px;
+  top: 230px;
   left: 16px;
-  margin-top: 20px;
   width: 567px;
-  height: 555px;
+	height: 100%;
   border-radius: 12px;
-  overflow: hidden;
 }
 
 .inner-list,
@@ -138,7 +135,7 @@ input::placeholder {
   align-items: center;
   justify-content: space-between;
   padding: 10px 22px;
-  transition: 0.2s;
+  transition: 0.2s ease-in-out;
   box-sizing: border-box;
   border-radius: 18px;
   cursor: pointer;
@@ -217,6 +214,7 @@ a:hover {
 .contract {
   display: flex;
   align-items: center;
+	gap: 10px;
 }
 
 .contract .image-copy {
@@ -226,7 +224,6 @@ a:hover {
   opacity: 0.3;
   background-size: cover;
   background-repeat: no-repeat;
-  margin-right: 10px;
   transition: 0.2s ease-in-out;
 }
 
@@ -234,9 +231,9 @@ a:hover {
   opacity: 1;
 }
 
-.token-change .contract > p {
+.token-change .contract p {
   font-family: "JetBrains Mono", monospace !important;
-  font-weight: 700;
+  font-weight: 400;
   font-size: 15px;
   color: white;
 }
@@ -247,5 +244,5 @@ a:hover {
   background: url(/img/trade/link.png);
   background-size: cover;
   background-repeat: no-repeat;
-  margin-left: 8px;
+	margin-left: 10px;
 }

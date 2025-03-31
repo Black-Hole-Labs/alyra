@@ -10,7 +10,10 @@ import { TransactionsService } from '../../../services/transactions.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './bridge-tx.component.html',
-  styleUrl: './bridge-tx.component.scss'
+  styleUrls: [
+		'./bridge-tx.component.scss', 
+		'./bridge-tx.component.adaptives.scss'
+	]
 })
 export class BridgeTxComponent implements OnInit {
   @Input() selectedNetwork: Network | undefined = undefined; //??

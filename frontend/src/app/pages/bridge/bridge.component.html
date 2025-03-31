@@ -206,6 +206,7 @@
     (networkSelected)="onNetworkToSelected($event)">
 </app-network-change-to>
 
+
 <app-bridge-tx
 	*ngIf="popupService.getCurrentPopup() === 'bridgeTx'"
 	[selectedNetwork]="selectedNetwork()"
@@ -217,6 +218,9 @@
 	[customAddress]="showCustomAddress ? customAddress() : ''"
 	(close)="closeBridgeTxPopup()">
 </app-bridge-tx>
+
+
+
 
 
 <!-- 
