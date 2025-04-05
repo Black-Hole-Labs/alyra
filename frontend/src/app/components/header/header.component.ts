@@ -1,13 +1,8 @@
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { BlackholeNetworkComponent } from '../popup/blackhole-network/blackhole-network.component';
-import { BlackholeMenuComponent } from '../popup/blackhole-menu/blackhole-menu.component';
-import { ConnectWalletComponent } from '../popup/connect-wallet/connect-wallet.component';
-import { WalletComponent } from '../popup/wallet/wallet.component';
 import { PopupService } from '../../services/popup.service';
 import { Subscription } from 'rxjs';
-import { Component, ElementRef, Renderer2, EventEmitter, Input, Output, OnInit, OnDestroy, computed } from '@angular/core';
-import { BlockchainConnectComponent } from "../blockchain-connect/blockchain-connect.component";
+import { Component, ElementRef, Renderer2, EventEmitter, Output, OnInit, OnDestroy, computed } from '@angular/core';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
 
 
@@ -19,7 +14,10 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
     CommonModule,
   ],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+  styleUrls: [
+	'./header.component.scss',
+	'./header.component.adaptives.scss'
+	],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   //@Input() isPopupVisible: boolean = false;

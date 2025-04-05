@@ -561,6 +561,7 @@
     "idHex": "0x41103230303302e",
     "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/solana.svg",
     "rpcUrls": [
+      "https://frosty-nameless-sunset.solana-mainnet.quiknode.pro/74791b866a6fa352e6b6a8026df34dc0b4f4475f/",
       "https://solana-rpc.publicnode.com",
       "https://api.mainnet-beta.solana.com"
     ],

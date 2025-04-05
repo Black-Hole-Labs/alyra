@@ -7,10 +7,9 @@
 		<input
 			type="text"
 			placeholder="Search by name or contract address"
-			[(ngModel)]="searchText"
-			(keydown.enter)="performSearch()"
+			(input)="updateSearchText($event)"
 		/>
-		<button class="search-button" (click)="performSearch()"></button>
+		<button class="search-button"></button>
 	</div>
 	<div class="desc">
 		<p>Token list</p>
@@ -22,7 +21,7 @@
 			<cdk-virtual-scroll-viewport itemSize="50" class="scroll-container">
 				<div 
 				  class="token" 
-				  *cdkVirtualFor="let token of tokenList; trackBy: trackByToken"
+				  *cdkVirtualFor="let token of tokenList(); trackBy: trackByToken"
 				  (click)="selectToken(token)"
 				>
 				  <div class="left">
@@ -32,7 +31,7 @@
 					</div>
 					<div class="name">
 					  <h6>{{ token.name }}</h6>
-					  <p>${{ token.symbol }}</p>
+					  <p>{{ token.symbol }}</p>
 					</div>
 				  </div>
 				  <div class="contract">

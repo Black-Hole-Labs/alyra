@@ -1,14 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Router, NavigationEnd } from '@angular/router';  // Импортируем Router и NavigationEnd
+import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
 import { Network } from '../../models/wallet-provider.interface';
 import { PopupService } from '../../services/popup.service';
-import { HeaderComponent } from '../header/header.component';
-import { BlockchainConnectComponent } from '../blockchain-connect/blockchain-connect.component';
-import { FooterComponent } from '../footer/footer.component';
 import { BlackholeMenuComponent } from '../popup/blackhole-menu/blackhole-menu.component';
 import { BlackholeNetworkComponent } from '../popup/blackhole-network/blackhole-network.component';
 import { WalletComponent } from "../popup/wallet/wallet.component";
@@ -17,8 +14,11 @@ import { ConnectWalletComponent } from "../popup/connect-wallet/connect-wallet.c
   selector: 'app-app-content',
   standalone: true,
   templateUrl: './app-content.component.html',
-  styleUrls: ['./app-content.component.scss'],
-  imports: [RouterOutlet, RouterModule, HeaderComponent, FooterComponent, BlackholeMenuComponent, CommonModule, BlackholeNetworkComponent, BlockchainConnectComponent, WalletComponent, ConnectWalletComponent]
+  styleUrls: [
+		'./app-content.component.scss',
+		'./app-content.component.adaptives.scss'
+	],
+  imports: [RouterOutlet, RouterModule, BlackholeMenuComponent, CommonModule, BlackholeNetworkComponent, WalletComponent, ConnectWalletComponent]
 })
 export class AppContentComponent {
   isPopupVisible = false;

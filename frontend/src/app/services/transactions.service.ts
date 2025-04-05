@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom, interval, lastValueFrom, Observable, switchMap, takeWhile } from 'rxjs';
+import { interval, lastValueFrom, Observable, switchMap, takeWhile } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -115,7 +115,7 @@ export class TransactionsService {
   }
   
   parseToAmount(toAmount: string, decimals: number): string {
-    return (Number(toAmount) / Math.pow(10, decimals)).toFixed(6);
+    return (Number(toAmount) / Math.pow(10, decimals)).toString();
   }
 
   parseGasPriceUSD(gasPriceHex: string, gasLimitHex: string, token: { decimals: number; priceUSD: string }): string {

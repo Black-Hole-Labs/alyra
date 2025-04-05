@@ -2,7 +2,7 @@ import { BlockchainStateService } from '../services/blockchain-state.service';
 import { EvmWalletProvider } from './evm-wallet-provider';
 import { SvmWalletProvider } from './svm-wallet-provider';
 import { TransactionRequestEVM, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
-import { inject, Injector } from '@angular/core';
+import { Injector } from '@angular/core';
 export abstract class MultiChainWalletProvider implements WalletProvider {
   protected evmProviderInstance: any;
   protected svmProviderInstance: any;
@@ -42,10 +42,12 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
       const { address, network } = await this.evmProvider.connect(this.evmProviderInstance, true);
       this.address = address;
       this.network = network;
+      this.currentNetwork = 'EVM';
     } else if (this.blockchainStateService.network()!.chainType === 'SVM' && this.svmProvider) {
       const { address, network } = await this.svmProvider.connect(this.svmProviderInstance, true);
       this.address = address;
       this.network = network;
+      this.currentNetwork = 'SVM';
     } else {
       throw new Error('No provider available');
     }

@@ -8,6 +8,9 @@ import { RouterModule } from '@angular/router';
     RouterModule
   ],
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss']
+  styleUrls: [
+		'./footer.component.scss',
+		'./footer.component.adaptives.scss'
+	]
 })
 export class FooterComponent {}

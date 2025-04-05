@@ -24,10 +24,6 @@ export class BlockchainStateService {
 
   constructor() {
     // Эффект для обновления статуса подключения
-    //this.loadTokensForNetwork("1");
-    this.loadNetworks("multichain", true);
-
-
     effect(() => {
       this.connected.set(this.walletAddress() !== null);
     }, { allowSignalWrites: true });
@@ -35,9 +31,12 @@ export class BlockchainStateService {
     // Эффект для загрузки токенов при изменении сети
     effect(() => {
       if (this.network()) {
-        console.log(this.network());
         this.loadTokensForNetwork(this.network()!.id);
       }
+    });
+
+    effect(() => {
+      console.log("netowrk", this.network());
     });
   }
 
@@ -144,31 +143,18 @@ export class BlockchainStateService {
 }
 
 
-  public async loadNetworks(type: string, force?: boolean): Promise<void> {
-      try {
-        const response = await fetch('/data/networks.json');
-        const allNetworks: Network[] = await response.json();
-        console.log(type);
-        console.log(allNetworks);
-        this.allNetworks.set(allNetworks);
-        if (type === 'multichain') { // Both EVM and SVM
-          this.networks.set(allNetworks);
-        } else {
-          this.networks.set(allNetworks.filter(
-            (network: Network) => network.chainType === type
-          ));
-        }
-
-        if(force){          
-          this.updateNetwork("1");
-          console.log("this.network());",this.network());
-        }
-  
-        console.log("this.networks",this.networks());
-      } catch (error) {
-        console.error('Failed to load networks:', error);
-      }
+public loadNetworks(type: string, force?: boolean): void {
+  const allNetworks = this.allNetworks();
+  if (type === 'multichain') {
+    this.networks.set(allNetworks);
+  } else {
+    this.networks.set(allNetworks.filter((network: Network) => network.chainType === type));
   }
+
+  if (force) {
+    this.updateNetwork(1);
+  }
+}
 
   updateWalletAddress(address: string | null): void {
     this.walletAddress.set(address);
@@ -178,12 +164,12 @@ export class BlockchainStateService {
     return this.walletAddress();
   }
 
-  updateNetwork(chainId: string): void {
-    const foundNetwork = this.networks().find(n => Number(n.id) === Number(chainId));
+  updateNetwork(chainId: number): void {
+    const foundNetwork = this.networks().find(n => n.id === chainId);
     this.network.set(foundNetwork ?? null);
   }
 
-  getCurrentNetworkId(): Network | null {
+  getCurrentNetwork(): Network | null {
     return this.network();
   }
 

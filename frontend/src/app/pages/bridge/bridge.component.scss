@@ -1,535 +1,391 @@
 .bridge-window {
-	width: 681px;
-	height: 680px;
-	background-color: rgba(var(--dark-bg), 0.3);
-	backdrop-filter: blur(25px);
-	-webkit-backdrop-filter: blur(5px);
-	border-radius: 28px;
-	box-sizing: border-box;
-	padding: 40px;
-	transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-	will-change: height;
-	display: flex;
-	flex-direction: column;
-	padding-bottom: 40px;
-	&.has-receive {
-		height: 780px;
-	}
-
-	&.has-custom-address.has-receive {
-		height: 860px;
-	}
-
-	.header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		.title {
-			display: flex;
-			align-items: center;
-			justify-content: flex-start;
-			gap: 10px;
-			.icon-bridge {
-				background-image: url(/img/bridge/icon-bridge.png);
-				background-size: cover;
-				background-repeat: no-repeat;
-				height: 24px;
-				width: 24px;
-			}
-			h3 {
-				font-family: "JetBrains Mono", monospace;
-				font-weight: 500;
-				font-size: 32px;
-				color: white;
-			}
-		}
-		.icons {
-			display: flex;
-			align-items: center;
-			gap: 12px;
-			position: relative;
-			
-			/* Добавляем минимальную ширину, чтобы сохранить пространство даже когда кнопка скрыта */
-			min-width: 88px; /* 36px (ширина кнопки) + 40px (ширина settings) + 12px (gap) */
-			justify-content: flex-end; /* Выравниваем элементы по правому краю */
-			
-			.custom-wallet-button {
-				width: 36px;
-				height: 36px;
-				background-image: url(/img/header/wallet.png);
-				background-size: cover;
-				background-repeat: no-repeat;
-				cursor: pointer;
-				opacity: 0.3;
-				transition: opacity 0.2s ease-in-out;
-				&:hover {
-					opacity: 1;
-				}
-	
-				&.active {
-					opacity: 1;
-				}
-				
-				&.hidden {
-					opacity: 0;
-					pointer-events: none; /* Отключаем события мыши для скрытой кнопки */
-				}
-			}
-			.settings {
-				background-image: url(/img/trade/settings.png);
-				background-size: cover;
-				background-repeat: no-repeat;
-				height: 40px;
-				width: 40px;
-				cursor: pointer;
-				opacity: 0.3;
-				transition: opacity 0.2s ease-in-out;
-			
-				&:hover {
-					opacity: 1;
-				}
-			
-				&.active {
-					opacity: 1;
-				}
-			}
-		}
-		
-	}
-	
-	.main {
-		margin-top: 46px;
-		transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-		will-change: transform;
-		display: flex;
-		flex-direction: column;
-		
-		> * {
-			transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-		}
-		.send {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			h4 {
-				font-family: "JetBrains Mono", monospace;
-				font-weight: 500;
-				font-size: 24px;
-				color: white;
-			}
-			.choose {
-				display: flex;
-				align-items: center;
-				gap: 10px;
-				.token {
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					gap: 6px;
-					height: 60px;
-					width: 110px;
-					border-radius: 15px;
-					cursor: pointer;
-					transition: 0.2s ease-in-out;
-					&:hover{
-						background-color: var(--btn-dark);
-					}
-					.token-icon {
-						background-image: url(/img/bridge/icon-bridge.png);
-						background-size: cover;
-						background-repeat: no-repeat;
-						height: 36px;
-						width: 36px;
-					}
-					p {
-						font-family: "JetBrains Mono", monospace;
-						font-weight: 500;
-						font-size: 20px;
-						color: white;
-					}
-					button {
-						background: url(/img/header/open-img.png);
-						width: 6px;
-						height: 3px;
-						background-size: cover;
-						background-repeat: no-repeat;
-					}
-				}
-			}
-			.bridge-amount {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				width: 350px;
-				height: 60px;
-				background-color: var(--dark-select);
-				// border: 1px solid var(--elem-nonactive);
-				border-radius: 15px;
-				padding: 17px 30px;
-				box-sizing: border-box;
-				input {
-					width: 250px;
-					height: 26px;
-					font-family: "JetBrains Mono", monospace;
-					font-weight: 400;
-					font-size: 20px;
-					color: white;
-					background-color: var(--dark-select);
-					outline: none;
-					border: none;
-				}
-				input::placeholder {
-					color: var(--elem-nonactive);
-					font-family: "JetBrains Mono", monospace;
-					font-weight: 400;
-					font-size: 20px;
-				}
-				h6 {
-					color: white;
-					font-family: "JetBrains Mono", monospace;
-					font-weight: 500;
-					font-size: 16px;
-					cursor: pointer;
-					transition: 0.2s;
-				}
-				h6:hover {
-					color: var(--elem-nonactive);
-				}
-			}
-		}
-	}
-	.from {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		margin-top: 20px;
-		h4 {
-			font-family: "JetBrains Mono", monospace;
-			font-weight: 500;
-			font-size: 24px;
-			color: white;
-		}
-		.choose-network {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			width: 469px;
-			height: 61px;
-			background-color: var(--dark-select);
-			// border: 1px solid var(--elem-nonactive);
-			border-radius: 15px;
-			padding: 13px 28px;
-			box-sizing: border-box;
-			cursor: pointer;
-			.network-from {
-				display: flex;
-				align-items: center;
-				gap: 20px;
-				.network-icon {
-					background-size: cover;
-					background-repeat: no-repeat;
-					height: 34px;
-					width: 34px;
-					border-radius: 100%;
-				}
-				p {
-					font-family: "JetBrains Mono", monospace;
-					font-weight: 400;
-					font-size: 20px;
-					color: white;
-				}
-			}
-		}
-		button {
-			background: url(/img/header/open-img.png);
-			width: 15px;
-			height: 9px;
-			background-size: cover;
-			background-repeat: no-repeat;
-		}
-	}
-}
-.changer {
-	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin-top: 50px;
-	margin-bottom: 50px;
-	hr {
-		width: 255px;
-		border: 1px solid var(--elem-nonactive);
-	}
-	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.receive-token {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin-bottom: 20px;
-	h4 {
-		font-family: "JetBrains Mono", monospace;
-		font-weight: 500;
-		font-size: 24px;
-		color: white;
-	}
-	.choose {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		.token {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			gap: 6px;
-			height: 60px;
-			width: 110px;
-			border-radius: 15px;
-			cursor: pointer;
-			transition: 0.2s ease-in-out;
-			&:hover{
-				background-color: var(--btn-dark);
-			}
-			.token-icon {
-				background-image: url(/img/bridge/icon-bridge.png);
-				background-size: cover;
-				background-repeat: no-repeat;
-				height: 36px;
-				width: 36px;
-			}
-			p {
-				font-family: "JetBrains Mono", monospace;
-				font-weight: 500;
-				font-size: 20px;
-				color: white;
-			}
-			button {
-				background: url(/img/header/open-img.png);
-				width: 6px;
-				height: 3px;
-				background-size: cover;
-				background-repeat: no-repeat;
-			}
-		}
-	}
-	.bridge-amount {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		width: 350px;
-		height: 60px;
-		background-color: var(--dark-select);
-		// border: 1px solid var(--elem-nonactive);
-		border-radius: 15px;
-		padding: 17px 30px;
-		box-sizing: border-box;
-		input {
-			width: 250px;
-			height: 26px;
-			font-family: "JetBrains Mono", monospace;
-			font-weight: 400;
-			font-size: 20px;
-			color: white;
-			background-color: var(--dark-select);
-			outline: none;
-			border: none;
-		}
-		input::placeholder {
-			color: var(--elem-nonactive);
-			font-family: "JetBrains Mono", monospace;
-			font-weight: 400;
-			font-size: 20px;
-		}
-		h6 {
-			color: white;
-			font-family: "JetBrains Mono", monospace;
-			font-weight: 500;
-			font-size: 16px;
-			cursor: pointer;
-			transition: 0.2s;
-		}
-		h6:hover {
-			color: var(--elem-nonactive);
-		}
-	}
-}
-.to {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	h4 {
-		font-family: "JetBrains Mono", monospace;
-		font-weight: 500;
-		font-size: 24px;
-		color: white;
-	}
-	.choose-network {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		width: 469px;
-		height: 61px;
-		background-color: var(--dark-select);
-		// border: 1px solid var(--elem-nonactive);
-		border-radius: 15px;
-		padding: 13px 28px;
-		box-sizing: border-box;
-		cursor: pointer;
-		.network-to {
-			display: flex;
-			align-items: center;
-			gap: 10px;
-			.network-icon {
-				background-image: url(/img/bridge/icon-bridge.png);
-				background-size: cover;
-				background-repeat: no-repeat;
-				height: 34px;
-				width: 34px;
-				border-radius: 100%;
-			}
-			p {
-				font-family: "JetBrains Mono", monospace;
-				font-weight: 400;
-				font-size: 20px;
-				color: white;
-			}
-		}
-	}
-	button {
-		background: url(/img/header/open-img.png);
-		width: 15px;
-		height: 9px;
-		background-size: cover;
-		background-repeat: no-repeat;
-	}
-}
-.custom-address {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	width: 601px;
-	height: 60px;
-	background-color: var(--dark-select);
-	border-radius: 15px;
-	padding: 13px 28px;
-	box-sizing: border-box;
-	margin-top: 20px;
-	margin-bottom: 0;
-	overflow: hidden;
-	transform-origin: top;
-	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-	
-	input {
-		width: 521px;
-		height: 26px;
-		font-family: "JetBrains Mono", monospace;
-		font-weight: 400;
-		font-size: 20px;
-		color: white;
-		background-color: var(--dark-select);
-		outline: none;
-		border: none;
-		
-		&::placeholder {
-			color: var(--elem-nonactive);
-		}
-	}
-	
-	.address-status {
-		width: 24px;
-		height: 24px;
-		background-size: cover;
-		background-repeat: no-repeat;
-
-		&.status-good {
-			background-image: url(/img/bridge/status-good.png);
-		}
-
-		&.status-bad {
-			background-image: url(/img/bridge/status-bad.png);
-		}
-	}
-
-	&.hidden {
-		height: 0;
-		opacity: 0;
-		transform: translateY(-20px);
-		margin: 0;
-		padding-top: 0;
-		padding-bottom: 0;
-	}
+  width: 600px;
+  height: 596px;
+  background-color: rgba(var(--dark-bg), 0.3);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 28px;
+  box-sizing: border-box;
+  padding: 30px;
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: height;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 30px;
 }
 
-/* Добавляем плавный переход для всех элементов, которые будут сдвигаться */
+.bridge-window.has-receive {
+  height: 701px;
+}
+
+.bridge-window.has-custom-address {
+  height: 671px;
+}
+
+.bridge-window.has-custom-address.has-receive {
+  height: 776px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 15px;
+}
+
+.icon-bridge {
+  background-image: url(/img/bridge/icon-bridge.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 21px;
+  width: 21px;
+}
+
+.title h3 {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 28px;
+  color: white;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+  min-width: 88px;
+  justify-content: flex-end;
+}
+
+.custom-wallet-button {
+  width: 30px;
+  height: 30px;
+  background-image: url(/img/header/wallet.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  opacity: 0.3;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.custom-wallet-button:hover,
+.custom-wallet-button.active {
+  opacity: 1;
+}
+
+.custom-wallet-button.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.settings {
+  background-image: url(/img/trade/settings.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 35px;
+  width: 35px;
+  cursor: pointer;
+  opacity: 0.3;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.settings:hover,
+.settings.active {
+  opacity: 1;
+}
+
 .main {
-  .receive, .to, .from, .send, .changer, .custom-address {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+  margin-top: 30px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  display: flex;
+  flex-direction: column;
 }
+
+.main > * {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.send {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.send h4,
+.from h4,
+.to h4,
+.receive h4,
+.receive-token h4 {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 21px;
+  color: white;
+}
+
+.choose {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.token {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+	width: 100px;
+  height: 55px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.token:hover {
+  background-color: var(--btn-dark);
+}
+
+.token p {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 18px;
+  color: white;
+}
+
+.bridge-amount {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 309px;
+  height: 55px;
+  background-color: var(--dark-select);
+  border-radius: 14px;
+  padding: 15px 20px;
+  box-sizing: border-box;
+}
+
+.bridge-amount input {
+  width: 235px;
+  height: 24px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 18px;
+  color: white;
+  background-color: var(--dark-select);
+  outline: none;
+  border: none;
+}
+
+.bridge-amount input::placeholder {
+  color: var(--elem-nonactive);
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.bridge-amount h6 {
+  color: white;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.bridge-amount h6:hover {
+  color: var(--elem-nonactive);
+}
+
+.from {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.choose-network {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 414px;
+  height: 55px;
+  background-color: var(--dark-select);
+  border-radius: 14px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  cursor: pointer;
+	transition: 0.2s ease-in-out;
+}
+
+.choose-network:hover {
+  background-color: var(--btn-dark);
+}
+
+.network-from,
+.network-to,
+.receive-network {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.token-icon,
+.network-icon {
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 30px;
+  width: 30px;
+  border-radius: 100%;
+}
+
+.network-from p,
+.network-to p,
+.receive-network p {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 18px;
+  color: white;
+}
+
+.choose-network button {
+  background: url(/img/header/open-img.png);
+  width: 13px;
+  height: 7px;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.changer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.changer hr {
+  width: 210px;
+  border: 1px solid var(--elem-nonactive);
+}
+
+.receive-token {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.to {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.custom-address {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 540px;
+  height: 55px;
+  background-color: var(--dark-select);
+  border-radius: 14px;
+  padding: 15px 20px;
+  box-sizing: border-box;
+  margin-top: 20px;
+  margin-bottom: 0;
+  overflow: hidden;
+  transform-origin: top;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.custom-address input {
+  width: 470px;
+  height: 24px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 18px;
+  color: white;
+  background-color: var(--dark-select);
+  outline: none;
+  border: none;
+}
+
+.custom-address input::placeholder {
+  color: var(--elem-nonactive);
+}
+
+.address-status {
+  width: 24px;
+  height: 24px;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.address-status.status-good {
+  background-image: url(/img/bridge/status-good.png);
+}
+
+.address-status.status-bad {
+  background-image: url(/img/bridge/status-bad.png);
+}
+
+.custom-address.hidden {
+  height: 0;
+  opacity: 0;
+  transform: translateY(-20px);
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.main .receive,
+.main .to,
+.main .from,
+.main .send,
+.main .changer,
+.main .custom-address {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .receive {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin-top: 20px;
-	margin-bottom: 0;
-	/* Улучшаем переход, добавляя все свойства, которые могут меняться */
-	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-	/* Начальная высота 0, чтобы анимация была плавной */
-	max-height: 61px; /* Устанавливаем максимальную высоту равной фактической высоте элемента */
-	opacity: 1;
-	overflow: hidden;
-	h4 {
-		font-family: "JetBrains Mono", monospace;
-		font-weight: 500;
-		font-size: 24px;
-		color: white;
-	}
-	.choose-network {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		width: 469px;
-		height: 61px;
-		background-color: var(--btn-dark);
-		border-radius: 15px;
-		padding: 13px 28px;
-		box-sizing: border-box;
-		cursor: pointer;
-		.receive-network {
-			display: flex;
-			align-items: center;
-			gap: 20px;
-			.network-icon {
-				background-size: cover;
-				background-repeat: no-repeat;
-				height: 34px;
-				width: 34px;
-				border-radius: 100%;
-			}
-			p {
-				font-family: "JetBrains Mono", monospace;
-				font-weight: 400;
-				font-size: 20px;
-				color: white;
-			}
-		}
-	}
-	.choose-network.active {
-		background-color: var(--elem-nonactive);
-	}
-
-	&.hidden {
-		height: 0;
-		opacity: 0;
-		transform: translateY(-20px);
-		margin: 0;
-		padding-top: 0;
-		padding-bottom: 0;
-	}
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-bottom: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 61px;
+  opacity: 1;
+  overflow: hidden;
 }
 
-/* Добавляем стили для анимации появления/исчезновения */
-.receive.ng-enter, .receive.ng-leave {
+.receive .choose-network {
+  background-color: var(--btn-dark);
+}
+
+.receive .choose-network.active {
+  background-color: var(--elem-nonactive);
+}
+
+.receive.hidden {
+  height: 0;
+  opacity: 0;
+  transform: translateY(-20px);
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.receive.ng-enter,
+.receive.ng-leave {
   transition: all 0.3s ease-in-out;
 }
 
@@ -558,188 +414,166 @@
 }
 
 .main-button {
-	margin-top: 40px;
-	height: 72px;
-	min-height: 72px;
-	width: 601px;
-	background-color: white;
-	border-radius: 16px;
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 500;
-	font-size: 21px;
-	color: black;
-	cursor: pointer;
-	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-	&.inactive {
-		background-color: rgba(var(--dark-bg), 0.9);
-		cursor: not-allowed;
-		color: var(--elem-nonactive);
-		opacity: 0.5;
-	}
-	
-	&.inactive:hover {
-		background-color: var(--dark-select);
-	}
-	
-	&.finding, &.wallet {
-		background-color: var(--dark-select);
-		color: var(--elem-nonactive);
-		cursor: wait;
-	}
-	
-	&.approve {
-		background-color: var(--green);
-		color: black;
-	}
-
-	&.wrong-address {
-		background-color: var(--red);
-		color: white;
-		cursor: not-allowed;
-	}
-
-	&.wrong-address:hover {
-		background-color: #ff6b6b; // Немного светлее красный при наведении
-	}
+  margin-top: 30px;
+	width: 540px;
+  min-height: 65px;
+  background-color: white;
+  border-radius: 16px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 18px;
+  color: black;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .main-button:hover {
-	background-color: var(--elem-nonactive);
-	
-	&.finding:hover, &.wallet:hover {
-		background-color: var(--dark-select);
-	}
-	
-	&.approve:hover {
-		background-color: #8aff8a;
-	}
+  background-color: var(--elem-nonactive);
+}
+
+.main-button.inactive {
+  background-color: rgba(var(--dark-bg), 0.9);
+  cursor: not-allowed;
+  color: var(--elem-nonactive);
+  opacity: 0.5;
+}
+
+.main-button.inactive:hover {
+  background-color: var(--dark-select);
+}
+
+.main-button.finding,
+.main-button.wallet {
+  background-color: var(--dark-select);
+  color: var(--elem-nonactive);
+  cursor: wait;
+}
+
+.main-button.finding:hover,
+.main-button.wallet:hover {
+  background-color: var(--dark-select);
+}
+
+.main-button.approve {
+  background-color: var(--green);
+  color: black;
+}
+
+.main-button.approve:hover {
+  background-color: #8aff8a;
+}
+
+.main-button.wrong-address {
+  background-color: var(--red);
+  color: white;
+  cursor: not-allowed;
+}
+
+.main-button.wrong-address:hover {
+  background-color: #ff6b6b;
 }
 
 .gas-container {
-	width: 601px;
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-	margin-top: 10px;
-}
-.gas{
-	display: flex;
-	align-items: center;
-	gap: 8px;
-}
-.gas-img{
-	background-image: url(/img/trade/gas-image.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-	height: 20px;
-	width: 20px;
-}
-.gas-text{
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 400;
-	font-size: 18px;
-	color: var(--elem-nonactive);
+  width: 540px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 20px;
 }
 
-.network-to {
-	display: flex;
-	align-items: center;
-	gap: 10px;
+.gas {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
 
-	p {
-		margin: 0;
-		// Добавьте дополнительные стили для текста, если необходимо
-	}
+.gas-img {
+  background-image: url(/img/trade/gas-image.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 18px;
+  width: 18px;
+}
+
+.gas-text {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--elem-nonactive);
 }
 
 .change-button {
-	background-image: url(/img/trade/change.png);
-	background-size: cover;
-	background-repeat: no-repeat;
-	height: 54px;
-	width: 54px;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	display: flex;
-	justify-content: center;
-	cursor: pointer;
-	border-radius: 1000px;
-	overflow: hidden;
-	z-index: 1;
+  background-image: url(/img/trade/change.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 54px;
+  width: 54px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 1000px;
+  overflow: hidden;
+  z-index: 1;
 }
 
 .arrow-up,
 .arrow-down {
-    background-image: url(/img/trade/change-arrow.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-    width: 14px;
-    height: 21px;
-    margin-top: 16px;
-    transition: 0.2s;
+  background-image: url(/img/trade/change-arrow.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 14px;
+  height: 21px;
+  margin-top: 16px;
+  transition: 0.2s;
 }
 
 .arrow-down {
-	transform: rotate(180deg);
-	transform-origin: center;
+  transform: rotate(180deg);
+  transform-origin: center;
 }
-.change-button:hover .arrow-up{
-margin-top: 20px;
+
+.change-button:hover .arrow-up {
+  margin-top: 20px;
 }
-.change-button:hover .arrow-down{
-margin-top: 12px;
+
+.change-button:hover .arrow-down {
+  margin-top: 12px;
 }
 
 .animate .arrow-up {
-animation: click-animation-up 1s linear;
+  animation: click-animation-up 1s linear;
 }
 
 .animate .arrow-down {
-animation: click-animation-down 1s linear;
+  animation: click-animation-down 1s linear;
 }
 
 @keyframes click-animation-up {
-	0% {
-			margin-top: 20px;
-	}
-	50% {
-			margin-top: -120px;
-	}
-	100% {
-			margin-top: 20px;
-	}
+  0% { margin-top: 20px; }
+  50% { margin-top: -120px; }
+  100% { margin-top: 20px; }
 }
 
 @keyframes click-animation-down {
-	0% {
-			margin-top: 12px;
-	}
-	50% {
-			margin-top: 132px;
-	}
-	100% {
-			margin-top: 12px;
-	}
+  0% { margin-top: 12px; }
+  50% { margin-top: 132px; }
+  100% { margin-top: 12px; }
 }
 
-/* Добавляем стили для сброса отступов */
-.main:not(.has-custom-address) {
-  .receive {
-    margin-top: 20px; /* Возвращаем стандартный отступ */
-  }
+.main:not(.has-custom-address) .receive {
+  margin-top: 20px;
 }
 
-/* Добавляем плавный переход для всего контейнера */
 .bridge {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: height;
 }
 
-/* Обновляем анимации для custom-address */
 @keyframes customAddressAnimation {
   from {
     opacity: 0;
@@ -753,29 +587,6 @@ animation: click-animation-down 1s linear;
   }
 }
 
-/* Удаляем старые стили для main.has-custom-address, так как они могут конфликтовать */
-.main {
-  &.has-custom-address {
-    transform: translateY(0);
-  }
-}
-
-/* Обновляем стили для main, чтобы все элементы внутри двигались плавно */
-.main {
-  display: flex;
-  flex-direction: column;
-  
-  /* Добавляем плавный переход для всего содержимого */
-  > * {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-}
-
-/* Обновляем стили для контейнера кнопки и gas */
-.bridge-window {
-  display: flex;
-  flex-direction: column;
-  
-  /* Добавляем padding внизу для плавного изменения высоты */
-  padding-bottom: 40px;
+.main.has-custom-address {
+  transform: translateY(0);
 }

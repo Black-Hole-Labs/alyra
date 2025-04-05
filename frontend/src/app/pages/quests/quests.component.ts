@@ -4,7 +4,10 @@ import { Component } from '@angular/core';
   selector: 'app-quests',
   standalone: true,
   templateUrl: './quests.component.html',
-  styleUrls: ['./quests.component.scss']
+  styleUrls: [
+		'./quests.component.scss',
+		'./quests.component.adaptives.scss'
+	]
 })
 export class QuestsComponent {
 }

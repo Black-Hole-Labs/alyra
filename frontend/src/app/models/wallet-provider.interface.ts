@@ -10,7 +10,6 @@ export interface Network {
     id: number;
     name: string;
     rpcUrls: string;
-    chainId: string;
     logoURI?: string;
     idHex?:string;
     chainType: string; // Тип сети (EVM, SVM)
@@ -33,7 +32,9 @@ export interface TransactionRequestSVM {
 export interface Wallets {
   id: string;
   name: string;
+  type: string;
   cssClass: string;
-  installUrl: string;
+  installUrl?: string;
+  iconUrl: string;
   status?: string;
 }

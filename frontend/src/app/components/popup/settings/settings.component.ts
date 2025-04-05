@@ -6,7 +6,10 @@ import { PopupService } from '../../../services/popup.service';
   selector: 'app-settings',
   standalone: true,
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss'],
+  styleUrls: [
+		'./settings.component.scss',
+		'./settings.component.adaptives.scss'
+	],
   imports: [CommonModule],
 })
 export class SettingsComponent implements OnInit {

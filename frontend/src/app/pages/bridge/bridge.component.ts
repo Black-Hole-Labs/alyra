@@ -6,13 +6,12 @@ import { NetworkChangeToPopupComponent } from '../../components/popup/network-ch
 import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
 import { Subscription } from 'rxjs';
 import { BridgeTxComponent } from '../../components/popup/bridge-tx/bridge-tx.component';
-import { ConnectWalletComponent } from '../../components/popup/connect-wallet/connect-wallet.component';
 import { Network, TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
 import { Token } from '../trade/trade.component';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
 import { WalletBalanceService } from '../../services/wallet-balance.service';
 import { PopupService } from '../../services/popup.service';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import { trigger, style, animate, transition } from '@angular/animations';
 import { SettingsBridgeComponent } from '../../components/popup/settings-bridge/settings-bridge.component';
 import { ethers, parseUnits } from 'ethers';
 import { TransactionsService } from '../../services/transactions.service';
@@ -22,7 +21,10 @@ import { HttpErrorResponse } from '@angular/common/http';
   selector: 'app-bridge',
   standalone: true,
   templateUrl: './bridge.component.html',
-  styleUrls: ['./bridge.component.scss'],
+  styleUrls: [
+		'./bridge.component.scss',
+		'./bridge.component.adaptives.scss'
+	],
   imports: [
     CommonModule,
     FormsModule,
@@ -141,6 +143,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   
   networkTokens = new Map<number, Token[]>();
   slippage: number = 0.005; //  // 0.005 is default for LIFI
+  gasPriceUSD: number | undefined;
 
   bridgeTxHash: string = '';
 
@@ -250,7 +253,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   //     return;
   //   }
 
-  //   if(this.blockchainStateService.getCurrentNetworkId()?.chainId === "1151111081099710") { // SVM
+  //   if(this.blockchainStateService.getCurrentNetwork()?.chainId === "1151111081099710") { // SVM
   //     if (token.symbol === "SOL") // change to adres
   //     {
   //       return this.walletBalanceService.getSolanaBalance(walletAddress);
@@ -269,7 +272,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   
   //       const data = await response.json();
   
-  //       const network = data.find((net: { id: number }) => net.id === this.blockchainStateService.getCurrentNetworkId()?.id);
+  //       const network = data.find((net: { id: number }) => net.id === this.blockchainStateService.getCurrentNetwork()?.id);
   
   //       if (!network) {
   //         console.error('Network not found');
@@ -345,14 +348,24 @@ export class BridgeComponent implements OnInit, OnDestroy {
           const readableToAmount = this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals));
         
           console.log('readableToAmount:', readableToAmount);
-
-          const gasPriceHex = response.transactionRequest.gasPrice;
-          const gasLimitHex = response.transactionRequest.gasLimit;
-          const gasToken = response.estimate.gasCosts?.[0]?.token;
-
-          const gasPriceUSD = this.transactionsService.parseGasPriceUSD(gasPriceHex, gasLimitHex, gasToken);
           
-          console.log('gasPriceUSD:', gasPriceUSD);
+          // if(this.blockchainStateService.network()!.id == 1151111081099710) // SVM
+          // {
+          //   gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
+          // }
+          // else // EVM
+          // {
+          //   const gasPriceHex = response.transactionRequest.gasPrice;
+          //   const gasLimitHex = response.transactionRequest.gasLimit;
+          //   const gasToken = response.estimate.gasCosts?.[0]?.token;
+          //   gasPriceUSD = this.transactionsService.parseGasPriceUSD(gasPriceHex, gasLimitHex, gasToken);
+          // }
+
+          const gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
+
+          this.gasPriceUSD = Number(gasPriceUSD);
+          
+          console.log('gasPriceUSD:', this.gasPriceUSD);
         }
         else 
         {
@@ -361,7 +374,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
         if(response.transactionRequest.data)
         {
-          if(this.blockchainStateService.network()?.chainId === "1151111081099710")
+          if(this.blockchainStateService.network()?.id === 1151111081099710)
           {
             this.txData.set(response.transactionRequest as TransactionRequestSVM);
           }
@@ -476,7 +489,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   // Управление анимацией
   onMouseDown(): void {
-    console.log('Mouse down triggered');
     const changeButton = document.getElementById('change-button');
     if (changeButton && !changeButton.classList.contains('animate')) {
       this.renderer.addClass(changeButton, 'animate');
@@ -484,7 +496,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
   
   onAnimationEnd(): void {
-    console.log('Animation ended, swapping networks...');
     const changeButton = document.getElementById('change-button');
     if (changeButton && changeButton.classList.contains('animate')) {
       this.renderer.removeClass(changeButton, 'animate');
@@ -566,16 +577,13 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   toggleCustomAddress(): void {
-    console.log('toggleCustomAddress called, current state:', this.showCustomAddress);
     
     if (this.showCustomAddress) {
       // Если инпут открыт, просто закрываем его
       this.showCustomAddress = false;
-      console.log('Closing input');
     } else {
       // Если инпут закрыт, открываем его
       this.showCustomAddress = true;
-      console.log('Opening input');
     }
     
     // Сбрасываем флаг анимации при переключении пользовательского адреса
@@ -585,9 +593,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
   // Нам больше не нужен метод onAnimationDone, так как Angular анимации
   // автоматически обрабатывают появление и исчезновение элементов
   // Можно удалить или оставить пустым для логирования
-  onAnimationDone(event: any) {
-    console.log('Animation done, event:', event);
-  }
 
   // Новый метод для управления состоянием кнопки
   // startFindingRoutesProcess(): void {
@@ -606,11 +611,13 @@ export class BridgeComponent implements OnInit, OnDestroy {
   //     }
   //   }, 2000);
   // }
-  
+  sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
   // Метод для обработки нажатия на кнопку
   async handleButtonClick(): Promise<void> {
     let txHash: string;
-    if(this.blockchainStateService.network()?.chainId === "1151111081099710")
+    if(this.blockchainStateService.network()?.id === 1151111081099710)
     {
       txHash = await this.svmSwap();
     }
@@ -618,6 +625,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
     {
       txHash = await this.evmSwap();
     }
+
+    await this.sleep(1000);
 
     this.bridgeTxHash = txHash;
     this.openBridgeTxPopup();
@@ -668,7 +677,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
     const approveTx = await erc20Contract["approve"]((this.txData() as TransactionRequestEVM).to, approveAmount);
     
-    console.log("a");
 
     await approveTx.wait();
 
@@ -680,7 +688,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
     this.buttonState === 'bridge'
 
     console.log("txHash",txHash);
-    // console.log("this.loading()",this.loading()); 
     return txHash;
   }
   
@@ -703,12 +710,10 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   openNetworkChangeFromPopup(): void {
-    console.log('Opening networkChangeFrom popup');
     this.popupService.openPopup('networkChangeFrom');
   }
 
   openNetworkChangeToPopup(): void {
-    console.log('Opening networkChangeTo popup');
     this.popupService.openPopup('networkChangeTo');
   }
 

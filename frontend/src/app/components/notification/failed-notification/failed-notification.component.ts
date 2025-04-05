@@ -10,7 +10,10 @@ import { Token } from '../../../pages/trade/trade.component';
     CommonModule
   ],
   templateUrl: './failed-notification.component.html',
-  styleUrls: ['./failed-notification.component.scss'],
+  styleUrls: [
+		'./failed-notification.component.scss', 
+		'./failed-notification.component.adaptives.scss'
+	],
   animations: [
     trigger('slideInOut', [
       state('void', style({

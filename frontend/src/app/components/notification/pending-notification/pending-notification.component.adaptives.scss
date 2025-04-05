@@ -1,0 +1,195 @@
+@media screen and (min-width: 1601px) and (max-width: 1920px){
+	.notification {
+		top: 108px;
+		right: 30px;
+		border-radius: 16px;
+		padding: 16px 26px;
+		gap: 20px;
+		min-width: 280px;
+	}
+	
+	.content {
+		gap: 12px;
+	}
+	
+	.info {
+		gap: 4px;
+		margin-right: 20px;
+	}
+	
+	.info h3 {
+		font-size: 18px;
+		font-weight: 500;
+	}
+	
+	.info p {
+		font-size: 13px;
+	}
+	
+	.pending-icon {
+		width: 28px;
+		height: 28px;
+		position: relative;
+	}
+	
+	.pending-icon::after {
+		border: 3px solid transparent;
+	}
+}
+@media screen and (min-width: 1171px) and (max-width: 1600px){
+	.notification {
+		top: 88px;
+		right: 20px;
+		border-radius: 16px;
+		padding: 16px 26px;
+		gap: 20px;
+		min-width: 280px;
+	}
+	
+	.content {
+		gap: 12px;
+	}
+	
+	.info {
+		gap: 4px;
+		margin-right: 20px;
+	}
+	
+	.info h3 {
+		font-size: 18px;
+		font-weight: 500;
+	}
+	
+	.info p {
+		font-size: 13px;
+	}
+	
+	.pending-icon {
+		width: 28px;
+		height: 28px;
+		position: relative;
+	}
+	
+	.pending-icon::after {
+		border: 3px solid transparent;
+		border-top-color: white;
+	}
+}
+@media screen and (min-width: 971px) and (max-width: 1170px){
+	.notification {
+		top: 75px;
+		right: 20px;
+		border-radius: 16px;
+		padding: 12px 18px;
+		gap: 20px;
+		min-width: 250px;
+	}
+	
+	.content {
+		gap: 12px;
+	}
+	
+	.info {
+		gap: 4px;
+		margin-right: 20px;
+	}
+	
+	.info h3 {
+		font-size: 13px;
+		font-weight: 500;
+	}
+	
+	.info p {
+		font-size: 10px;
+	}
+	
+	.pending-icon {
+		width: 24px;
+		height: 24px;
+		position: relative;
+	}
+	
+	.pending-icon::after {
+		border: 3px solid transparent;
+		border-top-color: white;
+	}
+}
+@media screen and (min-width: 769px) and (max-width: 970px){
+	.notification {
+		top: 88px;
+		right: 20px;
+		border-radius: 16px;
+		padding: 16px 26px;
+		gap: 20px;
+		min-width: 280px;
+	}
+	
+	.content {
+		gap: 12px;
+	}
+	
+	.info {
+		gap: 4px;
+		margin-right: 20px;
+	}
+	
+	.info h3 {
+		font-size: 18px;
+		font-weight: 500;
+	}
+	
+	.info p {
+		font-size: 13px;
+	}
+	
+	.pending-icon {
+		width: 28px;
+		height: 28px;
+		position: relative;
+	}
+	
+	.pending-icon::after {
+		border: 3px solid transparent;
+		border-top-color: white;
+	}
+}
+
+@media screen and (min-width: 360px) and (max-width: 479px) {
+	.notification {
+		top: 108px;
+		right: 20px;
+		border-radius: 16px;
+		padding: 16px 26px;
+		gap: 20px;
+		min-width: 280px;
+	}
+	
+	.content {
+		gap: 12px;
+	}
+	
+	.info {
+		gap: 4px;
+		margin-right: 20px;
+	}
+	
+	.info h3 {
+		font-size: 18px;
+		font-weight: 500;
+	}
+	
+	.info p {
+		font-size: 13px;
+	}
+	
+	.pending-icon {
+		width: 28px;
+		height: 28px;
+		position: relative;
+	}
+	
+	.pending-icon::after {
+		border: 3px solid transparent;
+		border-top-color: white;
+	}
+}

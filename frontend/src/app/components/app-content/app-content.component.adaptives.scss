@@ -1,0 +1,26 @@
+@media screen and (min-width: 1601px) and (max-width: 1920px) {
+	:host {
+		padding-top: 30px;
+}
+}
+@media screen and (min-width: 1171px) and (max-width: 1600px) {
+	:host {
+		padding-top: 20px;
+}
+}
+@media screen and (min-width: 971px) and (max-width: 1170px) {
+	:host {
+		padding-top: 20px;
+}
+}
+@media screen and (min-width: 769px) and (max-width: 970px) {
+	:host {
+		padding-top: 20px;
+}
+}
+
+@media screen and (min-width: 360px) and (max-width: 479px) {
+	:host {
+		padding-top: 30px;
+}
+}

@@ -4,76 +4,87 @@
     "name": "MetaMask",
     "type": "EVM",
     "cssClass": "metamask",
-    "installUrl": "https://metamask.io/download/"
+    "installUrl": "https://metamask.io/download/",
+    "iconUrl": "/img/wallet-icns/Metamask.png"
   },
   {
     "id": "rabby-wallet",
     "name": "Rabby Wallet",
     "type": "EVM",
     "cssClass": "rabby-wallet",
-    "installUrl": "https://rabby.io/"
+    "installUrl": "https://rabby.io/",
+    "iconUrl": "/img/wallet-icns/Rabby.png"
   },
   {
     "id": "backpack",
     "name": "Backpack",
     "type": "SVM",
     "cssClass": "backpack",
-    "installUrl": "https://backpack.app/"
+    "installUrl": "https://backpack.app/",
+    "iconUrl": "/img/wallet-icns/Backpack.png"
   },
   {
     "id": "phantom",
     "name": "Phantom",
     "type": "multichain",
     "cssClass": "phantom",
-    "installUrl": "https://phantom.app/"
+    "installUrl": "https://phantom.app/",
+    "iconUrl": "/img/wallet-icns/Phantom.png"
   },
   {
     "id": "solflare",
     "name": "Solflare",
     "type": "SVM",
     "cssClass": "solflare",
-    "installUrl": "https://solflare.com/"
+    "installUrl": "https://solflare.com/",
+    "iconUrl": "/img/wallet-icns/Solflare.png"
   },
   {
     "id": "trust-wallet",
     "name": "Trust Wallet",
     "type": "multichain",
     "cssClass": "trust-wallet",
-    "installUrl": "https://trustwallet.com/"
+    "installUrl": "https://trustwallet.com/",
+    "iconUrl": "/img/wallet-icns/Trust.png"
   },
   {
     "id": "okx-wallet",
     "name": "OKX Wallet",
     "type": "multichain",
     "cssClass": "okx-wallet",
-    "installUrl": "https://www.okx.com/web3"
+    "installUrl": "https://www.okx.com/web3",
+    "iconUrl": "/img/wallet-icns/Okx.png"
   },
   {
     "id": "coinbase-wallet",
     "name": "Coinbase Wallet",
     "type": "multichain",
     "cssClass": "coinbase-wallet",
-    "installUrl": "https://www.coinbase.com/wallet"
+    "installUrl": "https://www.coinbase.com/wallet",
+    "iconUrl": "/img/wallet-icns/Coinbase.png"
   },
   {
     "id": "ledger",
     "name": "Ledger",
     "type": "multichain",
     "cssClass": "ledger",
-    "installUrl": ""
+    "installUrl": "",
+    "iconUrl": "/img/wallet-icns/Ledger.png"
   },
   {
     "id": "walletconnect",
     "name": "WalletConnect",
     "type": "multichain",
     "cssClass": "walletconnect",
-    "installUrl": ""
+    "installUrl": "",
+    "iconUrl": "/img/wallet-icns/WalletConnect.png"
   },
   {
     "id": "magic-eden",
     "name": "Magic Eden",
     "type": "multichain",
     "cssClass": "magic-eden",
-    "installUrl": "https://magiceden.io/download"
+    "installUrl": "https://magiceden.io/download",
+    "iconUrl": "/img/wallet-icns/MagicEden.png"
   }
 ]
