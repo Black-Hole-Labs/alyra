@@ -20,6 +20,24 @@
     }
   },
   {
+    "key": "sol",
+    "chainType": "SVM",
+    "name": "Solana",
+    "id": 1151111081099710,
+    "idHex": "0x41103230303302e",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/solana.svg",
+    "rpcUrls": [
+      "https://frosty-nameless-sunset.solana-mainnet.quiknode.pro/74791b866a6fa352e6b6a8026df34dc0b4f4475f/",
+      "https://solana-rpc.publicnode.com",
+      "https://api.mainnet-beta.solana.com"
+    ],
+    "nativeCurrency": {
+      "name": "SOL",
+      "symbol": "SOL",
+      "decimals": 9
+    }
+  },
+  {
     "key": "bsc",
     "chainType": "EVM",
     "name": "BSC",
@@ -551,24 +569,6 @@
       "name": "Mantle",
       "symbol": "MNT",
       "decimals": 18
-    }
-  },
-  {
-    "key": "sol",
-    "chainType": "SVM",
-    "name": "Solana",
-    "id": 1151111081099710,
-    "idHex": "0x41103230303302e",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/solana.svg",
-    "rpcUrls": [
-      "https://frosty-nameless-sunset.solana-mainnet.quiknode.pro/74791b866a6fa352e6b6a8026df34dc0b4f4475f/",
-      "https://solana-rpc.publicnode.com",
-      "https://api.mainnet-beta.solana.com"
-    ],
-    "nativeCurrency": {
-      "name": "SOL",
-      "symbol": "SOL",
-      "decimals": 9
     }
   }
 ]
