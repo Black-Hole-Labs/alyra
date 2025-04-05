@@ -33,7 +33,7 @@
   <div class="tx-info">
 		<div class="elem">
 			<h6>Status</h6>
-			<div class="tx-status" [ngClass]="{'success': txStatusText === 'Transaction Successful', 'failed': txStatusText === 'Transaction Failed'}">
+			<div class="tx-status" [ngClass]="{'success': txStatusText === 'Successful', 'failed': txStatusText === 'Failed'}">
 				<p [ngClass]="{'pending-change': txStatusText !== 'Pending'}">{{ txStatusText }}</p>
 			  </div>			  
 		</div>

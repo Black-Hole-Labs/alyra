@@ -43,10 +43,12 @@ export class TradeComponent {
 //[x: string]: any;
   sellAmount: string = ''; // Значение, которое пользователь вводит в поле продажи
   //validatedSellAmount: string = ''; 
+  sellAmountForInput= signal<string | undefined>(undefined);
   validatedSellAmount = signal<number>(0);
   loading = signal<boolean>(false);
-
-  buyAmount = signal<number | undefined>(undefined);
+  
+  buyAmount = signal<string | undefined>(undefined);
+  buyAmountForInput = signal<string | undefined>(undefined);
   price: number = 0; // Цена обмена
   priceUsd: number = 0; // Текущая стоимость в USD за единицу
   sellPriceUsd = signal<string>('');
@@ -72,7 +74,7 @@ export class TradeComponent {
   showFailedNotification = false;
   showPendingNotification = false;
 
-  buttonState: 'swap' | 'finding' | 'approve' | 'wallet' | 'insufficient' = 'swap';
+  buttonState: 'swap' | 'finding' | 'approve' | 'wallet' | 'insufficient' | 'no-available-quotes' = 'swap';
   
   firstToken = computed(() => {
     const tokens = this.blockchainStateService.filteredTokens();
@@ -94,6 +96,8 @@ export class TradeComponent {
 
   private inputTimeout: any;
 
+  private previousWalletName: string | null = '';
+  private tokensLoaded = false;
 
   constructor(
     private renderer: Renderer2,
@@ -111,68 +115,59 @@ export class TradeComponent {
         }
       });
 
-      effect(() => 
-      {
-        const isConnected = this.blockchainStateService.connected();
+      effect(() => {
         const tokens = this.blockchainStateService.filteredTokens();
-        
-        const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
-        const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
-    
-        this.selectedToken.set(newSelectedToken);
-        this.selectedBuyToken.set(newSelectedBuyToken);
-
-        Promise.resolve().then(() =>
-          {
-            if (isConnected && this.selectedToken()) 
-            {
-                this.getBalanceForToken(this.selectedToken()!)
-                    .then((balanceStr) => 
-                    {
-                        this.balance.set(Number(parseFloat(balanceStr)));
-                    })
-                    .catch((error) => 
-                    {
-                        console.error('Error getting balance sell: ', error);
-                        this.balance.set(0.0);
-                    });
-            }
-    
-            if (isConnected && this.selectedBuyToken()) 
-            {
-                this.getBalanceForToken(this.selectedBuyToken()!)
-                    .then((balanceStr) => 
-                    {
-                        this.balanceBuy.set(Number(parseFloat(balanceStr)));
-                    })
-                    .catch((error) => 
-                    {
-                        console.error('Error getting balance buy: ', error);
-                        this.balanceBuy.set(0.0);
-                    });
-            }
+      
+        Promise.resolve().then(() => {
+          const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
+          const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
+      
+          this.selectedToken.set(newSelectedToken);
+          this.selectedBuyToken.set(newSelectedBuyToken);
+      
+          if (this.selectedToken()) {
+            this.getBalanceForToken(this.selectedToken()!)
+              .then((balanceStr) => {
+                this.balance.set(Number(parseFloat(balanceStr)));
+              })
+              .catch((error) => {
+                console.error('Error getting balance sell: ', error);
+                this.balance.set(0.0);
+              });
+          }
+      
+          if (this.selectedBuyToken()) {
+            this.getBalanceForToken(this.selectedBuyToken()!)
+              .then((balanceStr) => {
+                this.balanceBuy.set(Number(parseFloat(balanceStr)));
+              })
+              .catch((error) => {
+                console.error('Error getting balance buy: ', error);
+                this.balanceBuy.set(0.0);
+              });
+          }
         });
-    }, { allowSignalWrites: true });
+      }, { allowSignalWrites: true });
   }
 
   
-handleKeyDown(event: KeyboardEvent): void {
-  const inputElement = event.target as HTMLInputElement;
-  const cursorPos = inputElement.selectionStart ?? inputElement.value.length;
+  handleKeyDown(event: KeyboardEvent): void {
+    const inputElement = event.target as HTMLInputElement;
+    const cursorPos = inputElement.selectionStart ?? inputElement.value.length;
 
-  const replaceKeys = [',', '.', '/', 'б', 'ю']; 
+    const replaceKeys = [',', '.', '/', 'б', 'ю']; 
 
-  if (replaceKeys.includes(event.key)) {
-    event.preventDefault(); 
+    if (replaceKeys.includes(event.key)) {
+      event.preventDefault(); 
 
-    if (inputElement.value.includes('.')) return;
+      if (inputElement.value.includes('.')) return;
 
-    inputElement.value =
-      inputElement.value.slice(0, cursorPos) + '.' + inputElement.value.slice(cursorPos);
+      inputElement.value =
+        inputElement.value.slice(0, cursorPos) + '.' + inputElement.value.slice(cursorPos);
 
-    setTimeout(() => inputElement.setSelectionRange(cursorPos + 1, cursorPos + 1), 0);
+      setTimeout(() => inputElement.setSelectionRange(cursorPos + 1, cursorPos + 1), 0);
+    }
   }
-}
 
   processInput(event: Event, isSell: boolean): void {
     this.txData.set(undefined);
@@ -192,6 +187,7 @@ handleKeyDown(event: KeyboardEvent): void {
         this.validatedSellAmount.update(value => (Number(inputElement.value)));
         if (this.validatedSellAmount() > this.balance()) {
           this.buttonState = 'insufficient';
+          this.updateBuyAmount('0.0');
         }
         else
         {
@@ -203,13 +199,44 @@ handleKeyDown(event: KeyboardEvent): void {
     console.log("some data");
   }
 
-  updateBuyAmount(value: number): void {
-    if (!isNaN(value)) {
-      this.buyAmount.set(value);
+  updateBuyAmount(value: string): void {
+    const limited = this.limitDecimals(value, 6);
+    const num = Number(limited.replace('…', ''));
+  
+    if (!isNaN(num)) {
+      this.buyAmount.set(value); 
+      this.buyAmountForInput.set(limited);
     } else {
-      this.buyAmount.set(0);
+      this.buyAmount.set('0');
+      this.buyAmountForInput.set('0');
     }
   }
+
+  updateSellAmount(value: string): void {
+    const limited = this.limitDecimals(value, 6);
+    const num = Number(limited.replace('…', ''));
+  
+    if (!isNaN(num)) {
+      this.sellAmount = value; 
+      this.sellAmountForInput.set(limited);
+    } else {
+      this.sellAmount = '0';
+      this.sellAmountForInput.set('0');
+    }
+  }
+  
+  limitDecimals(value: string, maxDecimals: number): string {
+    if (value.includes('.')) {
+      const [intPart, decimalPart] = value.split('.');
+      const trimmedDecimals = decimalPart.slice(0, maxDecimals);
+      const hasMore = decimalPart.length > maxDecimals;
+  
+      const result = `${intPart}.${trimmedDecimals}`;
+      return hasMore ? result + '…' : result;
+    }
+    return value;
+  }
+  
 
   updateSellPriceUsd(price: number): void {
     if (!isNaN(price)) {
@@ -228,10 +255,12 @@ handleKeyDown(event: KeyboardEvent): void {
   }
 
   setMaxSellAmount(): void {
-    this.sellAmount = this.balance().toString();
+    //this.sellAmount = this.balance().toString();
+    this.updateSellAmount(this.balance().toString());
     this.validatedSellAmount.update(value => this.balance());
     if (Number(this.validatedSellAmount()) > this.balance()) {
       this.buttonState = 'insufficient';
+      this.updateBuyAmount('0.0');
     }
     else
     {
@@ -467,7 +496,7 @@ handleKeyDown(event: KeyboardEvent): void {
     this.buttonState = 'swap';
 
     console.log("SVM Swap транзакция отправлена:", txHash);
-    return txHash;
+    return txHash.signature;
   }
 
   async evmSwap(): Promise<string>{
@@ -540,7 +569,8 @@ handleKeyDown(event: KeyboardEvent): void {
     //const fromTokenDecimals = this.selectedTokendecimals;
     const fromTokenDecimals = this.selectedToken()!.decimals;
     //const fromAmount = this.validatedSellAmount;
-    const fromAmount = parseUnits(this.validatedSellAmount().toString(), fromTokenDecimals);
+    const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
+    const fromAmount = parseUnits(formattedFromAmount, fromTokenDecimals);
     //const fromToken = this.selectedTokenAddress;
     const fromToken = this.selectedToken()!.contractAddress;
     const toToken = this.selectedBuyToken()!.contractAddress;
@@ -580,7 +610,9 @@ handleKeyDown(event: KeyboardEvent): void {
           console.log(`fromUSD: ${response.estimate.fromAmountUSD}; toUSD: ${response.estimate.toAmountUSD}`);
           this.updateSellPriceUsd(response.estimate.fromAmountUSD);
           this.updateBuyPriceUsd(response.estimate.toAmountUSD);
-          const readableToAmount = Number(this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals)));
+
+          const toAmountNumber = Number(this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals)));
+          const readableToAmount = toAmountNumber.toFixed(Number(toTokenDecimals)).replace(/\.?0+$/, '');
           console.log('readableToAmount:', readableToAmount);
           this.updateBuyAmount(readableToAmount);
           
@@ -643,8 +675,10 @@ handleKeyDown(event: KeyboardEvent): void {
         
       },
       error: (error: HttpErrorResponse) => {
-        this.buttonState = 'swap'
-        if (error.status === 404) {
+        if(error.error.message === 'No available quotes for the requested transfer'){
+          this.buttonState = 'no-available-quotes';
+        }
+        else if (error.status === 404) {
           console.error('Custom error message:', error || 'Unknown error');
           console.error('Custom error message:', error.error?.message || 'Unknown error');
         } else {

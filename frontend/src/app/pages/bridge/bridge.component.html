@@ -46,7 +46,8 @@
 							id="number-input"
 							placeholder="Enter amount"
 							[value]="sellAmount"
-              (input)="processInput($event, true)"
+              				(input)="processInput($event, true)"
+							(keydown)="handleKeyDown($event)"
 						/>
 						<h6 class="max-button" *ngIf="isWalletConnected()">MAX</h6>
 					</div>
@@ -151,13 +152,15 @@
 				[class.approve]="buttonState === 'approve'"
 				[class.wallet]="buttonState === 'wallet'"
 				[class.wrong-address]="buttonState === 'wrong-address'"
+				[class.no-available-quotes]="buttonState === 'no-available-quotes'"
 				[disabled]="!isBridgeButtonActive() || buttonState === 'wallet' || buttonState === 'finding' || buttonState === 'wrong-address'"
 				(click)="isBridgeButtonActive() && handleButtonClick()">
 				<ng-container *ngIf="buttonState === 'finding'">Finding Routes...</ng-container>
 				<ng-container *ngIf="buttonState === 'approve'">Approve</ng-container>
 				<ng-container *ngIf="buttonState === 'wallet'">Continue in your wallet...</ng-container>
-				<ng-container *ngIf="buttonState === 'wrong-address'">Wrong destination address</ng-container>
+				<ng-container *ngIf="buttonState === 'wrong-address'">Wrong address</ng-container>
 				<ng-container *ngIf="buttonState === 'bridge'">Bridge</ng-container>
+				<ng-container *ngIf="buttonState === 'no-available-quotes'">No available quotes</ng-container>
       </button>
 
 			<div class="gas-container" *ngIf="isBridgeButtonActive()" [@receiveAnimation]>

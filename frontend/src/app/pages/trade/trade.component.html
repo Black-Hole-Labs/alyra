@@ -34,7 +34,7 @@
           type="text"
           id="number-input-sell"
 					placeholder="0.0"
-          [(ngModel)]="sellAmount"
+          [(ngModel)]="sellAmountForInput"
           (input)="processInput($event, true)"
           (keydown)="handleKeyDown($event)"
         />
@@ -70,8 +70,7 @@
           type="text"
           id="number-input-buy"
 					placeholder="0.0"
-          [(ngModel)]="buyAmount"
-          (input)="processInput($event, false)"
+          [(ngModel)]="buyAmountForInput"
           [disabled]=true
         />
       </div>
@@ -105,6 +104,7 @@
       [class.approve]="buttonState === 'approve'"
       [class.wallet]="buttonState === 'wallet'"
       [class.insufficient]="buttonState === 'insufficient'"
+      [class.no-available-quotes]="buttonState === 'no-available-quotes'"
       [disabled]="!isSwapButtonActive() || txData() === undefined || loading() === true || buttonState === 'insufficient'"
       (click)="isSwapButtonActive() && swap()">
       <ng-container *ngIf="buttonState === 'finding'">Finding Routes...</ng-container>
@@ -112,6 +112,7 @@
       <ng-container *ngIf="buttonState === 'wallet'">Continue in your wallet...</ng-container>
       <ng-container *ngIf="buttonState === 'insufficient'">Insufficient balance</ng-container>
       <ng-container *ngIf="buttonState === 'swap'">Swap</ng-container>
+      <ng-container *ngIf="buttonState === 'no-available-quotes'">No available quotes</ng-container>
     </button>
 
 		<ng-template #connectWallet>

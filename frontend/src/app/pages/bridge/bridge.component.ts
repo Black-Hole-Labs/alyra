@@ -113,7 +113,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   findingRoutesTimer: any = null;
   //walletTimer: any = null;
-  private _buttonState: 'bridge' | 'finding' | 'approve' | 'wallet' = 'bridge';
+  private _buttonState: 'bridge' | 'finding' | 'approve' | 'wallet' | 'no-available-quotes' | 'wrong-address' = 'bridge';
 
   // Свойства для анимации текста
   private possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}:"<>?|';
@@ -390,7 +390,13 @@ export class BridgeComponent implements OnInit, OnDestroy {
         
       },
       error: (error: HttpErrorResponse) => {
-        if (error.status === 404) {
+        if(error.error.message === 'No available quotes for the requested transfer'){
+          this.setButtonState('no-available-quotes');  
+        }
+        else if(error.error.message.includes("Invalid toAddress") || error.error.message.includes("Invalid fromAddress")){
+          this.setButtonState('wrong-address');
+        }
+        else if (error.status === 404) {
           console.error('Custom error message:', error || 'Unknown error');
           console.error('Custom error message:', error.error?.message || 'Unknown error');
         } else {
@@ -465,6 +471,24 @@ export class BridgeComponent implements OnInit, OnDestroy {
   async onTokenBuySelected(token: Token): Promise<void> {
     this.selectedBuyToken.set(token);
     this.receiveTextAnimated = false;
+  }
+
+  handleKeyDown(event: KeyboardEvent): void {
+    const inputElement = event.target as HTMLInputElement;
+    const cursorPos = inputElement.selectionStart ?? inputElement.value.length;
+
+    const replaceKeys = [',', '.', '/', 'б', 'ю']; 
+
+    if (replaceKeys.includes(event.key)) {
+      event.preventDefault(); 
+
+      if (inputElement.value.includes('.')) return;
+
+      inputElement.value =
+        inputElement.value.slice(0, cursorPos) + '.' + inputElement.value.slice(cursorPos);
+
+      setTimeout(() => inputElement.setSelectionRange(cursorPos + 1, cursorPos + 1), 0);
+    }
   }
 
 	processInput(event: Event, isSell: boolean): void {
@@ -643,7 +667,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   
     const txHash = await provider.sendTx(txData);
     console.log("SVM Swap транзакция отправлена:", txHash);
-    return txHash;
+    return txHash.signature;
   }
   
   async evmSwap(): Promise<string>{
@@ -717,7 +741,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
     this.popupService.openPopup('networkChangeTo');
   }
 
-  get buttonState(): 'bridge' | 'finding' | 'approve' | 'wallet' | 'wrong-address' {
+  get buttonState(): 'bridge' | 'finding' | 'approve' | 'wallet' | 'wrong-address' | 'no-available-quotes' {
     //console.log("uncoment, auto load fix???"); todo
 
     if (this.showCustomAddress && this.addressStatus === 'bad') {
@@ -727,7 +751,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
   
   // Добавляем сеттер для изменения состояния
-  private setButtonState(state: 'bridge' | 'finding' | 'approve' | 'wallet'): void {
+  private setButtonState(state: 'bridge' | 'finding' | 'approve' | 'wallet' | 'no-available-quotes' | 'wrong-address'): void {
     if (this._buttonState !== state) {
       this._buttonState = state;
       // Сбрасываем флаг анимации, чтобы текст анимировался заново при изменении состояния

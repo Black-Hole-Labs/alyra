@@ -463,13 +463,15 @@
   background-color: #8aff8a;
 }
 
-.main-button.wrong-address {
+.main-button.wrong-address,
+.no-available-quotes {
   background-color: var(--red);
   color: white;
   cursor: not-allowed;
 }
 
-.main-button.wrong-address:hover {
+.main-button.wrong-address:hover,
+.no-available-quotes:hover {
   background-color: #ff6b6b;
 }
 

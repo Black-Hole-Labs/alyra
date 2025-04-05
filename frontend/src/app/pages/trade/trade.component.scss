@@ -292,13 +292,15 @@ p {
   background-color: #8aff8a;
 }
 
-.main-button.insufficient {
+.main-button.insufficient,
+.no-available-quotes {
   background-color: var(--red);
   color: white;
   cursor: not-allowed;
 }
 
-.main-button.insufficient:hover {
+.main-button.insufficient:hover,
+.no-available-quotes:hover {
   background-color: #ff6b6b;
 }
 

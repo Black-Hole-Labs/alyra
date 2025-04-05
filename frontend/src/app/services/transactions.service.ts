@@ -97,17 +97,31 @@ export class TransactionsService {
       result = await this.getStatus(txHash);
       await this.delay(1000);
     } while (result.status !== 'DONE' && result.status !== 'FAILED');
-
+  
     console.log(`Transfer completed with state ${result.status}`);
     return result.status;
   }
-
+  
   private async getStatus(txHash: string): Promise<any> {
-    const request = this.http.get('https://li.quest/v1/status', {
-      params: { txHash }
-    });
-    return await lastValueFrom(request);
+    let attempts = 0;
+    while (attempts < 5) {
+      try {
+        const request = this.http.get('https://li.quest/v1/status', {
+          params: { txHash }
+        });
+        return await lastValueFrom(request);
+      } catch (error: any) {
+        if (error?.error?.code === 1011 && error?.error?.message.includes("Not a valid txHash")) {
+          attempts++;
+          await this.delay(2500);
+        } else {
+          throw error;
+        }
+      }
+    }
+    throw new Error('Max attempts reached for invalid txHash');
   }
+  
 
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -115,6 +129,10 @@ export class TransactionsService {
   
   parseToAmount(toAmount: string, decimals: number): string {
     return (Number(toAmount) / Math.pow(10, decimals)).toString();
+  }
+
+  toNonExponential(num: number): string {
+    return num.toFixed(18).replace(/\.?0+$/, '');
   }
 
   parseGasPriceUSD(gasPriceHex: string, gasLimitHex: string, token: { decimals: number; priceUSD: string }): string {
