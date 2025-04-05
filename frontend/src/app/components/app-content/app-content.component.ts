@@ -14,7 +14,10 @@ import { ConnectWalletComponent } from "../popup/connect-wallet/connect-wallet.c
   selector: 'app-app-content',
   standalone: true,
   templateUrl: './app-content.component.html',
-  styleUrls: ['./app-content.component.scss'],
+  styleUrls: [
+		'./app-content.component.scss',
+		'./app-content.component.adaptives.scss'
+	],
   imports: [RouterOutlet, RouterModule, BlackholeMenuComponent, CommonModule, BlackholeNetworkComponent, WalletComponent, ConnectWalletComponent]
 })
 export class AppContentComponent {

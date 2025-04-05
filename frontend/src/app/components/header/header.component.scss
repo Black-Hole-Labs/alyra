@@ -8,11 +8,13 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+	gap: 8px;
 }
 
 .left {
   display: flex;
   align-items: center;
+	gap: 80px;
 }
 
 .right {
@@ -27,7 +29,6 @@ h3 {
   font-weight: 800;
   font-size: 24px;
   color: white;
-  margin-left: 8px;
   cursor: pointer;
 }
 
@@ -45,8 +46,6 @@ img {
 }
 
 button {
-  width: 12px;
-  height: 7px;
   cursor: pointer;
 }
 
@@ -59,14 +58,6 @@ button.network-closed {
   background-repeat: no-repeat;
 }
 
-button.closed {
-  margin-left: 15px;
-}
-
-button.network-closed {
-  margin-right: 5px;
-}
-
 button.open,
 button.network-open {
   background: url(/img/header/close-img.png);
@@ -76,19 +67,10 @@ button.network-open {
   background-repeat: no-repeat;
 }
 
-button.open {
-  margin-left: 15px;
-}
-
-button.network-open {
-  margin-right: 5px;
-}
-
 nav {
   display: flex;
   align-items: center;
   gap: 70px;
-  margin-left: 80px;
 }
 
 nav a {
@@ -174,7 +156,7 @@ nav a.active-link {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.2s ease-in-out;
 }
 
 .xp:hover {
@@ -197,7 +179,7 @@ nav a.active-link {
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.2s ease-in-out;
 }
 
 .network:hover {
@@ -220,7 +202,8 @@ nav a.active-link {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.2s ease-in-out;
+	gap: 16px;
 }
 
 .wallet:hover {
@@ -233,7 +216,6 @@ nav a.active-link {
   background: url(/img/header/wallet.png);
   background-size: cover;
   background-repeat: no-repeat;
-  margin-right: 16px;
 }
 
 .wallet p {

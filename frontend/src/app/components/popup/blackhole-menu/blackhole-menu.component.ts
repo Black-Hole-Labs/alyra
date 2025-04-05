@@ -8,7 +8,10 @@ import { PopupService } from '../../../services/popup.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './blackhole-menu.component.html',
-  styleUrls: ['./blackhole-menu.component.scss']
+  styleUrls: [
+		'./blackhole-menu.component.scss', 
+		'./blackhole-menu.component.adaptives.scss'
+	]
 })
 export class BlackholeMenuComponent {
   @Output() close = new EventEmitter<void>();

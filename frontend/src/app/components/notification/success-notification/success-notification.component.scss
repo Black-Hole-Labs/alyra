@@ -12,41 +12,40 @@
   gap: 20px;
   z-index: 9999;
   min-width: 280px;
-	box-sizing: border-box;
+  box-sizing: border-box;
+}
 
-  .content {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
-    .info {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-			margin-right: 20px;
-			h3 {
-				font-family: "JetBrains Mono", monospace;
-				font-weight: 800;
-				font-size: 21px;
-				color: white;
-				margin: 0;
-			}
-			p {
-				font-family: "JetBrains Mono", monospace;
-				font-weight: 400;
-				font-size: 16px;
-				color: white;
-			}
-    }
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-right: 20px;
+}
 
-    
-  }
+.info h3 {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 800;
+  font-size: 21px;
+  color: white;
+  margin: 0;
+}
 
-	.success-icon {
-		width: 34px;
-		height: 34px;
-		background-image: url(/img/bridge/status-good.png);
-		background-size: cover;
-	}
+.info p {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 16px;
+  color: white;
+}
 
+.success-icon {
+  width: 34px;
+  height: 34px;
+  background-image: url(/img/bridge/status-good.png);
+  background-size: cover;
 }

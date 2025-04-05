@@ -6,7 +6,10 @@ import { BlockchainStateService } from '../../../services/blockchain-state.servi
   selector: 'app-blackhole-network',
   standalone: true,
   templateUrl: './blackhole-network.component.html',
-  styleUrls: ['./blackhole-network.component.scss'],
+  styleUrls: [
+		'./blackhole-network.component.scss',
+		'./blackhole-network.component.adaptives.scss'
+	],
   imports: [CommonModule]
 })
 export class BlackholeNetworkComponent {

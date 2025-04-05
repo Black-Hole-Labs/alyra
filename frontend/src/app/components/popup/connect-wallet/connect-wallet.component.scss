@@ -28,8 +28,8 @@
 }
 
 .upper button {
-  height: 15px;
-  width: 15px;
+  height: 19px;
+  width: 19px;
   background: url(/img/header/popup-menu/close-icon.png);
   opacity: 0.3;
   background-size: cover;
@@ -92,15 +92,15 @@
   width: 100%;
   height: 89px;
   border-radius: 22px;
-  background-color: var(--dark-select);
+  background-color: transparent;
   box-sizing: border-box;
   padding: 10px 20px 10px 10px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.2s ease-in-out;
 }
 
 .wallet:hover {
-  background-color: var(--btn-dark);
+  background-color: var(--dark-select);
 }
 
 .name {

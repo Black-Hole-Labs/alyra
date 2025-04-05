@@ -25,7 +25,10 @@ export interface Token {
   selector: 'app-trade',
   standalone: true,
   templateUrl: './trade.component.html',
-  styleUrls: ['./trade.component.scss'],
+  styleUrls: [
+    './trade.component.scss',
+    './trade.component.adaptives.scss'
+  ],
   imports: [
     FormsModule,
     CommonModule,

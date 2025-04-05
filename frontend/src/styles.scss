@@ -22,7 +22,6 @@
 
 html {
   background-color: black;
-  padding: 40px 40px 20px 40px;
 }
 
 html::before,
@@ -163,4 +162,161 @@ app-settings {
   top: 156px;
   left: 50%;
   transform: translate(-50%, 0%);
+}
+
+
+@media screen and (min-width: 1601px) and (max-width: 1920px) {
+
+	app-settings-bridge,
+	app-settings {
+		top: -23px;
+		left: 100px;
+	}
+
+	.wallet-popup,
+	.connect-wallet {
+		top: 108px;
+		right: 30px;
+	}
+
+	.blackhole-menu {
+		top: 108px;
+		left: 30px;
+	}
+
+	.popup-network {
+		top: 108px;
+		right: 55px;
+	}
+
+	.bridge-tx,
+	.network-change-from,
+	.network-change-to,
+	.token-change {
+		top: 108px;
+	}
+}
+@media screen and (min-width: 1171px) and (max-width: 1600px) {
+
+	app-settings-bridge,
+	app-settings {
+		top: -23px;
+		left: 100px;
+	}
+
+	.wallet-popup,
+	.connect-wallet {
+		top: 88px;
+		right: 20px;
+	}
+
+	.blackhole-menu {
+		top: 88px;
+		left: 20px;
+	}
+
+	.popup-network {
+		top: 88px;
+		right: 55px;
+	}
+
+	.bridge-tx,
+	.network-change-from,
+	.network-change-to,
+	.token-change {
+		top: 88px;
+	}
+}
+@media screen and (min-width: 971px) and (max-width: 1170px) {
+
+	app-settings-bridge,
+	app-settings {
+		top: -16px;
+		left: 75px;
+	}
+
+	.wallet-popup,
+	.connect-wallet {
+		top: 75px;
+		right: 20px;
+	}
+
+	.blackhole-menu {
+		top: 75px;
+		left: 20px;
+	}
+
+	.popup-network {
+		top: 75px;
+		right: 36px;
+	}
+
+	.bridge-tx,
+	.network-change-from,
+	.network-change-to,
+	.token-change {
+		top: 75px;
+	}
+}
+@media screen and (min-width: 769px) and (max-width: 970px) {
+
+	app-settings-bridge {
+		top: -23px;
+		left: -200px;
+		z-index: 1;
+	}
+	app-settings {
+		top: -23px;
+		left: -190px;
+		z-index: 1;
+	}
+
+	.wallet-popup,
+	.connect-wallet {
+		top: 88px;
+		right: 20px;
+	}
+
+	.blackhole-menu {
+		top: 88px;
+		left: 20px;
+	}
+
+	.popup-network {
+		top: 88px;
+		right: 55px;
+	}
+
+	.bridge-tx,
+	.network-change-from,
+	.network-change-to,
+	.token-change {
+		top: 88px;
+	}
+}
+
+@media screen and (min-width: 360px) and (max-width: 479px) {
+
+	app-settings-bridge,
+	app-settings {
+		position: fixed;
+		top: 0px;
+		left: 50%;
+		transform: translate(-50%, 0%);
+		z-index: 1;
+	}
+	.wallet-popup,
+	.connect-wallet,
+	.popup-network,
+	.blackhole-menu,
+	.bridge-tx,
+	.network-change-from,
+	.network-change-to,
+	.token-change {
+		position: fixed;
+		top: 108px;
+		left: 50%;
+		transform: translate(-50%, 0%);
+		z-index: 1;
+	}
 }

@@ -8,7 +8,10 @@ import { BlockchainStateService } from '../../../services/blockchain-state.servi
   selector: 'app-network-change-to',
   standalone: true,
   templateUrl: './network-change-to.component.html',
-  styleUrls: ['./network-change-to.component.scss'],
+  styleUrls: [
+		'./network-change-to.component.scss',
+		'./network-change-to.component.adaptives.scss'
+	],
   imports: [CommonModule, FormsModule],
 })
 export class NetworkChangeToPopupComponent {

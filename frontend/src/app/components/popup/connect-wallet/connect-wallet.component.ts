@@ -10,7 +10,10 @@ import { Wallets } from '../../../models/wallet-provider.interface';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './connect-wallet.component.html',
-  styleUrl: './connect-wallet.component.scss'
+  styleUrls: [
+		'./connect-wallet.component.scss',
+		'./connect-wallet.component.adaptives.scss'
+  ]
 })
 export class ConnectWalletComponent implements OnInit {
   @Output() close = new EventEmitter<void>();

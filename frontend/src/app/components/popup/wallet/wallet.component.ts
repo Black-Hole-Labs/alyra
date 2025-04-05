@@ -17,7 +17,10 @@ interface Token {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './wallet.component.html',
-  styleUrl: './wallet.component.scss',
+  styleUrls: [
+		'./wallet.component.scss',
+		'./wallet.component.adaptives.scss'
+	],
 })
 export class WalletComponent {
   @Output() close = new EventEmitter<void>();
