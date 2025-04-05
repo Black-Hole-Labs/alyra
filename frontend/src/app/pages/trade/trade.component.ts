@@ -213,7 +213,7 @@ handleKeyDown(event: KeyboardEvent): void {
 
   updateSellPriceUsd(price: number): void {
     if (!isNaN(price)) {
-      this.sellPriceUsd.set(`$${Number(price).toFixed(2)}`);
+      this.sellPriceUsd.set(`$${Number(price).toFixed(3)}`);
     } else {
       this.sellPriceUsd.set('');
     }
@@ -221,7 +221,7 @@ handleKeyDown(event: KeyboardEvent): void {
 
   updateBuyPriceUsd(price: number): void {
     if (!isNaN(price)) {
-      this.buyPriceUsd.set(`$${Number(price).toFixed(2)}`);
+      this.buyPriceUsd.set(`$${Number(price).toFixed(3)}`);
     } else {
       this.buyPriceUsd.set('');
     }
@@ -416,7 +416,7 @@ handleKeyDown(event: KeyboardEvent): void {
         this.showSuccessNotification = false;
         this.showFailedNotification = false;
         this.cdr.detectChanges();
-      }, 2000);
+      }, 5000);
 
       this.buttonState = 'swap';
 
