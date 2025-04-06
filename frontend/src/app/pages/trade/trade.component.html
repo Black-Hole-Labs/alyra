@@ -105,7 +105,7 @@
       [class.wallet]="buttonState === 'wallet'"
       [class.insufficient]="buttonState === 'insufficient'"
       [class.no-available-quotes]="buttonState === 'no-available-quotes'"
-      [disabled]="!isSwapButtonActive() || txData() === undefined || loading() === true || buttonState === 'insufficient'"
+      [disabled]="!isSwapButtonActive() || txData() === undefined || loading() === true || buttonState === 'insufficient' || buttonState === 'no-available-quotes'"
       (click)="isSwapButtonActive() && swap()">
       <ng-container *ngIf="buttonState === 'finding'">Finding Routes...</ng-container>
       <ng-container *ngIf="buttonState === 'approve'">Approve</ng-container>

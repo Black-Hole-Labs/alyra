@@ -153,7 +153,7 @@
 				[class.wallet]="buttonState === 'wallet'"
 				[class.wrong-address]="buttonState === 'wrong-address'"
 				[class.no-available-quotes]="buttonState === 'no-available-quotes'"
-				[disabled]="!isBridgeButtonActive() || buttonState === 'wallet' || buttonState === 'finding' || buttonState === 'wrong-address'"
+				[disabled]="!isBridgeButtonActive() || buttonState === 'wallet' || buttonState === 'finding' || buttonState === 'wrong-address' || buttonState === 'no-available-quotes'"
 				(click)="isBridgeButtonActive() && handleButtonClick()">
 				<ng-container *ngIf="buttonState === 'finding'">Finding Routes...</ng-container>
 				<ng-container *ngIf="buttonState === 'approve'">Approve</ng-container>
