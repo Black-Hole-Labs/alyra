@@ -14,3 +14,9 @@
 	</div>
 	
   </div>
+
+<app-failed-notification
+*ngIf="showFailedNotification"
+[message]="errorMessage"
+(close)="showFailedNotification = false">
+</app-failed-notification>

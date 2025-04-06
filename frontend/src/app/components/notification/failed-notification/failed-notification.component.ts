@@ -35,6 +35,7 @@ export class FailedNotificationComponent implements OnInit {
   @Input() selectedBuyToken: Token | undefined = undefined;
   @Input() sellAmount: string = '0';
   @Input() buyAmount: string = '0';
+  @Input() message: string = '';
   isVisible = true;
 
   ngOnInit() {
