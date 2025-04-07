@@ -92,9 +92,9 @@
 						<input
 							type="text"
 							id="number-input"
-							placeholder="Enter amount"
-							[value]="buyAmount"
-							(input)="processInput($event, true)"
+							placeholder="0.0"
+							[(ngModel)]="buyAmountForInput"
+							[disabled]=true
 						/>
 					</div>
 				</div>

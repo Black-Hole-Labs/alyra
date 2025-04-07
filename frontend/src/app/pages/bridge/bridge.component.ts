@@ -128,8 +128,9 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   txData = signal<TransactionRequestEVM | TransactionRequestSVM | undefined> (undefined);
   private inputTimeout: any;
+  buyAmountForInput = signal<string | undefined>(undefined);
   sellAmount: string = '';
-  buyAmount: string = '';
+  buyAmount = signal<string | undefined>(undefined);;
   validatedSellAmount = signal<string>('');
 
   selectedToken = signal<Token | undefined>(undefined);
@@ -345,9 +346,10 @@ export class BridgeComponent implements OnInit, OnDestroy {
         console.log('Quote received:', response);
         if (response.estimate && response.transactionRequest) 
         {
-          const readableToAmount = this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals));
-        
+          const toAmountNumber = Number(this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals)));
+          const readableToAmount = toAmountNumber.toFixed(Number(toTokenDecimals)).replace(/\.?0+$/, '');
           console.log('readableToAmount:', readableToAmount);
+          this.updateBuyAmount(readableToAmount);
           
           // if(this.blockchainStateService.network()!.id == 1151111081099710) // SVM
           // {
@@ -509,6 +511,31 @@ export class BridgeComponent implements OnInit, OnDestroy {
       }, 2000);
     }
     console.log("some data");
+  }
+
+  updateBuyAmount(value: string): void {
+    const limited = this.limitDecimals(value, 6);
+    const num = Number(limited.replace('…', ''));
+  
+    if (!isNaN(num)) {
+      this.buyAmount.set(value); 
+      this.buyAmountForInput.set(limited);
+    } else {
+      this.buyAmount.set('0');
+      this.buyAmountForInput.set('0');
+    }
+  }
+
+  limitDecimals(value: string, maxDecimals: number): string {
+    if (value.includes('.')) {
+      const [intPart, decimalPart] = value.split('.');
+      const trimmedDecimals = decimalPart.slice(0, maxDecimals);
+      const hasMore = decimalPart.length > maxDecimals;
+  
+      const result = `${intPart}.${trimmedDecimals}`;
+      return hasMore ? result + '…' : result;
+    }
+    return value;
   }
 
   // Управление анимацией
