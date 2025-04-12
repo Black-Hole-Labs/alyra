@@ -49,7 +49,7 @@
               				(input)="processInput($event, true)"
 							(keydown)="handleKeyDown($event)"
 						/>
-						<h6 class="max-button" *ngIf="isWalletConnected()">MAX</h6>
+						<h6 class="max-button" (click)="setMaxSellAmount()" *ngIf="isWalletConnected()">MAX</h6>
 					</div>
 				</div>
 			</div>
@@ -153,13 +153,15 @@
 				[class.wallet]="buttonState === 'wallet'"
 				[class.wrong-address]="buttonState === 'wrong-address'"
 				[class.no-available-quotes]="buttonState === 'no-available-quotes'"
+				[class.insufficient]="buttonState === 'insufficient'"
 				[disabled]="!isBridgeButtonActive() || buttonState === 'wallet' || buttonState === 'finding' || buttonState === 'wrong-address' || buttonState === 'no-available-quotes'"
-				(click)="isBridgeButtonActive() && handleButtonClick()">
+				(click)="isBridgeButtonActive() && bridge()">
 				<ng-container *ngIf="buttonState === 'finding'">Finding Routes...</ng-container>
 				<ng-container *ngIf="buttonState === 'approve'">Approve</ng-container>
 				<ng-container *ngIf="buttonState === 'wallet'">Continue in your wallet...</ng-container>
 				<ng-container *ngIf="buttonState === 'wrong-address'">Wrong address</ng-container>
 				<ng-container *ngIf="buttonState === 'bridge'">Bridge</ng-container>
+				<ng-container *ngIf="buttonState === 'insufficient'">Insufficient balance</ng-container>
 				<ng-container *ngIf="buttonState === 'no-available-quotes'">No available quotes</ng-container>
       </button>
 

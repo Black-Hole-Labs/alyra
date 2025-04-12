@@ -20,7 +20,7 @@ export class BridgeTxComponent implements OnInit {
   @Input() selectedNetworkTo: Network | undefined = undefined;
   @Input() selectedToken: Token | undefined = undefined;
   @Input() selectedReceiveToken: Token | undefined = undefined;
-  @Input() inputAmount: string = '';
+  @Input() inputAmount: number = 0;
   @Input() txHash: string = '';
   @Input() customAddress: string = '';
   @Output() close = new EventEmitter<void>();

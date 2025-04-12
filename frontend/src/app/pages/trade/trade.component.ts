@@ -59,9 +59,6 @@ export class TradeComponent {
 	slippage: number = 0.005; //  // 0.005 is default for LIFI
   gasPriceUSD: number | undefined;
 
-  // showTokenPopup = false;
-  // showTokenBuyPopup = false;
-	//showSettingsPopup = false;
   selectedToken = signal<Token | undefined>(undefined);
   selectedBuyToken = signal<Token | undefined>(undefined);
   //showConnectWalletPopup: boolean = false;
@@ -96,9 +93,6 @@ export class TradeComponent {
 
   private inputTimeout: any;
 
-  private previousWalletName: string | null = '';
-  private tokensLoaded = false;
-
   constructor(
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
@@ -117,16 +111,18 @@ export class TradeComponent {
 
       effect(() => {
         const tokens = this.blockchainStateService.filteredTokens();
-      
+        const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
+        const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
+    
+        this.selectedToken.set(newSelectedToken);
+        this.selectedBuyToken.set(newSelectedBuyToken);
+        if(!this.blockchainStateService.connected()){
+          return;
+        }
         Promise.resolve().then(() => {
-          const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
-          const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
-      
-          this.selectedToken.set(newSelectedToken);
-          this.selectedBuyToken.set(newSelectedBuyToken);
       
           if (this.selectedToken()) {
-            this.getBalanceForToken(this.selectedToken()!)
+            this.walletBalanceService.getBalanceForToken(this.selectedToken()!)
               .then((balanceStr) => {
                 this.balance.set(Number(parseFloat(balanceStr)));
               })
@@ -137,7 +133,7 @@ export class TradeComponent {
           }
       
           if (this.selectedBuyToken()) {
-            this.getBalanceForToken(this.selectedBuyToken()!)
+            this.walletBalanceService.getBalanceForToken(this.selectedBuyToken()!)
               .then((balanceStr) => {
                 this.balanceBuy.set(Number(parseFloat(balanceStr)));
               })
@@ -255,7 +251,6 @@ export class TradeComponent {
   }
 
   setMaxSellAmount(): void {
-    //this.sellAmount = this.balance().toString();
     this.updateSellAmount(this.balance().toString());
     this.validatedSellAmount.update(value => this.balance());
     if (Number(this.validatedSellAmount()) > this.balance()) {
@@ -297,18 +292,19 @@ export class TradeComponent {
 	// }
 	
 	swapTokens(): void {
-    this.txData.set(undefined);
+    this.txData.update(() => undefined);
+    this.buttonState = "swap";
 	
-		const tempToken = this.selectedToken();
-		this.selectedToken.set(this.selectedBuyToken());
-		this.selectedBuyToken.set(tempToken);
+    const tempToken = this.selectedToken();
+    this.selectedToken.update(() => this.selectedBuyToken());
+    this.selectedBuyToken.update(() => tempToken);
 
     const tempBalance = this.balance(); 
-    this.balance.set(this.balanceBuy());
-    this.balanceBuy.set(tempBalance);
-
+    this.balance.update(() => this.balanceBuy());
+    this.balanceBuy.update(() => tempBalance);
+    this.buyAmountForInput.update(() => '0');
     //this.getTxData();
-	}
+  }
 
   openTokenPopup(): void {
     this.popupService.openPopup('tokenChangeSell');
@@ -321,41 +317,12 @@ export class TradeComponent {
   async onTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.selectedToken.set(token);
-    this.balance.set(Number((parseFloat(await this.getBalanceForToken(token)))));
+    this.balance.set(Number((parseFloat(await this.walletBalanceService.getBalanceForToken(token)))));
     // this.selectedToken = token.symbol;
     // this.selectedTokenImage = token.imageUrl;
     // this.selectedTokenAddress = token.contractAddress;
     // this.selectedTokendecimals = token.decimals;
     this.closeTokenPopup();
-  }
-
-  async getBalanceForToken(token: Token): Promise<string> {
-    const walletAddress = this.blockchainStateService.getCurrentWalletAddress();
-    if (!walletAddress) {
-      console.error(`Failed to get wallet address`);
-      return "0";
-    }
-  
-    const currentNetwork = this.blockchainStateService.getCurrentNetwork();
-    if (!currentNetwork) {
-      console.error('Current network not found');
-      return "0";
-    }
-  
-    if (currentNetwork.id === 1151111081099710) { // SVM
-      if (token.symbol === "SOL") {
-        return this.walletBalanceService.getSolanaBalance(walletAddress);
-      } else {
-        return this.walletBalanceService.getSolanaBalance(walletAddress, token.contractAddress);
-      }
-    } else { // EVM
-      if (token.symbol === "ETH") {
-        const balance = await this.walletBalanceService.getEvmBalance(walletAddress, currentNetwork.rpcUrls[0], Number(token.decimals));
-        return balance;
-      } else {
-        return await this.walletBalanceService.getEvmBalance(walletAddress, currentNetwork.rpcUrls[0], Number(token.decimals), token.contractAddress);
-      }
-    }
   }
 
   // Методы управления попапом для buy
@@ -370,7 +337,7 @@ export class TradeComponent {
   async onBuyTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.selectedBuyToken.set(token);
-    this.balanceBuy.set(Number(parseFloat(await this.getBalanceForToken(token)).toFixed(6)));
+    this.balanceBuy.set(Number(parseFloat(await this.walletBalanceService.getBalanceForToken(token)).toFixed(6)));
     // this.selectedBuyToken = token.symbol;
     // this.selectedBuyTokenImage = token.imageUrl;
     // this.selectedBuyTokenAddress = token.contractAddress;
@@ -472,8 +439,8 @@ export class TradeComponent {
     
     try
     {
-      this.balance.set(Number((parseFloat(await this.getBalanceForToken(this.selectedToken()!)))));
-      this.balanceBuy.set(Number((parseFloat(await this.getBalanceForToken(this.selectedBuyToken()!)))));
+      this.balance.set(Number((parseFloat(await this.walletBalanceService.getBalanceForToken(this.selectedToken()!)))));
+      this.balanceBuy.set(Number((parseFloat(await this.walletBalanceService.getBalanceForToken(this.selectedBuyToken()!)))));
     }
     catch (error) 
     {
@@ -523,7 +490,8 @@ export class TradeComponent {
 
     //const fromAddress = this.blockchainStateService.walletAddress()!;
     const fromTokenDecimals = this.selectedToken()!.decimals;
-    const approveAmount = parseUnits(this.validatedSellAmount().toString(), fromTokenDecimals)
+    const amount = this.transactionsService.toNonExponential(this.validatedSellAmount());
+    const approveAmount = parseUnits(amount, fromTokenDecimals)
 
     // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
     // console.log("allowance",allowance);
@@ -570,6 +538,7 @@ export class TradeComponent {
     const fromTokenDecimals = this.selectedToken()!.decimals;
     //const fromAmount = this.validatedSellAmount;
     const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
+    console.log(formattedFromAmount)//todo
     const fromAmount = parseUnits(formattedFromAmount, fromTokenDecimals);
     //const fromToken = this.selectedTokenAddress;
     const fromToken = this.selectedToken()!.contractAddress;
