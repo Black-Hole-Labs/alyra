@@ -68,6 +68,9 @@ export class BlackholeNetworkComponent {
       return;
     }
 
+    if(!this.blockchainStateService.connected()){
+      this.blockchainStateService.updateNetwork(networkId);
+    }
 
     const currentProvider = this.blockchainStateService.getCurrentProvider();
     if (!currentProvider) {
@@ -87,6 +90,7 @@ export class BlackholeNetworkComponent {
       this.blockchainStateService.updateWalletAddress(provider.address);
       this.blockchainStateService.updateNetwork(networkId);
       console.log(`Switched to network: ${selectedNetwork.name}`);
+      this.blockchainStateService.updateNetwork(networkId);
       
       // Close the popup after successful network selection
       this.close.emit();
