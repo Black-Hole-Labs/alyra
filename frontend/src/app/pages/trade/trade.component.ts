@@ -414,13 +414,11 @@ export class TradeComponent {
 
       return;
     }
-
-    await this.sleep(1000);
     
     const finalStatus = await this.transactionsService.pollStatus(txHash);
     
     this.showPendingNotification = false;
-    if (finalStatus === 'DONE') {
+    if (finalStatus.status === 'DONE') {
       this.showSuccessNotification = true;
     } else {
       this.showFailedNotification = true;
@@ -643,7 +641,7 @@ export class TradeComponent {
         
       },
       error: (error: HttpErrorResponse) => {
-        if(error.error.message === 'No available quotes for the requested transfer'){
+        if(error.error.message === 'No available quotes for the requested transfer' || error.error.statusCode === 422){
           this.buttonState = 'no-available-quotes';
         }
         else if (error.status === 404) {

@@ -160,7 +160,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
     effect(() => {
       if (this.isBridgeButtonActive()) {
-        this.setButtonState('finding');
         this.getTxData();
       }
     });
@@ -271,6 +270,11 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   getTxData() {
+    this.setButtonState('finding');
+    if (this.validatedSellAmount() > this.balance()) {
+      this.setButtonState('insufficient');
+      return;
+    }
     const fromChain = (this.selectedNetwork()?.id)?.toString();
     const toChain = (this.selectedBuyNetwork()?.id)?.toString();
     console.log("this.selectedNetwork()?",this.selectedNetwork());
@@ -299,7 +303,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
       console.log("adjusted From Amount",adjustedFromAmount);
 
       console.error('Missing required parameters');
-      this.setButtonState('bridge');
       return;
     }
     
@@ -360,7 +363,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
         
       },
       error: (error: HttpErrorResponse) => {
-        if(error.error.message === 'No available quotes for the requested transfer'){
+        if(error.error.message === 'No available quotes for the requested transfer' || error.error.statusCode === 422){
           this.setButtonState('no-available-quotes');  
         }
         else if(error.error.message.includes("Invalid toAddress") || error.error.message.includes("Invalid fromAddress")){
@@ -578,7 +581,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
       this.selectedNetwork() !== undefined &&
       this.selectedBuyNetwork() !== undefined &&
       this.selectedBuyToken() !== undefined &&
-      this.validatedSellAmount() !== 0
+      this.validatedSellAmount() !== 0 &&
+      this.buttonState === "bridge" 
     );
 
   isWalletConnected(): boolean {
@@ -673,8 +677,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
     {
       txHash = await this.evmSwap();
     }
-
-    await this.sleep(1000);
 
     this.bridgeTxHash = txHash;
     this.openBridgeTxPopup();

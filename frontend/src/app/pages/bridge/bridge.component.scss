@@ -464,7 +464,7 @@
 }
 
 .main-button.wrong-address,
-.main-button.no-available-quotes 
+.main-button.no-available-quotes,
 .main-button.insufficient{
   background-color: var(--red);
   color: white;
@@ -472,8 +472,8 @@
 }
 
 .main-button.wrong-address:hover,
-.main-button.no-available-quotes:hover
-.main-button.insufficient {
+.main-button.no-available-quotes:hover,
+.main-button.insufficient:hover {
   background-color: #ff6b6b;
 }
 

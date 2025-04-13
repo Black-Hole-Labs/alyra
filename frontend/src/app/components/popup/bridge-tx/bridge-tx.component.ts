@@ -25,6 +25,9 @@ export class BridgeTxComponent implements OnInit {
   @Input() customAddress: string = '';
   @Output() close = new EventEmitter<void>();
   txStatusText = 'Pending';
+  sendingTxLink: string | null = null;
+  receivingTxLink: string | null = null;
+  isLoading: boolean = true;
 
   constructor(
       private blockchainStateService: BlockchainStateService,
@@ -36,14 +39,42 @@ export class BridgeTxComponent implements OnInit {
 
   async ngOnInit() {
     console.log('BridgeTx initialized with amount:', this.inputAmount);
-    const finalStatus = await this.transactionsService.pollStatus(this.txHash);
-    if (finalStatus === 'DONE') {
-      this.txStatusText = 'Transaction Successful';
-    } else {
-      this.txStatusText = 'Transaction Failed';
+    
+    try {
+      const initialStatus = await this.transactionsService.getInitialStatus(this.txHash);
+      this.updateLinkState(initialStatus);
+      
+      if (initialStatus.status !== 'DONE' && initialStatus.status !== 'FAILED') {
+        const finalStatus = await this.transactionsService.waitForCompletion(this.txHash);
+        this.updateLinkState(finalStatus);
+        this.txStatusText = finalStatus.status === 'DONE' ? 'Successful' : 'Failed';
+      } else {
+        this.txStatusText = initialStatus.status === 'DONE' ? 'Successful' : 'Failed';
+      }
+    } catch (error) {
+      console.error('Error processing transaction:', error);
+      this.txStatusText = 'Error';
+    } finally {
+      this.isLoading = false;
     }
   }
 
+  private updateLinkState(status: any): void {
+    if (status?.sending?.txLink) {
+      this.sendingTxLink = status.sending.txLink;
+    }
+    
+    if (status?.receiving?.txLink) {
+      this.receivingTxLink = status.receiving.txLink;
+    }
+  }
+  
+  navigateTo(url: string | null): void {
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  }
+  
   closePopup(): void {
     this.close.emit();
   }
