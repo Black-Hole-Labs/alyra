@@ -298,7 +298,7 @@ export class TradeComponent {
     const tempBalance = this.balance(); 
     this.balance.update(() => this.balanceBuy());
     this.balanceBuy.update(() => tempBalance);
-    this.buyAmountForInput.update(() => '0');
+    this.buyAmountForInput.update(() => undefined);
     //this.getTxData();
   }
 

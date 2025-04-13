@@ -8,10 +8,12 @@ import { BlockchainStateService } from './blockchain-state.service';
   providedIn: 'root'
 })
 export class WalletBalanceService {
-  private solanaRpcUrl = 'https://frosty-nameless-sunset.solana-mainnet.quiknode.pro/74791b866a6fa352e6b6a8026df34dc0b4f4475f/';
+  private solanaRpcUrl: string;
   private solanaConnection: Connection;
 
   constructor(private blockchainStateService: BlockchainStateService) {
+    this.solanaRpcUrl = this.blockchainStateService.allNetworks().find((network: { id: number; }) => network.id === 1151111081099710)?.rpcUrls[0] 
+                        || "https://solana-rpc.publicnode.com";;
     this.solanaConnection = new Connection(this.solanaRpcUrl, 'confirmed');
   }
 
