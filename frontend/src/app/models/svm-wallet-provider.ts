@@ -55,7 +55,8 @@ export class SvmWalletProvider implements WalletProvider {
   }
 
   async sendTx(txData: TransactionRequestSVM): Promise<string> {
-    const connection = new Connection('https://frosty-nameless-sunset.solana-mainnet.quiknode.pro/74791b866a6fa352e6b6a8026df34dc0b4f4475f/', 'confirmed');//todo rpc error after bridge
+    const solanaRPC = this.blockchainStateService.allNetworks().find((network: { id: number; }) => network.id === 1151111081099710)?.rpcUrls[0] || "https://solana-rpc.publicnode.com";
+    const connection = new Connection(solanaRPC!, 'confirmed');//todo rpc error after bridge
     const decodedTx = Uint8Array.from(atob(txData.data.toString()), c => c.charCodeAt(0));
     const versionedTx = VersionedTransaction.deserialize(decodedTx);
     const signedTx = await this.provider.signAndSendTransaction(versionedTx);
