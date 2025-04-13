@@ -493,7 +493,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   updateBuyAmount(value: string): void {
     const limited = this.limitDecimals(value, 6);
-    const num = Number(limited.replace('…', ''));
+    const num = Number(limited);
   
     if (!isNaN(num)) {
       this.buyAmount.set(value); 
@@ -504,14 +504,24 @@ export class BridgeComponent implements OnInit, OnDestroy {
     }
   }
 
+  updateSellAmount(value: string): void {
+    const limited = this.limitDecimals(value, 6);
+    const num = Number(limited);
+  
+    if (!isNaN(num)) {
+      this.sellAmount = value; 
+      this.sellAmountForInput.set(limited);
+    } else {
+      this.sellAmount = '0';
+      this.sellAmountForInput.set('0');
+    }
+  }
+
   limitDecimals(value: string, maxDecimals: number): string {
     if (value.includes('.')) {
       const [intPart, decimalPart] = value.split('.');
       const trimmedDecimals = decimalPart.slice(0, maxDecimals);
-      const hasMore = decimalPart.length > maxDecimals;
-  
-      const result = `${intPart}.${trimmedDecimals}`;
-      return hasMore ? result + '…' : result;
+      return `${intPart}.${trimmedDecimals}`;
     }
     return value;
   }
@@ -588,19 +598,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
     }
     //this.updateBuyAmount();
     //this.updateSellPriceUsd();
-  }
-
-  updateSellAmount(value: string): void {
-    const limited = this.limitDecimals(value, 6);
-    const num = Number(limited.replace('…', ''));
-  
-    if (!isNaN(num)) {
-      this.sellAmount = value; 
-      this.sellAmountForInput.set(limited);
-    } else {
-      this.sellAmount = '0';
-      this.sellAmountForInput.set('0');
-    }
   }
 
   openConnectWalletPopup(): void {

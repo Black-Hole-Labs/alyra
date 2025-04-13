@@ -45,7 +45,7 @@
 							type="text"
 							id="number-input"
 							placeholder="Enter amount"
-							[value]="sellAmount"
+							[(ngModel)]="sellAmountForInput"
               				(input)="processInput($event, true)"
 							(keydown)="handleKeyDown($event)"
 						/>

@@ -131,9 +131,19 @@ export class TransactionsService {
     return (Number(toAmount) / Math.pow(10, decimals)).toString();
   }
 
-  toNonExponential(num: number): string {
-    return num.toFixed(18).replace(/\.?0+$/, '');
+  toNonExponential(num: number, decimals: number = 18): string {
+    if (!isFinite(num)) return '0';
+  
+    const [intPart, decPart = ''] = num.toString().split('e').length === 2
+      ? Number(num).toFixed(30).split('.')
+      : num.toString().split('.');
+  
+    const trimmedDec = decPart.slice(0, decimals);
+    const result = trimmedDec ? `${intPart}.${trimmedDec}` : intPart;
+
+    return result.replace(/\.?0+$/, '');
   }
+  
 
   parseGasPriceUSD(gasPriceHex: string, gasLimitHex: string, token: { decimals: number; priceUSD: string }): string {
     // Конвертируем gasPrice и gasLimit из hex в десятичное число

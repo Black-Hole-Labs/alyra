@@ -197,7 +197,7 @@ export class TradeComponent {
 
   updateBuyAmount(value: string): void {
     const limited = this.limitDecimals(value, 6);
-    const num = Number(limited.replace('…', ''));
+    const num = Number(limited);
   
     if (!isNaN(num)) {
       this.buyAmount.set(value); 
@@ -210,7 +210,7 @@ export class TradeComponent {
 
   updateSellAmount(value: string): void {
     const limited = this.limitDecimals(value, 6);
-    const num = Number(limited.replace('…', ''));
+    const num = Number(limited);
   
     if (!isNaN(num)) {
       this.sellAmount = value; 
@@ -225,14 +225,10 @@ export class TradeComponent {
     if (value.includes('.')) {
       const [intPart, decimalPart] = value.split('.');
       const trimmedDecimals = decimalPart.slice(0, maxDecimals);
-      const hasMore = decimalPart.length > maxDecimals;
-  
-      const result = `${intPart}.${trimmedDecimals}`;
-      return hasMore ? result + '…' : result;
+      return `${intPart}.${trimmedDecimals}`;
     }
     return value;
   }
-  
 
   updateSellPriceUsd(price: number): void {
     if (!isNaN(price)) {
@@ -531,6 +527,10 @@ export class TradeComponent {
 
   getTxData() {
     this.buttonState = 'finding';
+    if (this.validatedSellAmount() > this.balance()) {
+      this.buttonState = 'insufficient';
+      return;
+    }
     const fromChain = this.blockchainStateService.network()!.id.toString();
     const toChain = this.blockchainStateService.network()!.id.toString();
     const fromAddress = this.blockchainStateService.walletAddress()!;
@@ -538,7 +538,6 @@ export class TradeComponent {
     const fromTokenDecimals = this.selectedToken()!.decimals;
     //const fromAmount = this.validatedSellAmount;
     const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
-    console.log(formattedFromAmount)//todo
     const fromAmount = parseUnits(formattedFromAmount, fromTokenDecimals);
     //const fromToken = this.selectedTokenAddress;
     const fromToken = this.selectedToken()!.contractAddress;
