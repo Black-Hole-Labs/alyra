@@ -496,6 +496,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   updateBuyAmount(value: string): void {
     const limited = this.limitDecimals(value, 6);
+    console.log("limited",limited);
     const num = Number(limited);
   
     if (!isNaN(num)) {
@@ -927,7 +928,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
         !this.receiveTextAnimated && 
         this.selectedBuyToken()?.symbol && 
         this.validatedSellAmount() > 0) {
-        const finalText = `${this.buyAmount()}`; // Убрали "in 30 sec"
+        const finalText = `${this.buyAmountForInput()}`; // Убрали "in 30 sec"
         this.animateText(this.receiveTextElement.nativeElement, finalText, 'receiveText');
         this.receiveTextAnimated = true;
     }
