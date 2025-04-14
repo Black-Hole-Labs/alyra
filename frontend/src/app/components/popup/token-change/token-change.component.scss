@@ -191,7 +191,7 @@ input::placeholder {
   font-family: "JetBrains Mono", monospace;
   font-weight: 700;
   font-size: 18px;
-  color: white;
+  color: rgba(var(--white), 0.4);
 }
 
 .token .name p {

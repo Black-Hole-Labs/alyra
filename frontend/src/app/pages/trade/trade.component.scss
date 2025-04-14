@@ -347,3 +347,7 @@ p {
   font-size: 15px;
   color: var(--elem-nonactive);
 }
+
+.settings-popup {
+	z-index: 10;
+}

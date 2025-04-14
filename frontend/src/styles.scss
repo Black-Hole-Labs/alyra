@@ -107,7 +107,8 @@ app-token-change-buy .token-change {
 .popup-opening .network-change-to,
 .popup-opening .bridge-tx,
 .popup-opening app-token-change .token-change,
-.popup-opening app-token-change-buy .token-change {
+.popup-opening app-token-change-buy .token-change,
+.popup-opening .popup-network {
   animation: popupFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
@@ -124,7 +125,8 @@ app-token-change-buy .token-change {
 .popup-closing .network-change-to,
 .popup-closing .bridge-tx,
 .popup-closing app-token-change .token-change,
-.popup-closing app-token-change-buy .token-change {
+.popup-closing app-token-change-buy .token-change,
+.popup-closing .popup-network {
   animation: popupFadeOut 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
@@ -258,7 +260,7 @@ app-settings {
 		top: 75px;
 	}
 }
-@media screen and (min-width: 769px) and (max-width: 970px) {
+@media screen and (min-width: 480px) and (max-width: 970px) {
 
 	app-settings-bridge {
 		top: -23px;

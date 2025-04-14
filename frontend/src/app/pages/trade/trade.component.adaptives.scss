@@ -427,7 +427,7 @@
 		font-size: 8px;
 	}
 }
-@media screen and (min-width: 769px) and (max-width: 970px) {
+@media screen and (min-width: 480px) and (max-width: 970px) {
 	.trade-window {
 		width: 450px;
 		border-radius: 21px;
@@ -598,6 +598,7 @@
 		width: 40px;
 		top: 100px;
 		gap: 2px;
+		z-index: 1;
 	}
 	
 	.arrow-up, .arrow-down {
@@ -635,6 +636,7 @@
 		height: 117px;
 		border-radius: 12px;
 		padding: 15px 20px 10px 20px;
+		position: relative;
 	}
 	
 	.sell {
@@ -657,7 +659,10 @@
 	}
 	
 	.token {
-		margin-top: 27px;
+		position: absolute;
+		top: 45px;
+		right: 30px;
+		margin-top: 0px;
 		gap: 10px;
 	}
 	

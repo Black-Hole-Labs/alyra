@@ -316,7 +316,7 @@
 		margin-left: 6px;
 	}
 }
-@media screen and (min-width: 769px) and (max-width: 970px) {
+@media screen and (min-width: 480px) and (max-width: 970px) {
 	.token-change {
 		width: 450px;
 		height: 539px;
@@ -425,7 +425,7 @@
 @media screen and (min-width: 360px) and (max-width: 479px) {
 	.token-change {
 		width: 90vw;
-		height: 539px;
+		height: 70vh;
 		border-radius: 16px;
 		padding: 15px;
 	}

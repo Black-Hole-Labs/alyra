@@ -15,7 +15,8 @@
 }
 
 .bridge-window.has-receive {
-  height: 701px;
+  //height: 701px;
+	height: 620px;
 }
 
 .bridge-window.has-custom-address {
@@ -23,7 +24,8 @@
 }
 
 .bridge-window.has-custom-address.has-receive {
-  height: 776px;
+  //height: 776px;
+	height: 695px;
 }
 
 .header {
@@ -199,6 +201,17 @@
 }
 
 .bridge-amount h6:hover {
+  color: var(--elem-nonactive);
+}
+
+.bridge-amount .receive-amount {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 18px;
+  color: white;
+}
+
+.bridge-amount .receive-amount.placeholder {
   color: var(--elem-nonactive);
 }
 
@@ -415,7 +428,7 @@
 
 .main-button {
   margin-top: 30px;
-	width: 540px;
+  width: 540px;
   min-height: 65px;
   background-color: white;
   border-radius: 16px;
@@ -424,7 +437,7 @@
   font-size: 18px;
   color: black;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease-in-out !important;
 }
 
 .main-button:hover {
@@ -442,15 +455,13 @@
   background-color: var(--dark-select);
 }
 
-.main-button.finding,
-.main-button.wallet {
+.main-button.finding, .main-button.wallet {
   background-color: var(--dark-select);
   color: var(--elem-nonactive);
   cursor: wait;
 }
 
-.main-button.finding:hover,
-.main-button.wallet:hover {
+.main-button.finding:hover, .main-button.wallet:hover {
   background-color: var(--dark-select);
 }
 
@@ -465,7 +476,7 @@
 
 .main-button.wrong-address,
 .main-button.no-available-quotes,
-.main-button.insufficient{
+.main-button.insufficient {
   background-color: var(--red);
   color: white;
   cursor: not-allowed;

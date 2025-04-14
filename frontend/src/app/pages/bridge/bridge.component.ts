@@ -923,11 +923,13 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   // Метод для проверки и запуска анимации текста
   private checkAndAnimateReceiveText() {
-    if (this.receiveTextElement && !this.receiveTextAnimated && this.selectedBuyToken()!.symbol) {
-      // Добавляем информацию о времени в секундах (например, 30 секунд)
-      const finalText = `${this.validatedSellAmount()} ${this.selectedBuyToken()!.symbol} in 30 sec`;
-      this.animateText(this.receiveTextElement.nativeElement, finalText, 'receiveText');
-      this.receiveTextAnimated = true;
+    if (this.receiveTextElement && 
+        !this.receiveTextAnimated && 
+        this.selectedBuyToken()?.symbol && 
+        this.validatedSellAmount() > 0) {
+        const finalText = `${this.buyAmount()}`; // Убрали "in 30 sec"
+        this.animateText(this.receiveTextElement.nativeElement, finalText, 'receiveText');
+        this.receiveTextAnimated = true;
     }
   }
 

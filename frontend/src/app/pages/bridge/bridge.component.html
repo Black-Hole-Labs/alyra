@@ -89,13 +89,17 @@
 						<p>{{ selectedBuyToken()?.symbol || 'Select Token' }}</p>
 					</div>
 					<div class="bridge-amount">
-						<input
-							type="text"
-							id="number-input"
-							placeholder="0.0"
-							[(ngModel)]="buyAmountForInput"
-							[disabled]=true
-						/>
+						<p *ngIf="selectedBuyToken() && validatedSellAmount() > 0" #receiveText 
+							class="receive-amount">{{ buyAmount() }}</p>
+						<p *ngIf="!validatedSellAmount() || validatedSellAmount() === 0" 
+							class="receive-amount placeholder">0.0</p>
+						<!-- <input
+              type="text"
+              id="number-input"
+              placeholder="0.0"
+              [(ngModel)]="buyAmountForInput"
+              [disabled]=true
+            /> -->
 					</div>
 				</div>
 			</div>
@@ -132,7 +136,7 @@
 				</div>
 			</div>
 			
-			<div class="receive"
+			<!-- <div class="receive"
 				 *ngIf="isBridgeButtonActive()"
 				@receiveAnimation>
 				<h4>Receive</h4>
@@ -142,7 +146,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
       <button 
 				class="main-button" 

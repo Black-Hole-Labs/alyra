@@ -178,7 +178,7 @@
 	}
 	
 }
-@media screen and (min-width: 769px) and (max-width: 970px) {
+@media screen and (min-width: 480px) and (max-width: 970px) {
 	.blackhole-menu {
 		width: 230px;
 		border-radius: 22px;
@@ -242,7 +242,7 @@
 @media screen and (min-width: 360px) and (max-width: 479px) {
 	.blackhole-menu {
 		width: 90%;
-		height: 80%;
+		height: 70%;
 		border-radius: 16px;
 		padding: 15px 18px;
 		backdrop-filter: blur(65px);
@@ -273,15 +273,15 @@
 	}
 	
 	.devider > .hr1 {
-		width: 261px;
+		width: 65%;
 	}
 	
 	.devider2 > .hr2 {
-		width: 277px;
+		width: 75%;
 	}
 	
 	.devider2 > .hr3 {
-		width: 240px;
+		width: 65%;
 	}
 	
 	.socials,
