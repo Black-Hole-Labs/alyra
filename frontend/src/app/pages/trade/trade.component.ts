@@ -103,11 +103,16 @@ export class TradeComponent {
   ) {
       effect(() => 
       {
-        if (this.allFieldsReady()) 
-        {
+        try{
           this.getTxData();
         }
-      });
+        catch(error){
+          // this.updateBuyAmount('0.0');
+          // update gas = 0.0
+          console.log("error",error);
+          this.buttonState = 'no-available-quotes';
+        }
+      }, { allowSignalWrites: true });
 
       effect(() => {
         const tokens = this.blockchainStateService.filteredTokens();

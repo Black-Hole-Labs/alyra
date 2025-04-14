@@ -160,9 +160,18 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
     effect(() => {
       if (this.isBridgeButtonActive()) {
-        this.getTxData();
+        try{
+          this.getTxData();
+        }
+        catch(error){
+          // this.updateBuyAmount('0.0');
+          // update gas = 0.0
+          console.log("error",error);
+          this.setButtonState('no-available-quotes');
+        }
+        
       }
-    });
+    }, { allowSignalWrites: true });
 
     effect(() => {
         const tokens = this.blockchainStateService.filteredTokens();
