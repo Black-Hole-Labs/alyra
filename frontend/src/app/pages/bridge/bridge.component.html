@@ -89,10 +89,12 @@
 						<p>{{ selectedBuyToken()?.symbol || 'Select Token' }}</p>
 					</div>
 					<div class="bridge-amount">
-						<p *ngIf="selectedBuyToken() && validatedSellAmount() > 0" #receiveText 
-							class="receive-amount">{{ buyAmount() }}</p>
-						<p *ngIf="!validatedSellAmount() || validatedSellAmount() === 0" 
-							class="receive-amount placeholder">0.0</p>
+						@if(selectedBuyToken() && validatedSellAmount() > 0 && buyAmountForInput()){								
+							<p  #receiveText class="receive-amount">{{ buyAmountForInput() }}</p>
+						}
+						@else {
+							<p class="receive-amount placeholder">0.0</p>
+						}
 						<!-- <input
               type="text"
               id="number-input"
