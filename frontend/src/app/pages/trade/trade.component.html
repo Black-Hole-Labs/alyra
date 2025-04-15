@@ -66,13 +66,21 @@
     <div class="buy">
       <div class="left">
         <h6 class="buy-h6">Buy</h6>
-        <input
+        <div class="buy-amount-container">
+          @if(selectedBuyToken() && validatedSellAmount() > 0 && buyAmountForInput()) {								
+            <p #buyAmountText class="buy-amount">{{ buyAmountForInput() }}</p>
+          }
+          @else {
+            <p class="buy-amount placeholder">0.0</p>
+          }
+        </div>
+        <!-- <input
           type="text"
           id="number-input-buy"
 					placeholder="0.0"
           [(ngModel)]="buyAmountForInput"
           [disabled]=true
-        />
+        /> -->
       </div>
 
       <div class="right">

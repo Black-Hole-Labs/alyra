@@ -1,4 +1,4 @@
-import { Component, Renderer2, ChangeDetectorRef, computed, signal, effect } from '@angular/core';
+import { Component, Renderer2, ChangeDetectorRef, computed, signal, effect, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
@@ -39,7 +39,7 @@ export interface Token {
     PendingNotificationComponent
 ],
 })
-export class TradeComponent {
+export class TradeComponent implements AfterViewChecked {
 //[x: string]: any;
   sellAmount: string = ''; // Значение, которое пользователь вводит в поле продажи
   //validatedSellAmount: string = ''; 
@@ -92,6 +92,16 @@ export class TradeComponent {
   );
 
   private inputTimeout: any;
+
+  @ViewChild('buyAmountText') buyAmountTextElement: ElementRef | null = null;
+  private buyAmountTextAnimated = false;
+
+  private possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}:"<>?|';
+  private glitchChars = '!@#$%^&*()_+{}:"<>?|\\';
+  private cyberChars = '01010101110010101010101110101010';
+  private animationFrames = 60;
+  private animationSpeed = 35;
+  private animationTimeouts: { [key: string]: number } = {};
 
   constructor(
     private renderer: Renderer2,
@@ -207,6 +217,12 @@ export class TradeComponent {
     if (!isNaN(num)) {
       this.buyAmount.set(value); 
       this.buyAmountForInput.set(limited);
+      
+      // Сбрасываем флаг анимации для возможности повторного запуска
+      this.buyAmountTextAnimated = false;
+      
+      // Проверяем и запускаем анимацию по необходимости
+      setTimeout(() => this.checkAndAnimateBuyText(), 0);
     } else {
       this.buyAmount.set('0');
       this.buyAmountForInput.set('0');
@@ -704,6 +720,148 @@ export class TradeComponent {
 
   truncateTo6Decimals(value: number): number {
     return Math.trunc(value * 1e6) / 1e6;
+  }
+
+  /**
+   * Анимирует текст с "глитч-эффектом"
+   * @param element HTML элемент для анимации
+   * @param finalText Конечный текст
+   * @param elementId Уникальный идентификатор элемента
+   */
+  animateText(element: HTMLElement, finalText: string, elementId: string): void {
+    // Сохраняем оригинальный текст для гарантированного отображения в конце
+    const originalText = finalText;
+    
+    // Очищаем предыдущую анимацию, если она есть
+    if (this.animationTimeouts[elementId]) {
+      window.clearTimeout(this.animationTimeouts[elementId]);
+      delete this.animationTimeouts[elementId];
+    }
+    
+    let frame = 0;
+    const totalFrames = this.animationFrames;
+    
+    // Создаем массив для отслеживания "глитч-эффекта" для каждой буквы
+    const glitchStates = Array(finalText.length).fill(false);
+    // Массив для отслеживания "подобранных" букв
+    const resolvedChars = Array(finalText.length).fill(false);
+    
+    const animate = () => {
+      if (frame >= totalFrames) {
+        // Гарантируем, что в конце анимации отображается оригинальный текст
+        element.textContent = originalText;
+        delete this.animationTimeouts[elementId];
+        return;
+      }
+      
+      let result = '';
+      const progress = frame / totalFrames;
+      
+      // Изменяем кривую прогресса для более медленного начала и быстрого завершения
+      // Используем кубическую функцию для более плавного эффекта
+      const easedProgress = Math.pow(progress, 0.6);
+      
+      // Определяем, сколько букв должно быть "подобрано" на текущем кадре
+      // Используем нелинейную функцию для более интересного визуального эффекта
+      const resolvedCount = Math.floor(finalText.length * easedProgress);
+      
+      // Обновляем состояние "подобранных" букв
+      for (let i = 0; i < resolvedCount; i++) {
+        if (!resolvedChars[i]) {
+          resolvedChars[i] = true;
+        }
+      }
+      
+      // Случайно выбираем несколько букв для глитча
+      // Уменьшаем частоту глитчей в начале и увеличиваем к концу
+      if (frame % 2 === 0) {
+        const glitchProbability = 0.05 + (progress * 0.1);
+        for (let i = 0; i < finalText.length; i++) {
+          if (Math.random() < glitchProbability) {
+            glitchStates[i] = !glitchStates[i];
+          }
+        }
+      }
+      
+      for (let i = 0; i < finalText.length; i++) {
+        // Если буква уже "подобрана"
+        if (resolvedChars[i]) {
+          // Но может быть с глитчем
+          if (glitchStates[i] && frame < totalFrames * 0.95 && finalText[i] !== ' ') {
+            // Применяем глитч-эффект к уже подобранной букве
+            if (Math.random() < 0.3) {
+              // Используем кибер-символы для более футуристического вида
+              const cyberIndex = Math.floor(Math.random() * this.cyberChars.length);
+              result += this.cyberChars[cyberIndex];
+            } else {
+              const glitchIndex = Math.floor(Math.random() * this.glitchChars.length);
+              result += this.glitchChars[glitchIndex];
+            }
+          } else {
+            // Если это последние 10% анимации, всегда показываем правильную букву
+            if (progress > 0.9) {
+              result += finalText[i];
+            } else {
+              result += finalText[i];
+            }
+          }
+        } else {
+          // Буква еще не "подобрана"
+          if (finalText[i] === ' ') {
+            // Пробелы оставляем как есть для лучшей читаемости
+            result += ' ';
+          } else {
+            // Для букв выбираем случайный символ
+            // С вероятностью используем символы глитча или кибер-символы
+            const rand = Math.random();
+            if (rand < 0.2) {
+              const glitchIndex = Math.floor(Math.random() * this.glitchChars.length);
+              result += this.glitchChars[glitchIndex];
+            } else if (rand < 0.4) {
+              const cyberIndex = Math.floor(Math.random() * this.cyberChars.length);
+              result += this.cyberChars[cyberIndex];
+            } else {
+              const randomIndex = Math.floor(Math.random() * this.possibleChars.length);
+              result += this.possibleChars[randomIndex];
+            }
+          }
+        }
+      }
+      
+      element.textContent = result;
+      frame++;
+      
+      // Динамически регулируем скорость анимации - быстрее в начале, медленнее в середине, быстрее к концу
+      let currentSpeed = this.animationSpeed;
+      if (progress < 0.3) {
+        currentSpeed = this.animationSpeed * 0.8; // Быстрее в начале
+      } else if (progress > 0.7) {
+        currentSpeed = this.animationSpeed * 0.7; // Быстрее к концу
+      } else {
+        currentSpeed = this.animationSpeed * 1.2; // Медленнее в середине
+      }
+      
+      this.animationTimeouts[elementId] = window.setTimeout(animate, currentSpeed);
+    };
+    
+    animate();
+  }
+
+  // Метод для проверки и запуска анимации текста
+  private checkAndAnimateBuyText() {
+    if (this.buyAmountTextElement && 
+        !this.buyAmountTextAnimated && 
+        this.selectedBuyToken()?.symbol && 
+        this.validatedSellAmount() > 0 &&
+        this.buyAmountForInput()) {
+        const finalText = `${this.buyAmountForInput()}`;
+        this.animateText(this.buyAmountTextElement.nativeElement, finalText, 'buyAmountText');
+        this.buyAmountTextAnimated = true;
+    }
+  }
+
+  ngAfterViewChecked() {
+    this.checkAndAnimateBuyText();
   }
 }
 
