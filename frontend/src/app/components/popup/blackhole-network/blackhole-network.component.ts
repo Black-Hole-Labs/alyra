@@ -89,7 +89,6 @@ export class BlackholeNetworkComponent {
       this.selectedNetwork = networkId;
       this.blockchainStateService.updateWalletAddress(provider.address);
       this.blockchainStateService.updateNetwork(networkId);
-      this.blockchainStateService.updateNetwork(networkId);
       console.log(`Switched to network: ${selectedNetwork.name}`);
       
       // Close the popup after successful network selection

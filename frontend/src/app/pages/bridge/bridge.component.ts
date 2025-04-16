@@ -187,11 +187,12 @@ export class BridgeComponent implements OnInit, OnDestroy {
       { allowSignalWrites: true }
     );
 
-    effect(() => {
-        const networks = this.blockchainStateService.networks();
+    effect(async () => {
+        const networks = this.blockchainStateService.allNetworks();
         const netowrk = networks.length > 1 ? networks[1] : undefined;
         this.selectedBuyNetwork.set(netowrk);
-        this.blockchainStateService.fetchTokensForNetwork(netowrk!.id);
+        const tokens = await this.blockchainStateService.fetchTokensForNetwork(netowrk!.id);
+        this.selectedBuyToken.set(tokens.length > 0 ? tokens[0] : undefined);
       },
       { allowSignalWrites: true }
     );
@@ -233,10 +234,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
     effect(() => {
       const tokens = this.blockchainStateService.filteredTokens();
       const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
-      const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
   
       this.selectedToken.set(newSelectedToken);
-      this.selectedBuyToken.set(newSelectedBuyToken);
       if(!this.blockchainStateService.connected()){
         return;
       }
@@ -430,11 +429,30 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   async onNetworkSelected(event: Network ): Promise<void> {
-    this.selectedNetwork.set(event);
-    requestAnimationFrame(() => {
-      this.popupService.closeAllPopups();
-    });
-    this.receiveTextAnimated = false;
+    try{
+      if(!this.blockchainStateService.connected()){
+        this.blockchainStateService.updateNetwork(event.id);
+      }
+
+      const currentProvider = this.blockchainStateService.getCurrentProvider();
+      if (!currentProvider) {
+        console.error('No provider selected');
+        return;
+      }
+      
+      const provider = currentProvider.provider;
+      await provider.switchNetwork(event);
+      this.blockchainStateService.updateNetwork(event.id);
+
+      this.selectedNetwork.set(event);
+      requestAnimationFrame(() => {
+        this.popupService.closeAllPopups();
+      });
+      this.receiveTextAnimated = false;
+    }
+    catch(error:any){
+      console.error(error);
+    }
   }
 
   async onNetworkToSelected(event: Network): Promise<void> {
