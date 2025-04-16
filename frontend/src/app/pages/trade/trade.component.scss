@@ -178,6 +178,22 @@ input::placeholder {
   color: var(--elem-nonactive);
 }
 
+.buy-amount-container {
+  display: flex;
+  align-items: center;
+}
+
+.buy-amount {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 48px;
+  color: white;
+}
+
+.buy-amount.placeholder {
+  color: var(--elem-nonactive);
+}
+
 p {
   font-family: "JetBrains Mono", monospace;
   font-weight: 600;
