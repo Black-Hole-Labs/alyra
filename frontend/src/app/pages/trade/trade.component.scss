@@ -178,6 +178,22 @@ input::placeholder {
   color: var(--elem-nonactive);
 }
 
+.buy-amount-container {
+  display: flex;
+  align-items: center;
+}
+
+.buy-amount {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 48px;
+  color: white;
+}
+
+.buy-amount.placeholder {
+  color: var(--elem-nonactive);
+}
+
 p {
   font-family: "JetBrains Mono", monospace;
   font-weight: 600;
@@ -292,13 +308,15 @@ p {
   background-color: #8aff8a;
 }
 
-.main-button.insufficient {
+.main-button.insufficient,
+.no-available-quotes {
   background-color: var(--red);
   color: white;
   cursor: not-allowed;
 }
 
-.main-button.insufficient:hover {
+.main-button.insufficient:hover,
+.no-available-quotes:hover {
   background-color: #ff6b6b;
 }
 
@@ -344,4 +362,8 @@ p {
   font-weight: 400;
   font-size: 15px;
   color: var(--elem-nonactive);
+}
+
+.settings-popup {
+	z-index: 10;
 }

@@ -98,6 +98,7 @@ export class ConnectWalletComponent implements OnInit {
 
       try
       {
+        this.blockchainStateService.updateWalletAddress(address);
         await provider.switchNetwork(this.blockchainStateService.getCurrentNetwork());
       }
       catch(e: unknown)
@@ -116,7 +117,6 @@ export class ConnectWalletComponent implements OnInit {
         provider.switchNetwork(this.blockchainStateService.getCurrentNetwork());
       }
       
-      this.blockchainStateService.updateWalletAddress(address);
       this.blockchainStateService.setCurrentProvider(providerId);
 
       this.closePopup();

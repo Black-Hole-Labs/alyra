@@ -45,10 +45,11 @@
 							type="text"
 							id="number-input"
 							placeholder="Enter amount"
-							[value]="sellAmount"
-              (input)="processInput($event, true)"
+							[(ngModel)]="sellAmountForInput"
+              				(input)="processInput($event, true)"
+							(keydown)="handleKeyDown($event)"
 						/>
-						<h6 class="max-button" *ngIf="isWalletConnected()">MAX</h6>
+						<h6 class="max-button" (click)="setMaxSellAmount()" *ngIf="isWalletConnected()">MAX</h6>
 					</div>
 				</div>
 			</div>
@@ -88,13 +89,19 @@
 						<p>{{ selectedBuyToken()?.symbol || 'Select Token' }}</p>
 					</div>
 					<div class="bridge-amount">
-						<input
-							type="text"
-							id="number-input"
-							placeholder="Enter amount"
-							[value]="buyAmount"
-							(input)="processInput($event, true)"
-						/>
+						@if(selectedBuyToken() && validatedSellAmount() > 0 && buyAmountForInput()){								
+							<p  #receiveText class="receive-amount">{{ buyAmountForInput() }}</p>
+						}
+						@else {
+							<p class="receive-amount placeholder">0.0</p>
+						}
+						<!-- <input
+              type="text"
+              id="number-input"
+              placeholder="0.0"
+              [(ngModel)]="buyAmountForInput"
+              [disabled]=true
+            /> -->
 					</div>
 				</div>
 			</div>
@@ -131,7 +138,7 @@
 				</div>
 			</div>
 			
-			<div class="receive"
+			<!-- <div class="receive"
 				 *ngIf="isBridgeButtonActive()"
 				@receiveAnimation>
 				<h4>Receive</h4>
@@ -141,7 +148,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
       <button 
 				class="main-button" 
@@ -151,13 +158,17 @@
 				[class.approve]="buttonState === 'approve'"
 				[class.wallet]="buttonState === 'wallet'"
 				[class.wrong-address]="buttonState === 'wrong-address'"
-				[disabled]="!isBridgeButtonActive() || buttonState === 'wallet' || buttonState === 'finding' || buttonState === 'wrong-address'"
-				(click)="isBridgeButtonActive() && handleButtonClick()">
+				[class.no-available-quotes]="buttonState === 'no-available-quotes'"
+				[class.insufficient]="buttonState === 'insufficient'"
+				[disabled]="!isBridgeButtonActive() || buttonState === 'wallet' || buttonState === 'finding' || buttonState === 'wrong-address' || buttonState === 'no-available-quotes'"
+				(click)="isBridgeButtonActive() && bridge()">
 				<ng-container *ngIf="buttonState === 'finding'">Finding Routes...</ng-container>
 				<ng-container *ngIf="buttonState === 'approve'">Approve</ng-container>
 				<ng-container *ngIf="buttonState === 'wallet'">Continue in your wallet...</ng-container>
-				<ng-container *ngIf="buttonState === 'wrong-address'">Wrong destination address</ng-container>
+				<ng-container *ngIf="buttonState === 'wrong-address'">Wrong address</ng-container>
 				<ng-container *ngIf="buttonState === 'bridge'">Bridge</ng-container>
+				<ng-container *ngIf="buttonState === 'insufficient'">Insufficient balance</ng-container>
+				<ng-container *ngIf="buttonState === 'no-available-quotes'">No available quotes</ng-container>
       </button>
 
 			<div class="gas-container" *ngIf="isBridgeButtonActive()" [@receiveAnimation]>

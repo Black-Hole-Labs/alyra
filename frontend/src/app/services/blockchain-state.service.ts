@@ -1,6 +1,7 @@
 import { Injectable, signal, effect, computed } from '@angular/core';
 import { Network, Wallets } from '../models/wallet-provider.interface';
 import { Token } from '../pages/trade/trade.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class BlockchainStateService {
@@ -21,6 +22,10 @@ export class BlockchainStateService {
   tokens = signal<Token[]>([]);
 
   filteredTokens = computed(() => [...this.tokens()]);
+
+  private tokensSubject = new BehaviorSubject<boolean>(false);
+  public tokensLoading$ = this.tokensSubject.asObservable();
+  private loadingTokens = false;
 
   constructor() {
     // Эффект для обновления статуса подключения

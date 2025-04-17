@@ -34,7 +34,7 @@
           type="text"
           id="number-input-sell"
 					placeholder="0.0"
-          [(ngModel)]="sellAmount"
+          [(ngModel)]="sellAmountForInput"
           (input)="processInput($event, true)"
           (keydown)="handleKeyDown($event)"
         />
@@ -66,14 +66,21 @@
     <div class="buy">
       <div class="left">
         <h6 class="buy-h6">Buy</h6>
-        <input
+        <div class="buy-amount-container">
+          @if(selectedBuyToken() && validatedSellAmount() > 0 && buyAmountForInput()) {								
+            <p #buyAmountText class="buy-amount">{{ buyAmountForInput() }}</p>
+          }
+          @else {
+            <p class="buy-amount placeholder">0.0</p>
+          }
+        </div>
+        <!-- <input
           type="text"
           id="number-input-buy"
 					placeholder="0.0"
-          [(ngModel)]="buyAmount"
-          (input)="processInput($event, false)"
+          [(ngModel)]="buyAmountForInput"
           [disabled]=true
-        />
+        /> -->
       </div>
 
       <div class="right">
@@ -105,13 +112,15 @@
       [class.approve]="buttonState === 'approve'"
       [class.wallet]="buttonState === 'wallet'"
       [class.insufficient]="buttonState === 'insufficient'"
-      [disabled]="!isSwapButtonActive() || txData() === undefined || loading() === true || buttonState === 'insufficient'"
+      [class.no-available-quotes]="buttonState === 'no-available-quotes'"
+      [disabled]="!isSwapButtonActive() || txData() === undefined || loading() === true || buttonState === 'insufficient' || buttonState === 'no-available-quotes'"
       (click)="isSwapButtonActive() && swap()">
       <ng-container *ngIf="buttonState === 'finding'">Finding Routes...</ng-container>
       <ng-container *ngIf="buttonState === 'approve'">Approve</ng-container>
       <ng-container *ngIf="buttonState === 'wallet'">Continue in your wallet...</ng-container>
       <ng-container *ngIf="buttonState === 'insufficient'">Insufficient balance</ng-container>
       <ng-container *ngIf="buttonState === 'swap'">Swap</ng-container>
+      <ng-container *ngIf="buttonState === 'no-available-quotes'">No available quotes</ng-container>
     </button>
 
 		<ng-template #connectWallet>

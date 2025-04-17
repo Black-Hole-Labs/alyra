@@ -18,6 +18,11 @@
 	color: #000000 !important;
 }
 
+.disabled-link {
+	text-decoration: none;
+	cursor: default;
+  }  
+
 .bridge-tx {
 	width: 681px;
 	height: auto;
@@ -112,7 +117,7 @@
 	margin-top: 8px;
 }
 
-.explorer-link a {
+.explorer-link button {
 	font-family: "JetBrains Mono", monospace;
 	font-weight: 500;
 	font-size: 18px;
@@ -120,7 +125,7 @@
 	transition: 0.2s;
 }
 
-.explorer-link a:hover {
+.explorer-link button:hover {
 	color: white;
 }
 

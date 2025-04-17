@@ -1,6 +1,7 @@
 import { Component, Output, EventEmitter, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
+import { FailedNotificationComponent } from '../../notification/failed-notification/failed-notification.component';
 
 @Component({
   selector: 'app-blackhole-network',
@@ -10,11 +11,14 @@ import { BlockchainStateService } from '../../../services/blockchain-state.servi
 		'./blackhole-network.component.scss',
 		'./blackhole-network.component.adaptives.scss'
 	],
-  imports: [CommonModule]
+  imports: [CommonModule, FailedNotificationComponent]
 })
 export class BlackholeNetworkComponent {
   networks = computed(() => this.blockchainStateService.networks());
   selectedNetwork: number | null = null;
+  showFailedNotification = false;
+  errorMessage = '';
+
   @Output() close = new EventEmitter<void>();
 
   constructor(
@@ -64,7 +68,9 @@ export class BlackholeNetworkComponent {
       return;
     }
 
-    this.blockchainStateService.updateNetwork(networkId);
+    if(!this.blockchainStateService.connected()){
+      this.blockchainStateService.updateNetwork(networkId);
+    }
 
     const currentProvider = this.blockchainStateService.getCurrentProvider();
     if (!currentProvider) {
@@ -81,14 +87,16 @@ export class BlackholeNetworkComponent {
     try {
       await provider.switchNetwork(selectedNetwork);
       this.selectedNetwork = networkId;
-      this.blockchainStateService.updateNetwork(networkId);
       this.blockchainStateService.updateWalletAddress(provider.address);
+      this.blockchainStateService.updateNetwork(networkId);
       console.log(`Switched to network: ${selectedNetwork.name}`);
       
       // Close the popup after successful network selection
       this.close.emit();
     } catch (error) {
       console.error('Failed to switch network:', error);
+      this.errorMessage = `Failed to switch to network ${selectedNetwork.name}!`;
+      this.showFailedNotification = true;
     }
   }
 

@@ -12,7 +12,12 @@
 			<div class="network-icon-left network-icon" [style.backgroundImage]="'url(' + selectedNetwork?.logoURI + ')'"></div>
 			<h4>{{ selectedNetwork!.name }}</h4>
 			<div class="explorer-link">
-				<a href="">View on Explorer</a><!-- todo -->
+				<button
+					[disabled]="!sendingTxLink" 
+					(click)="navigateTo(sendingTxLink)">
+						<span *ngIf="sendingTxLink">View Sending Transaction</span>
+						<span *ngIf="!sendingTxLink">Pending...</span>
+				</button>
 				<div class="image-link"></div>
 			</div>
 		</div>
@@ -24,7 +29,12 @@
 			<div class="network-icon-right network-icon" [style.backgroundImage]="'url(' + selectedNetworkTo?.logoURI"></div>
 			<h4>{{ selectedNetworkTo!.name }}</h4>
 			<div class="explorer-link">
-				<a href="">View on Explorer</a><!-- todo -->
+				<button
+					[disabled]="!receivingTxLink" 
+					(click)="navigateTo(receivingTxLink)">
+						<span *ngIf="receivingTxLink">View Transaction</span>
+						<span *ngIf="!receivingTxLink">Pending...</span>
+				</button>
 				<div class="image-link"></div>
 			</div>
 		</div>
@@ -33,7 +43,7 @@
   <div class="tx-info">
 		<div class="elem">
 			<h6>Status</h6>
-			<div class="tx-status" [ngClass]="{'success': txStatusText === 'Transaction Successful', 'failed': txStatusText === 'Transaction Failed'}">
+			<div class="tx-status" [ngClass]="{'success': txStatusText === 'Successful', 'failed': txStatusText === 'Failed'}">
 				<p [ngClass]="{'pending-change': txStatusText !== 'Pending'}">{{ txStatusText }}</p>
 			  </div>			  
 		</div>

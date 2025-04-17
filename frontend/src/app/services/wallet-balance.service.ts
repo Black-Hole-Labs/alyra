@@ -1,15 +1,19 @@
 import { Injectable } from '@angular/core';
 import { ethers } from 'ethers';
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+import { Token } from '../pages/trade/trade.component';
+import { BlockchainStateService } from './blockchain-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WalletBalanceService {
-  private solanaRpcUrl = 'https://frosty-nameless-sunset.solana-mainnet.quiknode.pro/74791b866a6fa352e6b6a8026df34dc0b4f4475f/';
+  private solanaRpcUrl: string;
   private solanaConnection: Connection;
 
-  constructor() {
+  constructor(private blockchainStateService: BlockchainStateService) {
+    this.solanaRpcUrl = this.blockchainStateService.allNetworks().find((network: { id: number; }) => network.id === 1151111081099710)?.rpcUrls[0] 
+                        || "https://solana-rpc.publicnode.com";;
     this.solanaConnection = new Connection(this.solanaRpcUrl, 'confirmed');
   }
 
@@ -53,4 +57,33 @@ export class WalletBalanceService {
       return (balance / LAMPORTS_PER_SOL).toString();
     }
   }
+
+  async getBalanceForToken(token: Token): Promise<string> {
+      const walletAddress = this.blockchainStateService.getCurrentWalletAddress();
+      if (!walletAddress) {
+        console.error(`Failed to get wallet address`);
+        return "0";
+      }
+    
+      const currentNetwork = this.blockchainStateService.getCurrentNetwork();
+      if (!currentNetwork) {
+        console.error('Current network not found');
+        return "0";
+      }
+    
+      if (currentNetwork.id === 1151111081099710) { // SVM
+        if (token.symbol === "SOL") {
+          return this.getSolanaBalance(walletAddress);
+        } else {
+          return this.getSolanaBalance(walletAddress, token.contractAddress);
+        }
+      } else { // EVM
+        if (token.symbol === "ETH") {
+          const balance = await this.getEvmBalance(walletAddress, currentNetwork.rpcUrls[0], Number(token.decimals));
+          return balance;
+        } else {
+          return await this.getEvmBalance(walletAddress, currentNetwork.rpcUrls[0], Number(token.decimals), token.contractAddress);
+        }
+      }
+    }
 }

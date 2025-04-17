@@ -193,7 +193,7 @@
 		font-size: 10px;
 	}
 }
-@media screen and (min-width: 769px) and (max-width: 970px) {
+@media screen and (min-width: 480px) and (max-width: 970px) {
 	.network-change-from {
 		width: 450px;
 		height: 539px;
@@ -262,7 +262,7 @@
 @media screen and (min-width: 360px) and (max-width: 479px) {
 	.network-change-from {
 		width: 90vw;
-		height: 539px;
+		height: 70vh;
 		border-radius: 16px;
 		padding: 15px 18px;
 		backdrop-filter: blur(35px);

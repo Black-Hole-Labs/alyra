@@ -92,23 +92,71 @@ export class TransactionsService {
     return this.http.get<{ quote: any }>(`${this.apiUrl}/lifi/quote-bridge`, { params });
   }
 
-  public async pollStatus(txHash: string): Promise<'DONE' | 'FAILED'> {
+  public async pollStatus(
+    txHash: string,
+    onInitialLinks?: (sending: string, receiving: string) => void
+  ): Promise<any> {
     let result: any;
+    
     do {
-      result = await this.getStatus(txHash);
-      await this.delay(1000);
-    } while (result.status !== 'DONE' && result.status !== 'FAILED');
-
-    console.log(`Transfer completed with state ${result.status}`);
-    return result.status;
+      try {
+        result = await this.getStatus(txHash);
+        
+        if (result?.sending?.txLink || result?.receiving?.txLink) {
+          onInitialLinks?.(
+            result?.sending?.txLink || '',
+            result?.receiving?.txLink || ''
+          );
+        }
+        
+        await this.delay(1000);
+      } catch (error) {
+        await this.delay(1000);
+      }
+    } while (!result || (result.status !== 'DONE' && result.status !== 'FAILED'));
+    
+    return result;
   }
 
+  async getInitialStatus(txHash: string): Promise<any> {
+    try {
+      return await this.getStatus(txHash);
+    } catch (error) {
+      console.log('Error fetching initial status:', error);
+      return {};
+    }
+  }
+  
+  async waitForCompletion(txHash: string): Promise<any> {
+    let result: any;
+    
+    do {
+      try {
+        result = await this.getStatus(txHash);
+        await this.delay(1000);
+      } catch (error) {
+        console.log('Error polling status:', error);
+        await this.delay(1000);
+      }
+    } while (!result || (result.status !== 'DONE' && result.status !== 'FAILED'));
+    
+    return result;
+  }
+  
   private async getStatus(txHash: string): Promise<any> {
-    const request = this.http.get('https://li.quest/v1/status', {
-      params: { txHash }
-    });
-    return await lastValueFrom(request);
-  }
+    try {
+      const request = this.http.get('https://li.quest/v1/status', {
+        params: { txHash }
+      });
+      return await lastValueFrom(request);
+    } catch (error: any) {
+      if (error?.error?.code === 1011 && error?.error?.message.includes("Not a valid txHash")) {
+        throw new Error('txHash not yet valid');
+      } else {
+        throw error;
+      }
+    }
+  }  
 
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -117,6 +165,20 @@ export class TransactionsService {
   parseToAmount(toAmount: string, decimals: number): string {
     return (Number(toAmount) / Math.pow(10, decimals)).toString();
   }
+
+  toNonExponential(num: number, decimals: number = 18): string {
+    if (!isFinite(num)) return '0';
+  
+    const [intPart, decPart = ''] = num.toString().split('e').length === 2
+      ? Number(num).toFixed(30).split('.')
+      : num.toString().split('.');
+  
+    const trimmedDec = decPart.slice(0, decimals);
+    const result = trimmedDec ? `${intPart}.${trimmedDec}` : intPart;
+
+    return result.replace(/\.?0+$/, '');
+  }
+  
 
   parseGasPriceUSD(gasPriceHex: string, gasLimitHex: string, token: { decimals: number; priceUSD: string }): string {
     // Конвертируем gasPrice и gasLimit из hex в десятичное число

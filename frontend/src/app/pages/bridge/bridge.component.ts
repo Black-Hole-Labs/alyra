@@ -113,7 +113,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   findingRoutesTimer: any = null;
   //walletTimer: any = null;
-  private _buttonState: 'bridge' | 'finding' | 'approve' | 'wallet' = 'bridge';
+  private _buttonState: 'bridge' | 'finding' | 'approve' | 'wallet' | 'no-available-quotes' | 'wrong-address' | 'insufficient' = 'bridge';
 
   // Свойства для анимации текста
   private possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}:"<>?|';
@@ -128,9 +128,11 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   txData = signal<TransactionRequestEVM | TransactionRequestSVM | undefined> (undefined);
   private inputTimeout: any;
+  buyAmountForInput = signal<string | undefined>(undefined);
   sellAmount: string = '';
-  buyAmount: string = '';
-  validatedSellAmount = signal<string>('');
+  buyAmount = signal<string | undefined>(undefined);;
+  validatedSellAmount = signal<number>(0);
+  sellAmountForInput= signal<string | undefined>(undefined);
 
   selectedToken = signal<Token | undefined>(undefined);
   selectedBuyToken = signal<Token | undefined>(undefined);
@@ -158,53 +160,39 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
     effect(() => {
       if (this.isBridgeButtonActive()) {
-        this.setButtonState('finding');
-        this.getTxData();
+        try{
+          this.getTxData();
+        }
+        catch(error){
+          // this.updateBuyAmount('0.0');
+          // update gas = 0.0
+          console.log("error",error);
+          this.setButtonState('no-available-quotes');
+        }
+        
       }
-    });
-
-    // effect(() => {
-    //     if (this.blockchainStateService.connected() && this.selectedToken()) {
-    //       this.getBalanceForToken(this.selectedToken()!)
-    //       .then((balanceStr) => {
-    //         this.balance.set(parseFloat(balanceStr));
-    //       })
-    //       .catch((error) => {
-    //         console.error('Ошибка получения баланса', error);
-    //         this.balance.set(0.0);
-    //       });
-    //     }
-    //   },
-    //   { allowSignalWrites: true }
-    // );
-
-    // effect(() => {
-    //     if (this.blockchainStateService.connected() && this.selectedBuyToken()) {
-    //       this.getBalanceForToken(this.selectedBuyToken()!)
-    //       .then((balanceStr) => {
-    //         this.balanceBuy.set(parseFloat(balanceStr));
-    //       })
-    //       .catch((error) => {
-    //         console.error('Ошибка получения баланса', error);
-    //         this.balanceBuy.set(0.0);
-    //       });
-    //     }
-    //   },
-    //   { allowSignalWrites: true }
-    // );
+    }, { allowSignalWrites: true });
 
     effect(() => {
         const tokens = this.blockchainStateService.filteredTokens();
         this.selectedToken.set(tokens.length > 0 ? tokens[0] : undefined);
-        this.selectedBuyToken.set(tokens.length > 1 ? tokens[1] : undefined);
       },
       { allowSignalWrites: true }
     );
 
     effect(() => {
-        const networks = this.blockchainStateService.networks();
-        this.selectedNetwork.set(networks.length > 0 ? networks[0] : undefined);
-        this.selectedBuyNetwork.set(networks.length > 1 ? networks[1] : undefined);
+        const network = this.blockchainStateService.network();
+        this.selectedNetwork.set(network!);
+      },
+      { allowSignalWrites: true }
+    );
+
+    effect(async () => {
+        const networks = this.blockchainStateService.allNetworks();
+        const netowrk = networks.length > 1 ? networks[1] : undefined;
+        this.selectedBuyNetwork.set(netowrk);
+        const tokens = await this.blockchainStateService.fetchTokensForNetwork(netowrk!.id);
+        this.selectedBuyToken.set(tokens.length > 0 ? tokens[0] : undefined);
       },
       { allowSignalWrites: true }
     );
@@ -243,54 +231,41 @@ export class BridgeComponent implements OnInit, OnDestroy {
       { allowSignalWrites: true }
     );
 
-  }
-
-  // async getBalanceForToken(token: Token): Promise<any> {
-  //   const walletAddress = this.blockchainStateService.getCurrentWalletAddress();
-  //   if (!walletAddress)
-  //   {
-  //     console.error(`Failed to get wallet address`);
-  //     return;
-  //   }
-
-  //   if(this.blockchainStateService.getCurrentNetwork()?.chainId === "1151111081099710") { // SVM
-  //     if (token.symbol === "SOL") // change to adres
-  //     {
-  //       return this.walletBalanceService.getSolanaBalance(walletAddress);
-  //     }
-  //     else
-  //     {
-  //       return this.walletBalanceService.getSolanaBalance(walletAddress, token.contractAddress);
-  //     }
-  //   }
-  //   else { // EVM
-  //     try {
-  //       const response = await fetch('/data/networks.json');
-  //       if (!response.ok) {
-  //         console.error('Failed to load networks');
-  //       }
+    effect(() => {
+      const tokens = this.blockchainStateService.filteredTokens();
+      const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
   
-  //       const data = await response.json();
-  
-  //       const network = data.find((net: { id: number }) => net.id === this.blockchainStateService.getCurrentNetwork()?.id);
-  
-  //       if (!network) {
-  //         console.error('Network not found');
-  //       }
-  
-  //       if (token.symbol === "ETH") {
-  //         const balance = await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals));
-  //         return balance;
-  //       } else {
-  //         return await this.walletBalanceService.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals), token.contractAddress);
-  //       }
-  //     } catch (error) {
-  //       console.error(`Error loading networks`);
-  //       return "0";
-  //     }
-  //   }
+      this.selectedToken.set(newSelectedToken);
+      if(!this.blockchainStateService.connected()){
+        return;
+      }
+      Promise.resolve().then(() => {
     
-  // }
+        if (this.selectedToken()) {
+          this.walletBalanceService.getBalanceForToken(this.selectedToken()!)
+            .then((balanceStr) => {
+              this.balance.set(Number(parseFloat(balanceStr)));
+            })
+            .catch((error) => {
+              console.error('Error getting balance sell: ', error);
+              this.balance.set(0.0);
+            });
+        }
+    
+        if (this.selectedBuyToken()) {
+          this.walletBalanceService.getBalanceForToken(this.selectedBuyToken()!)
+            .then((balanceStr) => {
+              this.balanceBuy.set(Number(parseFloat(balanceStr)));
+            })
+            .catch((error) => {
+              console.error('Error getting balance buy: ', error);
+              this.balanceBuy.set(0.0);
+            });
+        }
+      });
+    }, { allowSignalWrites: true });
+
+  }
 
   getTokensForNetwork(): Token[] | undefined {
     const chainId = this.selectedNetwork()?.id;
@@ -303,6 +278,11 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   getTxData() {
+    this.setButtonState('finding');
+    if (this.validatedSellAmount() > this.balance()) {
+      this.setButtonState('insufficient');
+      return;
+    }
     const fromChain = (this.selectedNetwork()?.id)?.toString();
     const toChain = (this.selectedBuyNetwork()?.id)?.toString();
     console.log("this.selectedNetwork()?",this.selectedNetwork());
@@ -312,7 +292,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
     //const toChain = this.blockchainStateService.network()!.id.toString();
     const fromAddress = this.blockchainStateService.walletAddress()!;
     const fromTokenDecimals = this.selectedToken()!.decimals;
-    const fromAmount = parseUnits(this.validatedSellAmount(), fromTokenDecimals);
+    const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
+    const fromAmount = parseUnits(formattedFromAmount, fromTokenDecimals);
     const fromToken = this.selectedToken()!.contractAddress;
     const toToken = this.selectedBuyToken()!.contractAddress;
     const toTokenDecimals = this.selectedBuyToken()!.decimals;
@@ -330,7 +311,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
       console.log("adjusted From Amount",adjustedFromAmount);
 
       console.error('Missing required parameters');
-      this.setButtonState('bridge');
       return;
     }
     
@@ -345,9 +325,10 @@ export class BridgeComponent implements OnInit, OnDestroy {
         console.log('Quote received:', response);
         if (response.estimate && response.transactionRequest) 
         {
-          const readableToAmount = this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals));
-        
+          const toAmountNumber = Number(this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals)));
+          const readableToAmount = toAmountNumber.toFixed(Number(toTokenDecimals)).replace(/\.?0+$/, '');
           console.log('readableToAmount:', readableToAmount);
+          this.updateBuyAmount(readableToAmount);
           
           // if(this.blockchainStateService.network()!.id == 1151111081099710) // SVM
           // {
@@ -390,7 +371,13 @@ export class BridgeComponent implements OnInit, OnDestroy {
         
       },
       error: (error: HttpErrorResponse) => {
-        if (error.status === 404) {
+        if(error.error.message === 'No available quotes for the requested transfer' || error.error.statusCode === 422){
+          this.setButtonState('no-available-quotes');  
+        }
+        else if(error.error.message.includes("Invalid toAddress") || error.error.message.includes("Invalid fromAddress")){
+          this.setButtonState('wrong-address');
+        }
+        else if (error.status === 404) {
           console.error('Custom error message:', error || 'Unknown error');
           console.error('Custom error message:', error.error?.message || 'Unknown error');
         } else {
@@ -442,11 +429,30 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   async onNetworkSelected(event: Network ): Promise<void> {
-    this.selectedNetwork.set(event);
-    requestAnimationFrame(() => {
-      this.popupService.closeAllPopups();
-    });
-    this.receiveTextAnimated = false;
+    try{
+      if(!this.blockchainStateService.connected()){
+        this.blockchainStateService.updateNetwork(event.id);
+      }
+
+      const currentProvider = this.blockchainStateService.getCurrentProvider();
+      if (!currentProvider) {
+        console.error('No provider selected');
+        return;
+      }
+      
+      const provider = currentProvider.provider;
+      await provider.switchNetwork(event);
+      this.blockchainStateService.updateNetwork(event.id);
+
+      this.selectedNetwork.set(event);
+      requestAnimationFrame(() => {
+        this.popupService.closeAllPopups();
+      });
+      this.receiveTextAnimated = false;
+    }
+    catch(error:any){
+      console.error(error);
+    }
   }
 
   async onNetworkToSelected(event: Network): Promise<void> {
@@ -460,11 +466,31 @@ export class BridgeComponent implements OnInit, OnDestroy {
   async onTokenSelected(token: Token): Promise<void> {
     this.selectedToken.set(token);
     this.receiveTextAnimated = false;
+    this.balance.set(Number((parseFloat(await this.walletBalanceService.getBalanceForToken(token)))));
   }
 
   async onTokenBuySelected(token: Token): Promise<void> {
     this.selectedBuyToken.set(token);
     this.receiveTextAnimated = false;
+    this.balanceBuy.set(Number(parseFloat(await this.walletBalanceService.getBalanceForToken(token)).toFixed(6)));
+  }
+
+  handleKeyDown(event: KeyboardEvent): void {
+    const inputElement = event.target as HTMLInputElement;
+    const cursorPos = inputElement.selectionStart ?? inputElement.value.length;
+
+    const replaceKeys = [',', '.', '/', 'б', 'ю']; 
+
+    if (replaceKeys.includes(event.key)) {
+      event.preventDefault(); 
+
+      if (inputElement.value.includes('.')) return;
+
+      inputElement.value =
+        inputElement.value.slice(0, cursorPos) + '.' + inputElement.value.slice(cursorPos);
+
+      setTimeout(() => inputElement.setSelectionRange(cursorPos + 1, cursorPos + 1), 0);
+    }
   }
 
 	processInput(event: Event, isSell: boolean): void {
@@ -481,10 +507,54 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
       this.inputTimeout = setTimeout(() => {
         this.sellAmount = inputElement.value;
-        this.validatedSellAmount.set(inputElement.value);
+        this.validatedSellAmount.update(value => (Number(inputElement.value)));
+        if (this.validatedSellAmount() > this.balance()) {
+          this.setButtonState('insufficient');
+          this.updateBuyAmount('0.0');
+        }
+        else
+        {
+          this.setButtonState('bridge');
+        }
       }, 2000);
     }
     console.log("some data");
+  }
+
+  updateBuyAmount(value: string): void {
+    const limited = this.limitDecimals(value, 6);
+    console.log("limited",limited);
+    const num = Number(limited);
+  
+    if (!isNaN(num)) {
+      this.buyAmount.set(value); 
+      this.buyAmountForInput.set(limited);
+    } else {
+      this.buyAmount.set('0');
+      this.buyAmountForInput.set('0');
+    }
+  }
+
+  updateSellAmount(value: string): void {
+    const limited = this.limitDecimals(value, 6);
+    const num = Number(limited);
+  
+    if (!isNaN(num)) {
+      this.sellAmount = value; 
+      this.sellAmountForInput.set(limited);
+    } else {
+      this.sellAmount = '0';
+      this.sellAmountForInput.set('0');
+    }
+  }
+
+  limitDecimals(value: string, maxDecimals: number): string {
+    if (value.includes('.')) {
+      const [intPart, decimalPart] = value.split('.');
+      const trimmedDecimals = decimalPart.slice(0, maxDecimals);
+      return `${intPart}.${trimmedDecimals}`;
+    }
+    return value;
   }
 
   // Управление анимацией
@@ -539,7 +609,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
       this.selectedNetwork() !== undefined &&
       this.selectedBuyNetwork() !== undefined &&
       this.selectedBuyToken() !== undefined &&
-      this.validatedSellAmount().trim() !== ''
+      this.validatedSellAmount() !== 0 &&
+      this.buttonState === "bridge" 
     );
 
   isWalletConnected(): boolean {
@@ -547,8 +618,17 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   setMaxSellAmount(): void {
-    this.sellAmount = this.balance.toString();
-    //this.updateBuyAmount(); todo
+    this.updateSellAmount(this.balance().toString());
+    this.validatedSellAmount.update(value => this.balance());
+    if (Number(this.validatedSellAmount()) > this.balance()) {
+      this.setButtonState('insufficient');
+      this.updateBuyAmount('0.0');
+    }
+    else
+    {
+      this.setButtonState('bridge');
+    }
+    //this.updateBuyAmount();
     //this.updateSellPriceUsd();
   }
 
@@ -614,8 +694,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
   sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-  // Метод для обработки нажатия на кнопку
-  async handleButtonClick(): Promise<void> {
+
+  async bridge(): Promise<void> {
     let txHash: string;
     if(this.blockchainStateService.network()?.id === 1151111081099710)
     {
@@ -626,12 +706,20 @@ export class BridgeComponent implements OnInit, OnDestroy {
       txHash = await this.evmSwap();
     }
 
-    await this.sleep(1000);
-
     this.bridgeTxHash = txHash;
     this.openBridgeTxPopup();
     
     this.setButtonState('bridge');
+    
+    try
+    {
+      this.balance.set(Number((parseFloat(await this.walletBalanceService.getBalanceForToken(this.selectedToken()!)))));
+      this.balanceBuy.set(Number((parseFloat(await this.walletBalanceService.getBalanceForToken(this.selectedBuyToken()!)))));
+    }
+    catch (error) 
+    {
+      console.log("error setting balance",error);
+    }
   }
 
   async svmSwap(): Promise<string> {
@@ -643,7 +731,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   
     const txHash = await provider.sendTx(txData);
     console.log("SVM Swap транзакция отправлена:", txHash);
-    return txHash;
+    return txHash.signature;
   }
   
   async evmSwap(): Promise<string>{
@@ -670,7 +758,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
     //const fromAddress = this.blockchainStateService.walletAddress()!;
     const fromTokenDecimals = this.selectedToken()!.decimals;
-    const approveAmount = parseUnits(this.validatedSellAmount(), fromTokenDecimals)
+    const amount = this.transactionsService.toNonExponential(this.validatedSellAmount());
+    const approveAmount = parseUnits(amount, fromTokenDecimals);
 
     // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
     // console.log("allowance",allowance);
@@ -717,7 +806,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
     this.popupService.openPopup('networkChangeTo');
   }
 
-  get buttonState(): 'bridge' | 'finding' | 'approve' | 'wallet' | 'wrong-address' {
+  get buttonState(): 'bridge' | 'finding' | 'approve' | 'wallet' | 'wrong-address' | 'no-available-quotes' | 'insufficient' {
     //console.log("uncoment, auto load fix???"); todo
 
     if (this.showCustomAddress && this.addressStatus === 'bad') {
@@ -727,7 +816,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
   
   // Добавляем сеттер для изменения состояния
-  private setButtonState(state: 'bridge' | 'finding' | 'approve' | 'wallet'): void {
+  private setButtonState(state: 'bridge' | 'finding' | 'approve' | 'wallet' | 'no-available-quotes' | 'wrong-address' | 'insufficient'): void {
     if (this._buttonState !== state) {
       this._buttonState = state;
       // Сбрасываем флаг анимации, чтобы текст анимировался заново при изменении состояния
@@ -862,11 +951,13 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   // Метод для проверки и запуска анимации текста
   private checkAndAnimateReceiveText() {
-    if (this.receiveTextElement && !this.receiveTextAnimated && this.selectedBuyToken()!.symbol) {
-      // Добавляем информацию о времени в секундах (например, 30 секунд)
-      const finalText = `${this.validatedSellAmount()} ${this.selectedBuyToken()!.symbol} in 30 sec`;
-      this.animateText(this.receiveTextElement.nativeElement, finalText, 'receiveText');
-      this.receiveTextAnimated = true;
+    if (this.receiveTextElement && 
+        !this.receiveTextAnimated && 
+        this.selectedBuyToken()?.symbol && 
+        this.validatedSellAmount() > 0) {
+        const finalText = `${this.buyAmountForInput()}`; // Убрали "in 30 sec"
+        this.animateText(this.receiveTextElement.nativeElement, finalText, 'receiveText');
+        this.receiveTextAnimated = true;
     }
   }
 

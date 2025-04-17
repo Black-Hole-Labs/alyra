@@ -8,7 +8,8 @@
 	}
 	
 	.bridge-window.has-receive {
-		height: 489px;
+		//height: 489px;
+		height: 443px;
 	}
 	
 	.bridge-window.has-custom-address {
@@ -16,7 +17,8 @@
 	}
 	
 	.bridge-window.has-custom-address.has-receive {
-		height: 539px;
+		//height: 539px;
+		height: 492px;
 	}
 	
 	.title {
@@ -93,6 +95,10 @@
 	
 	.bridge-amount h6 {
 		font-size: 11px;
+	}
+
+	.bridge-amount .receive-amount {
+		font-size: 14px;
 	}
 
 	.from {
@@ -272,7 +278,8 @@
 	}
 	
 	.bridge-window.has-receive {
-		height: 489px;
+		//height: 489px;
+		height: 443px;
 	}
 	
 	.bridge-window.has-custom-address {
@@ -280,7 +287,8 @@
 	}
 	
 	.bridge-window.has-custom-address.has-receive {
-		height: 539px;
+		//height: 539px;
+		height: 492px;
 	}
 	
 	.title {
@@ -357,6 +365,10 @@
 	
 	.bridge-amount h6 {
 		font-size: 11px;
+	}
+
+	.bridge-amount .receive-amount {
+		font-size: 14px;
 	}
 
 	.from {
@@ -535,7 +547,8 @@
 	}
 	
 	.bridge-window.has-receive {
-		height: 369px;
+		//height: 369px;
+		height: 325px;
 	}
 	
 	.bridge-window.has-custom-address {
@@ -543,7 +556,8 @@
 	}
 	
 	.bridge-window.has-custom-address.has-receive {
-		height: 407px;
+		//height: 407px;
+		height: 362px;
 	}
 	
 	.title {
@@ -620,6 +634,10 @@
 	
 	.bridge-amount h6 {
 		font-size: 8px;
+	}
+
+	.bridge-amount .receive-amount {
+		font-size: 10px;
 	}
 
 	.from {
@@ -789,7 +807,7 @@
 		}
 	}
 }
-@media screen and (min-width: 769px) and (max-width: 970px) {
+@media screen and (min-width: 480px) and (max-width: 970px) {
 	.bridge-window {
 		width: 450px;
 		height: 423px;
@@ -799,7 +817,8 @@
 	}
 	
 	.bridge-window.has-receive {
-		height: 489px;
+		//height: 489px;
+		height: 443px;
 	}
 	
 	.bridge-window.has-custom-address {
@@ -807,7 +826,8 @@
 	}
 	
 	.bridge-window.has-custom-address.has-receive {
-		height: 539px;
+		//height: 539px;
+		height: 492px;
 	}
 	
 	.title {
@@ -884,6 +904,10 @@
 	
 	.bridge-amount h6 {
 		font-size: 11px;
+	}
+
+	.bridge-amount .receive-amount {
+		font-size: 14px;
 	}
 
 	.from {
@@ -1064,15 +1088,17 @@
 	}
 	
 	.bridge-window.has-receive {
-		height: 489px;
+		//height: 489px;
+		height: 433px;
 	}
 	
 	.bridge-window.has-custom-address {
-		height: 473px;
+		height: 456px;
 	}
 	
 	.bridge-window.has-custom-address.has-receive {
-		height: 539px;
+		//height: 539px;
+		height: 482px;
 	}
 	
 	.title {
@@ -1131,14 +1157,14 @@
 	}
 	
 	.bridge-amount {
-		width: 190px;
+		width: 160px;
 		height: 40px;
 		border-radius: 10px;
 		padding: 11px 15px;
 	}
 	
 	.bridge-amount input {
-		width: 181px;
+		width: 100px;
 		height: 18px;
 		font-size: 14px;
 	}
@@ -1149,6 +1175,10 @@
 	
 	.bridge-amount h6 {
 		font-size: 11px;
+	}
+
+	.bridge-amount .receive-amount {
+		font-size: 14px;
 	}
 
 	.from {
