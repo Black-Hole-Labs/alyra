@@ -1,5 +1,5 @@
 import { Connection, VersionedTransaction } from '@solana/web3.js';
-import { TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
+import { ProviderType, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
 import { BlockchainStateService } from '../services/blockchain-state.service';
 import { Injector } from '@angular/core';
 
@@ -32,7 +32,7 @@ export class SvmWalletProvider implements WalletProvider {
     this.network = await this.getNetwork();
 
     if(!isMultichain){
-      this.blockchainStateService.loadNetworks("SVM");
+      this.blockchainStateService.loadNetworks(ProviderType.SVM);
     }
 
     return { address: this.address, network: this.network };

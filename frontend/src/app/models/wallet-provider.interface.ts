@@ -38,3 +38,9 @@ export interface Wallets {
   iconUrl: string;
   status?: string;
 }
+
+export enum ProviderType {
+  EVM = 'EVM',
+  SVM = 'SVM',
+  MULTICHAIN = 'MULTICHAIN'
+}

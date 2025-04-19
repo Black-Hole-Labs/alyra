@@ -1,69 +1,78 @@
-import { ApplicationConfig, Injector, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, Injector, provideZoneChangeDetection, APP_INITIALIZER } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { APP_INITIALIZER } from '@angular/core';
-import { BlockchainStateService } from './services/blockchain-state.service';
-import { routes } from './app.routes';
-import { BackpackProvider, CoinbaseWalletProvider, LedgerProvider, MagicEdenProvider, MetaMaskProvider, OkxWalletProvider, PhantomProvider, RabbyWalletProvider, SolflareProvider, TrustWalletProvider, WalletProviderManager } from './models/network.model';
 import { provideHttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
-import { importProvidersFrom } from '@angular/core';
-import { Network } from './models/wallet-provider.interface';
+import { BlockchainStateService } from './services/blockchain-state.service';
+import { routes } from './app.routes';
+import { Network, ProviderType } from './models/wallet-provider.interface';
+import {
+  MetaMaskProvider, SolflareProvider, PhantomProvider, MagicEdenProvider,
+  BackpackProvider, LedgerProvider, TrustWalletProvider, OkxWalletProvider,
+  CoinbaseWalletProvider, RabbyWalletProvider, WalletProviderManager
+} from './models/network.model';
 
-function initializeApp(
-  injector: Injector
-): () => Promise<void> {
-  return async () => {
-    const walletManager = new WalletProviderManager();
-    
-    const stateService = injector.get(BlockchainStateService);
+function registerProviders(stateService: BlockchainStateService, providers: any[], walletManager: WalletProviderManager, injector: Injector): void {
+  providers.forEach(provider => {
+    switch (provider.id) {
+      case 'metamask':
+        stateService.registerProvider(provider.id, new MetaMaskProvider(walletManager, injector), provider.type as ProviderType);
+        break;
+      case 'solflare':
+        stateService.registerProvider(provider.id, new SolflareProvider(injector), provider.type as ProviderType);
+        break;
+      case 'phantom':
+        stateService.registerProvider(provider.id, new PhantomProvider(walletManager, injector), provider.type as ProviderType);
+        break;
+      case 'magic-eden':
+        stateService.registerProvider(provider.id, new MagicEdenProvider(walletManager, injector), provider.type as ProviderType);
+        break;
+      case 'backpack':
+        stateService.registerProvider(provider.id, new BackpackProvider(injector), provider.type as ProviderType);
+        break;
+      case 'ledger':
+        stateService.registerProvider(provider.id, new LedgerProvider(), provider.type as ProviderType);
+        break;
+      case 'trust-wallet':
+        stateService.registerProvider(provider.id, new TrustWalletProvider(injector), provider.type as ProviderType);
+        break;
+      case 'okx-wallet':
+        stateService.registerProvider(provider.id, new OkxWalletProvider(injector), provider.type as ProviderType);
+        break;
+      case 'coinbase-wallet':
+        stateService.registerProvider(provider.id, new CoinbaseWalletProvider(injector), provider.type as ProviderType);
+        break;
+      case 'rabby-wallet':
+        stateService.registerProvider(provider.id, new RabbyWalletProvider(walletManager, injector), provider.type as ProviderType);
+        break;
+      default:
+        console.warn(`Provider ${provider.id} is not yet implemented.`);
+    }
+  });
+}
 
+async function initializeApp(injector: Injector): Promise<void> {
+  const walletManager = new WalletProviderManager();
+  const stateService = injector.get(BlockchainStateService);
+
+  try {
     const response = await fetch('/data/providers.json');
+    if (!response.ok) throw new Error('Failed to load providers');
     const providers = await response.json();
+    registerProviders(stateService, providers, walletManager, injector);
+  } catch (error) {
+    console.error('Error loading providers:', error);
+  }
 
-    // Регистрация провайдеров
-    providers.forEach((provider: { id: string; name: string; type: string }) => {
-      switch (provider.id) {
-        case 'metamask':
-          stateService.registerProvider(provider.id, new MetaMaskProvider(walletManager, injector), provider.type);
-          break;
-        case 'solflare':
-          stateService.registerProvider(provider.id, new SolflareProvider(injector), provider.type);
-          break;
-        case 'phantom':
-          stateService.registerProvider(provider.id, new PhantomProvider(walletManager, injector), provider.type);
-          break;
-        case 'magic-eden':
-          stateService.registerProvider(provider.id, new MagicEdenProvider(walletManager, injector), provider.type);
-          break;
-        case 'backpack':
-          stateService.registerProvider(provider.id, new BackpackProvider(injector), provider.type);
-          break;
-        case 'ledger':
-          stateService.registerProvider(provider.id, new LedgerProvider(), provider.type);
-          break;
-        case 'trust-wallet':
-          stateService.registerProvider(provider.id, new TrustWalletProvider(injector), provider.type);
-          break;
-        case 'okx-wallet':
-          stateService.registerProvider(provider.id, new OkxWalletProvider(injector), provider.type);
-          break;
-        case 'coinbase-wallet':
-          stateService.registerProvider(provider.id, new CoinbaseWalletProvider(injector), provider.type);
-          break;
-        case 'rabby-wallet':
-          stateService.registerProvider(provider.id, new RabbyWalletProvider(walletManager, injector), provider.type);
-          break;
-        default:
-          console.warn(`Provider ${provider.id} is not yet implemented.`);
-      }
-    });
-
+  try {
     const responseNetworks = await fetch('/data/networks.json');
+    if (!responseNetworks.ok) throw new Error('Failed to load networks');
     const allNetworks: Network[] = await responseNetworks.json();
     stateService.allNetworks.set(allNetworks);
     stateService.networks.set(allNetworks);
     stateService.updateNetwork(1);
-  };
+  } catch (error) {
+    console.error('Error loading networks:', error);
+  }
 }
 
 export const appConfig: ApplicationConfig = {
@@ -71,15 +80,13 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     {
       provide: APP_INITIALIZER,
-      useFactory: (injector: Injector) => initializeApp(injector),
+      useFactory: (injector: Injector) => () => initializeApp(injector),
       deps: [Injector],
       multi: true,
     },
     provideHttpClient(),
-    provideRouter(routes), // Обеспечивает маршрутизацию
-    provideHttpClient(), // Обеспечивает HTTP-клиент для работы с API
+    provideAnimations(),
     importProvidersFrom(BrowserAnimationsModule),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideAnimations()
   ],
-}
+};

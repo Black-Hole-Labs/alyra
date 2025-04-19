@@ -1,21 +1,20 @@
 import { Injectable, signal, effect, computed } from '@angular/core';
-import { Network, Wallets } from '../models/wallet-provider.interface';
+import { Network, ProviderType, Wallets } from '../models/wallet-provider.interface';
 import { Token } from '../pages/trade/trade.component';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class BlockchainStateService {
-  // Управление провайдерами
-  private providers: Record<string, { provider: any; type: 'EVM' | 'SVM' | 'multichain' }> = {};
+
+  private providers: Record<string, { provider: any; type: ProviderType }> = {};
   private currentProviderId: string | null = null;
 
-  // Сигналы состояния
-  readonly walletAddress = signal<string | null>(null); // Адрес кошелька
-  readonly network = signal<Network | null>(null); // Выбранная сеть
-  readonly connected = signal<boolean>(false); // Статус подключения
+  readonly walletAddress = signal<string | null>(null);
+  readonly network = signal<Network | null>(null);
+  readonly connected = signal<boolean>(false);
   readonly allNetworks = signal<Network[]>([]);
+
   searchText = signal<string>('');
-  // filteredTokens = [...this.tokens];
 
   networks = signal<Network[]>([]);
 
@@ -25,23 +24,16 @@ export class BlockchainStateService {
 
   private tokensSubject = new BehaviorSubject<boolean>(false);
   public tokensLoading$ = this.tokensSubject.asObservable();
-  private loadingTokens = false;
 
   constructor() {
-    // Эффект для обновления статуса подключения
     effect(() => {
       this.connected.set(this.walletAddress() !== null);
     }, { allowSignalWrites: true });
 
-    // Эффект для загрузки токенов при изменении сети
     effect(() => {
       if (this.network()) {
         this.loadTokensForNetwork(this.network()!.id);
       }
-    });
-
-    effect(() => {
-      console.log("netowrk", this.network());
     });
   }
 
@@ -49,17 +41,10 @@ export class BlockchainStateService {
     this.searchText.set(value);
   }
 
-  // Методы управления провайдерами
-  registerProvider(id: string, provider: any, type: string): void {
-    if (type != 'EVM' && type != 'SVM' && type != 'multichain')
-    {
+  registerProvider(id: string, provider: any, type: ProviderType): void {
+    if (!Object.values(ProviderType).includes(type)) {
       throw new Error(`Invalid providerType: ${type}`);
     }
-    // else
-    // {
-    //   console.log(`Set Provider Type: ${type} for provider: ${id}`);
-    // }
-
     this.providers[id] = { provider, type };
   }
 
@@ -84,7 +69,6 @@ export class BlockchainStateService {
     return await response.json();
   }
 
-  // Методы управления состоянием
   private loadTokensForNetwork(network: number): void {
     fetch(`/data/tokens.json`)
       .then((response) => {
@@ -106,17 +90,14 @@ export class BlockchainStateService {
               decimals: token.decimals
             }))
           );          
-          //this.filteredTokens = [...this.tokens];
         } else {
           console.warn(`No tokens found for network ${network}`);
           this.tokens.set([]);
-          //this.filteredTokens = [];
         }
       })
       .catch((error) => {
         console.error(`Error loading tokens: ${error.message}`);
         this.tokens.set([]);
-        //this.filteredTokens = [];
       });
   }
 
@@ -148,16 +129,21 @@ export class BlockchainStateService {
 }
 
 
-public loadNetworks(type: string, force?: boolean): void {
+public loadNetworks(type: ProviderType, force: boolean = false): void {
   const allNetworks = this.allNetworks();
-  if (type === 'multichain') {
+  if (type === ProviderType.MULTICHAIN) {
     this.networks.set(allNetworks);
   } else {
-    this.networks.set(allNetworks.filter((network: Network) => network.chainType === type));
+    this.networks.set(allNetworks.filter(network => network.chainType === type));
   }
 
   if (force) {
-    this.updateNetwork(1);
+    const defaultNetwork = this.networks().find(n => n.id === 1);
+    if (defaultNetwork) {
+      this.updateNetwork(1);
+    } else {
+      console.warn('Default network with id 1 not found');
+    }
   }
 }
 
@@ -180,7 +166,7 @@ public loadNetworks(type: string, force?: boolean): void {
 
   disconnect(): void {
     this.walletAddress.set(null);
-    this.loadNetworks("multichain", true);
+    this.loadNetworks(ProviderType.MULTICHAIN, true);
     //this.network.set(null);
     this.connected.set(false);
   }
