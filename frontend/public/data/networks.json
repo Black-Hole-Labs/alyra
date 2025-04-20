@@ -17,7 +17,8 @@
       "name": "ETH",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://etherscan.io/token/"
   },
   {
     "key": "sol",
@@ -35,7 +36,8 @@
       "name": "SOL",
       "symbol": "SOL",
       "decimals": 9
-    }
+    },
+    "explorerUrl": "https://solscan.io/token/"
   },
   {
     "key": "bsc",
@@ -55,7 +57,8 @@
       "name": "BNB",
       "symbol": "BNB",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://bscscan.com/token/"
   },
   {
     "key": "arb",
@@ -74,7 +77,8 @@
       "name": "ETH",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://arbiscan.io/token/"
   },
   {
     "key": "bas",
@@ -93,7 +97,8 @@
       "name": "Ethereum",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://basescan.org/token/"
   },
   {
     "key": "bls",
@@ -112,7 +117,8 @@
       "name": "Ethereum",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://blastscan.io/token/"
   },
   {
     "key": "ava",
@@ -132,7 +138,8 @@
       "name": "AVAX",
       "symbol": "AVAX",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://snowtrace.io/token/"
   },
   {
     "key": "pol",
@@ -151,7 +158,8 @@
       "name": "Polygon Ecosystem Token",
       "symbol": "POL",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://polygonscan.com/token/"
   },
   {
     "key": "scl",
@@ -170,7 +178,8 @@
       "name": "ETH",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://scrollscan.com/token/"
   },
   {
     "key": "opt",
@@ -189,7 +198,8 @@
       "name": "ETH",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://optimistic.etherscan.io/token/"
   },
   {
     "key": "lna",
@@ -205,7 +215,8 @@
       "name": "ETH",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://lineascan.build/token/"
   },
   {
     "key": "era",
@@ -221,7 +232,8 @@
       "name": "ETH",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://explorer.zksync.io/token/"
   },
   {
     "key": "pze",
@@ -238,7 +250,8 @@
       "name": "ETH",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://zkevm.polygonscan.com/token/"
   },
   {
     "key": "dai",
@@ -257,7 +270,8 @@
       "name": "XDAI",
       "symbol": "XDAI",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://gnosisscan.io/token/"
   },
   {
     "key": "ftm",
@@ -277,7 +291,8 @@
       "name": "FTM",
       "symbol": "FTM",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://ftmscan.com/token/"
   },
   {
     "key": "mor",
@@ -295,7 +310,8 @@
       "name": "Moonriver",
       "symbol": "MOVR",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://moonriver.moonscan.io/token/"
   },
   {
     "key": "moo",
@@ -313,7 +329,8 @@
       "name": "GLMR",
       "symbol": "GLMR",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://moonscan.io/token/"
   },
   {
     "key": "fus",
@@ -330,7 +347,8 @@
       "name": "FUSE",
       "symbol": "FUSE",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://explorer.fuse.io/token/"
   },
   {
     "key": "bob",
@@ -347,7 +365,8 @@
       "name": "ETH",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://bobascan.com/token/"
   },
   {
     "key": "mod",
@@ -364,7 +383,8 @@
       "name": "ETH",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://modescan.io/token/"
   },
   {
     "key": "mam",
@@ -381,7 +401,8 @@
       "name": "METIS",
       "symbol": "METIS",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://andromeda-explorer.metis.io/token/"
   },
   {
     "key": "aur",
@@ -397,7 +418,8 @@
       "name": "ETH",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://aurorascan.dev/token/"
   },
   {
     "key": "sei",
@@ -413,7 +435,8 @@
       "name": "SEI",
       "symbol": "SEI",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://seiscan.app/token/"
   },
   {
     "key": "imx",
@@ -430,7 +453,8 @@
       "name": "ImmutableX",
       "symbol": "IMX",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://explorer.immutable.com/token/"
   },
   {
     "key": "gra",
@@ -446,7 +470,8 @@
       "name": "G",
       "symbol": "G",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://explorer.gravity.xyz/token/"
   },
   {
     "key": "tai",
@@ -464,7 +489,8 @@
       "name": "Ethereum",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://taikoscan.io/token/"
   },
   {
     "key": "cro",
@@ -481,7 +507,8 @@
       "name": "Cronos",
       "symbol": "CRO",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://cronoscan.com/token/"
   },
   {
     "key": "fra",
@@ -497,7 +524,8 @@
       "name": "Frax Ethereum",
       "symbol": "frxETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://fraxscan.com/token/"
   },
   {
     "key": "rsk",
@@ -514,7 +542,8 @@
       "name": "Rootstock Smart Bitcoin",
       "symbol": "RBTC",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://explorer.rsk.co/token/"
   },
   {
     "key": "cel",
@@ -532,7 +561,8 @@
       "name": "CELO",
       "symbol": "CELO",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://celoscan.io/token/"
   },
   {
     "key": "wcc",
@@ -549,7 +579,8 @@
       "name": "Ethereum",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://worldscan.io/token/"
   },
   {
     "key": "mnt",
@@ -569,6 +600,7 @@
       "name": "Mantle",
       "symbol": "MNT",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://mantlescan.xyz/token/"
   }
 ]

@@ -13,6 +13,7 @@ export interface Network {
     logoURI?: string;
     idHex?:string;
     chainType: string; // Тип сети (EVM, SVM)
+    explorerUrl: string;
 }
 
 export interface TransactionRequestEVM {
