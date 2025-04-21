@@ -53,7 +53,7 @@
 
         <div class="balance" *ngIf="isWalletConnected()">
           <p id="balance">{{ truncateTo6Decimals(balance()) }}</p>
-          <p>{{ selectedToken()?.symbol }}</p>
+          <!-- <p>{{ selectedToken()?.symbol }}</p> -->
 
           <button class="max" (click)="setMaxSellAmount()">MAX</button>
         </div>
@@ -96,7 +96,7 @@
 
         <div class="balance" *ngIf="isWalletConnected()">
           <p>{{truncateTo6Decimals(balanceBuy())}}</p>
-          <p>{{ selectedBuyToken()?.symbol }}</p>
+          <!-- <p>{{ selectedBuyToken()?.symbol }}</p> -->
         </div>
         <!-- Показываем сообщение, если кошелек не подключен -->
         <div class="balance-not-connected" *ngIf="!isWalletConnected()">
