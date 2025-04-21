@@ -22,6 +22,7 @@ export class TokenChangePopupComponent {
   @Input() networkTokens: Token[] | undefined;
   searchText = signal<string>(''); 
   blockchainStateService = inject(BlockchainStateService);
+  explorerUrl = computed(() => this.blockchainStateService.network()?.explorerUrl || "https://etherscan.io/token/");
 
   ngOnInit(): void {
     if (!this.mode) {
