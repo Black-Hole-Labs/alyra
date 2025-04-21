@@ -216,7 +216,16 @@
     (networkSelected)="onNetworkToSelected($event)">
 </app-network-change-to>
 
-
+<!-- <app-bridge-tx
+	[selectedNetwork]="{id: 1, name: 'Ethereum', logoURI: '/img/trade/bnb.png', rpcUrls: 'https://ethereum.rpc.com', chainType: 'EVM', explorerUrl: 'https://etherscan.io'}"
+	[selectedNetworkTo]="{id: 56, name: 'Binance', logoURI: '/img/trade/arbitrum.png', rpcUrls: 'https://binance.rpc.com', chainType: 'EVM', explorerUrl: 'https://bscscan.com'}"
+	[selectedToken]="{symbol: 'ETH', imageUrl: '/img/trade/shib.png', contractAddress: '0x0000000000000000000000000000000000000000', decimals: '18'}"
+	[selectedReceiveToken]="{symbol: 'BNB', imageUrl: '/img/trade/usdc.png', contractAddress: '0x0000000000000000000000000000000000000000', decimals: '18'}"
+	[inputAmount]="0.0001"
+	[txHash]="''"
+	[customAddress]="''"
+	(close)="closeBridgeTxPopup()">
+</app-bridge-tx> -->
 <app-bridge-tx
 	*ngIf="popupService.getCurrentPopup() === 'bridgeTx'"
 	[selectedNetwork]="selectedNetwork()"

@@ -130,4 +130,12 @@ export class ConnectWalletComponent implements OnInit {
   disconnectWallet(): void {
     this.blockchainStateService.disconnect();
   }
+
+  handleWalletClick(wallet: Wallets): void {
+    if (wallet.status === 'install' && wallet.installUrl) {
+      window.open(wallet.installUrl, '_blank');
+    } else {
+      this.onWalletClick(wallet.id);
+    }
+  }
 }

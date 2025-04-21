@@ -86,15 +86,15 @@ input::placeholder {
   flex-direction: column;
   align-items: center;
   width: 567px;
-  height: 588px;
+  height: 100%;
   border-radius: 12px;
-  overflow: hidden;
 }
 
 .inner-list {
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+	padding-bottom: 35%;
 }
 
 .inner-list::-webkit-scrollbar {
