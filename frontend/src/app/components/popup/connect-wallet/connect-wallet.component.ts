@@ -65,10 +65,10 @@ export class ConnectWalletComponent implements OnInit {
     });
 
     // TODO recent logic
-    const recentWallet = this.availableWallets.find(w => w.id === 'metamask');
-    if (recentWallet) {
-      recentWallet.status = 'recent';
-    }
+    // const recentWallet = this.availableWallets.find(w => w.id === 'metamask');
+    // if (recentWallet) {
+    //   recentWallet.status = 'recent';
+    // }
   }
 
   private isWalletDetected(providerId: string): boolean {
