@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { filter, map, mergeMap } from 'rxjs/operators';
+
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AppContentComponent } from './components/app-content/app-content.component';
-import { PopupService } from './services/popup.service';
 import { ClosePopupsDirective } from './directives/close-popups.directive';
 
 @Component({
@@ -22,5 +24,30 @@ import { ClosePopupsDirective } from './directives/close-popups.directive';
   hostDirectives: [ClosePopupsDirective]
 })
 export class AppComponent {
-  constructor(private popupService: PopupService) {}
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+  private titleService = inject(Title);
+
+  constructor() {
+    this.setDynamicTitle();
+  }
+
+  private setDynamicTitle() {
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        map(() => {
+          let route = this.activatedRoute;
+          while (route.firstChild) route = route.firstChild;
+          return route;
+        }),
+        mergeMap(route => route.data)
+      )
+      .subscribe(data => {
+        const pageTitle = data['title']
+          ? `Blackhole | ${data['title']}` 
+          : 'Blackhole';
+        this.titleService.setTitle(pageTitle);
+      });
+  }
 }
