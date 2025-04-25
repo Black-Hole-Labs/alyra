@@ -36,7 +36,7 @@ function initializeApp(
           stateService.registerProvider(provider.id, new MagicEdenProvider(walletManager, injector), provider.type);
           break;
         case 'backpack':
-          stateService.registerProvider(provider.id, new BackpackProvider(injector), provider.type);
+          stateService.registerProvider(provider.id, new BackpackProvider(walletManager, injector), provider.type);
           break;
         case 'ledger':
           stateService.registerProvider(provider.id, new LedgerProvider(), provider.type);

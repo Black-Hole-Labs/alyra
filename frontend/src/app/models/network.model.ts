@@ -11,6 +11,7 @@ export class WalletProviderManager {
   private magicEdenProvider: any = null;
   private PhantomProvider: any = null;
   private RabbyWalletProvider: any = null;
+  private backPackProvider: any = null;
 
   constructor() {
     this.initializeProviders();
@@ -28,6 +29,10 @@ export class WalletProviderManager {
         console.log("Detected Phantom");
         this.PhantomProvider = provider;
       }
+      else if (provider.isBackpack) {
+        console.log("Detected BackPack");
+        this.backPackProvider = provider;
+      }
       else if (provider.isRabby) {
         console.log("Detected RabbyWallet");
         this.RabbyWalletProvider = provider;
@@ -36,10 +41,18 @@ export class WalletProviderManager {
         console.log("Detected MetaMask");
         this.metaMaskProvider = provider;
       }
-      else if (provider.isTrust) {
+      else if (provider.isTrust || provider.isTrustWallet) {
         console.log("Detected Trust");
         this.trustWalletProvider = provider;
       }
+      // else if (provider.isOkxWallet || provider.isOKExWallet) {
+      //   console.log("Detected OKX");
+      //   // this.trustWalletProvider = provider;
+      // }
+      // else if (provider.isCoinbaseWallet) {
+      //   console.log("Detected Coinbase");
+      //   // this.trustWalletProvider = provider;
+      // }
     });
 
     window.dispatchEvent(new Event("eip6963:requestProvider"));
@@ -50,9 +63,7 @@ export class WalletProviderManager {
   getTrustWalletProvider(): any { return this.trustWalletProvider; }
   getMagicEdenProvider(): any { return this.magicEdenProvider; }
   getPhantomProvider(): any { return this.PhantomProvider; }
-  isMetaMaskInstalled(): boolean { return !!this.metaMaskProvider; }
-  isTrustWalletInstalled(): boolean { return !!this.trustWalletProvider; }
-  isMagicEdenInstalled(): boolean { return !!this.magicEdenProvider; }
+  getBackPackProvider(): any { return this.backPackProvider; }
 }
 
 /***************EVM***************/
@@ -75,13 +86,22 @@ export class SolflareProvider extends SvmWalletProvider {
   }
 }
 
-export class BackpackProvider extends SvmWalletProvider {
-  constructor(injector: Injector) {
-    super((window as any).backpack, injector);
+/***************MULTICHAIN***************/
+export class BackpackProvider extends MultiChainWalletProvider {
+  constructor(walletManager: WalletProviderManager, injector: Injector) {
+    super(injector);
+    this.evmProviderInstance = walletManager.getBackPackProvider();
+    this.svmProviderInstance = (window as any).backpack?.solana;
+  }
+
+  override async connect(): Promise<{ address: string; network: string }> {
+    this.blockchainStateService.updateNetwork(1151111081099710); // Solana is default for BackPack
+    const connection = await super.connect();
+
+    return connection;
   }
 }
 
-/***************MULTICHAIN***************/
 export class PhantomProvider extends MultiChainWalletProvider {
   constructor(walletManager: WalletProviderManager, injector: Injector) {
     super(injector);
