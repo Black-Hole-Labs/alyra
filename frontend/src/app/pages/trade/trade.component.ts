@@ -49,7 +49,7 @@ export class TradeComponent implements AfterViewChecked {
   
   buyAmount = signal<string | undefined>(undefined);
   buyAmountForInput = signal<string | undefined>(undefined);
-  price: number = 0; // Цена обмена
+  price = signal<number>(0); // Цена обмена
   priceUsd: number = 0; // Текущая стоимость в USD за единицу
   sellPriceUsd = signal<string>('');
   buyPriceUsd = signal<string>('');
@@ -84,7 +84,6 @@ export class TradeComponent implements AfterViewChecked {
 
   allFieldsReady = computed(() =>
     !!this.blockchainStateService.network() &&
-    !!this.blockchainStateService.walletAddress() &&
     this.selectedToken() !== undefined &&
     this.selectedBuyToken() !== undefined &&
     this.validatedSellAmount() !== 0
@@ -555,19 +554,28 @@ export class TradeComponent implements AfterViewChecked {
     this.buttonState = 'finding';
     const fromChain = this.blockchainStateService.network()!.id.toString();
     const toChain = this.blockchainStateService.network()!.id.toString();
-    const fromAddress = this.blockchainStateService.walletAddress()!;
-    //const fromTokenDecimals = this.selectedTokendecimals;
     const fromTokenDecimals = this.selectedToken()!.decimals;
-    //const fromAmount = this.validatedSellAmount;
     const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
     const fromAmount = parseUnits(formattedFromAmount, fromTokenDecimals);
-    //const fromToken = this.selectedTokenAddress;
     const fromToken = this.selectedToken()!.contractAddress;
     const toToken = this.selectedBuyToken()!.contractAddress;
     const toTokenDecimals = this.selectedBuyToken()!.decimals;
-    // const toToken = this.selectedBuyTokenAddress;
-    // const toTokenDecimals = this.selectedTokenBuydecimals;
-
+    let fromAddress = '';
+    if(!this.blockchainStateService.walletAddress())
+    {
+      if(fromToken !== ethers.ZeroAddress)
+      {
+        fromAddress = fromToken;
+      }
+      else
+      {
+        fromAddress = toToken;
+      }
+    }
+    else
+    {
+      fromAddress = this.blockchainStateService.walletAddress()!;
+    }
     const adjustedFromAmount = fromAmount.toString();
 
     console.log("fromChain",fromChain);
@@ -634,7 +642,7 @@ export class TradeComponent implements AfterViewChecked {
           if (fromDecimal > 0)
           {
             const ratio = toDecimal / fromDecimal;
-            this.price = Number(ratio.toFixed(3));
+            this.price.set(Number(ratio.toFixed(3)));
 
             const ratioUsd = Number(response.estimate.toAmountUSD) / fromDecimal;
             this.priceUsd = Number(ratioUsd.toFixed(3));
@@ -677,7 +685,11 @@ export class TradeComponent implements AfterViewChecked {
       },
       complete: () => {
         console.log('Quote request completed');
-        if (this.validatedSellAmount() > this.balance()) {
+        if(!this.blockchainStateService.walletAddress())
+        {
+          this.buttonState = 'insufficient';
+        }
+        else if (this.validatedSellAmount() > this.balance()) {
           this.buttonState = 'insufficient';
           return;
         }

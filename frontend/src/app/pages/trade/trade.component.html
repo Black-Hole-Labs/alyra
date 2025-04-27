@@ -132,11 +132,11 @@
 		</ng-template>
 
 		<div class="info">
-			<div class="price">
+			<div class="price" *ngIf="price() !== 0">
 				<p>1</p>
 				<p>{{ selectedToken()?.symbol }}</p>
 				<p>=</p>
-				<p id="price">{{ price }}</p>
+				<p id="price">{{ price() }}</p>
 				<p>{{ selectedBuyToken()?.symbol }}</p>
 				<p class="price-usd">($</p>
 				<p class="price-usd" id="price-usd">{{ priceUsd }}</p>
