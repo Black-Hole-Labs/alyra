@@ -49,7 +49,7 @@ export class TradeComponent implements AfterViewChecked {
   
   buyAmount = signal<string | undefined>(undefined);
   buyAmountForInput = signal<string | undefined>(undefined);
-  price: number = 0; // Цена обмена
+  price = signal<number>(0); // Цена обмена
   priceUsd: number = 0; // Текущая стоимость в USD за единицу
   sellPriceUsd = signal<string>('');
   buyPriceUsd = signal<string>('');
@@ -84,14 +84,10 @@ export class TradeComponent implements AfterViewChecked {
 
   allFieldsReady = computed(() =>
     !!this.blockchainStateService.network() &&
-    !!this.blockchainStateService.walletAddress() &&
     this.selectedToken() !== undefined &&
     this.selectedBuyToken() !== undefined &&
-    this.validatedSellAmount() !== 0 &&
-    this.buttonState === "swap"
+    this.validatedSellAmount() !== 0
   );
-
-  private inputTimeout: any;
 
   @ViewChild('buyAmountText') buyAmountTextElement: ElementRef | null = null;
   private buyAmountTextAnimated = false;
@@ -103,6 +99,10 @@ export class TradeComponent implements AfterViewChecked {
   private animationSpeed = 35;
   private animationTimeouts: { [key: string]: number } = {};
 
+  private debounceTimer: any;
+  private throttleActive: boolean = false;
+  private isProcessingInput = signal<boolean>(false);
+
   constructor(
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
@@ -111,54 +111,57 @@ export class TradeComponent implements AfterViewChecked {
     private transactionsService: TransactionsService,
     public popupService: PopupService
   ) {
-      effect(() => 
-      {
-        try{
+    effect(() => 
+    {
+      try{
+        if(this.allFieldsReady() && !this.isProcessingInput())
+        {
           this.getTxData();
         }
-        catch(error){
-          // this.updateBuyAmount('0.0');
-          // update gas = 0.0
-          console.log("error",error);
-          this.buttonState = 'no-available-quotes';
-        }
-      }, { allowSignalWrites: true });
+      }
+      catch(error){
+        // this.updateBuyAmount('0.0');
+        // update gas = 0.0
+        console.log("error",error);
+        this.buttonState = 'no-available-quotes';
+      }
+    }, { allowSignalWrites: true });
 
-      effect(() => {
-        const tokens = this.blockchainStateService.filteredTokens();
-        const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
-        const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
+    effect(() => {
+      const tokens = this.blockchainStateService.filteredTokens();
+      const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
+      const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
+  
+      this.selectedToken.set(newSelectedToken);
+      this.selectedBuyToken.set(newSelectedBuyToken);
+      if(!this.blockchainStateService.connected()){
+        return;
+      }
+      Promise.resolve().then(() => {
     
-        this.selectedToken.set(newSelectedToken);
-        this.selectedBuyToken.set(newSelectedBuyToken);
-        if(!this.blockchainStateService.connected()){
-          return;
+        if (this.selectedToken()) {
+          this.walletBalanceService.getBalanceForToken(this.selectedToken()!)
+            .then((balanceStr) => {
+              this.balance.set(Number(parseFloat(balanceStr)));
+            })
+            .catch((error) => {
+              console.error('Error getting balance sell: ', error);
+              this.balance.set(0.0);
+            });
         }
-        Promise.resolve().then(() => {
-      
-          if (this.selectedToken()) {
-            this.walletBalanceService.getBalanceForToken(this.selectedToken()!)
-              .then((balanceStr) => {
-                this.balance.set(Number(parseFloat(balanceStr)));
-              })
-              .catch((error) => {
-                console.error('Error getting balance sell: ', error);
-                this.balance.set(0.0);
-              });
-          }
-      
-          if (this.selectedBuyToken()) {
-            this.walletBalanceService.getBalanceForToken(this.selectedBuyToken()!)
-              .then((balanceStr) => {
-                this.balanceBuy.set(Number(parseFloat(balanceStr)));
-              })
-              .catch((error) => {
-                console.error('Error getting balance buy: ', error);
-                this.balanceBuy.set(0.0);
-              });
-          }
-        });
-      }, { allowSignalWrites: true });
+    
+        if (this.selectedBuyToken()) {
+          this.walletBalanceService.getBalanceForToken(this.selectedBuyToken()!)
+            .then((balanceStr) => {
+              this.balanceBuy.set(Number(parseFloat(balanceStr)));
+            })
+            .catch((error) => {
+              console.error('Error getting balance buy: ', error);
+              this.balanceBuy.set(0.0);
+            });
+        }
+      });
+    }, { allowSignalWrites: true });
   }
 
   
@@ -188,26 +191,32 @@ export class TradeComponent implements AfterViewChecked {
     .replace(/\.+/g, '.') 
     .replace(/^(\.)/g, '');
 
-    if (isSell) {
-      //this.updateBuyAmount();
-      //this.updateSellPriceUsd();
-      clearTimeout(this.inputTimeout);
+    if (isSell)
+    {
+      this.isProcessingInput.update(value => true);
 
-      this.inputTimeout = setTimeout(() => {
-        this.sellAmount = inputElement.value;
-        this.validatedSellAmount.update(value => (Number(inputElement.value)));
-        if (this.validatedSellAmount() > this.balance()) {
-          this.buttonState = 'insufficient';
-          this.updateBuyAmount('0.0');
-        }
-        else
-        {
-          this.buttonState = 'swap';
-        }
-      }, 2000);
+      this.sellAmount = inputElement.value;
+      this.validatedSellAmount.update(value => (Number(inputElement.value)));
+      
+      if (this.validatedSellAmount() > this.balance())
+      {
+        this.buttonState = 'insufficient';
+        // this.updateBuyAmount('0.0');
+      }
+      else
+      {
+        this.buttonState = 'swap';
+      }
+
+      if (!this.throttleActive) {
+        this.throttleActive = true;
+        
+        this.debounceTimer = setTimeout(() => {
+          this.isProcessingInput.update(() => false);
+          this.throttleActive = false;
+        }, 2000);
+      }
     }
-
-    console.log("some data");
   }
 
   updateBuyAmount(value: string): void {
@@ -546,25 +555,32 @@ export class TradeComponent implements AfterViewChecked {
 
   getTxData() {
     this.buttonState = 'finding';
-    if (this.validatedSellAmount() > this.balance()) {
-      this.buttonState = 'insufficient';
-      return;
-    }
     const fromChain = this.blockchainStateService.network()!.id.toString();
     const toChain = this.blockchainStateService.network()!.id.toString();
-    const fromAddress = this.blockchainStateService.walletAddress()!;
-    //const fromTokenDecimals = this.selectedTokendecimals;
     const fromTokenDecimals = this.selectedToken()!.decimals;
-    //const fromAmount = this.validatedSellAmount;
+    console.log("this.validatedSellAmount()",this.validatedSellAmount());
     const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
+    console.log(formattedFromAmount,formattedFromAmount);
     const fromAmount = parseUnits(formattedFromAmount, fromTokenDecimals);
-    //const fromToken = this.selectedTokenAddress;
     const fromToken = this.selectedToken()!.contractAddress;
     const toToken = this.selectedBuyToken()!.contractAddress;
     const toTokenDecimals = this.selectedBuyToken()!.decimals;
-    // const toToken = this.selectedBuyTokenAddress;
-    // const toTokenDecimals = this.selectedTokenBuydecimals;
-
+    let fromAddress = '';
+    if(!this.blockchainStateService.walletAddress())
+    {
+      if(fromToken !== ethers.ZeroAddress)
+      {
+        fromAddress = fromToken;
+      }
+      else
+      {
+        fromAddress = toToken;
+      }
+    }
+    else
+    {
+      fromAddress = this.blockchainStateService.walletAddress()!;
+    }
     const adjustedFromAmount = fromAmount.toString();
 
     console.log("fromChain",fromChain);
@@ -631,7 +647,7 @@ export class TradeComponent implements AfterViewChecked {
           if (fromDecimal > 0)
           {
             const ratio = toDecimal / fromDecimal;
-            this.price = Number(ratio.toFixed(3));
+            this.price.set(Number(ratio.toFixed(3)));
 
             const ratioUsd = Number(response.estimate.toAmountUSD) / fromDecimal;
             this.priceUsd = Number(ratioUsd.toFixed(3));
@@ -674,6 +690,14 @@ export class TradeComponent implements AfterViewChecked {
       },
       complete: () => {
         console.log('Quote request completed');
+        if(!this.blockchainStateService.walletAddress())
+        {
+          this.buttonState = 'insufficient';
+        }
+        else if (this.validatedSellAmount() > this.balance()) {
+          this.buttonState = 'insufficient';
+          return;
+        }
       }
     });
 

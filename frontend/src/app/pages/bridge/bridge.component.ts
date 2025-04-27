@@ -149,6 +149,10 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   bridgeTxHash: string = '';
 
+  private debounceTimer: any;
+  private throttleActive: boolean = false;
+  private isProcessingInput = signal<boolean>(false);
+
   constructor(
     private renderer: Renderer2,
     private blockchainStateService: BlockchainStateService,
@@ -159,7 +163,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   ) {
 
     effect(() => {
-      if (this.isBridgeButtonActive()) {
+      if (this.isBridgeButtonActive() && !this.isProcessingInput()) {
         try{
           this.getTxData();
         }
@@ -279,18 +283,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   getTxData() {
     this.setButtonState('finding');
-    if (this.validatedSellAmount() > this.balance()) {
-      this.setButtonState('insufficient');
-      return;
-    }
     const fromChain = (this.selectedNetwork()?.id)?.toString();
     const toChain = (this.selectedBuyNetwork()?.id)?.toString();
-    console.log("this.selectedNetwork()?",this.selectedNetwork());
-    console.log("this.selectedNetwork()?",this.selectedBuyNetwork());
-
-    //const fromChain = this.blockchainStateService.network()!.id.toString();
-    //const toChain = this.blockchainStateService.network()!.id.toString();
-    const fromAddress = this.blockchainStateService.walletAddress()!;
     const fromTokenDecimals = this.selectedToken()!.decimals;
     const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
     const fromAmount = parseUnits(formattedFromAmount, fromTokenDecimals);
@@ -298,6 +292,34 @@ export class BridgeComponent implements OnInit, OnDestroy {
     const toToken = this.selectedBuyToken()!.contractAddress;
     const toTokenDecimals = this.selectedBuyToken()!.decimals;
     const adjustedFromAmount = fromAmount.toString();
+
+    let toAddress = this.customAddress() !== '' ? this.customAddress() : undefined;
+    const slippageValue = this.slippage !== 0.005 ? this.slippage: undefined;
+
+    let fromAddress = '';
+    const CONSTANT_ETH_ADDRESS = "0x1111111111111111111111111111111111111111";
+    const CONSTANT_SOL_ADDRESS = "11111111111111111111111111111111";
+
+    if (!this.blockchainStateService.walletAddress()) {
+      const fromChainType = this.selectedNetwork()?.chainType;
+      const toChainType = this.selectedBuyNetwork()?.chainType;
+      
+      if (fromChainType === "EVM") {
+        fromAddress = CONSTANT_ETH_ADDRESS;
+      } else if (fromChainType === "SVM") {
+        fromAddress = CONSTANT_SOL_ADDRESS;
+      }
+      
+      if (!toAddress) {
+        if (toChainType === "EVM") {
+          toAddress = CONSTANT_ETH_ADDRESS;
+        } else if (toChainType === "SVM") {
+          toAddress = CONSTANT_SOL_ADDRESS;
+        }
+      }
+    } else {
+      fromAddress = this.blockchainStateService.walletAddress()!;
+    }
   
     if (!fromChain || !toChain || !fromAddress || !fromAmount || !fromToken || !toToken || !fromTokenDecimals) {
       console.log("fromChain",fromChain);
@@ -313,10 +335,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
       console.error('Missing required parameters');
       return;
     }
-    
-    console.log("fromAddress",fromAddress);
-    const toAddress = this.customAddress() !== '' ? this.customAddress() : undefined;
-    const slippageValue = this.slippage !== 0.005 ? this.slippage: undefined; // 0.005 is default for LIFI
 
     this.transactionsService.getQuoteBridge(
       fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress, slippageValue)
@@ -385,6 +403,10 @@ export class BridgeComponent implements OnInit, OnDestroy {
         }
       },
       complete: () => {
+        if (this.validatedSellAmount() > this.balance()) {
+          this.setButtonState('insufficient');
+          return;
+        }
         this.setButtonState('bridge');
         console.log('Quote request completed');
       }
@@ -502,21 +524,32 @@ export class BridgeComponent implements OnInit, OnDestroy {
       .replace(/^(,|\.)/g, '')
       .replace(/,/g, '.');
 
-    if (isSell) {
-      clearTimeout(this.inputTimeout);
+    if (isSell)
+    { 
+      this.isProcessingInput.update(value => true);
 
-      this.inputTimeout = setTimeout(() => {
-        this.sellAmount = inputElement.value;
-        this.validatedSellAmount.update(value => (Number(inputElement.value)));
-        if (this.validatedSellAmount() > this.balance()) {
-          this.setButtonState('insufficient');
-          this.updateBuyAmount('0.0');
-        }
-        else
-        {
-          this.setButtonState('bridge');
-        }
-      }, 2000);
+      this.sellAmount = inputElement.value;
+      this.validatedSellAmount.update(value => (Number(inputElement.value)));
+
+      if (this.validatedSellAmount() > this.balance())
+      {
+        this.setButtonState('insufficient');
+        // this.updateBuyAmount('0.0');
+        this.isProcessingInput.update(value => false);
+      }
+      else
+      {
+        this.setButtonState('bridge');
+      }
+
+      if (!this.throttleActive) {
+        this.throttleActive = true;
+        
+        this.debounceTimer = setTimeout(() => {
+          this.isProcessingInput.update(() => false);
+          this.throttleActive = false;
+        }, 2000);
+      }
     }
     console.log("some data");
   }
@@ -604,13 +637,11 @@ export class BridgeComponent implements OnInit, OnDestroy {
   //?
   isBridgeButtonActive = computed(() =>
       !!this.blockchainStateService.network() &&
-      !!this.blockchainStateService.walletAddress() &&
       this.selectedToken() !== undefined &&
       this.selectedNetwork() !== undefined &&
       this.selectedBuyNetwork() !== undefined &&
       this.selectedBuyToken() !== undefined &&
-      this.validatedSellAmount() !== 0 &&
-      this.buttonState === "bridge" 
+      this.validatedSellAmount() !== 0
     );
 
   isWalletConnected(): boolean {
