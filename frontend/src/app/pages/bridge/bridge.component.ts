@@ -127,7 +127,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
   private receiveTextAnimated = false;
 
   txData = signal<TransactionRequestEVM | TransactionRequestSVM | undefined> (undefined);
-  private inputTimeout: any;
   buyAmountForInput = signal<string | undefined>(undefined);
   sellAmount: string = '';
   buyAmount = signal<string | undefined>(undefined);;
@@ -159,7 +158,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
     private walletBalanceService: WalletBalanceService,
     public popupService: PopupService,
     private transactionsService: TransactionsService,
-    private cdr: ChangeDetectorRef
   ) {
 
     effect(() => {
@@ -268,6 +266,17 @@ export class BridgeComponent implements OnInit, OnDestroy {
         }
       });
     }, { allowSignalWrites: true });
+
+    effect(() => {
+      let isConnected = this.blockchainStateService.connected();
+      if (isConnected && 
+        (this.selectedNetwork()?.id == 1151111081099710 ||
+         this.selectedBuyNetwork()?.id == 1151111081099710))
+      {
+        this.showCustomAddress = true;
+      }
+    },
+    { allowSignalWrites: true });
 
   }
 
@@ -471,6 +480,15 @@ export class BridgeComponent implements OnInit, OnDestroy {
         this.popupService.closeAllPopups();
       });
       this.receiveTextAnimated = false;
+
+      if (event.id == 1151111081099710) // Solana
+      {
+        this.showCustomAddress = true;
+      }
+      else if (this.selectedBuyNetwork()?.id != 1151111081099710)
+      {
+        this.showCustomAddress = false;
+      }
     }
     catch(error:any){
       console.error(error);
@@ -483,6 +501,15 @@ export class BridgeComponent implements OnInit, OnDestroy {
       this.popupService.closeAllPopups();
     });
     this.receiveTextAnimated = false;
+
+    if (event.id == 1151111081099710) // Solana
+    {
+      this.showCustomAddress = true;
+    }
+    else if (this.selectedNetwork()?.id != 1151111081099710)
+    {
+      this.showCustomAddress = false;
+    }
   }
 
   async onTokenSelected(token: Token): Promise<void> {
