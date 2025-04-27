@@ -100,6 +100,7 @@ export class TradeComponent implements AfterViewChecked {
   private animationTimeouts: { [key: string]: number } = {};
 
   private debounceTimer: any;
+  private throttleActive: boolean = false;
   private isProcessingInput = signal<boolean>(false);
 
   constructor(
@@ -110,57 +111,57 @@ export class TradeComponent implements AfterViewChecked {
     private transactionsService: TransactionsService,
     public popupService: PopupService
   ) {
-      effect(() => 
-      {
-        try{
-          if(this.allFieldsReady() && !this.isProcessingInput())
-          {
-            this.getTxData();
-          }
+    effect(() => 
+    {
+      try{
+        if(this.allFieldsReady() && !this.isProcessingInput())
+        {
+          this.getTxData();
         }
-        catch(error){
-          // this.updateBuyAmount('0.0');
-          // update gas = 0.0
-          console.log("error",error);
-          this.buttonState = 'no-available-quotes';
-        }
-      }, { allowSignalWrites: true });
+      }
+      catch(error){
+        // this.updateBuyAmount('0.0');
+        // update gas = 0.0
+        console.log("error",error);
+        this.buttonState = 'no-available-quotes';
+      }
+    }, { allowSignalWrites: true });
 
-      effect(() => {
-        const tokens = this.blockchainStateService.filteredTokens();
-        const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
-        const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
+    effect(() => {
+      const tokens = this.blockchainStateService.filteredTokens();
+      const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
+      const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
+  
+      this.selectedToken.set(newSelectedToken);
+      this.selectedBuyToken.set(newSelectedBuyToken);
+      if(!this.blockchainStateService.connected()){
+        return;
+      }
+      Promise.resolve().then(() => {
     
-        this.selectedToken.set(newSelectedToken);
-        this.selectedBuyToken.set(newSelectedBuyToken);
-        if(!this.blockchainStateService.connected()){
-          return;
+        if (this.selectedToken()) {
+          this.walletBalanceService.getBalanceForToken(this.selectedToken()!)
+            .then((balanceStr) => {
+              this.balance.set(Number(parseFloat(balanceStr)));
+            })
+            .catch((error) => {
+              console.error('Error getting balance sell: ', error);
+              this.balance.set(0.0);
+            });
         }
-        Promise.resolve().then(() => {
-      
-          if (this.selectedToken()) {
-            this.walletBalanceService.getBalanceForToken(this.selectedToken()!)
-              .then((balanceStr) => {
-                this.balance.set(Number(parseFloat(balanceStr)));
-              })
-              .catch((error) => {
-                console.error('Error getting balance sell: ', error);
-                this.balance.set(0.0);
-              });
-          }
-      
-          if (this.selectedBuyToken()) {
-            this.walletBalanceService.getBalanceForToken(this.selectedBuyToken()!)
-              .then((balanceStr) => {
-                this.balanceBuy.set(Number(parseFloat(balanceStr)));
-              })
-              .catch((error) => {
-                console.error('Error getting balance buy: ', error);
-                this.balanceBuy.set(0.0);
-              });
-          }
-        });
-      }, { allowSignalWrites: true });
+    
+        if (this.selectedBuyToken()) {
+          this.walletBalanceService.getBalanceForToken(this.selectedBuyToken()!)
+            .then((balanceStr) => {
+              this.balanceBuy.set(Number(parseFloat(balanceStr)));
+            })
+            .catch((error) => {
+              console.error('Error getting balance buy: ', error);
+              this.balanceBuy.set(0.0);
+            });
+        }
+      });
+    }, { allowSignalWrites: true });
   }
 
   
@@ -192,8 +193,6 @@ export class TradeComponent implements AfterViewChecked {
 
     if (isSell)
     {
-      clearTimeout(this.debounceTimer);
-
       this.isProcessingInput.update(value => true);
 
       this.sellAmount = inputElement.value;
@@ -203,16 +202,20 @@ export class TradeComponent implements AfterViewChecked {
       {
         this.buttonState = 'insufficient';
         // this.updateBuyAmount('0.0');
-        this.isProcessingInput.update(value => false);
       }
       else
       {
         this.buttonState = 'swap';
       }
 
-      this.debounceTimer = setTimeout(() => {
-        this.isProcessingInput.update(value => false); 
-      }, 2000);
+      if (!this.throttleActive) {
+        this.throttleActive = true;
+        
+        this.debounceTimer = setTimeout(() => {
+          this.isProcessingInput.update(() => false);
+          this.throttleActive = false;
+        }, 2000);
+      }
     }
   }
 
@@ -555,7 +558,9 @@ export class TradeComponent implements AfterViewChecked {
     const fromChain = this.blockchainStateService.network()!.id.toString();
     const toChain = this.blockchainStateService.network()!.id.toString();
     const fromTokenDecimals = this.selectedToken()!.decimals;
+    console.log("this.validatedSellAmount()",this.validatedSellAmount());
     const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
+    console.log(formattedFromAmount,formattedFromAmount);
     const fromAmount = parseUnits(formattedFromAmount, fromTokenDecimals);
     const fromToken = this.selectedToken()!.contractAddress;
     const toToken = this.selectedBuyToken()!.contractAddress;

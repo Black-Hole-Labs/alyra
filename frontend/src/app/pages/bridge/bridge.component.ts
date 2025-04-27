@@ -150,6 +150,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   bridgeTxHash: string = '';
 
   private debounceTimer: any;
+  private throttleActive: boolean = false;
   private isProcessingInput = signal<boolean>(false);
 
   constructor(
@@ -524,9 +525,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
       .replace(/,/g, '.');
 
     if (isSell)
-    {
-      clearTimeout(this.debounceTimer);
-      
+    { 
       this.isProcessingInput.update(value => true);
 
       this.sellAmount = inputElement.value;
@@ -543,9 +542,14 @@ export class BridgeComponent implements OnInit, OnDestroy {
         this.setButtonState('bridge');
       }
 
-      this.debounceTimer = setTimeout(() => {
-        this.isProcessingInput.update(value => false); 
-      }, 2000);
+      if (!this.throttleActive) {
+        this.throttleActive = true;
+        
+        this.debounceTimer = setTimeout(() => {
+          this.isProcessingInput.update(() => false);
+          this.throttleActive = false;
+        }, 2000);
+      }
     }
     console.log("some data");
   }
