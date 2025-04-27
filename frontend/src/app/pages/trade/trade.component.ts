@@ -87,11 +87,8 @@ export class TradeComponent implements AfterViewChecked {
     !!this.blockchainStateService.walletAddress() &&
     this.selectedToken() !== undefined &&
     this.selectedBuyToken() !== undefined &&
-    this.validatedSellAmount() !== 0 &&
-    this.buttonState === "swap"
+    this.validatedSellAmount() !== 0
   );
-
-  private inputTimeout: any;
 
   @ViewChild('buyAmountText') buyAmountTextElement: ElementRef | null = null;
   private buyAmountTextAnimated = false;
@@ -102,6 +99,9 @@ export class TradeComponent implements AfterViewChecked {
   private animationFrames = 60;
   private animationSpeed = 35;
   private animationTimeouts: { [key: string]: number } = {};
+
+  private debounceTimer: any;
+  private isProcessingInput = signal<boolean>(false);
 
   constructor(
     private renderer: Renderer2,
@@ -114,7 +114,10 @@ export class TradeComponent implements AfterViewChecked {
       effect(() => 
       {
         try{
-          this.getTxData();
+          if(this.allFieldsReady() && !this.isProcessingInput())
+          {
+            this.getTxData();
+          }
         }
         catch(error){
           // this.updateBuyAmount('0.0');
@@ -188,26 +191,30 @@ export class TradeComponent implements AfterViewChecked {
     .replace(/\.+/g, '.') 
     .replace(/^(\.)/g, '');
 
-    if (isSell) {
-      //this.updateBuyAmount();
-      //this.updateSellPriceUsd();
-      clearTimeout(this.inputTimeout);
+    if (isSell)
+    {
+      clearTimeout(this.debounceTimer);
 
-      this.inputTimeout = setTimeout(() => {
-        this.sellAmount = inputElement.value;
-        this.validatedSellAmount.update(value => (Number(inputElement.value)));
-        if (this.validatedSellAmount() > this.balance()) {
-          this.buttonState = 'insufficient';
-          this.updateBuyAmount('0.0');
-        }
-        else
-        {
-          this.buttonState = 'swap';
-        }
+      this.isProcessingInput.update(value => true);
+
+      this.sellAmount = inputElement.value;
+      this.validatedSellAmount.update(value => (Number(inputElement.value)));
+      
+      if (this.validatedSellAmount() > this.balance())
+      {
+        this.buttonState = 'insufficient';
+        // this.updateBuyAmount('0.0');
+        this.isProcessingInput.update(value => false);
+      }
+      else
+      {
+        this.buttonState = 'swap';
+      }
+
+      this.debounceTimer = setTimeout(() => {
+        this.isProcessingInput.update(value => false); 
       }, 2000);
     }
-
-    console.log("some data");
   }
 
   updateBuyAmount(value: string): void {
@@ -546,10 +553,6 @@ export class TradeComponent implements AfterViewChecked {
 
   getTxData() {
     this.buttonState = 'finding';
-    if (this.validatedSellAmount() > this.balance()) {
-      this.buttonState = 'insufficient';
-      return;
-    }
     const fromChain = this.blockchainStateService.network()!.id.toString();
     const toChain = this.blockchainStateService.network()!.id.toString();
     const fromAddress = this.blockchainStateService.walletAddress()!;
@@ -674,6 +677,10 @@ export class TradeComponent implements AfterViewChecked {
       },
       complete: () => {
         console.log('Quote request completed');
+        if (this.validatedSellAmount() > this.balance()) {
+          this.buttonState = 'insufficient';
+          return;
+        }
       }
     });
 
