@@ -16,6 +16,7 @@ import { SettingsBridgeComponent } from '../../components/popup/settings-bridge/
 import { ethers, parseUnits } from 'ethers';
 import { TransactionsService } from '../../services/transactions.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { PublicKey } from '@solana/web3.js';
 
 @Component({
   selector: 'app-bridge',
@@ -706,12 +707,25 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   get addressStatus(): 'none' | 'good' | 'bad' {
-    if (!this.customAddress()) {
+    const addr = this.customAddress();
+    if (!addr) {
       return 'none';
     }
-    // Для примера используем простую проверку длины
-    // В реальном приложении здесь должна быть более сложная валидация адреса
-    return this.customAddress().length > 2 ? 'good' : 'bad';
+    return this.isValidWalletAddress(addr, this.selectedBuyNetwork()?.chainType!) ? 'good' : 'bad';
+  }
+
+  private isValidWalletAddress(address: string, chainType: string): boolean {
+    if (chainType === 'EVM') {
+      // 0x + 40 hex chars
+      return /^0x[a-fA-F0-9]{40}$/.test(address);
+    } else {
+      try {
+        new PublicKey(address);
+        return true;
+      } catch {
+        return false;
+      }
+    }
   }
 
   toggleCustomAddress(): void {
