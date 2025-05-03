@@ -20,7 +20,7 @@
 
 				<app-settings-bridge
 					*ngIf="showSettingsBridgePopup"
-					class="settings-bridge-popup open"
+					class="settings-bridge-popup"
 					(close)="popupService.closePopup('settingsBridge')"
 					(save)="onSlippageSave($event)">
 				</app-settings-bridge>
@@ -46,10 +46,15 @@
 							id="number-input"
 							placeholder="Enter amount"
 							[(ngModel)]="sellAmountForInput"
-              				(input)="processInput($event, true)"
+							(input)="processInput($event, true)"
 							(keydown)="handleKeyDown($event)"
 						/>
-						<h6 class="max-button" (click)="setMaxSellAmount()" *ngIf="isWalletConnected()">MAX</h6>
+						<div class="balance-container">
+							<h6 class="max-button" 
+                 (click)="setMaxSellAmount()" 
+                 *ngIf="isWalletConnected()"
+                 [attr.data-balance]="truncateTo6Decimals(balance())">MAX</h6>
+						</div>
 					</div>
 				</div>
 			</div>

@@ -10,7 +10,7 @@
 
 			<app-settings
 				*ngIf="showSettingsPopup"
-				class="settings-popup open"
+				class="settings-popup"
 				(close)="popupService.closePopup('settings')"
 				(save)="onSlippageSave($event)">
 			</app-settings>
@@ -37,6 +37,7 @@
           [(ngModel)]="sellAmountForInput"
           (input)="processInput($event, true)"
           (keydown)="handleKeyDown($event)"
+          [style.fontSize.px]="inputFontSize()"
         />
       </div>
 

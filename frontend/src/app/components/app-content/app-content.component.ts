@@ -10,6 +10,8 @@ import { BlackholeMenuComponent } from '../popup/blackhole-menu/blackhole-menu.c
 import { BlackholeNetworkComponent } from '../popup/blackhole-network/blackhole-network.component';
 import { WalletComponent } from "../popup/wallet/wallet.component";
 import { ConnectWalletComponent } from "../popup/connect-wallet/connect-wallet.component";
+import { EcosystemChangeComponent } from '../popup/ecosystem-change/ecosystem-change.component';
+import { BlockchainStateService } from '../../services/blockchain-state.service';
 @Component({
   selector: 'app-app-content',
   standalone: true,
@@ -18,7 +20,7 @@ import { ConnectWalletComponent } from "../popup/connect-wallet/connect-wallet.c
 		'./app-content.component.scss',
 		'./app-content.component.adaptives.scss'
 	],
-  imports: [RouterOutlet, RouterModule, BlackholeMenuComponent, CommonModule, BlackholeNetworkComponent, WalletComponent, ConnectWalletComponent]
+  imports: [RouterOutlet, RouterModule, BlackholeMenuComponent, CommonModule, BlackholeNetworkComponent, WalletComponent, ConnectWalletComponent, EcosystemChangeComponent]
 })
 export class AppContentComponent {
   isPopupVisible = false;
@@ -30,7 +32,8 @@ export class AppContentComponent {
   constructor(
     private router: Router, 
     public popupService: PopupService,
-    ) {
+    private blockchainStateService: BlockchainStateService,
+  ) {
       //this.networks = this.networkService.getNetworks();
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -52,4 +55,20 @@ export class AppContentComponent {
     this.isNetworkPopupVisible = false;
   }
 
+  onEcosystemSelected(ecosystemId: string): void {
+    if (ecosystemId === 'evm') {
+      this.blockchainStateService.updateNetwork(1);
+    } else if (ecosystemId === 'svm') {
+      this.blockchainStateService.updateNetwork(1151111081099710);
+    }
+    
+    const provider = this.blockchainStateService.getCurrentProvider();
+    provider.provider.switchNetwork(this.blockchainStateService.getCurrentNetwork());
+    
+    this.popupService.openPopup('wallet');
+  }
+
+  closeEcosystemPopup(): void {
+    this.popupService.closePopup('ecosystemChange');
+  }
 }

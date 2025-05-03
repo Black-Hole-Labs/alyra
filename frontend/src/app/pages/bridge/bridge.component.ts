@@ -706,6 +706,10 @@ export class BridgeComponent implements OnInit, OnDestroy {
     this.customAddress.set(input.value);
   }
 
+  truncateTo6Decimals(value: number): string {
+    return (Math.trunc(value * 1e6) / 1e6).toString();
+  }
+
   get addressStatus(): 'none' | 'good' | 'bad' {
     const addr = this.customAddress();
     if (!addr) {
@@ -1040,8 +1044,20 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   toggleSettingsBridgePopup(): void {
     if (this.showSettingsBridgePopup) {
-      this.popupService.closePopup('settingsBridge');
+      const settingsEl = document.querySelector('app-settings-bridge');
+      if (settingsEl) {
+        settingsEl.classList.add('closing');
+      }
+      document.body.classList.add('popup-closing');
+      setTimeout(() => {
+        this.popupService.closePopup('settingsBridge');
+        document.body.classList.remove('popup-closing');
+        if (settingsEl) {
+          settingsEl.classList.remove('closing');
+        }
+      }, 300);
     } else {
+      document.body.classList.add('popup-opening');
       this.popupService.openPopup('settingsBridge');
     }
   }

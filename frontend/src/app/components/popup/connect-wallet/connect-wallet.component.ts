@@ -96,35 +96,24 @@ export class ConnectWalletComponent implements OnInit {
     try {
       const { address } = await provider.connect();
 
-      try
-      {
+      try {
         this.blockchainStateService.updateWalletAddress(address);
-        await provider.switchNetwork(this.blockchainStateService.getCurrentNetwork());
-      }
-      catch(e: unknown)
-      {
+        // Не переключаем сеть здесь, это будет сделано после выбора экосистемы
+      } catch(e: unknown) {
         console.log("caught error: ", e);
-        console.log("Force switching to available network Etherium or Solana");
-        if (this.blockchainStateService.getType(providerId) == "SVM")
-        {
-          this.blockchainStateService.updateNetwork(1151111081099710);
-        }
-        else
-        {
-          this.blockchainStateService.updateNetwork(1);
-        }
-
-        provider.switchNetwork(this.blockchainStateService.getCurrentNetwork());
       }
       
+      // Сохраняем провайдер
       this.blockchainStateService.setCurrentProvider(providerId);
-
+      
+      // Закрываем текущий попап
       this.closePopup();
+      
+      // Открываем попап выбора экосистемы
+      this.popupService.openPopup('ecosystemChange');
     } catch (error) {
       console.error('Connection error:', error);
     }
-    this.popupService.openPopup('wallet');
-    this.openWallet.emit();
   }
 
   disconnectWallet(): void {

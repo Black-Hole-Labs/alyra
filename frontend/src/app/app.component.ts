@@ -8,7 +8,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AppContentComponent } from './components/app-content/app-content.component';
 import { ClosePopupsDirective } from './directives/close-popups.directive';
-
+import { PopupService } from './services/popup.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -27,6 +27,7 @@ export class AppComponent {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private titleService = inject(Title);
+  public popupService = inject(PopupService);
 
   constructor() {
     this.setDynamicTitle();
