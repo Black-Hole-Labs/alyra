@@ -297,3 +297,20 @@ a:hover {
   background-repeat: no-repeat;
 	margin-left: 10px;
 }
+
+.token-viewport {
+  /* сохраняем overflow, но прячем скроллбары */
+  overflow: auto;
+
+  /* Firefox */
+  scrollbar-width: none;
+  /* IE 10+ */
+  -ms-overflow-style: none;
+}
+
+/* Webkit-браузеры (Chrome, Safari, Opera) */
+.token-viewport::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
+}

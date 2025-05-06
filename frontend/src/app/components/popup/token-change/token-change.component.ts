@@ -5,6 +5,7 @@ import { BlockchainStateService } from '../../../services/blockchain-state.servi
 import { WalletBalanceService } from '../../../services/wallet-balance.service';
 import { Token } from '../../../pages/trade/trade.component';
 import { ethers } from 'ethers';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 export interface TokenDisplay extends Token {
   name?: string;
@@ -18,7 +19,7 @@ export interface TokenDisplay extends Token {
 		'./token-change.component.scss',
 		'./token-change.component.adaptives.scss'
 	],
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ScrollingModule],
 })
 export class TokenChangePopupComponent {
   @Input() mode!: 'sell' | 'buy';
@@ -39,7 +40,7 @@ export class TokenChangePopupComponent {
     }
     
     if (this.blockchainStateService.connected()) {
-      this.loadTokenBalances();
+      // this.loadTokenBalances();
     }
   }
 
