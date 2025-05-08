@@ -279,6 +279,20 @@ export class BridgeComponent implements OnInit, OnDestroy {
     },
     { allowSignalWrites: true });
 
+    effect(() => {
+      const from = this.selectedNetwork()?.id;
+      const to   = this.selectedBuyNetwork()?.id;
+  
+      if ((from && to) && (from === to)) {
+        const other = this.blockchainStateService
+                        .allNetworks()
+                        .find(n => n.id !== from);
+        if (other) {
+          this.selectedBuyNetwork.set(other);
+        }
+      }
+    }, { allowSignalWrites: true });
+
   }
 
   availableFromNetworks = computed<Network[]>(() => {
