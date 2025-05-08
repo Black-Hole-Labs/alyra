@@ -64,14 +64,6 @@
     "iconUrl": "/img/wallet-icns/Coinbase.png"
   },
   {
-    "id": "ledger",
-    "name": "Ledger",
-    "type": "multichain",
-    "cssClass": "ledger",
-    "installUrl": "",
-    "iconUrl": "/img/wallet-icns/Ledger.png"
-  },
-  {
     "id": "walletconnect",
     "name": "WalletConnect",
     "type": "multichain",

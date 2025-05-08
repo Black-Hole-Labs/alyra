@@ -49,7 +49,7 @@ export class ConnectWalletComponent implements OnInit {
     this.otherWallets = [];
 
     this.allWallets.forEach(wallet => {
-      if (['ledger', 'walletconnect'].includes(wallet.id)) {
+      if (['walletconnect'].includes(wallet.id)) {
         wallet.status = 'connect';
         this.availableWallets.push(wallet);
       } else {
