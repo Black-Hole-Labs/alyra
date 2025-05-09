@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { APP_INITIALIZER } from '@angular/core';
 import { BlockchainStateService } from './services/blockchain-state.service';
 import { routes } from './app.routes';
-import { BackpackProvider, CoinbaseWalletProvider, LedgerProvider, MagicEdenProvider, MetaMaskProvider, OkxWalletProvider, PhantomProvider, RabbyWalletProvider, SolflareProvider, TrustWalletProvider, WalletProviderManager } from './models/network.model';
+import { BackpackProvider, CoinbaseWalletProvider, MagicEdenProvider, MetaMaskProvider, OkxWalletProvider, PhantomProvider, RabbyWalletProvider, SolflareProvider, TrustWalletProvider, WalletProviderManager } from './models/network.model';
 import { provideHttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { importProvidersFrom } from '@angular/core';
@@ -38,9 +38,6 @@ function initializeApp(
         case 'backpack':
           stateService.registerProvider(provider.id, new BackpackProvider(walletManager, injector), provider.type);
           break;
-        case 'ledger':
-          stateService.registerProvider(provider.id, new LedgerProvider(), provider.type);
-          break;
         case 'trust-wallet':
           stateService.registerProvider(provider.id, new TrustWalletProvider(injector), provider.type);
           break;
@@ -61,11 +58,11 @@ function initializeApp(
     const responseNetworks = await fetch('/data/networks.json');
     const allNetworks: Network[] = await responseNetworks.json();
 
-    const excludeIds = [146, 1329, 324, 250, 1135, 13371, 1088, 42220, 122, 1284, 288];
-    const visibleNetworks = allNetworks.filter(network => !excludeIds.includes(network.id));
+    // const excludeIds = [146, 1329, 324, 250, 1135, 13371, 1088, 42220, 122, 1284, 288];
+    // const visibleNetworks = allNetworks.filter(network => !excludeIds.includes(network.id));
 
-    stateService.allNetworks.set(visibleNetworks);
-    stateService.networks.set(visibleNetworks);
+    // stateService.allNetworks.set(visibleNetworks);
+    stateService.networks.set(allNetworks);
     stateService.updateNetwork(1);
   };
 }

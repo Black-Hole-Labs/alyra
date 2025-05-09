@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 import { FailedNotificationComponent } from '../../notification/failed-notification/failed-notification.component';
+import { PopupService } from '../../../services/popup.service';
 
 @Component({
   selector: 'app-blackhole-network',
@@ -22,7 +23,8 @@ export class BlackholeNetworkComponent {
   @Output() close = new EventEmitter<void>();
 
   constructor(
-    private blockchainStateService: BlockchainStateService
+    private blockchainStateService: BlockchainStateService,
+    private popupService: PopupService
   ) {}
 
   ngOnInit(): void {
@@ -70,6 +72,10 @@ export class BlackholeNetworkComponent {
 
     if(!this.blockchainStateService.connected()){
       this.blockchainStateService.updateNetwork(networkId);
+      // Закрываем попап при успешном обновлении сети, даже если пользователь не подключен
+      this.popupService.closePopup('networkPopup');
+      this.close.emit();
+      return;
     }
 
     const currentProvider = this.blockchainStateService.getCurrentProvider();
@@ -91,7 +97,8 @@ export class BlackholeNetworkComponent {
       this.blockchainStateService.updateNetwork(networkId);
       console.log(`Switched to network: ${selectedNetwork.name}`);
       
-      // Close the popup after successful network selection
+      // Закрываем попап после успешного выбора сети через PopupService
+      this.popupService.closePopup('networkPopup');
       this.close.emit();
     } catch (error) {
       console.error('Failed to switch network:', error);

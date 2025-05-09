@@ -279,7 +279,33 @@ export class BridgeComponent implements OnInit, OnDestroy {
     },
     { allowSignalWrites: true });
 
+    effect(() => {
+      const from = this.selectedNetwork()?.id;
+      const to   = this.selectedBuyNetwork()?.id;
+  
+      if ((from && to) && (from === to)) {
+        const other = this.blockchainStateService
+                        .allNetworks()
+                        .find(n => n.id !== from);
+        if (other) {
+          this.selectedBuyNetwork.set(other);
+        }
+      }
+    }, { allowSignalWrites: true });
+
   }
+
+  availableFromNetworks = computed<Network[]>(() => {
+    const all = this.blockchainStateService.allNetworks();
+    const toId = this.selectedBuyNetwork()?.id;
+    return all.filter(n => n.id !== toId);
+  });
+
+  availableToNetworks = computed<Network[]>(() => {
+    const all = this.blockchainStateService.allNetworks();
+    const fromId = this.selectedNetwork()?.id;
+    return all.filter(n => n.id !== fromId);
+  });
 
   getTokensForNetwork(): Token[] | undefined {
     const chainId = this.selectedNetwork()?.id;
@@ -706,6 +732,10 @@ export class BridgeComponent implements OnInit, OnDestroy {
     this.customAddress.set(input.value);
   }
 
+  truncateTo6Decimals(value: number): string {
+    return (Math.trunc(value * 1e6) / 1e6).toString();
+  }
+
   get addressStatus(): 'none' | 'good' | 'bad' {
     const addr = this.customAddress();
     if (!addr) {
@@ -1040,8 +1070,20 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   toggleSettingsBridgePopup(): void {
     if (this.showSettingsBridgePopup) {
-      this.popupService.closePopup('settingsBridge');
+      const settingsEl = document.querySelector('app-settings-bridge');
+      if (settingsEl) {
+        settingsEl.classList.add('closing');
+      }
+      document.body.classList.add('popup-closing');
+      setTimeout(() => {
+        this.popupService.closePopup('settingsBridge');
+        document.body.classList.remove('popup-closing');
+        if (settingsEl) {
+          settingsEl.classList.remove('closing');
+        }
+      }, 300);
     } else {
+      document.body.classList.add('popup-opening');
       this.popupService.openPopup('settingsBridge');
     }
   }

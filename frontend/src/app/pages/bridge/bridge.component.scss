@@ -191,6 +191,12 @@
   font-size: 18px;
 }
 
+.balance-container {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
 .bridge-amount h6 {
   color: white;
   font-family: "JetBrains Mono", monospace;
@@ -198,6 +204,20 @@
   font-size: 15px;
   cursor: pointer;
   transition: 0.2s;
+  position: relative;
+}
+
+.bridge-amount h6.max-button::before {
+  content: attr(data-balance);
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  transform: translateX(-50%);
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--elem-nonactive);
+  white-space: nowrap;
 }
 
 .bridge-amount h6:hover {

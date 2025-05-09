@@ -63,10 +63,11 @@ h3{
   transform: translate(-50%, 0%);
   display: flex;
   justify-content: center;
-	gap: 0px;
+	gap: 4px;
   cursor: pointer;
   border-radius: 1000px;
   overflow: hidden;
+	z-index: 1;
 }
 
 .arrow-up, .arrow-down {
@@ -92,26 +93,6 @@ h3{
   margin-top: 12px;
 }
 
-.animate .arrow-up {
-  animation: click-animation-up 1s linear;
-}
-
-.animate .arrow-down {
-  animation: click-animation-down 1s linear;
-}
-
-@keyframes click-animation-up {
-  0% { margin-top: 20px; }
-  50% { margin-top: -120px; }
-  100% { margin-top: 20px; }
-}
-
-@keyframes click-animation-down {
-  0% { margin-top: 12px; }
-  50% { margin-top: 132px; }
-  100% { margin-top: 12px; }
-}
-
 .swap-container{
 	display: flex;
 	flex-direction: column;
@@ -131,6 +112,7 @@ h3{
   border-radius: 16px;
   padding: 20px 25px 15px 25px;
   box-sizing: border-box;
+	position: relative;
 }
 
 .sell {
@@ -169,9 +151,9 @@ input {
   width: 290px;
   font-family: "JetBrains Mono", monospace;
   font-weight: 400;
-  font-size: 48px;
   color: white;
   background-color: var(--dark-bg);
+  transition: font-size 0.2s ease;
 }
 
 input::placeholder {
@@ -203,12 +185,14 @@ p {
 
 .token {
   box-sizing: border-box;
-  margin-top: 36px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
 	gap: 15px;
+	position: absolute;
+	top: 50%;
+	transform: translate(0%, -50%);
 }
 
 .token-icon {

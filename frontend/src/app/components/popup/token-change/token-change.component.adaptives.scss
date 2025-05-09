@@ -3,7 +3,7 @@
 		width: 450px;
 		height: 539px;
 		border-radius: 22px;
-		padding: 20px;
+		padding: 20px 20px 0 20px;
 	}
 	
 	h3 {
@@ -84,6 +84,14 @@
 		margin-top: 0px;
 		font-size: 14px;
 	}
+
+	.right {
+		gap: 8px;
+	}
+	
+	.token-balance p{
+		font-size: 14px;
+	}
 	
 	.contract {
 		gap: 8px;
@@ -102,6 +110,15 @@
 		height: 14px;
 		width: 5px;
 		margin-left: 8px;
+	}
+	
+	.verified-icon {
+		width: 18px;
+		height: 18px;
+	}
+	
+	.symbol-container {
+		gap: 5px;
 	}
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
@@ -109,7 +126,7 @@
 		width: 450px;
 		height: 539px;
 		border-radius: 22px;
-		padding: 20px;
+		padding: 20px 20px 0 20px;
 	}
 	
 	h3 {
@@ -190,6 +207,14 @@
 		margin-top: 0px;
 		font-size: 14px;
 	}
+
+	.right {
+		gap: 8px;
+	}
+	
+	.token-balance p{
+		font-size: 14px;
+	}
 	
 	.contract {
 		gap: 8px;
@@ -208,6 +233,15 @@
 		height: 14px;
 		width: 5px;
 		margin-left: 8px;
+	}
+	
+	.verified-icon {
+		width: 18px;
+		height: 18px;
+	}
+	
+	.symbol-container {
+		gap: 5px;
 	}
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
@@ -296,6 +330,14 @@
 		margin-top: 0px;
 		font-size: 10px;
 	}
+
+	.right {
+		gap: 6px;
+	}
+	
+	.token-balance p{
+		font-size: 10px;
+	}
 	
 	.contract {
 		gap: 6px;
@@ -314,6 +356,15 @@
 		height: 10px;
 		width: 4px;
 		margin-left: 6px;
+	}
+	
+	.verified-icon {
+		width: 13px;
+		height: 13px;
+	}
+	
+	.symbol-container {
+		gap: 4px;
 	}
 }
 @media screen and (min-width: 480px) and (max-width: 970px) {
@@ -402,6 +453,14 @@
 		font-size: 14px;
 	}
 	
+	.right {
+		gap: 8px;
+	}
+	
+	.token-balance p{
+		font-size: 14px;
+	}
+
 	.contract {
 		gap: 8px;
 	}
@@ -419,6 +478,15 @@
 		height: 14px;
 		width: 5px;
 		margin-left: 8px;
+	}
+	
+	.verified-icon {
+		width: 18px;
+		height: 18px;
+	}
+	
+	.symbol-container {
+		gap: 5px;
 	}
 }
 
@@ -510,6 +578,14 @@
 		font-size: 14px;
 	}
 	
+	.right {
+		gap: 8px;
+	}
+	
+	.token-balance p{
+		font-size: 14px;
+	}
+	
 	.contract {
 		gap: 8px;
 	}
@@ -527,5 +603,14 @@
 		height: 14px;
 		width: 5px;
 		margin-left: 8px;
+	}
+	
+	.verified-icon {
+		width: 18px;
+		height: 18px;
+	}
+	
+	.symbol-container {
+		gap: 5px;
 	}
 }
