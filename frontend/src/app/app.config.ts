@@ -58,11 +58,11 @@ function initializeApp(
     const responseNetworks = await fetch('/data/networks.json');
     const allNetworks: Network[] = await responseNetworks.json();
 
-    const excludeIds = [146, 1329, 324, 250, 1135, 13371, 1088, 42220, 122, 1284, 288];
-    const visibleNetworks = allNetworks.filter(network => !excludeIds.includes(network.id));
+    // const excludeIds = [146, 1329, 324, 250, 1135, 13371, 1088, 42220, 122, 1284, 288];
+    // const visibleNetworks = allNetworks.filter(network => !excludeIds.includes(network.id));
 
-    stateService.allNetworks.set(visibleNetworks);
-    stateService.networks.set(visibleNetworks);
+    // stateService.allNetworks.set(visibleNetworks);
+    stateService.networks.set(allNetworks);
     stateService.updateNetwork(1);
   };
 }
