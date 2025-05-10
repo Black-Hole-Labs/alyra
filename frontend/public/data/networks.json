@@ -306,6 +306,23 @@
     "explorerUrl": "https://snowtrace.io/token/"
   },
   {
+    "key": "ber",
+    "chainType": "EVM",
+    "name": "Berachain",
+    "id": 80094,
+    "idHex": "0x138de",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/bera.svg",
+    "rpcUrls": [
+      "https://rpc.berachain.com"
+    ],
+    "nativeCurrency": {
+      "name": "Bera",
+      "symbol": "BERA",
+      "decimals": 18
+    },
+    "explorerUrl": "https://berascan.com/"
+  },
+  {
     "key": "lsk",
     "chainType": "EVM",
     "name": "Lisk",
@@ -471,5 +488,56 @@
       "decimals": 18
     },
     "explorerUrl": "https://bobascan.com/token/"
+  },
+  {
+    "key": "sup",
+    "chainType": "EVM",
+    "name": "Superposition",
+    "id": 55244,
+    "idHex": "0xd7cc",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/superposition.svg",
+    "rpcUrls": [
+      "https://rpc.superposition.so"
+    ],
+    "nativeCurrency": {
+      "name": "Ether",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://explorer.superposition.so/"
+  },
+  {
+    "key": "crn",
+    "chainType": "EVM",
+    "name": "Corn",
+    "id": 21000000,
+    "idHex": "0x1406f40",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/corn.svg",
+    "rpcUrls": [
+      "https://mainnet.corn-rpc.com"
+    ],
+    "nativeCurrency": {
+      "name": "Bitcorn",
+      "symbol": "BTCN",
+      "decimals": 18
+    },
+    "explorerUrl": "https://cornscan.io/"
+  },
+  {
+    "key": "lns",
+    "chainType": "EVM",
+    "name": "Lens",
+    "id": 232,
+    "idHex": "0xe8",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/lens.svg",
+    "rpcUrls": [
+      "https://api.lens.matterhosted.dev"
+    ],
+    "nativeCurrency": {
+      "name": "GHO",
+      "symbol": "GHO",
+      "decimals": 18
+    },
+    "explorerUrl": "https://explorer.lens.xyz/"
   }
 ]
