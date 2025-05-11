@@ -64,14 +64,6 @@
     "iconUrl": "/img/wallet-icns/Coinbase.png"
   },
   {
-    "id": "walletconnect",
-    "name": "WalletConnect",
-    "type": "multichain",
-    "cssClass": "walletconnect",
-    "installUrl": "",
-    "iconUrl": "/img/wallet-icns/WalletConnect.png"
-  },
-  {
     "id": "magic-eden",
     "name": "Magic Eden",
     "type": "multichain",
