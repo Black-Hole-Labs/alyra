@@ -37,6 +37,7 @@ export class BlockchainStateService {
     effect(() => {
       if (this.network()) {
         this.loadTokensForNetwork(this.network()!.id);
+        this.updateNetworkBackgroundIcons(this.network()!);
       }
     });
 
@@ -177,6 +178,9 @@ public loadNetworks(type: string, force?: boolean): void {
   updateNetwork(chainId: number): void {
     const foundNetwork = this.networks().find(n => n.id === chainId);
     this.network.set(foundNetwork ?? null);
+    if (foundNetwork) {
+      this.updateNetworkBackgroundIcons(foundNetwork);
+    }
   }
 
   getCurrentNetwork(): Network | null {
@@ -188,5 +192,11 @@ public loadNetworks(type: string, force?: boolean): void {
     this.loadNetworks("multichain", true);
     //this.network.set(null);
     this.connected.set(false);
+  }
+
+  private updateNetworkBackgroundIcons(network: Network): void {
+    const root = document.documentElement;
+    root.style.setProperty('--current-network-icon-1', `url(${network.logoURI})`);
+    root.style.setProperty('--current-network-icon-2', `url(${network.logoURI})`);
   }
 }
