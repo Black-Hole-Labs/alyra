@@ -104,7 +104,7 @@ input::placeholder {
   top: 230px;
   left: 16px;
   width: 567px;
-  height: 100%;
+  height: calc(100% - 230px);
   border-radius: 12px;
 }
 
@@ -220,6 +220,7 @@ input::placeholder {
 a {
   display: flex;
   align-items: center;
+	transition: 0.2s ease-in-out;
 }
 
 a:hover {
@@ -286,7 +287,12 @@ a:hover {
   font-family: "JetBrains Mono", monospace !important;
   font-weight: 400;
   font-size: 15px;
-  color: white;
+  color: rgba(var(--white), 0.4);
+	transition: 0.2s ease-in-out;
+}
+
+.token-change .contract p:hover {
+	color: white;
 }
 
 .contract .image-link {
