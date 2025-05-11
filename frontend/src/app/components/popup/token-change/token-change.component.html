@@ -27,7 +27,7 @@
 	  >
 		<div
 		  class="token"
-		  *cdkVirtualFor="let token of tokenList(); trackBy: trackByToken"
+		  *cdkVirtualFor="let token of displayedTokens(); trackBy: trackByToken"
 		  (click)="selectToken(token)"
 		>
 		  <div class="left">
