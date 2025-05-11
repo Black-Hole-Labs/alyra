@@ -504,7 +504,7 @@
       "symbol": "ETH",
       "decimals": 18
     },
-    "explorerUrl": "https://explorer.superposition.so/"
+    "explorerUrl": "https://explorer.superposition.so/token/"
   },
   {
     "key": "crn",
@@ -521,7 +521,7 @@
       "symbol": "BTCN",
       "decimals": 18
     },
-    "explorerUrl": "https://cornscan.io/"
+    "explorerUrl": "https://cornscan.io/token/"
   },
   {
     "key": "lns",
@@ -538,6 +538,6 @@
       "symbol": "GHO",
       "decimals": 18
     },
-    "explorerUrl": "https://explorer.lens.xyz/"
+    "explorerUrl": "https://explorer.lens.xyz/token/"
   }
 ]

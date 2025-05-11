@@ -9,6 +9,8 @@ import { FooterComponent } from './components/footer/footer.component';
 import { AppContentComponent } from './components/app-content/app-content.component';
 import { ClosePopupsDirective } from './directives/close-popups.directive';
 import { PopupService } from './services/popup.service';
+import { BlockchainStateService } from './services/blockchain-state.service';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -27,10 +29,23 @@ export class AppComponent {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private titleService = inject(Title);
+  private blockchainStateService = inject(BlockchainStateService);
   public popupService = inject(PopupService);
 
   constructor() {
     this.setDynamicTitle();
+    this.initializeNetworks();
+  }
+
+  private async initializeNetworks() {
+    try {
+      const response = await fetch('/data/networks.json');
+      const networks = await response.json();
+      this.blockchainStateService.allNetworks.set(networks);
+      this.blockchainStateService.loadNetworks('multichain', true);
+    } catch (error) {
+      console.error('Failed to load networks:', error);
+    }
   }
 
   private setDynamicTitle() {

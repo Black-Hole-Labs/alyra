@@ -82,35 +82,44 @@ export class ConnectWalletComponent implements OnInit {
   }
 
   async onWalletClick(providerId: string): Promise<void> {
+    console.log('Starting wallet connection for provider:', providerId);
+    
     if (!this.allProviders.includes(providerId)) {
+      console.error('Provider not supported:', providerId);
       alert('Provider not supported');
       return;
     }
 
     const provider = this.blockchainStateService.getProvider(providerId);
     if (!provider) {
+      console.error('Provider not registered:', providerId);
       alert('Provider not registered');
       return;
     }
 
     try {
+      console.log('Attempting to connect to provider...');
       const { address } = await provider.connect();
+      console.log('Successfully connected, address:', address);
 
       try {
+        console.log('Updating wallet address...');
         this.blockchainStateService.updateWalletAddress(address);
-        // Не переключаем сеть здесь, это будет сделано после выбора экосистемы
+        console.log('Wallet address updated');
+        
+        // Сохраняем провайдер
+        console.log('Setting current provider:', providerId);
+        this.blockchainStateService.setCurrentProvider(providerId);
+        console.log('Current provider set');
+        
+        // Закрываем текущий попап
+        this.closePopup();
+        
+        // Открываем попап выбора экосистемы
+        this.popupService.openPopup('ecosystemChange');
       } catch(e: unknown) {
-        console.log("caught error: ", e);
+        console.error("Error in post-connection steps:", e);
       }
-      
-      // Сохраняем провайдер
-      this.blockchainStateService.setCurrentProvider(providerId);
-      
-      // Закрываем текущий попап
-      this.closePopup();
-      
-      // Открываем попап выбора экосистемы
-      this.popupService.openPopup('ecosystemChange');
     } catch (error) {
       console.error('Connection error:', error);
     }
