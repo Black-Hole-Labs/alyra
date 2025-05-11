@@ -28,40 +28,12 @@ export class BlackholeNetworkComponent {
   ) {}
 
   ngOnInit(): void {
-    //this.loadNetworksForCurrentProvider();
+    // Устанавливаем начальные иконки сети
+    const currentNetwork = this.networks()[0];
+    if (currentNetwork) {
+      this.updateNetworkBackgroundIcons(currentNetwork);
+    }
   }
-
-  // private async loadNetworksForCurrentProvider(): Promise<void> {
-  //   const currentProvider = this.blockchainStateService.getCurrentProvider();
-    
-  //   if (!currentProvider) {
-  //     console.error('No provider selected');
-  //     return;
-  //   }
-
-  //   console.log("currentProvider",currentProvider);
-  //   // const type = this.blockchainStateService.getType(currentProvider);
-  //   await this.loadNetworks(currentProvider.type);
-  // }
-
-  // private async loadNetworks(type: string): Promise<void> {
-  //   try {
-  //     const response = await fetch('/data/networks.json');
-  //     const allNetworks: any[] = await response.json();
-
-  //     if (type === 'multichain') { // Both EVM and SVM
-  //       this.networks = allNetworks;
-  //     } else {
-  //       this.networks = allNetworks.filter(
-  //         (network: Network) => network.chainType === type
-  //       );
-  //     }
-
-  //     console.log("this.networks",this.networks);
-  //   } catch (error) {
-  //     console.error('Failed to load networks:', error);
-  //   }
-  // }
 
   async selectNetwork(networkId: number): Promise<void> {
     const selectedNetwork = this.networks().find((network) => network.id === networkId);
@@ -69,6 +41,9 @@ export class BlackholeNetworkComponent {
       console.error('Network not found');
       return;
     }
+
+    // Обновляем иконки сети в фоне
+    this.updateNetworkBackgroundIcons(selectedNetwork);
 
     if(!this.blockchainStateService.connected()){
       this.blockchainStateService.updateNetwork(networkId);
@@ -111,5 +86,11 @@ export class BlackholeNetworkComponent {
   getCurrentNetwork(): any {
     if (!this.selectedNetwork) return null;
     return this.networks().find(n => n.id === this.selectedNetwork);
+  }
+
+  private updateNetworkBackgroundIcons(network: any): void {
+    const root = document.documentElement;
+    root.style.setProperty('--current-network-icon-1', `url(${network.logoURI})`);
+    root.style.setProperty('--current-network-icon-2', `url(${network.logoURI})`);
   }
 }
