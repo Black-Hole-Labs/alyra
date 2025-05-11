@@ -34,21 +34,37 @@ export class TokenChangePopupComponent {
   explorerUrl = computed(() => this.blockchainStateService.network()?.explorerUrl || "https://etherscan.io/token/");
   ethers = ethers;
 
+  tokenList: Signal<TokenDisplay[]> = computed(() => {
+    const search = this.searchText().toLowerCase().trim();
+    const tokens = this.networkTokens?.length ? this.networkTokens : this.blockchainStateService.tokens();
+
+    if (!search) return tokens as TokenDisplay[];
+
+    return tokens.filter((token: Token) =>
+      token.symbol.toLowerCase().includes(search) ||
+      token.contractAddress.toLowerCase().includes(search)
+    ) as TokenDisplay[];
+  });
+
+  displayedTokens: Signal<TokenDisplay[]> = computed(() => {
+    return (this.tokenList() || []).slice(0, 15);
+  });
+
   ngOnInit(): void {
     if (!this.mode) {
       throw new Error('Mode is required! Pass "sell" or "buy" to the mode input.');
     }
     
     if (this.blockchainStateService.connected()) {
-      // this.loadTokenBalances();
+      this.loadDisplayedBalances();
     }
   }
 
-  async loadTokenBalances(): Promise<void> {
-    const tokens = this.blockchainStateService.tokens();
+  async loadDisplayedBalances(): Promise<void> {
+    const list = this.displayedTokens();
     const balances = new Map<string, string>();
     
-    for (const token of tokens) {
+    for (const token of list) {
       try {
         const balance = await this.walletBalanceService.getBalanceForToken(token);
         balances.set(token.contractAddress, this.truncateTo6Decimals(parseFloat(balance)));
@@ -68,18 +84,6 @@ export class TokenChangePopupComponent {
   truncateTo6Decimals(value: number): string {
     return (Math.trunc(value * 1e6) / 1e6).toString();
   }
-
-  tokenList: Signal<TokenDisplay[]> = computed(() => {
-    const search = this.searchText().toLowerCase().trim();
-    const tokens = this.networkTokens?.length ? this.networkTokens : this.blockchainStateService.tokens();
-
-    if (!search) return tokens as TokenDisplay[];
-
-    return tokens.filter((token: Token) =>
-      token.symbol.toLowerCase().includes(search) ||
-      token.contractAddress.toLowerCase().includes(search)
-    ) as TokenDisplay[];
-  });
 
   updateSearchText(event: Event): void {
     this.searchText.set((event.target as HTMLInputElement).value);
