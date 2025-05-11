@@ -2,8 +2,9 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PopupService } from '../../services/popup.service';
 import { Subscription } from 'rxjs';
-import { Component, ElementRef, Renderer2, EventEmitter, Output, OnInit, OnDestroy, computed } from '@angular/core';
+import { Component, ElementRef, Renderer2, EventEmitter, Output, OnInit, OnDestroy, computed, signal, effect } from '@angular/core';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
+import { Wallets } from '../../models/wallet-provider.interface';
 
 
 @Component({
@@ -35,6 +36,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   //walletName: string = 'Connect Wallet';
   walletName = computed(() => this.blockchainStateService.walletAddress() ?? 'Connect Wallet');
   private subscription: Subscription;
+  private providers: Wallets[] = [];
+  walletIcon = signal<string>('/img/header/wallet.png');
 
   @Output() toggleMenu = new EventEmitter<void>();
   @Output() toggleNetwork = new EventEmitter<void>();
@@ -71,6 +74,32 @@ export class HeaderComponent implements OnInit, OnDestroy {
           break;
       }
     });
+
+    // Эффект для отслеживания состояния подключения
+    effect(() => {
+      const isConnected = this.blockchainStateService.connected();
+      console.log('Connection status changed:', isConnected);
+      
+      if (!isConnected) {
+        console.log('Wallet disconnected, resetting icon');
+        this.walletIcon.set('/img/header/wallet.png');
+      }
+    }, { allowSignalWrites: true });
+
+    // Эффект для обновления иконки при изменении провайдера
+    effect(() => {
+      console.log('Header effect triggered');
+      const providerId = this.blockchainStateService.getCurrentProviderId();
+      console.log('Provider ID in header effect:', providerId);
+      
+      if (this.providers.length === 0) {
+        console.log('Loading providers...');
+        this.loadProviders();
+      } else {
+        console.log('Updating wallet icon...');
+        this.updateWalletIcon();
+      }
+    }, { allowSignalWrites: true });
   }
 
   selectedNetwork = computed(() => {
@@ -80,8 +109,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadGmCount();
-
-    this.loadGmCount();
+    this.loadProviders();
     
     setTimeout(() => {
       this.initTextAnimation();
@@ -380,5 +408,41 @@ export class HeaderComponent implements OnInit, OnDestroy {
     };
     
     animate();
+  }
+
+  async loadProviders(): Promise<void> {
+    console.log('Loading providers...');
+    try {
+      const response = await fetch('/data/providers.json');
+      const data = await response.json();
+      this.providers = data;
+      console.log('Providers loaded:', this.providers);
+      this.updateWalletIcon();
+    } catch (error) {
+      console.error('Error loading providers:', error);
+    }
+  }
+
+  updateWalletIcon(): void {
+    console.log('Updating wallet icon...');
+    const providerId = this.blockchainStateService.getCurrentProviderId();
+    console.log('Current provider ID:', providerId);
+    
+    if (!providerId) {
+      console.log('No provider ID, using default icon');
+      this.walletIcon.set('/img/header/wallet.png');
+      return;
+    }
+
+    const provider = this.providers.find(p => p.id === providerId);
+    console.log('Found provider:', provider);
+    
+    if (provider && provider.iconUrl) {
+      console.log('Setting wallet icon to:', provider.iconUrl);
+      this.walletIcon.set(provider.iconUrl);
+    } else {
+      console.log('Provider not found or no icon URL, using default icon');
+      this.walletIcon.set('/img/header/wallet.png');
+    }
   }
 }

@@ -54,7 +54,7 @@
 
 		<!-- WALLET -->
 		<div class="wallet" (click)="openConnectWalletPopup()">
-			<div class="wallet-icon"></div>
+			<div class="wallet-icon" [style.background-image]="'url(' + walletIcon() + ')'"></div>
 			<p>{{ walletName().length > 20 ? walletName().slice(0, 6) + '...' + walletName().slice(-3) : walletName()}}</p>
 		</div>
 
