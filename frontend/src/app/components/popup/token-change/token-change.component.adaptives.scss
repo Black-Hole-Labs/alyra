@@ -50,6 +50,7 @@
 		top: 166px;
 		left: 10px;
 		width: 430px;
+		height: calc(100% - 166px);
 		border-radius: 12px;
 	}
 	
@@ -173,6 +174,7 @@
 		top: 166px;
 		left: 10px;
 		width: 430px;
+		height: calc(100% - 166px);
 		border-radius: 12px;
 	}
 	
@@ -296,6 +298,7 @@
 		top: 117px;
 		left: 5px;
 		width: 320px;
+		height: calc(100% - 117px);
 		border-radius: 8px;
 	}
 	
@@ -418,6 +421,7 @@
 	.list {
 		top: 166px;
 		width: 430px;
+		height: calc(100% - 166px);
 		border-radius: 12px;
 	}
 	
@@ -543,6 +547,7 @@
 		left: 50%;
 		transform: translate(-50%, 0%);
 		width: 100%;
+		height: calc(100% - 156px);
 		border-radius: 12px;
 	}
 	
