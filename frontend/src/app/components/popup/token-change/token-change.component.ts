@@ -36,7 +36,7 @@ export class TokenChangePopupComponent {
 
   tokenList: Signal<TokenDisplay[]> = computed(() => {
     const search = this.searchText().toLowerCase().trim();
-    const tokens = this.networkTokens?.length ? this.networkTokens : this.blockchainStateService.tokens();
+    const tokens = this.networkTokens?.length ? this.networkTokens : this.blockchainStateService.allTokens();
 
     if (!search) return tokens as TokenDisplay[];
 
@@ -120,6 +120,13 @@ export class TokenChangePopupComponent {
   }
 
   isNativeToken(token: TokenDisplay): boolean {
+    const currentNetwork = this.blockchainStateService.network();
+    if (!currentNetwork) return false;
+
+    if (currentNetwork.chainType === 'SVM') {
+      return token.symbol === 'SOL';
+    }
+    
     return token.contractAddress === ethers.ZeroAddress;
   }
 

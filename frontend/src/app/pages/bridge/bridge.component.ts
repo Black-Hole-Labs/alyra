@@ -129,8 +129,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   txData = signal<TransactionRequestEVM | TransactionRequestSVM | undefined> (undefined);
   buyAmountForInput = signal<string | undefined>(undefined);
-  sellAmount: string = '';
-  buyAmount = signal<string | undefined>(undefined);;
   validatedSellAmount = signal<number>(0);
   sellAmountForInput= signal<string | undefined>(undefined);
 
@@ -582,7 +580,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
     { 
       this.isProcessingInput.update(value => true);
 
-      this.sellAmount = inputElement.value;
       this.validatedSellAmount.update(value => (Number(inputElement.value)));
 
       if (this.validatedSellAmount() > this.balance())
@@ -614,10 +611,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
     const num = Number(limited);
   
     if (!isNaN(num)) {
-      this.buyAmount.set(value); 
       this.buyAmountForInput.set(limited);
     } else {
-      this.buyAmount.set('0');
       this.buyAmountForInput.set('0');
     }
   }
@@ -627,10 +622,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
     const num = Number(limited);
   
     if (!isNaN(num)) {
-      this.sellAmount = value; 
       this.sellAmountForInput.set(limited);
     } else {
-      this.sellAmount = '0';
       this.sellAmountForInput.set('0');
     }
   }
@@ -665,7 +658,12 @@ export class BridgeComponent implements OnInit, OnDestroy {
     this.txData.set(undefined);
 
     const tempNetwork = this.selectedNetwork();
-		const tempToken = this.selectedToken();
+		const tempToken   = this.selectedToken();
+    const tempAmount  = this.validatedSellAmount();
+
+    this.updateSellAmount(this.buyAmountForInput()!);
+    this.validatedSellAmount.set(Number(this.buyAmountForInput()));
+    this.updateBuyAmount(String(tempAmount));
     
 		this.selectedToken.set(this.selectedBuyToken());
 		this.selectedBuyToken.set(tempToken);
@@ -674,6 +672,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
 		this.selectedBuyNetwork.set(tempNetwork);
 
     this.receiveTextAnimated = false;
+
+    // this.getTxData();
   }
 
   openBridgeTxPopup(): void {
