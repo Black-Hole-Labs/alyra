@@ -356,7 +356,11 @@ export class TradeComponent implements AfterViewChecked {
     const tempBalance = this.balance(); 
     this.balance.update(() => this.balanceBuy());
     this.balanceBuy.update(() => tempBalance);
-    this.buyAmountForInput.update(() => undefined);
+
+    const tempSellAmount = this.validatedSellAmount();
+    this.updateSellAmount(this.buyAmountForInput()!);
+    this.validatedSellAmount.set(Number(this.buyAmountForInput()));
+    this.updateBuyAmount(String(tempSellAmount));
     //this.getTxData();
   }
 
