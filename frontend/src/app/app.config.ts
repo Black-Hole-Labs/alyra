@@ -62,6 +62,9 @@ function initializeApp(
     // const visibleNetworks = allNetworks.filter(network => !excludeIds.includes(network.id));
 
     // stateService.allNetworks.set(visibleNetworks);
+    // stateService.networks.set(visibleNetworks);
+
+    stateService.allNetworks.set(allNetworks);
     stateService.networks.set(allNetworks);
     stateService.updateNetwork(1);
   };
