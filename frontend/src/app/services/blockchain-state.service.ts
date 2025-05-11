@@ -14,12 +14,14 @@ export class BlockchainStateService {
   readonly network = signal<Network | null>(null); // Выбранная сеть
   readonly connected = signal<boolean>(false); // Статус подключения
   readonly allNetworks = signal<Network[]>([]);
+
   searchText = signal<string>('');
   // filteredTokens = [...this.tokens];
 
   networks = signal<Network[]>([]);
 
   tokens = signal<Token[]>([]);
+  allTokens = signal<Token[]>([]);
 
   filteredTokens = computed(() => [...this.tokens()]);
 
@@ -37,12 +39,14 @@ export class BlockchainStateService {
     effect(() => {
       if (this.network()) {
         this.loadTokensForNetwork(this.network()!.id);
+        this.loadAllTokensForNetwork(this.network()!.id);
       }
     });
 
     effect(() => {
       console.log("netowrk", this.network());
     });
+
   }
 
   setSearchText(value: string) {
@@ -84,6 +88,41 @@ export class BlockchainStateService {
     return await response.json();
   }
 
+  private loadAllTokensForNetwork(network: number): void {
+    fetch(`/data/tokens_search.json`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Failed to load tokens for network`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const tokensForNetwork = data.tokensEVM[network] || data.tokensSVM[network];
+
+        if (tokensForNetwork) {
+          this.allTokens.set(
+            tokensForNetwork.map((token: any) => ({
+              symbol: token.symbol,
+              name: token.name,
+              contractAddress: token.address,
+              imageUrl: token.logoURI,
+              decimals: token.decimals
+            }))
+          );          
+          //this.filteredTokens = [...this.tokens];
+        } else {
+          console.warn(`No tokens found for network ${network}`);
+          this.allTokens.set([]);
+          //this.filteredTokens = [];
+        }
+      })
+      .catch((error) => {
+        console.error(`Error loading tokens: ${error.message}`);
+        this.allTokens.set([]);
+        //this.filteredTokens = [];
+    });
+  }
+
   // Методы управления состоянием
   private loadTokensForNetwork(network: number): void {
     fetch(`/data/tokens.json`)
@@ -117,7 +156,7 @@ export class BlockchainStateService {
         console.error(`Error loading tokens: ${error.message}`);
         this.tokens.set([]);
         //this.filteredTokens = [];
-      });
+    });
   }
 
   async fetchTokensForNetwork(networkId: number): Promise<Token[]> {

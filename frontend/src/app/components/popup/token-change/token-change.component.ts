@@ -36,7 +36,7 @@ export class TokenChangePopupComponent {
 
   tokenList: Signal<TokenDisplay[]> = computed(() => {
     const search = this.searchText().toLowerCase().trim();
-    const tokens = this.networkTokens?.length ? this.networkTokens : this.blockchainStateService.tokens();
+    const tokens = this.networkTokens?.length ? this.networkTokens : this.blockchainStateService.allTokens();
 
     if (!search) return tokens as TokenDisplay[];
 
