@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class BlockchainStateService {
   // Управление провайдерами
   private providers: Record<string, { provider: any; type: 'EVM' | 'SVM' | 'multichain' }> = {};
-  private currentProviderId: string | null = null;
+  private currentProviderId = signal<string | null>(null);
 
   // Сигналы состояния
   readonly walletAddress = signal<string | null>(null); // Адрес кошелька
@@ -41,7 +41,7 @@ export class BlockchainStateService {
     });
 
     effect(() => {
-      console.log("netowrk", this.network());
+      console.log("network", this.network());
     });
   }
 
@@ -64,7 +64,7 @@ export class BlockchainStateService {
   }
 
   setCurrentProvider(id: string): void {
-    this.currentProviderId = id;
+    this.currentProviderId.set(id);
   }
 
   getProvider(id: string): any {
@@ -76,7 +76,12 @@ export class BlockchainStateService {
   }
 
   getCurrentProvider(): any {
-    return this.currentProviderId ? this.providers[this.currentProviderId] : null;
+    return this.currentProviderId() ? this.providers[this.currentProviderId()!] : null;
+  }
+
+  getCurrentProviderId(): string | null {
+    console.log('Getting current provider ID:', this.currentProviderId());
+    return this.currentProviderId();
   }
 
   async loadProviders(): Promise<Wallets[]> {

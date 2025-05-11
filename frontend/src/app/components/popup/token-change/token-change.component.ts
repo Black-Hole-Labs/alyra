@@ -120,6 +120,13 @@ export class TokenChangePopupComponent {
   }
 
   isNativeToken(token: TokenDisplay): boolean {
+    const currentNetwork = this.blockchainStateService.network();
+    if (!currentNetwork) return false;
+
+    if (currentNetwork.chainType === 'SVM') {
+      return token.symbol === 'SOL';
+    }
+    
     return token.contractAddress === ethers.ZeroAddress;
   }
 
