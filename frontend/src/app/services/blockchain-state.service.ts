@@ -50,6 +50,23 @@ export class BlockchainStateService {
 
   }
 
+  public tryAutoConnect(): Promise<void> {
+      const providerId = sessionStorage.getItem('currentProvider');
+      const networkId = sessionStorage.getItem('networkId');
+      if (!providerId) return Promise.resolve();
+      const provider = this.getProvider(providerId);
+      if (!provider) return Promise.resolve();
+
+      return provider.connect()
+        .then(({ address } : { address: string }) => {
+          this.updateWalletAddress(address);
+          this.setCurrentProvider(providerId);
+          this.updateNetwork(Number(networkId!))
+        })
+        .catch(console.error);
+
+  }
+
   setSearchText(value: string) {
     this.searchText.set(value);
   }

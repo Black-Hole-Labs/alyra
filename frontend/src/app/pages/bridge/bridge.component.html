@@ -244,23 +244,3 @@
 	[customAddress]="showCustomAddress ? customAddress() : ''"
 	(close)="closeBridgeTxPopup()">
 </app-bridge-tx>
-
-
-
-
-
-<!-- 
-
-<app-bridge-tx
-  *ngIf="showBridgeTxPopup"
-  [selectedNetwork]="selectedNetwork()"
-  [selectedNetworkTo]="selectedBuyNetwork()"
-  [selectedToken]="selectedToken()"
-  [inputAmount]="sellAmount"
-  (close)="closeBridgeTxPopup()">
-</app-bridge-tx>
-
-<app-connect-wallet 
-  *ngIf="showConnectWalletPopup"
-  (close)="closeConnectWalletPopup()">
-</app-connect-wallet> -->

@@ -42,9 +42,6 @@ export class BlackholeNetworkComponent {
       return;
     }
 
-    // Обновляем иконки сети в фоне
-    this.updateNetworkBackgroundIcons(selectedNetwork);
-
     if(!this.blockchainStateService.connected()){
       this.blockchainStateService.updateNetwork(networkId);
       // Закрываем попап при успешном обновлении сети, даже если пользователь не подключен

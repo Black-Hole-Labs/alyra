@@ -67,6 +67,8 @@ function initializeApp(
     stateService.allNetworks.set(allNetworks);
     stateService.networks.set(allNetworks);
     stateService.updateNetwork(1);
+    stateService.tryAutoConnect();
+
   };
 }
 

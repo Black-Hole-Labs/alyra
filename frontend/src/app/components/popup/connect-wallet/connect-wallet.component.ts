@@ -102,6 +102,9 @@ export class ConnectWalletComponent implements OnInit {
       const { address } = await provider.connect();
       console.log('Successfully connected, address:', address);
 
+      sessionStorage.setItem('currentProvider', providerId);
+      sessionStorage.setItem('networkId', (this.blockchainStateService.network()!.id).toString());
+
       try {
         console.log('Updating wallet address...');
         this.blockchainStateService.updateWalletAddress(address);
