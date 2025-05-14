@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PopupService } from '../../../services/popup.service';
+import { ProviderType } from '../../../models/wallet-provider.interface';
 
 @Component({
   selector: 'app-ecosystem-change',
@@ -19,13 +20,13 @@ export class EcosystemChangeComponent {
   
   ecosystems = [
     {
-      id: 'evm',
+      id: ProviderType.EVM,
       name: 'Ethereum & EVM',
       description: 'Ethereum and EVM-compatible blockchains',
       iconUrl: '/img/ecosystem/evm.png'
     },
     {
-      id: 'svm',
+      id: ProviderType.SVM,
       name: 'Solana',
       description: 'Solana blockchain ecosystem',
       iconUrl: '/img/ecosystem/sol.png'

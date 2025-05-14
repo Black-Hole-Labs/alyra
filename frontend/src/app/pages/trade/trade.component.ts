@@ -255,10 +255,8 @@ export class TradeComponent implements AfterViewChecked {
       this.buyAmount.set(value); 
       this.buyAmountForInput.set(limited);
       
-      // Сбрасываем флаг анимации для возможности повторного запуска
       this.buyAmountTextAnimated = false;
       
-      // Проверяем и запускаем анимацию по необходимости
       setTimeout(() => this.checkAndAnimateBuyText(), 0);
     } else {
       this.buyAmount.set('0');
@@ -315,8 +313,6 @@ export class TradeComponent implements AfterViewChecked {
     {
       this.buttonState = 'swap';
     }
-    //this.updateBuyAmount();
-    //this.updateSellPriceUsd();
   }
 
   rotateRefresh(): void {
@@ -326,24 +322,6 @@ export class TradeComponent implements AfterViewChecked {
       this.renderer.setStyle(refreshElement, 'transform', `rotate(${this.rotationCount * -720}deg)`);
     }
   }
-
-  // // Управление анимацией
-  // onMouseDown(): void {
-	// 	console.log('Mouse down triggered');
-	// 	const changeButton = document.getElementById('change-button');
-	// 	if (changeButton && !changeButton.classList.contains('animate')) {
-	// 		this.renderer.addClass(changeButton, 'animate');
-	// 	}
-	// }
-	
-	// onAnimationEnd(): void {
-	// 	console.log('Animation ended, swapping tokens...');
-	// 	const changeButton = document.getElementById('change-button');
-	// 	if (changeButton && changeButton.classList.contains('animate')) {
-	// 		this.renderer.removeClass(changeButton, 'animate');
-	// 		this.swapTokens();
-	// 	}
-	// }
 	
 	swapTokens(): void {
     this.txData.update(() => undefined);

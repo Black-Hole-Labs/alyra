@@ -1,38 +1,41 @@
 <router-outlet></router-outlet>
+@if(popupService.activePopup$ | async; as activePopup)
+{
+  @if(activePopup === 'connectWallet')
+  {
+    <app-connect-wallet 
+      (close)="popupService.closeAllPopups()"
+      (openWallet)="popupService.openPopup('wallet')">
+    </app-connect-wallet>
+  }
+  
+  @if(activePopup === 'wallet')
+  {
+    <app-wallet 
+      (close)="popupService.closeAllPopups()">
+    </app-wallet>
+  }
 
-<!-- Попапы через PopupService -->
-<ng-container *ngIf="popupService.activePopup$ | async as activePopup">
-  <app-connect-wallet 
-    *ngIf="activePopup === 'connectWallet'"
-    (close)="popupService.closeAllPopups()"
-    (openWallet)="popupService.openPopup('wallet')">
-  </app-connect-wallet>
+  @if(activePopup === 'blackholeMenu')
+  {
+    <app-blackhole-menu
+      (close)="popupService.closeAllPopups()">
+    </app-blackhole-menu>
+  }
 
-  <app-wallet 
-    *ngIf="activePopup === 'wallet'"
-    (close)="popupService.closeAllPopups()">
-  </app-wallet>
+  @if(activePopup === 'networkPopup')
+  {
+    <app-blackhole-network
+      (close)="popupService.closeAllPopups()">
+    </app-blackhole-network>
+  }
 
-  <app-blackhole-menu
-    *ngIf="activePopup === 'blackholeMenu'"
-    (close)="popupService.closeAllPopups()">
-  </app-blackhole-menu>
-
-  <app-blackhole-network
-    *ngIf="activePopup === 'networkPopup'"
-    (close)="popupService.closeAllPopups()">
-  </app-blackhole-network>
-
-	<app-ecosystem-change
-		*ngIf="popupService.getCurrentPopup() === 'ecosystemChange'"
-		(ecosystemSelected)="onEcosystemSelected($event)"
-		(close)="closeEcosystemPopup()">
-	</app-ecosystem-change>
-
-	<!-- For testing -->
-	<!-- <app-ecosystem-change
-		(ecosystemSelected)="onEcosystemSelected($event)"
-		(close)="closeEcosystemPopup()">
-	</app-ecosystem-change> -->
-</ng-container>
+  @if(popupService.getCurrentPopup() === 'ecosystemChange')
+  {
+    <app-ecosystem-change
+      (ecosystemSelected)="onEcosystemSelected($event)"
+      (close)="closeEcosystemPopup()">
+    </app-ecosystem-change>
+  }
+}
 

@@ -10,6 +10,7 @@ import { AppContentComponent } from './components/app-content/app-content.compon
 import { ClosePopupsDirective } from './directives/close-popups.directive';
 import { PopupService } from './services/popup.service';
 import { BlockchainStateService } from './services/blockchain-state.service';
+import { ProviderType } from './models/wallet-provider.interface';
 
 @Component({
   selector: 'app-root',
@@ -42,7 +43,7 @@ export class AppComponent {
       const response = await fetch('/data/networks.json');
       const networks = await response.json();
       this.blockchainStateService.allNetworks.set(networks);
-      this.blockchainStateService.loadNetworks('multichain', true);
+      this.blockchainStateService.loadNetworks(ProviderType.MULTICHAIN, true);
     } catch (error) {
       console.error('Failed to load networks:', error);
     }

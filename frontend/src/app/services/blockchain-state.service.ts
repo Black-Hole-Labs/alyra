@@ -74,7 +74,7 @@ export class BlockchainStateService {
   }
 
   setCurrentProvider(id: string): void {
-    this.currentProviderId.set(id);
+    this.currentProviderId = id;
   }
 
   getProvider(id: string): any {

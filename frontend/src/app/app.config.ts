@@ -4,7 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { BlockchainStateService } from './services/blockchain-state.service';
 import { routes } from './app.routes';
-import { Network, ProviderType } from './models/wallet-provider.interface';
+import { Network, NetworkId, ProviderType } from './models/wallet-provider.interface';
 import {
   MetaMaskProvider, SolflareProvider, PhantomProvider, MagicEdenProvider,
   BackpackProvider, LedgerProvider, TrustWalletProvider, OkxWalletProvider,
@@ -27,7 +27,7 @@ function registerProviders(stateService: BlockchainStateService, providers: any[
         stateService.registerProvider(provider.id, new MagicEdenProvider(walletManager, injector), provider.type as ProviderType);
         break;
       case 'backpack':
-        stateService.registerProvider(provider.id, new BackpackProvider(injector), provider.type as ProviderType);
+        stateService.registerProvider(provider.id, new BackpackProvider(walletManager, injector), provider.type as ProviderType);
         break;
       case 'ledger':
         stateService.registerProvider(provider.id, new LedgerProvider(), provider.type as ProviderType);
@@ -76,7 +76,7 @@ async function initializeApp(injector: Injector): Promise<void> {
 
     stateService.allNetworks.set(allNetworks);
     stateService.networks.set(allNetworks);
-    stateService.updateNetwork(1);
+    stateService.updateNetwork(NetworkId.ETHEREUM_MAINNET);
     stateService.tryAutoConnect();
 
   } catch (error) {
