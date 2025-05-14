@@ -7,7 +7,7 @@ import { routes } from './app.routes';
 import { Network, NetworkId, ProviderType } from './models/wallet-provider.interface';
 import {
   MetaMaskProvider, SolflareProvider, PhantomProvider, MagicEdenProvider,
-  BackpackProvider, LedgerProvider, TrustWalletProvider, OkxWalletProvider,
+  BackpackProvider, TrustWalletProvider, OkxWalletProvider,
   CoinbaseWalletProvider, RabbyWalletProvider, WalletProviderManager
 } from './models/network.model';
 
@@ -28,9 +28,6 @@ function registerProviders(stateService: BlockchainStateService, providers: any[
         break;
       case 'backpack':
         stateService.registerProvider(provider.id, new BackpackProvider(walletManager, injector), provider.type as ProviderType);
-        break;
-      case 'ledger':
-        stateService.registerProvider(provider.id, new LedgerProvider(), provider.type as ProviderType);
         break;
       case 'trust-wallet':
         stateService.registerProvider(provider.id, new TrustWalletProvider(injector), provider.type as ProviderType);

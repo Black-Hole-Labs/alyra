@@ -1,5 +1,5 @@
 import { Injectable, signal, effect, computed } from '@angular/core';
-import { Network, ProviderType, Wallets } from '../models/wallet-provider.interface';
+import { Network, NetworkId, ProviderType, Wallets } from '../models/wallet-provider.interface';
 import { Token } from '../pages/trade/trade.component';
 import { BehaviorSubject } from 'rxjs';
 
@@ -204,7 +204,7 @@ public loadNetworks(type: ProviderType, force: boolean = false): void {
   }
 
   if (force) {
-    const defaultNetwork = this.networks().find(n => n.id === 1);
+    const defaultNetwork = this.networks().find(n => n.id === NetworkId.ETHEREUM_MAINNET);
     if (defaultNetwork) {
       this.updateNetwork(1);
     } else {

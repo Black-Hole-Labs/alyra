@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, inject, Input, Signal, WritableSignal, computed, signal } from '@angular/core';
+import { Component, EventEmitter, Output, inject, Input, Signal, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';

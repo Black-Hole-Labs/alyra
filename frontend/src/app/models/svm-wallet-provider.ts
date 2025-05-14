@@ -1,5 +1,5 @@
 import { Connection, VersionedTransaction } from '@solana/web3.js';
-import { ProviderType, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
+import { NetworkId, ProviderType, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
 import { BlockchainStateService } from '../services/blockchain-state.service';
 import { Injector } from '@angular/core';
 
@@ -55,7 +55,7 @@ export class SvmWalletProvider implements WalletProvider {
   }
 
   async sendTx(txData: TransactionRequestSVM): Promise<string> {
-    const solanaRPC = this.blockchainStateService.allNetworks().find((network: { id: number; }) => network.id === 1151111081099710)?.rpcUrls[0] || "https://solana-rpc.publicnode.com";
+    const solanaRPC = this.blockchainStateService.allNetworks().find((network: { id: number; }) => network.id === NetworkId.SOLANA_MAINNET)?.rpcUrls[0] || "https://solana-rpc.publicnode.com";
     const connection = new Connection(solanaRPC!, 'confirmed');//todo rpc error after bridge
     const decodedTx = Uint8Array.from(atob(txData.data.toString()), c => c.charCodeAt(0));
     const versionedTx = VersionedTransaction.deserialize(decodedTx);

@@ -2,9 +2,8 @@ import { Injector } from '@angular/core';
 import { EvmWalletProvider } from './evm-wallet-provider';
 import { MultiChainWalletProvider } from './multichain-wallet-provider';
 import { SvmWalletProvider } from './svm-wallet-provider';
-import { WalletProvider } from './wallet-provider.interface';
+import { NetworkId } from './wallet-provider.interface';
 
-// WalletProviderManager остается без изменений
 export class WalletProviderManager {
   private metaMaskProvider: any = null;
   private trustWalletProvider: any = null;
@@ -95,7 +94,7 @@ export class BackpackProvider extends MultiChainWalletProvider {
   }
 
   override async connect(): Promise<{ address: string; network: string }> {
-    this.blockchainStateService.updateNetwork(1151111081099710); // Solana is default for BackPack
+    this.blockchainStateService.updateNetwork(NetworkId.SOLANA_MAINNET); // Solana is default for BackPack
     const connection = await super.connect();
 
     return connection;
@@ -110,7 +109,7 @@ export class PhantomProvider extends MultiChainWalletProvider {
   }
 
   override async connect(): Promise<{ address: string; network: string }> {
-    this.blockchainStateService.updateNetwork(1151111081099710); // Solana is default for Phantom
+    this.blockchainStateService.updateNetwork(NetworkId.SOLANA_MAINNET); // Solana is default for Phantom
     const connection = await super.connect();
 
     return connection;
@@ -146,46 +145,6 @@ export class CoinbaseWalletProvider extends MultiChainWalletProvider {
     super(injector);
     this.evmProviderInstance = window.coinbaseWalletExtension;
     this.svmProviderInstance = (window as any).coinbaseSolana;
-  }
-}
-
-export class LedgerProvider implements WalletProvider {
-  private address: string = '';
-  private network: string = '';
-  private ledger: any;
-
-  isAvailable(): boolean {
-    return !!this.ledger;
-  }
-
-  async connect(): Promise<{ address: string; network: string }> {
-    // Предполагаем, что для работы с Ledger используется Web3 или специальный SDK
-    this.ledger = (window as any).ledger; // Подключение к глобальному объекту или SDK
-    if (!this.ledger) {
-      throw new Error('Ledger Wallet not available');
-    }
-
-    const accounts = await this.ledger.getAccounts();
-    if (!accounts || accounts.length === 0) {
-      throw new Error('Failed to retrieve Ledger accounts');
-    }
-
-    this.address = accounts[0];
-    this.network = await this.getNetwork();
-    return { address: this.address, network: this.network };
-  }
-
-  async switchNetwork(selectedNetwork: any): Promise<void> {
-    console.warn('Ledger does not support network switching programmatically.');
-    this.network = selectedNetwork.id;
-  }
-
-  async getNetwork(): Promise<string> {
-    return this.network || 'mainnet';
-  }
-
-  getAddress(): string {
-    return this.address;
   }
 }
 

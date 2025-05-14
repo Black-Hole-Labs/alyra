@@ -7,7 +7,7 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
 import { WalletBalanceService } from '../../services/wallet-balance.service';
 import { TransactionsService } from '../../services/transactions.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
+import { NetworkId, TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
 import { ethers, parseUnits, ZeroAddress } from 'ethers';
 import { PopupService } from '../../services/popup.service';
 import { SuccessNotificationComponent } from '../../components/notification/success-notification/success-notification.component';
@@ -439,7 +439,7 @@ export class TradeComponent implements AfterViewChecked {
     let txHash: string = "";
     try
     {
-      if (this.blockchainStateService.network()?.id === 1151111081099710) 
+      if (this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET) 
       {
         txHash = await this.svmSwap();
       } 
@@ -641,7 +641,7 @@ export class TradeComponent implements AfterViewChecked {
           console.log('readableToAmount:', readableToAmount);
           this.updateBuyAmount(readableToAmount);
           
-          // if(this.blockchainStateService.network()!.id == 1151111081099710) // SVM
+          // if(this.blockchainStateService.network()!.id == NetworkId.SOLANA_MAINNET) // SVM
           // {
           //   gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
           // }
@@ -682,7 +682,7 @@ export class TradeComponent implements AfterViewChecked {
 
         if(response.transactionRequest.data)
         {
-          if(this.blockchainStateService.network()?.id === 1151111081099710)
+          if(this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET)
           {
             this.txData.set(response.transactionRequest as TransactionRequestSVM);
             this.buttonState = 'swap';  

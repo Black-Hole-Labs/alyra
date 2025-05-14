@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Token } from '../pages/trade/trade.component';
 import { BlockchainStateService } from './blockchain-state.service';
+import { NetworkId } from '../models/wallet-provider.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class WalletBalanceService {
   private solanaConnection: Connection;
 
   constructor(private blockchainStateService: BlockchainStateService) {
-    this.solanaRpcUrl = this.blockchainStateService.allNetworks().find((network: { id: number; }) => network.id === 1151111081099710)?.rpcUrls[0] 
+    this.solanaRpcUrl = this.blockchainStateService.allNetworks().find((network: { id: number; }) => network.id === NetworkId.SOLANA_MAINNET)?.rpcUrls[0] 
                         || "https://solana-rpc.publicnode.com";;
     this.solanaConnection = new Connection(this.solanaRpcUrl, 'confirmed');
   }
@@ -71,7 +72,7 @@ export class WalletBalanceService {
         return "0";
       }
     
-      if (currentNetwork.id === 1151111081099710) { // SVM
+      if (currentNetwork.id === NetworkId.SOLANA_MAINNET) { // SVM
         if (token.symbol === "SOL") {
           return this.getSolanaBalance(walletAddress);
         } else {

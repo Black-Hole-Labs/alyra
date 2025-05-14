@@ -6,7 +6,7 @@ import { NetworkChangeToPopupComponent } from '../../components/popup/network-ch
 import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
 import { Subscription } from 'rxjs';
 import { BridgeTxComponent } from '../../components/popup/bridge-tx/bridge-tx.component';
-import { Network, TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
+import { Network, NetworkId, TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
 import { Token } from '../trade/trade.component';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
 import { WalletBalanceService } from '../../services/wallet-balance.service';
@@ -269,8 +269,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
     effect(() => {
       let isConnected = this.blockchainStateService.connected();
       if (isConnected && 
-        (this.selectedNetwork()?.id == 1151111081099710 ||
-         this.selectedBuyNetwork()?.id == 1151111081099710))
+        (this.selectedNetwork()?.id == NetworkId.SOLANA_MAINNET ||
+         this.selectedBuyNetwork()?.id == NetworkId.SOLANA_MAINNET))
       {
         this.showCustomAddress = true;
       }
@@ -382,7 +382,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
           console.log('readableToAmount:', readableToAmount);
           this.updateBuyAmount(readableToAmount);
           
-          // if(this.blockchainStateService.network()!.id == 1151111081099710) // SVM
+          // if(this.blockchainStateService.network()!.id == NetworkId.SOLANA_MAINNET) // SVM
           // {
           //   gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
           // }
@@ -407,7 +407,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
         if(response.transactionRequest.data)
         {
-          if(this.blockchainStateService.network()?.id === 1151111081099710)
+          if(this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET)
           {
             this.txData.set(response.transactionRequest as TransactionRequestSVM);
           }
@@ -506,11 +506,11 @@ export class BridgeComponent implements OnInit, OnDestroy {
       });
       this.receiveTextAnimated = false;
 
-      if (event.id == 1151111081099710) // Solana
+      if (event.id == NetworkId.SOLANA_MAINNET) // Solana
       {
         this.showCustomAddress = true;
       }
-      else if (this.selectedBuyNetwork()?.id != 1151111081099710)
+      else if (this.selectedBuyNetwork()?.id != NetworkId.SOLANA_MAINNET)
       {
         this.showCustomAddress = false;
       }
@@ -527,11 +527,11 @@ export class BridgeComponent implements OnInit, OnDestroy {
     });
     this.receiveTextAnimated = false;
 
-    if (event.id == 1151111081099710) // Solana
+    if (event.id == NetworkId.SOLANA_MAINNET) // Solana
     {
       this.showCustomAddress = true;
     }
-    else if (this.selectedNetwork()?.id != 1151111081099710)
+    else if (this.selectedNetwork()?.id != NetworkId.SOLANA_MAINNET)
     {
       this.showCustomAddress = false;
     }
@@ -799,7 +799,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   async bridge(): Promise<void> {
     let txHash: string;
-    if(this.blockchainStateService.network()?.id === 1151111081099710)
+    if(this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET)
     {
       txHash = await this.svmSwap();
     }
