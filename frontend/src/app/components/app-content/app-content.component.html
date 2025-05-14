@@ -22,5 +22,17 @@
     *ngIf="activePopup === 'networkPopup'"
     (close)="popupService.closeAllPopups()">
   </app-blackhole-network>
+
+	<app-ecosystem-change
+		*ngIf="popupService.getCurrentPopup() === 'ecosystemChange'"
+		(ecosystemSelected)="onEcosystemSelected($event)"
+		(close)="closeEcosystemPopup()">
+	</app-ecosystem-change>
+
+	<!-- For testing -->
+	<!-- <app-ecosystem-change
+		(ecosystemSelected)="onEcosystemSelected($event)"
+		(close)="closeEcosystemPopup()">
+	</app-ecosystem-change> -->
 </ng-container>
 

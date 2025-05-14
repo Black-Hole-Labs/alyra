@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 import { FailedNotificationComponent } from '../../notification/failed-notification/failed-notification.component';
+import { PopupService } from '../../../services/popup.service';
 
 @Component({
   selector: 'app-blackhole-network',
@@ -22,44 +23,17 @@ export class BlackholeNetworkComponent {
   @Output() close = new EventEmitter<void>();
 
   constructor(
-    private blockchainStateService: BlockchainStateService
+    private blockchainStateService: BlockchainStateService,
+    private popupService: PopupService
   ) {}
 
   ngOnInit(): void {
-    //this.loadNetworksForCurrentProvider();
+    // Устанавливаем начальные иконки сети
+    const currentNetwork = this.networks()[0];
+    if (currentNetwork) {
+      this.updateNetworkBackgroundIcons(currentNetwork);
+    }
   }
-
-  // private async loadNetworksForCurrentProvider(): Promise<void> {
-  //   const currentProvider = this.blockchainStateService.getCurrentProvider();
-    
-  //   if (!currentProvider) {
-  //     console.error('No provider selected');
-  //     return;
-  //   }
-
-  //   console.log("currentProvider",currentProvider);
-  //   // const type = this.blockchainStateService.getType(currentProvider);
-  //   await this.loadNetworks(currentProvider.type);
-  // }
-
-  // private async loadNetworks(type: string): Promise<void> {
-  //   try {
-  //     const response = await fetch('/data/networks.json');
-  //     const allNetworks: any[] = await response.json();
-
-  //     if (type === 'multichain') { // Both EVM and SVM
-  //       this.networks = allNetworks;
-  //     } else {
-  //       this.networks = allNetworks.filter(
-  //         (network: Network) => network.chainType === type
-  //       );
-  //     }
-
-  //     console.log("this.networks",this.networks);
-  //   } catch (error) {
-  //     console.error('Failed to load networks:', error);
-  //   }
-  // }
 
   async selectNetwork(networkId: number): Promise<void> {
     const selectedNetwork = this.networks().find((network) => network.id === networkId);
@@ -70,6 +44,10 @@ export class BlackholeNetworkComponent {
 
     if(!this.blockchainStateService.connected()){
       this.blockchainStateService.updateNetwork(networkId);
+      // Закрываем попап при успешном обновлении сети, даже если пользователь не подключен
+      this.popupService.closePopup('networkPopup');
+      this.close.emit();
+      return;
     }
 
     const currentProvider = this.blockchainStateService.getCurrentProvider();
@@ -91,7 +69,8 @@ export class BlackholeNetworkComponent {
       this.blockchainStateService.updateNetwork(networkId);
       console.log(`Switched to network: ${selectedNetwork.name}`);
       
-      // Close the popup after successful network selection
+      // Закрываем попап после успешного выбора сети через PopupService
+      this.popupService.closePopup('networkPopup');
       this.close.emit();
     } catch (error) {
       console.error('Failed to switch network:', error);
@@ -104,5 +83,11 @@ export class BlackholeNetworkComponent {
   getCurrentNetwork(): any {
     if (!this.selectedNetwork) return null;
     return this.networks().find(n => n.id === this.selectedNetwork);
+  }
+
+  private updateNetworkBackgroundIcons(network: any): void {
+    const root = document.documentElement;
+    root.style.setProperty('--current-network-icon-1', `url(${network.logoURI})`);
+    root.style.setProperty('--current-network-icon-2', `url(${network.logoURI})`);
   }
 }

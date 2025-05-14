@@ -96,6 +96,10 @@
 	.bridge-amount h6 {
 		font-size: 11px;
 	}
+	
+	.bridge-amount h6.max-button::before {
+		font-size: 11px;
+	}
 
 	.bridge-amount .receive-amount {
 		font-size: 14px;
@@ -366,6 +370,10 @@
 	.bridge-amount h6 {
 		font-size: 11px;
 	}
+	
+	.bridge-amount h6.max-button::before {
+		font-size: 11px;
+	}
 
 	.bridge-amount .receive-amount {
 		font-size: 14px;
@@ -633,6 +641,10 @@
 	}
 	
 	.bridge-amount h6 {
+		font-size: 8px;
+	}
+	
+	.bridge-amount h6.max-button::before {
 		font-size: 8px;
 	}
 
@@ -905,6 +917,10 @@
 	.bridge-amount h6 {
 		font-size: 11px;
 	}
+	
+	.bridge-amount h6.max-button::before {
+		font-size: 11px;
+	}
 
 	.bridge-amount .receive-amount {
 		font-size: 14px;
@@ -1175,6 +1191,10 @@
 	
 	.bridge-amount h6 {
 		font-size: 11px;
+	}
+	
+	.bridge-amount h6.max-button::before {
+		font-size: 0px;
 	}
 
 	.bridge-amount .receive-amount {

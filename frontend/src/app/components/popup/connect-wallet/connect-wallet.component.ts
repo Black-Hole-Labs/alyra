@@ -49,7 +49,7 @@ export class ConnectWalletComponent implements OnInit {
     this.otherWallets = [];
 
     this.allWallets.forEach(wallet => {
-      if (['ledger', 'walletconnect'].includes(wallet.id)) {
+      if (['walletconnect'].includes(wallet.id)) {
         wallet.status = 'connect';
         this.availableWallets.push(wallet);
       } else {
@@ -65,10 +65,10 @@ export class ConnectWalletComponent implements OnInit {
     });
 
     // TODO recent logic
-    const recentWallet = this.availableWallets.find(w => w.id === 'metamask');
-    if (recentWallet) {
-      recentWallet.status = 'recent';
-    }
+    // const recentWallet = this.availableWallets.find(w => w.id === 'metamask');
+    // if (recentWallet) {
+    //   recentWallet.status = 'recent';
+    // }
   }
 
   private isWalletDetected(providerId: string): boolean {
@@ -82,52 +82,61 @@ export class ConnectWalletComponent implements OnInit {
   }
 
   async onWalletClick(providerId: string): Promise<void> {
+    console.log('Starting wallet connection for provider:', providerId);
+    
     if (!this.allProviders.includes(providerId)) {
+      console.error('Provider not supported:', providerId);
       alert('Provider not supported');
       return;
     }
 
     const provider = this.blockchainStateService.getProvider(providerId);
     if (!provider) {
+      console.error('Provider not registered:', providerId);
       alert('Provider not registered');
       return;
     }
 
     try {
+      console.log('Attempting to connect to provider...');
       const { address } = await provider.connect();
+      console.log('Successfully connected, address:', address);
 
-      try
-      {
+      sessionStorage.setItem('currentProvider', providerId);
+      sessionStorage.setItem('networkId', (this.blockchainStateService.network()!.id).toString());
+
+      try {
+        console.log('Updating wallet address...');
         this.blockchainStateService.updateWalletAddress(address);
-        await provider.switchNetwork(this.blockchainStateService.getCurrentNetwork());
+        console.log('Wallet address updated');
+        
+        // Сохраняем провайдер
+        console.log('Setting current provider:', providerId);
+        this.blockchainStateService.setCurrentProvider(providerId);
+        console.log('Current provider set');
+        
+        // Закрываем текущий попап
+        this.closePopup();
+        
+        // Открываем попап выбора экосистемы
+        this.popupService.openPopup('ecosystemChange');
+      } catch(e: unknown) {
+        console.error("Error in post-connection steps:", e);
       }
-      catch(e: unknown)
-      {
-        console.log("caught error: ", e);
-        console.log("Force switching to available network Etherium or Solana");
-        if (this.blockchainStateService.getType(providerId) == "SVM")
-        {
-          this.blockchainStateService.updateNetwork(1151111081099710);
-        }
-        else
-        {
-          this.blockchainStateService.updateNetwork(1);
-        }
-
-        provider.switchNetwork(this.blockchainStateService.getCurrentNetwork());
-      }
-      
-      this.blockchainStateService.setCurrentProvider(providerId);
-
-      this.closePopup();
     } catch (error) {
       console.error('Connection error:', error);
     }
-    this.popupService.openPopup('wallet');
-    this.openWallet.emit();
   }
 
   disconnectWallet(): void {
     this.blockchainStateService.disconnect();
+  }
+
+  handleWalletClick(wallet: Wallets): void {
+    if (wallet.status === 'install' && wallet.installUrl) {
+      window.open(wallet.installUrl, '_blank');
+    } else {
+      this.onWalletClick(wallet.id);
+    }
   }
 }

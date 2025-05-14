@@ -19,6 +19,7 @@ export class BlockchainStateService {
   networks = signal<Network[]>([]);
 
   tokens = signal<Token[]>([]);
+  allTokens = signal<Token[]>([]);
 
   filteredTokens = computed(() => [...this.tokens()]);
 
@@ -33,8 +34,32 @@ export class BlockchainStateService {
     effect(() => {
       if (this.network()) {
         this.loadTokensForNetwork(this.network()!.id);
+        this.updateNetworkBackgroundIcons(this.network()!);
+        this.loadAllTokensForNetwork(this.network()!.id);
       }
     });
+
+    effect(() => {
+      console.log("network", this.network());
+    });
+
+  }
+
+  public tryAutoConnect(): Promise<void> {
+      const providerId = sessionStorage.getItem('currentProvider');
+      const networkId = sessionStorage.getItem('networkId');
+      if (!providerId) return Promise.resolve();
+      const provider = this.getProvider(providerId);
+      if (!provider) return Promise.resolve();
+
+      return provider.connect()
+        .then(({ address } : { address: string }) => {
+          this.updateWalletAddress(address);
+          this.setCurrentProvider(providerId);
+          this.updateNetwork(Number(networkId!))
+        })
+        .catch(console.error);
+
   }
 
   setSearchText(value: string) {
@@ -49,7 +74,7 @@ export class BlockchainStateService {
   }
 
   setCurrentProvider(id: string): void {
-    this.currentProviderId = id;
+    this.currentProviderId.set(id);
   }
 
   getProvider(id: string): any {
@@ -61,7 +86,12 @@ export class BlockchainStateService {
   }
 
   getCurrentProvider(): any {
-    return this.currentProviderId ? this.providers[this.currentProviderId] : null;
+    return this.currentProviderId ? this.providers[this.currentProviderId!] : null;
+  }
+
+  getCurrentProviderId(): string | null {
+    console.log('Getting current provider ID:', this.currentProviderId);
+    return this.currentProviderId;
   }
 
   async loadProviders(): Promise<Wallets[]> {
@@ -69,6 +99,42 @@ export class BlockchainStateService {
     return await response.json();
   }
 
+  private loadAllTokensForNetwork(network: number): void {
+    fetch(`/data/tokens_search.json`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Failed to load tokens for network`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const tokensForNetwork = data.tokensEVM[network] || data.tokensSVM[network];
+
+        if (tokensForNetwork) {
+          this.allTokens.set(
+            tokensForNetwork.map((token: any) => ({
+              symbol: token.symbol,
+              name: token.name,
+              contractAddress: token.address,
+              imageUrl: token.logoURI,
+              decimals: token.decimals
+            }))
+          );          
+          //this.filteredTokens = [...this.tokens];
+        } else {
+          console.warn(`No tokens found for network ${network}`);
+          this.allTokens.set([]);
+          //this.filteredTokens = [];
+        }
+      })
+      .catch((error) => {
+        console.error(`Error loading tokens: ${error.message}`);
+        this.allTokens.set([]);
+        //this.filteredTokens = [];
+    });
+  }
+
+  // Методы управления состоянием
   private loadTokensForNetwork(network: number): void {
     fetch(`/data/tokens.json`)
       .then((response) => {
@@ -158,6 +224,9 @@ public loadNetworks(type: ProviderType, force: boolean = false): void {
   updateNetwork(chainId: number): void {
     const foundNetwork = this.networks().find(n => n.id === chainId);
     this.network.set(foundNetwork ?? null);
+    if (foundNetwork) {
+      this.updateNetworkBackgroundIcons(foundNetwork);
+    }
   }
 
   getCurrentNetwork(): Network | null {
@@ -169,5 +238,11 @@ public loadNetworks(type: ProviderType, force: boolean = false): void {
     this.loadNetworks(ProviderType.MULTICHAIN, true);
     //this.network.set(null);
     this.connected.set(false);
+  }
+
+  private updateNetworkBackgroundIcons(network: Network): void {
+    const root = document.documentElement;
+    root.style.setProperty('--current-network-icon-1', `url(${network.logoURI})`);
+    root.style.setProperty('--current-network-icon-2', `url(${network.logoURI})`);
   }
 }

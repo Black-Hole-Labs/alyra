@@ -49,7 +49,7 @@ export class TradeComponent implements AfterViewChecked {
   
   buyAmount = signal<string | undefined>(undefined);
   buyAmountForInput = signal<string | undefined>(undefined);
-  price: number = 0; // Цена обмена
+  price = signal<number>(0); // Цена обмена
   priceUsd: number = 0; // Текущая стоимость в USD за единицу
   sellPriceUsd = signal<string>('');
   buyPriceUsd = signal<string>('');
@@ -84,14 +84,10 @@ export class TradeComponent implements AfterViewChecked {
 
   allFieldsReady = computed(() =>
     !!this.blockchainStateService.network() &&
-    !!this.blockchainStateService.walletAddress() &&
     this.selectedToken() !== undefined &&
     this.selectedBuyToken() !== undefined &&
-    this.validatedSellAmount() !== 0 &&
-    this.buttonState === "swap"
+    this.validatedSellAmount() !== 0
   );
-
-  private inputTimeout: any;
 
   @ViewChild('buyAmountText') buyAmountTextElement: ElementRef | null = null;
   private buyAmountTextAnimated = false;
@@ -103,6 +99,16 @@ export class TradeComponent implements AfterViewChecked {
   private animationSpeed = 35;
   private animationTimeouts: { [key: string]: number } = {};
 
+  private debounceTimer: any;
+  private throttleActive: boolean = false;
+  private isProcessingInput = signal<boolean>(false);
+
+  // Добавить новую переменную для отслеживания размера шрифта
+  inputFontSize = signal<number>(48);
+
+  // Добавьте это свойство в класс
+  private resizeObserver: any;
+
   constructor(
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
@@ -111,56 +117,78 @@ export class TradeComponent implements AfterViewChecked {
     private transactionsService: TransactionsService,
     public popupService: PopupService
   ) {
-      effect(() => 
-      {
-        try{
+    // Установка начального размера шрифта в зависимости от ширины экрана
+    this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
+
+    effect(() => 
+    {
+      try{
+        if(this.allFieldsReady() && !this.isProcessingInput())
+        {
           this.getTxData();
         }
-        catch(error){
-          // this.updateBuyAmount('0.0');
-          // update gas = 0.0
-          console.log("error",error);
-          this.buttonState = 'no-available-quotes';
-        }
-      }, { allowSignalWrites: true });
+      }
+      catch(error){
+        // this.updateBuyAmount('0.0');
+        // update gas = 0.0
+        console.log("error",error);
+        this.buttonState = 'no-available-quotes';
+      }
+    }, { allowSignalWrites: true });
 
-      effect(() => {
-        const tokens = this.blockchainStateService.filteredTokens();
-        const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
-        const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
+    effect(() => {
+      const tokens = this.blockchainStateService.filteredTokens();
+      const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
+      const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
+  
+      this.selectedToken.set(newSelectedToken);
+      this.selectedBuyToken.set(newSelectedBuyToken);
+      if(!this.blockchainStateService.connected()){
+        return;
+      }
+      Promise.resolve().then(() => {
     
-        this.selectedToken.set(newSelectedToken);
-        this.selectedBuyToken.set(newSelectedBuyToken);
-        if(!this.blockchainStateService.connected()){
-          return;
+        if (this.selectedToken()) {
+          this.walletBalanceService.getBalanceForToken(this.selectedToken()!)
+            .then((balanceStr) => {
+              this.balance.set(Number(parseFloat(balanceStr)));
+            })
+            .catch((error) => {
+              console.error('Error getting balance sell: ', error);
+              this.balance.set(0.0);
+            });
         }
-        Promise.resolve().then(() => {
-      
-          if (this.selectedToken()) {
-            this.walletBalanceService.getBalanceForToken(this.selectedToken()!)
-              .then((balanceStr) => {
-                this.balance.set(Number(parseFloat(balanceStr)));
-              })
-              .catch((error) => {
-                console.error('Error getting balance sell: ', error);
-                this.balance.set(0.0);
-              });
-          }
-      
-          if (this.selectedBuyToken()) {
-            this.walletBalanceService.getBalanceForToken(this.selectedBuyToken()!)
-              .then((balanceStr) => {
-                this.balanceBuy.set(Number(parseFloat(balanceStr)));
-              })
-              .catch((error) => {
-                console.error('Error getting balance buy: ', error);
-                this.balanceBuy.set(0.0);
-              });
-          }
-        });
-      }, { allowSignalWrites: true });
+    
+        if (this.selectedBuyToken()) {
+          this.walletBalanceService.getBalanceForToken(this.selectedBuyToken()!)
+            .then((balanceStr) => {
+              this.balanceBuy.set(Number(parseFloat(balanceStr)));
+            })
+            .catch((error) => {
+              console.error('Error getting balance buy: ', error);
+              this.balanceBuy.set(0.0);
+            });
+        }
+      });
+    }, { allowSignalWrites: true });
   }
 
+  ngOnInit() {
+    // Инициализируем обработчик изменения размера окна
+    this.resizeObserver = new ResizeObserver(() => {
+      // Сбрасываем размер шрифта при изменении размера окна
+      this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
+    });
+    
+    // Наблюдаем за изменением размера окна
+    this.resizeObserver.observe(document.body);
+  }
+
+  ngOnDestroy() {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+  }
   
   handleKeyDown(event: KeyboardEvent): void {
     const inputElement = event.target as HTMLInputElement;
@@ -188,26 +216,35 @@ export class TradeComponent implements AfterViewChecked {
     .replace(/\.+/g, '.') 
     .replace(/^(\.)/g, '');
 
-    if (isSell) {
-      //this.updateBuyAmount();
-      //this.updateSellPriceUsd();
-      clearTimeout(this.inputTimeout);
+    if (isSell)
+    {
+      this.isProcessingInput.update(value => true);
 
-      this.inputTimeout = setTimeout(() => {
-        this.sellAmount = inputElement.value;
-        this.validatedSellAmount.update(value => (Number(inputElement.value)));
-        if (this.validatedSellAmount() > this.balance()) {
-          this.buttonState = 'insufficient';
-          this.updateBuyAmount('0.0');
-        }
-        else
-        {
-          this.buttonState = 'swap';
-        }
-      }, 2000);
+      this.sellAmount = inputElement.value;
+      this.validatedSellAmount.update(value => (Number(inputElement.value)));
+      
+      // Обновляем размер шрифта в зависимости от длины ввода
+      this.adjustFontSize(inputElement);
+      
+      if (this.validatedSellAmount() > this.balance())
+      {
+        this.buttonState = 'insufficient';
+        // this.updateBuyAmount('0.0');
+      }
+      else
+      {
+        this.buttonState = 'swap';
+      }
+
+      if (!this.throttleActive) {
+        this.throttleActive = true;
+        
+        this.debounceTimer = setTimeout(() => {
+          this.isProcessingInput.update(() => false);
+          this.throttleActive = false;
+        }, 2000);
+      }
     }
-
-    console.log("some data");
   }
 
   updateBuyAmount(value: string): void {
@@ -319,7 +356,11 @@ export class TradeComponent implements AfterViewChecked {
     const tempBalance = this.balance(); 
     this.balance.update(() => this.balanceBuy());
     this.balanceBuy.update(() => tempBalance);
-    this.buyAmountForInput.update(() => undefined);
+
+    const tempSellAmount = this.validatedSellAmount();
+    this.updateSellAmount(this.buyAmountForInput()!);
+    this.validatedSellAmount.set(Number(this.buyAmountForInput()));
+    this.updateBuyAmount(String(tempSellAmount));
     //this.getTxData();
   }
 
@@ -369,8 +410,20 @@ export class TradeComponent implements AfterViewChecked {
 
   toggleSettingsPopup(): void {
     if (this.showSettingsPopup) {
-      this.popupService.closePopup('settings');
+      const settingsEl = document.querySelector('app-settings');
+      if (settingsEl) {
+        settingsEl.classList.add('closing');
+      }
+      document.body.classList.add('popup-closing');
+      setTimeout(() => {
+        this.popupService.closePopup('settings');
+        document.body.classList.remove('popup-closing');
+        if (settingsEl) {
+          settingsEl.classList.remove('closing');
+        }
+      }, 300);
     } else {
+      document.body.classList.add('popup-opening');
       this.popupService.openPopup('settings');
     }
   }
@@ -546,25 +599,32 @@ export class TradeComponent implements AfterViewChecked {
 
   getTxData() {
     this.buttonState = 'finding';
-    if (this.validatedSellAmount() > this.balance()) {
-      this.buttonState = 'insufficient';
-      return;
-    }
     const fromChain = this.blockchainStateService.network()!.id.toString();
     const toChain = this.blockchainStateService.network()!.id.toString();
-    const fromAddress = this.blockchainStateService.walletAddress()!;
-    //const fromTokenDecimals = this.selectedTokendecimals;
     const fromTokenDecimals = this.selectedToken()!.decimals;
-    //const fromAmount = this.validatedSellAmount;
+    console.log("this.validatedSellAmount()",this.validatedSellAmount());
     const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
+    console.log(formattedFromAmount,formattedFromAmount);
     const fromAmount = parseUnits(formattedFromAmount, fromTokenDecimals);
-    //const fromToken = this.selectedTokenAddress;
     const fromToken = this.selectedToken()!.contractAddress;
     const toToken = this.selectedBuyToken()!.contractAddress;
     const toTokenDecimals = this.selectedBuyToken()!.decimals;
-    // const toToken = this.selectedBuyTokenAddress;
-    // const toTokenDecimals = this.selectedTokenBuydecimals;
-
+    let fromAddress = '';
+    if(!this.blockchainStateService.walletAddress())
+    {
+      if(fromToken !== ethers.ZeroAddress)
+      {
+        fromAddress = fromToken;
+      }
+      else
+      {
+        fromAddress = toToken;
+      }
+    }
+    else
+    {
+      fromAddress = this.blockchainStateService.walletAddress()!;
+    }
     const adjustedFromAmount = fromAmount.toString();
 
     console.log("fromChain",fromChain);
@@ -631,7 +691,7 @@ export class TradeComponent implements AfterViewChecked {
           if (fromDecimal > 0)
           {
             const ratio = toDecimal / fromDecimal;
-            this.price = Number(ratio.toFixed(3));
+            this.price.set(Number(ratio.toFixed(3)));
 
             const ratioUsd = Number(response.estimate.toAmountUSD) / fromDecimal;
             this.priceUsd = Number(ratioUsd.toFixed(3));
@@ -674,6 +734,14 @@ export class TradeComponent implements AfterViewChecked {
       },
       complete: () => {
         console.log('Quote request completed');
+        if(!this.blockchainStateService.walletAddress())
+        {
+          this.buttonState = 'insufficient';
+        }
+        else if (this.validatedSellAmount() > this.balance()) {
+          this.buttonState = 'insufficient';
+          return;
+        }
       }
     });
 
@@ -862,6 +930,115 @@ export class TradeComponent implements AfterViewChecked {
 
   ngAfterViewChecked() {
     this.checkAndAnimateBuyText();
+  }
+
+  // Обновленный метод с более подходящими порогами
+  adjustFontSize(inputElement: HTMLInputElement): void {
+    const textLength = inputElement.value.length;
+    const width = window.innerWidth;
+    
+    if (width >= 1601 && width <= 1920) {
+      // 1601-1920px
+      if (textLength > 15) {
+        this.inputFontSize.set(18);
+      } else if (textLength > 12) {
+        this.inputFontSize.set(22);
+      } else if (textLength > 10) {
+        this.inputFontSize.set(26);
+      } else if (textLength > 8) {
+        this.inputFontSize.set(30);
+      } else {
+        this.inputFontSize.set(36);
+      }
+    } else if (width >= 1171 && width <= 1600) {
+      // 1171-1600px
+      if (textLength > 15) {
+        this.inputFontSize.set(18);
+      } else if (textLength > 12) {
+        this.inputFontSize.set(22);
+      } else if (textLength > 10) {
+        this.inputFontSize.set(26);
+      } else if (textLength > 8) {
+        this.inputFontSize.set(30);
+      } else {
+        this.inputFontSize.set(36);
+      }
+    } else if (width >= 971 && width <= 1170) {
+      // 971-1170px
+      if (textLength > 15) {
+        this.inputFontSize.set(13);
+      } else if (textLength > 12) {
+        this.inputFontSize.set(16);
+      } else if (textLength > 10) {
+        this.inputFontSize.set(20);
+      } else if (textLength > 8) {
+        this.inputFontSize.set(22);
+      } else {
+        this.inputFontSize.set(26);
+      }
+    } else if (width >= 480 && width <= 970) {
+      // 480-970px
+      if (textLength > 15) {
+        this.inputFontSize.set(18);
+      } else if (textLength > 12) {
+        this.inputFontSize.set(22);
+      } else if (textLength > 10) {
+        this.inputFontSize.set(26);
+      } else if (textLength > 8) {
+        this.inputFontSize.set(30);
+      } else {
+        this.inputFontSize.set(36);
+      }
+    } else if (width >= 360 && width <= 479) {
+      // 360-479px
+      if (textLength > 15) {
+        this.inputFontSize.set(18);
+      } else if (textLength > 12) {
+        this.inputFontSize.set(22);
+      } else if (textLength > 10) {
+        this.inputFontSize.set(26);
+      } else if (textLength > 8) {
+        this.inputFontSize.set(30);
+      } else {
+        this.inputFontSize.set(36);
+      }
+    } else {
+      // По умолчанию
+      if (textLength > 15) {
+        this.inputFontSize.set(24);
+      } else if (textLength > 12) {
+        this.inputFontSize.set(28);
+      } else if (textLength > 10) {
+        this.inputFontSize.set(32);
+      } else if (textLength > 8) {
+        this.inputFontSize.set(38);
+      } else {
+        this.inputFontSize.set(48);
+      }
+    }
+  }
+
+  // Также обновите метод resetFontSize
+  resetFontSize(): void {
+    this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
+  }
+
+  private defaultFontSizeByScreenWidth(): number {
+    const width = window.innerWidth;
+    
+    if (width >= 1601 && width <= 1920) {
+      return 36; // 1601-1920px
+    } else if (width >= 1171 && width <= 1600) {
+      return 36; // 1171-1600px
+    } else if (width >= 971 && width <= 1170) {
+      return 26; // 971-1170px
+    } else if (width >= 480 && width <= 970) {
+      return 36; // 480-970px
+    } else if (width >= 360 && width <= 479) {
+      return 36; // 360-479px
+    } else {
+      return 48; // По умолчанию
+    }
   }
 }
 

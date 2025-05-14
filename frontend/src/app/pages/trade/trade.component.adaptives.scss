@@ -40,13 +40,13 @@
 
 	@keyframes click-animation-up {
 		0% { margin-top: 15px; }
-		50% { margin-top: -120px; }
+		50% { margin-top: -80px; }
 		100% { margin-top: 15px; }
 	}
 	
 	@keyframes click-animation-down {
 		0% { margin-top: 5px; }
-		50% { margin-top: 132px; }
+		50% { margin-top: 90px; }
 		100% { margin-top: 5px; }
 	}
 	
@@ -73,7 +73,6 @@
 	input {
 		height: 48px;
 		width: 200px;
-		font-size: 36px;
 	}
 
 	.buy-amount {
@@ -85,7 +84,6 @@
 	}
 	
 	.token {
-		margin-top: 27px;
 		gap: 10px;
 	}
 	
@@ -185,18 +183,6 @@
 		margin-top: 5px;
 	}
 
-	@keyframes click-animation-up {
-		0% { margin-top: 15px; }
-		50% { margin-top: -120px; }
-		100% { margin-top: 15px; }
-	}
-	
-	@keyframes click-animation-down {
-		0% { margin-top: 5px; }
-		50% { margin-top: 132px; }
-		100% { margin-top: 5px; }
-	}
-	
 	.swap-container{
 		margin-top: 20px;
 	}
@@ -220,7 +206,6 @@
 	input {
 		height: 48px;
 		width: 200px;
-		font-size: 36px;
 	}
 
 	.buy-amount {
@@ -232,7 +217,6 @@
 	}
 	
 	.token {
-		margin-top: 27px;
 		gap: 10px;
 	}
 	
@@ -367,7 +351,6 @@
 	input {
 		height: 34px;
 		width: 147px;
-		font-size: 26px;
 	}
 
 	.buy-amount {
@@ -379,7 +362,6 @@
 	}
 	
 	.token {
-		margin-top: 21px;
 		gap: 7px;
 	}
 	
@@ -514,7 +496,6 @@
 	input {
 		height: 48px;
 		width: 200px;
-		font-size: 36px;
 	}
 
 	.buy-amount {
@@ -526,7 +507,6 @@
 	}
 	
 	.token {
-		margin-top: 27px;
 		gap: 10px;
 	}
 	
@@ -667,7 +647,6 @@
 	input {
 		height: 48px;
 		width: 200px;
-		font-size: 36px;
 	}
 
 	.buy-amount {
@@ -679,10 +658,6 @@
 	}
 	
 	.token {
-		position: absolute;
-		top: 45px;
-		right: 30px;
-		margin-top: 0px;
 		gap: 10px;
 	}
 	

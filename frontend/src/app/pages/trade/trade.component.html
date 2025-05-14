@@ -10,7 +10,7 @@
 
 			<app-settings
 				*ngIf="showSettingsPopup"
-				class="settings-popup open"
+				class="settings-popup"
 				(close)="popupService.closePopup('settings')"
 				(save)="onSlippageSave($event)">
 			</app-settings>
@@ -37,6 +37,7 @@
           [(ngModel)]="sellAmountForInput"
           (input)="processInput($event, true)"
           (keydown)="handleKeyDown($event)"
+          [style.fontSize.px]="inputFontSize()"
         />
       </div>
 
@@ -53,7 +54,7 @@
 
         <div class="balance" *ngIf="isWalletConnected()">
           <p id="balance">{{ truncateTo6Decimals(balance()) }}</p>
-          <p>{{ selectedToken()?.symbol }}</p>
+          <!-- <p>{{ selectedToken()?.symbol }}</p> -->
 
           <button class="max" (click)="setMaxSellAmount()">MAX</button>
         </div>
@@ -96,7 +97,7 @@
 
         <div class="balance" *ngIf="isWalletConnected()">
           <p>{{truncateTo6Decimals(balanceBuy())}}</p>
-          <p>{{ selectedBuyToken()?.symbol }}</p>
+          <!-- <p>{{ selectedBuyToken()?.symbol }}</p> -->
         </div>
         <!-- Показываем сообщение, если кошелек не подключен -->
         <div class="balance-not-connected" *ngIf="!isWalletConnected()">
@@ -120,7 +121,7 @@
       <ng-container *ngIf="buttonState === 'wallet'">Continue in your wallet...</ng-container>
       <ng-container *ngIf="buttonState === 'insufficient'">Insufficient balance</ng-container>
       <ng-container *ngIf="buttonState === 'swap'">Swap</ng-container>
-      <ng-container *ngIf="buttonState === 'no-available-quotes'">No available quotes</ng-container>
+      <ng-container *ngIf="buttonState === 'no-available-quotes'">No available routes</ng-container>
     </button>
 
 		<ng-template #connectWallet>
@@ -132,11 +133,11 @@
 		</ng-template>
 
 		<div class="info">
-			<div class="price">
+			<div class="price" *ngIf="price() !== 0">
 				<p>1</p>
 				<p>{{ selectedToken()?.symbol }}</p>
 				<p>=</p>
-				<p id="price">{{ price }}</p>
+				<p id="price">{{ price() }}</p>
 				<p>{{ selectedBuyToken()?.symbol }}</p>
 				<p class="price-usd">($</p>
 				<p class="price-usd" id="price-usd">{{ priceUsd }}</p>

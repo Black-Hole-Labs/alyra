@@ -67,9 +67,18 @@ async function initializeApp(injector: Injector): Promise<void> {
     const responseNetworks = await fetch('/data/networks.json');
     if (!responseNetworks.ok) throw new Error('Failed to load networks');
     const allNetworks: Network[] = await responseNetworks.json();
+
+    // const excludeIds = [146, 1329, 324, 250, 1135, 13371, 1088, 42220, 122, 1284, 288];
+    // const visibleNetworks = allNetworks.filter(network => !excludeIds.includes(network.id));
+
+    // stateService.allNetworks.set(visibleNetworks);
+    // stateService.networks.set(visibleNetworks);
+
     stateService.allNetworks.set(allNetworks);
     stateService.networks.set(allNetworks);
     stateService.updateNetwork(1);
+    stateService.tryAutoConnect();
+
   } catch (error) {
     console.error('Error loading networks:', error);
   }

@@ -17,7 +17,8 @@
       "name": "ETH",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://etherscan.io/token/"
   },
   {
     "key": "sol",
@@ -35,7 +36,85 @@
       "name": "SOL",
       "symbol": "SOL",
       "decimals": 9
-    }
+    },
+    "explorerUrl": "https://solscan.io/token/"
+  },
+  {
+    "key": "arb",
+    "chainType": "EVM",
+    "name": "Arbitrum",
+    "id": 42161,
+    "idHex": "0xa4b1",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/arbitrum.svg",
+    "rpcUrls": [
+      "https://arb1.arbitrum.io/rpc",
+      "https://arbitrum-one-rpc.publicnode.com",
+      "https://arbitrum.drpc.org",
+      "https://rpc.ankr.com/arbitrum"
+    ],
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://arbiscan.io/token/"
+  },
+  {
+    "key": "opt",
+    "chainType": "EVM",
+    "name": "Optimism",
+    "id": 10,
+    "idHex": "0xa",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/optimism.svg",
+    "rpcUrls": [
+      "https://mainnet.optimism.io/",
+      "https://optimism-rpc.publicnode.com",
+      "https://optimism.drpc.org",
+      "https://rpc.ankr.com/optimism"
+    ],
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://optimistic.etherscan.io/token/"
+  },
+  {
+    "key": "bas",
+    "chainType": "EVM",
+    "name": "Base",
+    "id": 8453,
+    "idHex": "0x2105",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/base.svg",
+    "rpcUrls": [
+      "https://mainnet.base.org",
+      "https://base-rpc.publicnode.com",
+      "https://base.drpc.org",
+      "https://rpc.ankr.com/base"
+    ],
+    "nativeCurrency": {
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://basescan.org/token/"
+  },
+  {
+    "key": "abs",
+    "chainType": "EVM",
+    "name": "Abstract",
+    "id": 2741,
+    "idHex": "0xab5",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/abstract.svg",
+    "rpcUrls": [
+      "https://rpc.fsd.adfasd32442ds.com"
+    ],
+    "nativeCurrency": {
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://abscan.org/token/"
   },
   {
     "key": "bsc",
@@ -55,43 +134,226 @@
       "name": "BNB",
       "symbol": "BNB",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://bscscan.com/token/"
   },
   {
-    "key": "arb",
+    "key": "lna",
     "chainType": "EVM",
-    "name": "Arbitrum",
-    "id": 42161,
-    "idHex": "0xa4b1",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/arbitrum.svg",
+    "name": "Linea",
+    "id": 59144,
+    "idHex": "0xe708",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/linea.svg",
     "rpcUrls": [
-      "https://arb1.arbitrum.io/rpc",
-      "https://arbitrum-one-rpc.publicnode.com",
-      "https://arbitrum.drpc.org",
-      "https://rpc.ankr.com/arbitrum"
+      "https://rpc.linea.build"
     ],
     "nativeCurrency": {
       "name": "ETH",
       "symbol": "ETH",
       "decimals": 18
+    },
+    "explorerUrl": "https://lineascan.build/token/"
+  },
+  {
+    "key": "mnt",
+    "chainType": "EVM",
+    "name": "Mantle",
+    "id": 5000,
+    "idHex": "0x1388",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/mantle.png",
+    "rpcUrls": [
+      "https://rpc.mantle.xyz",
+      "https://mantle-rpc.publicnode.com",
+      "https://mantle.drpc.org",
+      "https://mantle.public-rpc.com",
+      "https://rpc.ankr.com/mantle"
+    ],
+    "nativeCurrency": {
+      "name": "Mantle",
+      "symbol": "MNT",
+      "decimals": 18
+    },
+    "explorerUrl": "https://mantlescan.xyz/token/"
+  },
+  {
+    "key": "uni",
+    "chainType": "EVM",
+    "name": "Unichain",
+    "id": 130,
+    "idHex": "0x82",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/unichain.svg",
+    "rpcUrls": [
+      "https://mainnet.unichain.org"
+    ],
+    "nativeCurrency": {
+      "name": "Ether",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://uniscan.xyz/"
+  },
+  {
+    "key": "son",
+    "chainType": "EVM",
+    "name": "Sonic",
+    "id": 146,
+    "idHex": "0x92",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/sonic.svg",
+    "rpcUrls": [
+      "https://rpc.soniclabs.com",
+      "https://sonic.drpc.org"
+    ],
+    "nativeCurrency": {
+      "name": "Sonic",
+      "symbol": "S",
+      "decimals": 18
+    },
+    "explorerUrl": "https://sonicscan.org/"
+  },
+  {
+    "key": "pol",
+    "chainType": "EVM",
+    "name": "Polygon",
+    "id": 137,
+    "idHex": "0x89",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/polygon.svg",
+    "rpcUrls": [
+      "https://polygon-bor-rpc.publicnode.com",
+      "https://polygon.drpc.org",
+      "https://polygon-rpc.com",
+      "https://rpc.ankr.com/polygon"
+    ],
+    "nativeCurrency": {
+      "name": "Polygon Ecosystem Token",
+      "symbol": "POL",
+      "decimals": 18
+    },
+    "explorerUrl": "https://polygonscan.com/token/"
+  },
+  {
+    "key": "sei",
+    "chainType": "EVM",
+    "name": "Sei",
+    "id": 1329,
+    "idHex": "0x531",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/sei.svg",
+    "rpcUrls": [
+      "https://evm-rpc.sei-apis.com"
+    ],
+    "nativeCurrency": {
+      "name": "SEI",
+      "symbol": "SEI",
+      "decimals": 18
     }
   },
   {
-    "key": "bas",
+    "key": "era",
     "chainType": "EVM",
-    "name": "Base",
-    "id": 8453,
-    "idHex": "0x2105",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/base.svg",
+    "name": "zkSync",
+    "id": 324,
+    "idHex": "0x144",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/zksync.svg",
     "rpcUrls": [
-      "https://mainnet.base.org",
-      "https://base-rpc.publicnode.com",
-      "https://base.drpc.org",
-      "https://rpc.ankr.com/base"
+      "https://mainnet.era.zksync.io"
+    ],
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://explorer.zksync.io/token/"
+  },
+  {
+    "key": "ftm",
+    "chainType": "EVM",
+    "name": "Fantom",
+    "id": 250,
+    "idHex": "0xfa",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/fantom.svg",
+    "rpcUrls": [
+      "https://rpcapi.fantom.network",
+      "https://rpc.fantom.network",
+      "https://fantom-rpc.publicnode.com",
+      "https://fantom.drpc.org",
+      "https://rpc.ftm.tools"
+    ],
+    "nativeCurrency": {
+      "name": "FTM",
+      "symbol": "FTM",
+      "decimals": 18
+    },
+    "explorerUrl": "https://ftmscan.com/token/"
+  },
+  {
+    "key": "ava",
+    "chainType": "EVM",
+    "name": "Avalanche",
+    "id": 43114,
+    "idHex": "0xa86a",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/avalanche.svg",
+    "rpcUrls": [
+      "https://api.avax.network/ext/bc/C/rpc",
+      "https://avalanche-c-chain-rpc.publicnode.com",
+      "https://avalanche.drpc.org",
+      "https://avalanche.public-rpc.com",
+      "https://rpc.ankr.com/avalanche"
+    ],
+    "nativeCurrency": {
+      "name": "AVAX",
+      "symbol": "AVAX",
+      "decimals": 18
+    },
+    "explorerUrl": "https://snowtrace.io/token/"
+  },
+  {
+    "key": "ber",
+    "chainType": "EVM",
+    "name": "Berachain",
+    "id": 80094,
+    "idHex": "0x138de",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/bera.svg",
+    "rpcUrls": [
+      "https://rpc.berachain.com"
+    ],
+    "nativeCurrency": {
+      "name": "Bera",
+      "symbol": "BERA",
+      "decimals": 18
+    },
+    "explorerUrl": "https://berascan.com/"
+  },
+  {
+    "key": "lsk",
+    "chainType": "EVM",
+    "name": "Lisk",
+    "id": 1135,
+    "idHex": "0x46f",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/lisk.svg",
+    "rpcUrls": [
+      "https://rpc.api.lisk.com",
+      "https://lisk.drpc.org"
     ],
     "nativeCurrency": {
       "name": "Ethereum",
       "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://blockscout.lisk.com/"
+  },
+  {
+    "key": "imx",
+    "chainType": "EVM",
+    "name": "Immutable zkEVM",
+    "id": 13371,
+    "idHex": "0x343b",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/imx.svg",
+    "rpcUrls": [
+      "https://rpc.immutable.com/",
+      "https://immutable-zkevm.drpc.org"
+    ],
+    "nativeCurrency": {
+      "name": "ImmutableX",
+      "symbol": "IMX",
       "decimals": 18
     }
   },
@@ -112,46 +374,8 @@
       "name": "Ethereum",
       "symbol": "ETH",
       "decimals": 18
-    }
-  },
-  {
-    "key": "ava",
-    "chainType": "EVM",
-    "name": "Avalanche",
-    "id": 43114,
-    "idHex": "0xa86a",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/avalanche.svg",
-    "rpcUrls": [
-      "https://api.avax.network/ext/bc/C/rpc",
-      "https://avalanche-c-chain-rpc.publicnode.com",
-      "https://avalanche.drpc.org",
-      "https://avalanche.public-rpc.com",
-      "https://rpc.ankr.com/avalanche"
-    ],
-    "nativeCurrency": {
-      "name": "AVAX",
-      "symbol": "AVAX",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "pol",
-    "chainType": "EVM",
-    "name": "Polygon",
-    "id": 137,
-    "idHex": "0x89",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/polygon.svg",
-    "rpcUrls": [
-      "https://polygon-bor-rpc.publicnode.com",
-      "https://polygon.drpc.org",
-      "https://polygon-rpc.com",
-      "https://rpc.ankr.com/polygon"
-    ],
-    "nativeCurrency": {
-      "name": "Polygon Ecosystem Token",
-      "symbol": "POL",
-      "decimals": 18
-    }
+    },
+    "explorerUrl": "https://blastscan.io/token/"
   },
   {
     "key": "scl",
@@ -170,201 +394,8 @@
       "name": "ETH",
       "symbol": "ETH",
       "decimals": 18
-    }
-  },
-  {
-    "key": "opt",
-    "chainType": "EVM",
-    "name": "Optimism",
-    "id": 10,
-    "idHex": "0xa",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/optimism.svg",
-    "rpcUrls": [
-      "https://mainnet.optimism.io/",
-      "https://optimism-rpc.publicnode.com",
-      "https://optimism.drpc.org",
-      "https://rpc.ankr.com/optimism"
-    ],
-    "nativeCurrency": {
-      "name": "ETH",
-      "symbol": "ETH",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "lna",
-    "chainType": "EVM",
-    "name": "Linea",
-    "id": 59144,
-    "idHex": "0xe708",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/linea.svg",
-    "rpcUrls": [
-      "https://rpc.linea.build"
-    ],
-    "nativeCurrency": {
-      "name": "ETH",
-      "symbol": "ETH",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "era",
-    "chainType": "EVM",
-    "name": "zkSync",
-    "id": 324,
-    "idHex": "0x144",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/zksync.svg",
-    "rpcUrls": [
-      "https://mainnet.era.zksync.io"
-    ],
-    "nativeCurrency": {
-      "name": "ETH",
-      "symbol": "ETH",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "pze",
-    "chainType": "EVM",
-    "name": "Polygon zkEVM",
-    "id": 1101,
-    "idHex": "0x44d",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/zkevm.png",
-    "rpcUrls": [
-      "https://zkevm-rpc.com",
-      "https://polygon-zkevm.drpc.org"
-    ],
-    "nativeCurrency": {
-      "name": "ETH",
-      "symbol": "ETH",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "dai",
-    "chainType": "EVM",
-    "name": "Gnosis",
-    "id": 100,
-    "idHex": "0x64",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/gnosis.svg",
-    "rpcUrls": [
-      "https://rpc.gnosischain.com",
-      "https://gnosis-rpc.publicnode.com",
-      "https://gnosis.drpc.org",
-      "https://rpc.ankr.com/gnosis"
-    ],
-    "nativeCurrency": {
-      "name": "XDAI",
-      "symbol": "XDAI",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "ftm",
-    "chainType": "EVM",
-    "name": "Fantom",
-    "id": 250,
-    "idHex": "0xfa",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/fantom.svg",
-    "rpcUrls": [
-      "https://rpcapi.fantom.network",
-      "https://rpc.fantom.network",
-      "https://fantom-rpc.publicnode.com",
-      "https://fantom.drpc.org",
-      "https://rpc.ftm.tools"
-    ],
-    "nativeCurrency": {
-      "name": "FTM",
-      "symbol": "FTM",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "mor",
-    "chainType": "EVM",
-    "name": "Moonriver",
-    "id": 1285,
-    "idHex": "0x505",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/moonriver.svg",
-    "rpcUrls": [
-      "https://rpc.api.moonriver.moonbeam.network",
-      "https://moonriver-rpc.publicnode.com",
-      "https://moonriver.drpc.org"
-    ],
-    "nativeCurrency": {
-      "name": "Moonriver",
-      "symbol": "MOVR",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "moo",
-    "chainType": "EVM",
-    "name": "Moonbeam",
-    "id": 1284,
-    "idHex": "0x504",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/moonbeam.svg",
-    "rpcUrls": [
-      "https://rpc.api.moonbeam.network",
-      "https://moonbeam-rpc.publicnode.com",
-      "https://moonbeam.drpc.org"
-    ],
-    "nativeCurrency": {
-      "name": "GLMR",
-      "symbol": "GLMR",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "fus",
-    "chainType": "EVM",
-    "name": "FUSE",
-    "id": 122,
-    "idHex": "0x7a",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/fuse.svg",
-    "rpcUrls": [
-      "https://rpc.fuse.io",
-      "https://fuse.drpc.org"
-    ],
-    "nativeCurrency": {
-      "name": "FUSE",
-      "symbol": "FUSE",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "bob",
-    "chainType": "EVM",
-    "name": "Boba",
-    "id": 288,
-    "idHex": "0x120",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/boba.png",
-    "rpcUrls": [
-      "https://mainnet.boba.network",
-      "https://replica.boba.network"
-    ],
-    "nativeCurrency": {
-      "name": "ETH",
-      "symbol": "ETH",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "mod",
-    "chainType": "EVM",
-    "name": "Mode",
-    "id": 34443,
-    "idHex": "0x868b",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/mode.png",
-    "rpcUrls": [
-      "https://mainnet.mode.network",
-      "https://mode.drpc.org"
-    ],
-    "nativeCurrency": {
-      "name": "ETH",
-      "symbol": "ETH",
-      "decimals": 18
-    }
+    },
+    "explorerUrl": "https://scrollscan.com/token/"
   },
   {
     "key": "mam",
@@ -381,140 +412,8 @@
       "name": "METIS",
       "symbol": "METIS",
       "decimals": 18
-    }
-  },
-  {
-    "key": "aur",
-    "chainType": "EVM",
-    "name": "Aurora",
-    "id": 1313161554,
-    "idHex": "0x4e454152",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/aurora.png",
-    "rpcUrls": [
-      "https://mainnet.aurora.dev"
-    ],
-    "nativeCurrency": {
-      "name": "ETH",
-      "symbol": "ETH",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "sei",
-    "chainType": "EVM",
-    "name": "Sei",
-    "id": 1329,
-    "idHex": "0x531",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/sei.svg",
-    "rpcUrls": [
-      "https://evm-rpc.sei-apis.com"
-    ],
-    "nativeCurrency": {
-      "name": "SEI",
-      "symbol": "SEI",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "imx",
-    "chainType": "EVM",
-    "name": "Immutable zkEVM",
-    "id": 13371,
-    "idHex": "0x343b",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/imx.svg",
-    "rpcUrls": [
-      "https://rpc.immutable.com/",
-      "https://immutable-zkevm.drpc.org"
-    ],
-    "nativeCurrency": {
-      "name": "ImmutableX",
-      "symbol": "IMX",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "gra",
-    "chainType": "EVM",
-    "name": "Gravity",
-    "id": 1625,
-    "idHex": "0x659",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/gravity.svg",
-    "rpcUrls": [
-      "https://rpc.gravity.xyz/"
-    ],
-    "nativeCurrency": {
-      "name": "G",
-      "symbol": "G",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "tai",
-    "chainType": "EVM",
-    "name": "Taiko",
-    "id": 167000,
-    "idHex": "0x28c58",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/taiko.png",
-    "rpcUrls": [
-      "https://rpc.mainnet.taiko.xyz",
-      "https://rpc.taiko.xyz",
-      "https://rpc.taiko.tools"
-    ],
-    "nativeCurrency": {
-      "name": "Ethereum",
-      "symbol": "ETH",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "cro",
-    "chainType": "EVM",
-    "name": "Cronos",
-    "id": 25,
-    "idHex": "0x19",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/cronos.svg",
-    "rpcUrls": [
-      "https://evm.cronos.org",
-      "https://cronos.drpc.org"
-    ],
-    "nativeCurrency": {
-      "name": "Cronos",
-      "symbol": "CRO",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "fra",
-    "chainType": "EVM",
-    "name": "Fraxtal",
-    "id": 252,
-    "idHex": "0xfc",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/fraxtal.svg",
-    "rpcUrls": [
-      "https://rpc.frax.com"
-    ],
-    "nativeCurrency": {
-      "name": "Frax Ethereum",
-      "symbol": "frxETH",
-      "decimals": 18
-    }
-  },
-  {
-    "key": "rsk",
-    "chainType": "EVM",
-    "name": "Rootstock",
-    "id": 30,
-    "idHex": "0x1e",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/rootstock.svg",
-    "rpcUrls": [
-      "https://public-node.rsk.co",
-      "https://mycrypto.rsk.co"
-    ],
-    "nativeCurrency": {
-      "name": "Rootstock Smart Bitcoin",
-      "symbol": "RBTC",
-      "decimals": 18
-    }
+    },
+    "explorerUrl": "https://andromeda-explorer.metis.io/token/"
   },
   {
     "key": "cel",
@@ -532,43 +431,113 @@
       "name": "CELO",
       "symbol": "CELO",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://celoscan.io/token/"
   },
   {
-    "key": "wcc",
+    "key": "fus",
     "chainType": "EVM",
-    "name": "World Chain",
-    "id": 480,
-    "idHex": "0x1e0",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/world.svg",
+    "name": "FUSE",
+    "id": 122,
+    "idHex": "0x7a",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/fuse.svg",
     "rpcUrls": [
-      "https://worldchain-mainnet.g.alchemy.com/public",
-      "https://worldchain-mainnet.gateway.tenderly.co"
+      "https://rpc.fuse.io",
+      "https://fuse.drpc.org"
     ],
     "nativeCurrency": {
-      "name": "Ethereum",
+      "name": "FUSE",
+      "symbol": "FUSE",
+      "decimals": 18
+    },
+    "explorerUrl": "https://explorer.fuse.io/token/"
+  },
+  {
+    "key": "moo",
+    "chainType": "EVM",
+    "name": "Moonbeam",
+    "id": 1284,
+    "idHex": "0x504",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/moonbeam.svg",
+    "rpcUrls": [
+      "https://rpc.api.moonbeam.network",
+      "https://moonbeam-rpc.publicnode.com",
+      "https://moonbeam.drpc.org"
+    ],
+    "nativeCurrency": {
+      "name": "GLMR",
+      "symbol": "GLMR",
+      "decimals": 18
+    },
+    "explorerUrl": "https://moonscan.io/token/"
+  },
+  {
+    "key": "bob",
+    "chainType": "EVM",
+    "name": "Boba",
+    "id": 288,
+    "idHex": "0x120",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/boba.png",
+    "rpcUrls": [
+      "https://mainnet.boba.network",
+      "https://replica.boba.network"
+    ],
+    "nativeCurrency": {
+      "name": "ETH",
       "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://bobascan.com/token/"
   },
   {
-    "key": "mnt",
+    "key": "sup",
     "chainType": "EVM",
-    "name": "Mantle",
-    "id": 5000,
-    "idHex": "0x1388",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/mantle.png",
+    "name": "Superposition",
+    "id": 55244,
+    "idHex": "0xd7cc",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/superposition.svg",
     "rpcUrls": [
-      "https://rpc.mantle.xyz",
-      "https://mantle-rpc.publicnode.com",
-      "https://mantle.drpc.org",
-      "https://mantle.public-rpc.com",
-      "https://rpc.ankr.com/mantle"
+      "https://rpc.superposition.so"
     ],
     "nativeCurrency": {
-      "name": "Mantle",
-      "symbol": "MNT",
+      "name": "Ether",
+      "symbol": "ETH",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://explorer.superposition.so/token/"
+  },
+  {
+    "key": "crn",
+    "chainType": "EVM",
+    "name": "Corn",
+    "id": 21000000,
+    "idHex": "0x1406f40",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/corn.svg",
+    "rpcUrls": [
+      "https://mainnet.corn-rpc.com"
+    ],
+    "nativeCurrency": {
+      "name": "Bitcorn",
+      "symbol": "BTCN",
+      "decimals": 18
+    },
+    "explorerUrl": "https://cornscan.io/token/"
+  },
+  {
+    "key": "lns",
+    "chainType": "EVM",
+    "name": "Lens",
+    "id": 232,
+    "idHex": "0xe8",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/lens.svg",
+    "rpcUrls": [
+      "https://api.lens.matterhosted.dev"
+    ],
+    "nativeCurrency": {
+      "name": "GHO",
+      "symbol": "GHO",
+      "decimals": 18
+    },
+    "explorerUrl": "https://explorer.lens.xyz/token/"
   }
 ]

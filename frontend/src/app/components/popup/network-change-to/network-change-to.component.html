@@ -8,7 +8,7 @@
       type="text"
       placeholder="Search by name"
       [(ngModel)]="searchText"
-      (keydown.enter)="performSearch()"
+      (input)="performSearch()"
     />
     <button class="search-button" (click)="performSearch()"></button>
   </div>

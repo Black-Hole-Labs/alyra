@@ -174,8 +174,8 @@ export class TransactionsService {
   
     const trimmedDec = decPart.slice(0, decimals);
     const result = trimmedDec ? `${intPart}.${trimmedDec}` : intPart;
-
-    return result.replace(/\.?0+$/, '');
+  
+    return result.includes('.') ? result.replace(/\.?0+$/, '') : result;
   }
   
 

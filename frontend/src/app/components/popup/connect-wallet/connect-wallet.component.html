@@ -1,7 +1,7 @@
 <div class="connect-wallet">
 	<div class="upper">
-	  <h6>Connect Wallet</h6>
-	  <button (click)="closePopup()"></button>
+		<h6>Connect Wallet</h6>
+		<button (click)="closePopup()"></button>
 	</div>
   
 	<div class="scroll-container">
@@ -12,7 +12,7 @@
 		
 		<div class="inner-wallets">
 			@for (wallet of availableWallets; track wallet.id) {
-			<div class="wallet" (click)="onWalletClick(wallet.id)">
+			<div class="wallet" (click)="handleWalletClick(wallet)">
 				<div class="name">
 				<div class="wallet-img" [style.background-image]="'url(' + wallet.iconUrl + ')'"></div>
 				<p>{{wallet.name}}</p>
@@ -37,7 +37,7 @@
 		
 		<div class="inner-wallets">
 			@for (wallet of otherWallets; track wallet.id) {
-			<div class="wallet" (click)="onWalletClick(wallet.id)">
+			<div class="wallet" (click)="handleWalletClick(wallet)">
 				<div class="name">
 				<div class="wallet-img" [style.background-image]="'url(' + wallet.iconUrl + ')'"></div>
 				<p>{{wallet.name}}</p>

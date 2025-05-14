@@ -20,7 +20,7 @@
 
 				<app-settings-bridge
 					*ngIf="showSettingsBridgePopup"
-					class="settings-bridge-popup open"
+					class="settings-bridge-popup"
 					(close)="popupService.closePopup('settingsBridge')"
 					(save)="onSlippageSave($event)">
 				</app-settings-bridge>
@@ -46,10 +46,15 @@
 							id="number-input"
 							placeholder="Enter amount"
 							[(ngModel)]="sellAmountForInput"
-              				(input)="processInput($event, true)"
+							(input)="processInput($event, true)"
 							(keydown)="handleKeyDown($event)"
 						/>
-						<h6 class="max-button" (click)="setMaxSellAmount()" *ngIf="isWalletConnected()">MAX</h6>
+						<div class="balance-container">
+							<h6 class="max-button" 
+                 (click)="setMaxSellAmount()" 
+                 *ngIf="isWalletConnected()"
+                 [attr.data-balance]="truncateTo6Decimals(balance())">MAX</h6>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -168,7 +173,7 @@
 				<ng-container *ngIf="buttonState === 'wrong-address'">Wrong address</ng-container>
 				<ng-container *ngIf="buttonState === 'bridge'">Bridge</ng-container>
 				<ng-container *ngIf="buttonState === 'insufficient'">Insufficient balance</ng-container>
-				<ng-container *ngIf="buttonState === 'no-available-quotes'">No available quotes</ng-container>
+				<ng-container *ngIf="buttonState === 'no-available-quotes'">No available routes</ng-container>
       </button>
 
 			<div class="gas-container" *ngIf="isBridgeButtonActive()" [@receiveAnimation]>
@@ -206,17 +211,28 @@
 
 <app-network-change-from
 	*ngIf="popupService.getCurrentPopup() === 'networkChangeFrom'"
+	[networks]="availableFromNetworks()"
 	(close)="popupService.closePopup('networkChangeFrom')"
 	(networkSelected)="onNetworkSelected($event)">
 </app-network-change-from>
 
 <app-network-change-to
 	*ngIf="popupService.getCurrentPopup() === 'networkChangeTo'"
+	[networks]="availableToNetworks()"
 	(close)="popupService.closePopup('networkChangeTo')"
-    (networkSelected)="onNetworkToSelected($event)">
+	(networkSelected)="onNetworkToSelected($event)">
 </app-network-change-to>
 
-
+<!-- <app-bridge-tx
+	[selectedNetwork]="{id: 1, name: 'Ethereum', logoURI: '/img/trade/bnb.png', rpcUrls: 'https://ethereum.rpc.com', chainType: 'EVM', explorerUrl: 'https://etherscan.io'}"
+	[selectedNetworkTo]="{id: 56, name: 'Binance', logoURI: '/img/trade/arbitrum.png', rpcUrls: 'https://binance.rpc.com', chainType: 'EVM', explorerUrl: 'https://bscscan.com'}"
+	[selectedToken]="{symbol: 'ETH', imageUrl: '/img/trade/shib.png', contractAddress: '0x0000000000000000000000000000000000000000', decimals: '18'}"
+	[selectedReceiveToken]="{symbol: 'BNB', imageUrl: '/img/trade/usdc.png', contractAddress: '0x0000000000000000000000000000000000000000', decimals: '18'}"
+	[inputAmount]="0.0001"
+	[txHash]="''"
+	[customAddress]="''"
+	(close)="closeBridgeTxPopup()">
+</app-bridge-tx> -->
 <app-bridge-tx
 	*ngIf="popupService.getCurrentPopup() === 'bridgeTx'"
 	[selectedNetwork]="selectedNetwork()"
@@ -228,23 +244,3 @@
 	[customAddress]="showCustomAddress ? customAddress() : ''"
 	(close)="closeBridgeTxPopup()">
 </app-bridge-tx>
-
-
-
-
-
-<!-- 
-
-<app-bridge-tx
-  *ngIf="showBridgeTxPopup"
-  [selectedNetwork]="selectedNetwork()"
-  [selectedNetworkTo]="selectedBuyNetwork()"
-  [selectedToken]="selectedToken()"
-  [inputAmount]="sellAmount"
-  (close)="closeBridgeTxPopup()">
-</app-bridge-tx>
-
-<app-connect-wallet 
-  *ngIf="showConnectWalletPopup"
-  (close)="closeConnectWalletPopup()">
-</app-connect-wallet> -->
