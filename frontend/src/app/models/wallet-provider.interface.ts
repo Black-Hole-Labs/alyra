@@ -43,7 +43,7 @@ export interface Wallets {
 export enum ProviderType {
   EVM = 'EVM',
   SVM = 'SVM',
-  MULTICHAIN = 'MULTICHAIN'
+  MULTICHAIN = 'multichain'
 }
 
 export enum NetworkId
