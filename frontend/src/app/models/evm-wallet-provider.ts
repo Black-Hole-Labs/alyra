@@ -89,7 +89,7 @@ export class EvmWalletProvider implements WalletProvider {
       } else {
         txParams.value = '0x0';
       }
-      console.log('Отправка транзакции:', txParams);
+      // console.log('Отправка транзакции:', txParams);
       return await this.provider.request({
         method: 'eth_sendTransaction',
         params: [txParams],

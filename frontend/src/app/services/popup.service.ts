@@ -9,14 +9,14 @@ export class PopupService {
   activePopup$ = this.activePopupSubject.asObservable();
 
   openPopup(popupName: string): void {
-    console.log(`Opening popup: ${popupName}`);
+    // // console.log(`Opening popup: ${popupName}`);
     document.body.classList.add('popup-opening');
     this.activePopupSubject.next(popupName);
   }
 
   closePopup(popupName: string): void {
     if (this.getCurrentPopup() === popupName) {
-      console.log(`Closing popup: ${popupName}`);
+      // // console.log(`Closing popup: ${popupName}`);
       document.body.classList.add('popup-closing');
       setTimeout(() => {
         this.activePopupSubject.next(null);
@@ -27,7 +27,7 @@ export class PopupService {
   }
 
   closeAllPopups(): void {
-    console.log('Closing all popups');
+    // // console.log('Closing all popups');
     if (this.getCurrentPopup()) {
       document.body.classList.add('popup-closing');
       setTimeout(() => {

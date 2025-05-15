@@ -121,7 +121,7 @@ export class TransactionsService {
     try {
       return await this.getStatus(txHash);
     } catch (error) {
-      console.log('Error fetching initial status:', error);
+      // console.log('Error fetching initial status:', error);
       return {};
     }
   }
@@ -134,7 +134,7 @@ export class TransactionsService {
         result = await this.getStatus(txHash);
         await this.delay(1000);
       } catch (error) {
-        console.log('Error polling status:', error);
+        // console.log('Error polling status:', error);
         await this.delay(1000);
       }
     } while (!result || (result.status !== 'DONE' && result.status !== 'FAILED'));

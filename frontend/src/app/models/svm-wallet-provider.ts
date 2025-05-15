@@ -59,7 +59,7 @@ export class SvmWalletProvider implements WalletProvider {
     const decodedTx = Uint8Array.from(atob(txData.data.toString()), c => c.charCodeAt(0));
     const versionedTx = VersionedTransaction.deserialize(decodedTx);
     const signedTx = await this.provider.signAndSendTransaction(versionedTx);
-    console.log('SVM Transaction sent:', signedTx);
+    // console.log('SVM Transaction sent:', signedTx);
     await connection.confirmTransaction(signedTx, 'confirmed');
     return signedTx;
   }

@@ -40,7 +40,7 @@ export class BlockchainStateService {
     });
 
     effect(() => {
-      console.log("network", this.network());
+      // console.log("network", this.network());
     });
 
   }
@@ -90,7 +90,7 @@ export class BlockchainStateService {
   }
 
   getCurrentProviderId(): string | null {
-    console.log('Getting current provider ID:', this.currentProviderId);
+    // console.log('Getting current provider ID:', this.currentProviderId);
     return this.currentProviderId;
   }
 

@@ -76,24 +76,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     effect(() => {
       const isConnected = this.blockchainStateService.connected();
-      console.log('Connection status changed:', isConnected);
+      // console.log('Connection status changed:', isConnected);
       
       if (!isConnected) {
-        console.log('Wallet disconnected, resetting icon');
+        // console.log('Wallet disconnected, resetting icon');
         this.walletIcon.set('/img/header/wallet.png');
       }
     }, { allowSignalWrites: true });
 
     effect(() => {
-      console.log('Header effect triggered');
+      // console.log('Header effect triggered');
       const providerId = this.blockchainStateService.getCurrentProviderId();
-      console.log('Provider ID in header effect:', providerId);
+      // console.log('Provider ID in header effect:', providerId);
       
       if (this.providers.length === 0) {
-        console.log('Loading providers...');
+        // console.log('Loading providers...');
         this.loadProviders();
       } else {
-        console.log('Updating wallet icon...');
+        // console.log('Updating wallet icon...');
         this.updateWalletIcon();
       }
     }, { allowSignalWrites: true });
@@ -379,12 +379,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async loadProviders(): Promise<void> {
-    console.log('Loading providers...');
+    // console.log('Loading providers...');
     try {
       const response = await fetch('/data/providers.json');
       const data = await response.json();
       this.providers = data;
-      console.log('Providers loaded:', this.providers);
+      // console.log('Providers loaded:', this.providers);
       this.updateWalletIcon();
     } catch (error) {
       console.error('Error loading providers:', error);
@@ -392,24 +392,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   updateWalletIcon(): void {
-    console.log('Updating wallet icon...');
+    // console.log('Updating wallet icon...');
     const providerId = this.blockchainStateService.getCurrentProviderId();
-    console.log('Current provider ID:', providerId);
+    // console.log('Current provider ID:', providerId);
     
     if (!providerId) {
-      console.log('No provider ID, using default icon');
+      // console.log('No provider ID, using default icon');
       this.walletIcon.set('/img/header/wallet.png');
       return;
     }
 
     const provider = this.providers.find(p => p.id === providerId);
-    console.log('Found provider:', provider);
+    // console.log('Found provider:', provider);
     
     if (provider && provider.iconUrl) {
-      console.log('Setting wallet icon to:', provider.iconUrl);
+      // console.log('Setting wallet icon to:', provider.iconUrl);
       this.walletIcon.set(provider.iconUrl);
     } else {
-      console.log('Provider not found or no icon URL, using default icon');
+      // console.log('Provider not found or no icon URL, using default icon');
       this.walletIcon.set('/img/header/wallet.png');
     }
   }

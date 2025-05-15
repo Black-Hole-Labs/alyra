@@ -38,7 +38,7 @@ export class PendingNotificationComponent implements OnInit {
   isVisible = true;
 
   ngOnInit() {
-    console.log("selectedBuyToken",this.selectedBuyToken);
+    // console.log("selectedBuyToken",this.selectedBuyToken);
     // setTimeout(() => {
     //   this.startClosing();
     // }, 5000);

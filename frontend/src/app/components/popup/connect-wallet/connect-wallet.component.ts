@@ -34,9 +34,9 @@ export class ConnectWalletComponent implements OnInit {
 
     effect(() => {
       if (this.connected()) {
-        console.log('Wallet connected!:', this.blockchainStateService.walletAddress());
+        // console.log('Wallet connected!:', this.blockchainStateService.walletAddress());
       } else {
-        console.log('Wallet disconnected');
+        // console.log('Wallet disconnected');
       }
     }, { allowSignalWrites: true });
   }
@@ -82,7 +82,7 @@ export class ConnectWalletComponent implements OnInit {
   }
 
   async onWalletClick(providerId: string): Promise<void> {
-    console.log('Starting wallet connection for provider:', providerId);
+    // console.log('Starting wallet connection for provider:', providerId);
     
     if (!this.allProviders.includes(providerId)) {
       console.error('Provider not supported:', providerId);
@@ -98,21 +98,21 @@ export class ConnectWalletComponent implements OnInit {
     }
 
     try {
-      console.log('Attempting to connect to provider...');
+      // console.log('Attempting to connect to provider...');
       const { address } = await provider.connect();
-      console.log('Successfully connected, address:', address);
+      // console.log('Successfully connected, address:', address);
 
       sessionStorage.setItem('currentProvider', providerId);
       sessionStorage.setItem('networkId', (this.blockchainStateService.network()!.id).toString());
 
       try {
-        console.log('Updating wallet address...');
+        // console.log('Updating wallet address...');
         this.blockchainStateService.updateWalletAddress(address);
-        console.log('Wallet address updated');
+        // console.log('Wallet address updated');
         
-        console.log('Setting current provider:', providerId);
+        // console.log('Setting current provider:', providerId);
         this.blockchainStateService.setCurrentProvider(providerId);
-        console.log('Current provider set');
+        // console.log('Current provider set');
         
         this.closePopup();
         

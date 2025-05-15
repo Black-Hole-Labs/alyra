@@ -21,35 +21,35 @@ export class WalletProviderManager {
       const provider = event.detail.provider;
 
       if (provider.isMagicEden) {
-        console.log("Detected MagicEden");
+        // console.log("Detected MagicEden");
         this.magicEdenProvider = provider;
       }
       else if (provider.isPhantom) {
-        console.log("Detected Phantom");
+        // console.log("Detected Phantom");
         this.PhantomProvider = provider;
       }
       else if (provider.isBackpack) {
-        console.log("Detected BackPack");
+        // console.log("Detected BackPack");
         this.backPackProvider = provider;
       }
       else if (provider.isRabby) {
-        console.log("Detected RabbyWallet");
+        // console.log("Detected RabbyWallet");
         this.RabbyWalletProvider = provider;
       }
       else if (provider.isMetaMask && !provider.isPontem && !provider.isKeplr) {
-        console.log("Detected MetaMask");
+        // console.log("Detected MetaMask");
         this.metaMaskProvider = provider;
       }
       else if (provider.isTrust || provider.isTrustWallet) {
-        console.log("Detected Trust");
+        // console.log("Detected Trust");
         this.trustWalletProvider = provider;
       }
       // else if (provider.isOkxWallet || provider.isOKExWallet) {
-      //   console.log("Detected OKX");
+      //   // console.log("Detected OKX");
       //   // this.trustWalletProvider = provider;
       // }
       // else if (provider.isCoinbaseWallet) {
-      //   console.log("Detected Coinbase");
+      //   // console.log("Detected Coinbase");
       //   // this.trustWalletProvider = provider;
       // }
     });

@@ -166,7 +166,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
         catch(error){
           // this.updateBuyAmount('0.0');
           // update gas = 0.0
-          console.log("error",error);
+          // console.log("error",error);
           this.setButtonState('no-available-quotes');
         }
         
@@ -355,15 +355,15 @@ export class BridgeComponent implements OnInit, OnDestroy {
     }
   
     if (!fromChain || !toChain || !fromAddress || !fromAmount || !fromToken || !toToken || !fromTokenDecimals) {
-      console.log("fromChain",fromChain);
-      console.log("toChain",toChain);
-      console.log("fromAddress",fromAddress);
-      console.log("fromAmount",fromAmount);
-      console.log("fromToken",fromToken);
-      console.log("toToken",toToken);
-      console.log("fromTokenDecimals",fromTokenDecimals);
+      // console.log("fromChain",fromChain);
+      // console.log("toChain",toChain);
+      // console.log("fromAddress",fromAddress);
+      // console.log("fromAmount",fromAmount);
+      // console.log("fromToken",fromToken);
+      // console.log("toToken",toToken);
+      // console.log("fromTokenDecimals",fromTokenDecimals);
       
-      console.log("adjusted From Amount",adjustedFromAmount);
+      // console.log("adjusted From Amount",adjustedFromAmount);
 
       console.error('Missing required parameters');
       return;
@@ -373,12 +373,12 @@ export class BridgeComponent implements OnInit, OnDestroy {
       fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress, slippageValue)
     .subscribe({
       next: (response: any) => {
-        console.log('Quote received:', response);
+        // console.log('Quote received:', response);
         if (response.estimate && response.transactionRequest) 
         {
           const toAmountNumber = Number(this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals)));
           const readableToAmount = toAmountNumber.toFixed(Number(toTokenDecimals)).replace(/\.?0+$/, '');
-          console.log('readableToAmount:', readableToAmount);
+          // console.log('readableToAmount:', readableToAmount);
           this.updateBuyAmount(readableToAmount);
           
           // if(this.blockchainStateService.network()!.id == NetworkId.SOLANA_MAINNET) // SVM
@@ -397,7 +397,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
           this.gasPriceUSD = Number(gasPriceUSD);
           
-          console.log('gasPriceUSD:', this.gasPriceUSD);
+          // console.log('gasPriceUSD:', this.gasPriceUSD);
         }
         else 
         {
@@ -414,7 +414,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
           {
             this.txData.set(response.transactionRequest as TransactionRequestEVM);            
             if(fromToken !== ethers.ZeroAddress){
-              console.log("this.buttonState = 'approve'");
+              // console.log("this.buttonState = 'approve'");
               this.setButtonState('approve');
             }
           }
@@ -441,7 +441,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
           return;
         }
         this.setButtonState('bridge');
-        console.log('Quote request completed');
+        // console.log('Quote request completed');
       }
     });
 
@@ -475,7 +475,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   selectNetwork(networkId: string) {
-    console.log(`Selected network: ${networkId}`);
+    // console.log(`Selected network: ${networkId}`);
     // Handle the selected network
   }
   closeNetworkChangeFromPopup(): void {
@@ -600,12 +600,12 @@ export class BridgeComponent implements OnInit, OnDestroy {
         }, 2000);
       }
     }
-    console.log("some data");
+    // console.log("some data");
   }
 
   updateBuyAmount(value: string): void {
     const limited = this.limitDecimals(value, 6);
-    console.log("limited",limited);
+    // console.log("limited",limited);
     const num = Number(limited);
   
     if (!isNaN(num)) {
@@ -651,7 +651,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
   
   swapNetworks(): void {
-    console.log('Swapping networks...');
+    // console.log('Swapping networks...');
     this.txData.set(undefined);
 
     const tempNetwork = this.selectedNetwork();
@@ -808,7 +808,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
     }
     catch (error) 
     {
-      console.log("error setting balance",error);
+      // console.log("error setting balance",error);
     }
   }
 
@@ -820,7 +820,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
     const provider = this.blockchainStateService.getCurrentProvider().provider;
   
     const txHash = await provider.sendTx(txData);
-    console.log("SVM Swap транзакция отправлена:", txHash);
+    // console.log("SVM Swap транзакция отправлена:", txHash);
     return txHash.signature;
   }
   
@@ -852,21 +852,21 @@ export class BridgeComponent implements OnInit, OnDestroy {
     const approveAmount = parseUnits(amount, fromTokenDecimals);
 
     // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
-    // console.log("allowance",allowance);
+    // // console.log("allowance",allowance);
 
     const approveTx = await erc20Contract["approve"]((this.txData() as TransactionRequestEVM).to, approveAmount);
     
 
     await approveTx.wait();
 
-    console.log("Approve успешно выполнен:", approveTx.hash);
+    // console.log("Approve успешно выполнен:", approveTx.hash);
 
     const txHash = await provider.sendTx(this.txData(), true);
 
     this.setButtonState('bridge');
     this.buttonState === 'bridge'
 
-    console.log("txHash",txHash);
+    // console.log("txHash",txHash);
     return txHash;
   }
   
@@ -895,7 +895,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   get buttonState(): 'bridge' | 'finding' | 'approve' | 'wallet' | 'wrong-address' | 'no-available-quotes' | 'insufficient' {
-    //console.log("uncoment, auto load fix???"); todo
+    //// console.log("uncoment, auto load fix???"); todo
 
     if (this.showCustomAddress && this.addressStatus === 'bad') {
       return 'wrong-address';
@@ -1052,7 +1052,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 	onSlippageSave(value: string): void {
     if (value === "Auto")
     {
-      console.log("Slippate is Auto. Default value is 0.005 (0.5%)");
+      // console.log("Slippate is Auto. Default value is 0.005 (0.5%)");
       this.slippage = 0.005;
     }
     else
@@ -1064,7 +1064,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
       }
   
       this.slippage = val / 100;
-      console.log(`Slippage set: ${this.slippage}; (${val}%)`);
+      // console.log(`Slippage set: ${this.slippage}; (${val}%)`);
     }
   }
 }

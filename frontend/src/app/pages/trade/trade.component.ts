@@ -129,7 +129,7 @@ export class TradeComponent implements AfterViewChecked {
       catch(error){
         // this.updateBuyAmount('0.0');
         // update gas = 0.0
-        console.log("error",error);
+        // console.log("error",error);
         this.buttonState = 'no-available-quotes';
       }
     }, { allowSignalWrites: true });
@@ -402,7 +402,7 @@ export class TradeComponent implements AfterViewChecked {
 	onSlippageSave(value: string): void {
     if (value === "Auto")
     {
-      console.log("Slippate is Auto. Default value is 0.005 (0.5%)");
+      // console.log("Slippate is Auto. Default value is 0.005 (0.5%)");
       this.slippage = 0.005;
     }
     else
@@ -414,7 +414,7 @@ export class TradeComponent implements AfterViewChecked {
       }
   
       this.slippage = val / 100;
-      console.log(`Slippage set: ${this.slippage}; (${val}%)`);
+      // console.log(`Slippage set: ${this.slippage}; (${val}%)`);
     }
 
     //this.showSettingsPopup = false;
@@ -446,7 +446,7 @@ export class TradeComponent implements AfterViewChecked {
       this.showFailedNotification = true;
       
       this.loading.set(false);
-      //console.log(error);
+      //// console.log(error);
 
       this.cdr.detectChanges();
       setTimeout(() => {
@@ -483,7 +483,7 @@ export class TradeComponent implements AfterViewChecked {
     }
     catch (error) 
     {
-      console.log("error setting balance",error);
+      // console.log("error setting balance",error);
     }
 
     this.loading.set(false);
@@ -501,7 +501,7 @@ export class TradeComponent implements AfterViewChecked {
     this.showPendingNotification = true;
     this.buttonState = 'swap';
 
-    console.log("SVM Swap транзакция отправлена:", txHash);
+    // console.log("SVM Swap транзакция отправлена:", txHash);
     return txHash.signature;
   }
 
@@ -533,22 +533,22 @@ export class TradeComponent implements AfterViewChecked {
     const approveAmount = parseUnits(amount, fromTokenDecimals)
 
     // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
-    // console.log("allowance",allowance);
+    // // console.log("allowance",allowance);
 
     const approveTx = await erc20Contract["approve"]((this.txData() as TransactionRequestEVM).to, approveAmount);
     
-    console.log("a");
+    // console.log("a");
 
     await approveTx.wait();
 
-    console.log("Approve успешно выполнен:", approveTx.hash);
+    // console.log("Approve успешно выполнен:", approveTx.hash);
 
     const txHash = await provider.sendTx(this.txData(), true);
     
     this.showPendingNotification = true;
     this.buttonState = 'swap';
 
-    console.log("txHash",txHash);
+    // console.log("txHash",txHash);
     return txHash;
   }
 
@@ -559,8 +559,8 @@ export class TradeComponent implements AfterViewChecked {
   test(){
     this.transactionsService.runTest().subscribe({
       next: (response) => {
-        console.log('Quote:', response.quote);
-        console.log('Simulation Result:', response.simulationResult);
+        // console.log('Quote:', response.quote);
+        // console.log('Simulation Result:', response.simulationResult);
       },
       error: (error) => {
         console.error('Ошибка запроса:', error);
@@ -573,9 +573,9 @@ export class TradeComponent implements AfterViewChecked {
     const fromChain = this.blockchainStateService.network()!.id.toString();
     const toChain = this.blockchainStateService.network()!.id.toString();
     const fromTokenDecimals = this.selectedToken()!.decimals;
-    console.log("this.validatedSellAmount()",this.validatedSellAmount());
+    // console.log("this.validatedSellAmount()",this.validatedSellAmount());
     const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
-    console.log(formattedFromAmount,formattedFromAmount);
+    // console.log(formattedFromAmount,formattedFromAmount);
     const fromAmount = parseUnits(formattedFromAmount, fromTokenDecimals);
     const fromToken = this.selectedToken()!.contractAddress;
     const toToken = this.selectedBuyToken()!.contractAddress;
@@ -598,40 +598,40 @@ export class TradeComponent implements AfterViewChecked {
     }
     const adjustedFromAmount = fromAmount.toString();
 
-    console.log("fromChain",fromChain);
+    // console.log("fromChain",fromChain);
   
     if (!fromChain || !toChain || !fromAddress || !fromAmount || !fromToken || !toToken || !fromTokenDecimals) {
-      console.log("fromChain",fromChain);
-      console.log("toChain",toChain);
-      console.log("fromAddress",fromAddress);
-      console.log("fromAmount",fromAmount);
-      console.log("fromToken",fromToken);
-      console.log("toToken",toToken);
-      console.log("fromTokenDecimals",fromTokenDecimals);
+      // console.log("fromChain",fromChain);
+      // console.log("toChain",toChain);
+      // console.log("fromAddress",fromAddress);
+      // console.log("fromAmount",fromAmount);
+      // console.log("fromToken",fromToken);
+      // console.log("toToken",toToken);
+      // console.log("fromTokenDecimals",fromTokenDecimals);
       
-      console.log("adjusted From Amount",adjustedFromAmount);
+      // console.log("adjusted From Amount",adjustedFromAmount);
 
       console.error('Missing required parameters');
       return;
     }
     
-    console.log("fromAddress",fromAddress);
+    // console.log("fromAddress",fromAddress);
 
     const slippageValue = this.slippage !== 0.005 ? this.slippage: undefined; // 0.005 is default for LIFI
 
     this.transactionsService.getQuote(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, slippageValue)
     .subscribe({
       next: (response: any) => {
-        console.log('Quote received:', response);
+        // console.log('Quote received:', response);
         if (response.estimate && response.transactionRequest) 
         {
-          console.log(`fromUSD: ${response.estimate.fromAmountUSD}; toUSD: ${response.estimate.toAmountUSD}`);
+          // console.log(`fromUSD: ${response.estimate.fromAmountUSD}; toUSD: ${response.estimate.toAmountUSD}`);
           this.updateSellPriceUsd(response.estimate.fromAmountUSD);
           this.updateBuyPriceUsd(response.estimate.toAmountUSD);
 
           const toAmountNumber = Number(this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals)));
           const readableToAmount = toAmountNumber.toFixed(Number(toTokenDecimals)).replace(/\.?0+$/, '');
-          console.log('readableToAmount:', readableToAmount);
+          // console.log('readableToAmount:', readableToAmount);
           this.updateBuyAmount(readableToAmount);
           
           // if(this.blockchainStateService.network()!.id == NetworkId.SOLANA_MAINNET) // SVM
@@ -650,7 +650,7 @@ export class TradeComponent implements AfterViewChecked {
 
           this.gasPriceUSD = Number(gasPriceUSD);
           
-          console.log('gasPriceUSD:', this.gasPriceUSD);
+          // console.log('gasPriceUSD:', this.gasPriceUSD);
 
           const fromDecimal = parseFloat(
             this.transactionsService.parseToAmount(response.estimate.fromAmount, Number(fromTokenDecimals))
@@ -685,7 +685,7 @@ export class TradeComponent implements AfterViewChecked {
             this.txData.set(response.transactionRequest as TransactionRequestEVM);
             this.buttonState = 'swap';
             if(fromToken !== ethers.ZeroAddress){
-              console.log("this.buttonState = 'approve'");
+              // console.log("this.buttonState = 'approve'");
               this.buttonState = 'approve';
             }
           }
@@ -704,7 +704,7 @@ export class TradeComponent implements AfterViewChecked {
         }
       },
       complete: () => {
-        console.log('Quote request completed');
+        // console.log('Quote request completed');
         if(!this.blockchainStateService.walletAddress())
         {
           this.buttonState = 'insufficient';
