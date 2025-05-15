@@ -110,15 +110,12 @@ export class ConnectWalletComponent implements OnInit {
         this.blockchainStateService.updateWalletAddress(address);
         console.log('Wallet address updated');
         
-        // Сохраняем провайдер
         console.log('Setting current provider:', providerId);
         this.blockchainStateService.setCurrentProvider(providerId);
         console.log('Current provider set');
         
-        // Закрываем текущий попап
         this.closePopup();
         
-        // Открываем попап выбора экосистемы
         this.popupService.openPopup('ecosystemChange');
       } catch(e: unknown) {
         console.error("Error in post-connection steps:", e);

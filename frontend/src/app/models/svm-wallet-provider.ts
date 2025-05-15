@@ -19,7 +19,6 @@ export class SvmWalletProvider implements WalletProvider {
     return !!this.provider;
   }
 
-  // Provide a default implementation that forces override
   async connect(_provider?: any, isMultichain?: boolean): Promise<{ address: string; network: string }>  {
     if (_provider) this.provider = _provider;
     if (!this.provider) throw new Error('Solana not installed');

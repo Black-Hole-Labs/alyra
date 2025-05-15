@@ -134,7 +134,6 @@ export class BlockchainStateService {
     });
   }
 
-  // Методы управления состоянием
   private loadTokensForNetwork(network: number): void {
     fetch(`/data/tokens.json`)
       .then((response) => {

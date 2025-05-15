@@ -42,13 +42,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @Output() toggleMenu = new EventEmitter<void>();
   @Output() toggleNetwork = new EventEmitter<void>();
 
-  // Добавляем свойства для анимации текста
   private menuItems: { element: HTMLElement, originalText: string }[] = [];
   private possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}:"<>?|';
-  private glitchChars = '!@#$%^&*()_+{}:"<>?|\\';  // Символы для эффекта глитча
-  private cyberChars = '01010101110010101010101110101010'; // Кибер-символы
-  private animationFrames = 20; // Увеличиваем количество кадров для более плавной анимации
-  private animationSpeed = 20; // Немного ускоряем анимацию
+  private glitchChars = '!@#$%^&*()_+{}:"<>?|\\';
+  private cyberChars = '01010101110010101010101110101010';
+  private animationFrames = 20;
+  private animationSpeed = 20;
   private animationTimeouts: { [key: string]: number } = {};
 
   constructor(
@@ -75,7 +74,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Эффект для отслеживания состояния подключения
     effect(() => {
       const isConnected = this.blockchainStateService.connected();
       console.log('Connection status changed:', isConnected);
@@ -86,7 +84,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     }, { allowSignalWrites: true });
 
-    // Эффект для обновления иконки при изменении провайдера
     effect(() => {
       console.log('Header effect triggered');
       const providerId = this.blockchainStateService.getCurrentProviderId();
@@ -133,9 +130,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (savedCount && lastGmTime) {
       const now = new Date().getTime();
       const timeDiff = now - parseInt(lastGmTime);
-      // Изменяем с 24 на 48 часов (48 * 60 * 60 * 1000 = 172800000 миллисекунд)
       if (timeDiff > 172800000) {
-        // Прошло больше 48 часов - сбрасываем счетчик
         localStorage.removeItem(this.GM_COUNT_KEY);
         localStorage.removeItem(this.LAST_GM_TIME_KEY);
         this.gmCount = null;
@@ -189,7 +184,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     }
 
-    // Если можно кликнуть
     this.gmCount = (this.gmCount ?? 0) + 1;
     localStorage.setItem('lastGmClick', now.toISOString());
     this.triggerFireworks();
@@ -207,7 +201,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.showPopup = true;
     setTimeout(() => {
       this.showPopup = false;
-    }, 5000); // Показываем попап на 5 секунд
+    }, 5000);
   }
 
   triggerFireworks() {
@@ -217,50 +211,43 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const gmRect = gmElement.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
 
-    const centerX = gmRect.left + gmRect.width / 2 - containerRect.left; // Центр X
-    const centerY = gmRect.top + gmRect.height / 2 - containerRect.top; // Центр Y
+    const centerX = gmRect.left + gmRect.width / 2 - containerRect.left;
+    const centerY = gmRect.top + gmRect.height / 2 - containerRect.top;
 
     for (let i = 0; i < 20; i++) {
       const spark = this.renderer.createElement('div');
       this.renderer.addClass(spark, 'spark');
       this.renderer.appendChild(container, spark);
 
-      // Угол и дистанция
       const angle = Math.random() * 2 * Math.PI;
       const distance = Math.random() * 100 + 50;
-      const duration = Math.random() * 800 + 500; // Длительность в миллисекундах
+      const duration = Math.random() * 800 + 500;
 
-      // Вычисляем конечные координаты
       const targetX = Math.cos(angle) * distance;
       const targetY = Math.sin(angle) * distance;
 
-      // Устанавливаем начальную позицию
-      this.renderer.setStyle(spark, 'background-color', ''); // Убедитесь, что нет фона
+      this.renderer.setStyle(spark, 'background-color', '');
       this.renderer.setStyle(spark, 'background-image', 'url("/img/animation/ufo.png")');
       this.renderer.setStyle(spark, 'background-size', 'contain');
       this.renderer.setStyle(spark, 'border-radius', '0');
       this.renderer.setStyle(spark, 'box-shadow', 'none');
 
-      // Начинаем анимацию
       const startTime = performance.now();
 
       const animate = (currentTime: number) => {
         const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1); // Прогресс от 0 до 1
+        const progress = Math.min(elapsed / duration, 1);
 
-        // Интерполяция координат
         const currentX = centerX + targetX * progress;
         const currentY = centerY + targetY * progress;
 
-        // Обновляем позицию
         this.renderer.setStyle(spark, 'left', `${currentX}px`);
         this.renderer.setStyle(spark, 'top', `${currentY}px`);
-        this.renderer.setStyle(spark, 'opacity', `${1 - progress}`); // Исчезновение
+        this.renderer.setStyle(spark, 'opacity', `${1 - progress}`);
 
         if (progress < 1) {
-          requestAnimationFrame(animate); // Продолжаем анимацию
+          requestAnimationFrame(animate);
         } else {
-          // Удаляем искру после завершения
           this.renderer.removeChild(container, spark);
         }
       };
@@ -281,7 +268,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.popupService.closeAllPopups();
   }
 
-  // Геттер для проверки состояния blackholeMenu
   get isPopupVisible(): boolean {
     return this.popupService.getCurrentPopup() === 'blackholeMenu';
   }
@@ -294,7 +280,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.popupService.openPopup('settings');
   }
 
-  // Инициализация анимации текста
   private initTextAnimation(): void {
     const menuLinks = this.elRef.nativeElement.querySelectorAll('nav a');
     
@@ -302,21 +287,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
       const originalText = link.textContent || '';
       this.menuItems.push({ element: link, originalText });
       
-      // Добавляем обработчики событий для наведения мыши
       this.renderer.listen(link, 'mouseenter', () => {
         this.animateText(link, originalText);
       });
       
       this.renderer.listen(link, 'mouseleave', () => {
-        // Останавливаем анимацию и возвращаем оригинальный текст
         link.textContent = originalText;
       });
     });
   }
   
-  // Анимация "подбора букв"
   private animateText(element: HTMLElement, finalText: string): void {
-    // Отменяем предыдущую анимацию, если она есть
     const elementId = element.getAttribute('data-animation-id') || Math.random().toString(36).substring(2, 9);
     element.setAttribute('data-animation-id', elementId);
     
@@ -327,9 +308,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     let frame = 0;
     const totalFrames = this.animationFrames;
     
-    // Создаем массив для отслеживания "глитч-эффекта" для каждой буквы
     const glitchStates = Array(finalText.length).fill(false);
-    // Массив для отслеживания "подобранных" букв
     const resolvedChars = Array(finalText.length).fill(false);
     
     const animate = () => {
@@ -342,17 +321,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
       let result = '';
       const progress = frame / totalFrames;
       
-      // Определяем, сколько букв должно быть "подобрано" на текущем кадре
       const resolvedCount = Math.floor(finalText.length * Math.pow(progress, 0.8));
       
-      // Обновляем состояние "подобранных" букв
       for (let i = 0; i < resolvedCount; i++) {
         if (!resolvedChars[i]) {
           resolvedChars[i] = true;
         }
       }
       
-      // Случайно выбираем несколько букв для глитча
       if (frame % 3 === 0) {
         for (let i = 0; i < finalText.length; i++) {
           if (Math.random() < 0.1) {
@@ -362,13 +338,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
       
       for (let i = 0; i < finalText.length; i++) {
-        // Если буква уже "подобрана"
         if (resolvedChars[i]) {
-          // Но может быть с глитчем
           if (glitchStates[i] && frame < totalFrames * 0.9 && finalText[i] !== ' ') {
-            // Применяем глитч-эффект к уже подобранной букве
             if (Math.random() < 0.3) {
-              // Используем кибер-символы для более футуристического вида
               const cyberIndex = Math.floor(Math.random() * this.cyberChars.length);
               result += this.cyberChars[cyberIndex];
             } else {
@@ -379,13 +351,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
             result += finalText[i];
           }
         } else {
-          // Буква еще не "подобрана"
           if (finalText[i] === ' ') {
-            // Пробелы оставляем как есть для лучшей читаемости
             result += ' ';
           } else {
-            // Для букв выбираем случайный символ
-            // С вероятностью используем символы глитча или кибер-символы
             const rand = Math.random();
             if (rand < 0.2) {
               const glitchIndex = Math.floor(Math.random() * this.glitchChars.length);

@@ -12,18 +12,18 @@ export interface Network {
   rpcUrls: string;
   logoURI?: string;
   idHex?:string;
-  chainType: string; // Тип сети (EVM, SVM)
+  chainType: string; // Network type (EVM, SVM)
   explorerUrl: string;
 }
 
 export interface TransactionRequestEVM {
-  value: string; // Значение транзакции в HEX
-  to: string; // Адрес получателя
-  data: string; // Данные транзакции (payload)
-  chainId: number; // ID блокчейна (например, 1 для Ethereum Mainnet)
-  gasPrice: string; // Цена газа в HEX
-  gasLimit: string; // Лимит газа в HEX
-  from: string; // Адрес отправителя
+  value: string; // in hex
+  to: string; // address receiver
+  data: string; // trx data(payload)
+  chainId: number;
+  gasPrice: string; // in hex
+  gasLimit: string; // in hex
+  from: string; // address sender
 }
 
 export interface TransactionRequestSVM {

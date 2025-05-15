@@ -131,7 +131,6 @@ export class TokenChangePopupComponent {
   }
 
   isVerifiedToken(token: TokenDisplay): boolean {
-    // Заглушка - логика будет добавлена пользователем позже
     return true;
   }
 

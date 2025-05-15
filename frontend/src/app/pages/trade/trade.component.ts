@@ -41,7 +41,7 @@ export interface Token {
 })
 export class TradeComponent implements AfterViewChecked {
 //[x: string]: any;
-  sellAmount: string = ''; // Значение, которое пользователь вводит в поле продажи
+  sellAmount: string = '';
   //validatedSellAmount: string = ''; 
   sellAmountForInput= signal<string | undefined>(undefined);
   validatedSellAmount = signal<number>(0);
@@ -49,14 +49,14 @@ export class TradeComponent implements AfterViewChecked {
   
   buyAmount = signal<string | undefined>(undefined);
   buyAmountForInput = signal<string | undefined>(undefined);
-  price = signal<number>(0); // Цена обмена
-  priceUsd: number = 0; // Текущая стоимость в USD за единицу
+  price = signal<number>(0);
+  priceUsd: number = 0;
   sellPriceUsd = signal<string>('');
   buyPriceUsd = signal<string>('');
   balance = signal<number>(0.0);
   balanceBuy = signal<number>(0.0);
-  rotationCount: number = 0; // Счетчик для отслеживания вращений
-	slippage: number = 0.005; //  // 0.005 is default for LIFI
+  rotationCount: number = 0;
+	slippage: number = 0.005; // 0.005 is default for LIFI
   gasPriceUSD: number | undefined;
 
   selectedToken = signal<Token | undefined>(undefined);
@@ -103,10 +103,8 @@ export class TradeComponent implements AfterViewChecked {
   private throttleActive: boolean = false;
   private isProcessingInput = signal<boolean>(false);
 
-  // Добавить новую переменную для отслеживания размера шрифта
   inputFontSize = signal<number>(48);
 
-  // Добавьте это свойство в класс
   private resizeObserver: any;
 
   constructor(
@@ -117,7 +115,6 @@ export class TradeComponent implements AfterViewChecked {
     private transactionsService: TransactionsService,
     public popupService: PopupService
   ) {
-    // Установка начального размера шрифта в зависимости от ширины экрана
     this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
 
     effect(() => 
@@ -174,13 +171,10 @@ export class TradeComponent implements AfterViewChecked {
   }
 
   ngOnInit() {
-    // Инициализируем обработчик изменения размера окна
     this.resizeObserver = new ResizeObserver(() => {
-      // Сбрасываем размер шрифта при изменении размера окна
       this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
     });
     
-    // Наблюдаем за изменением размера окна
     this.resizeObserver.observe(document.body);
   }
 
@@ -223,7 +217,6 @@ export class TradeComponent implements AfterViewChecked {
       this.sellAmount = inputElement.value;
       this.validatedSellAmount.update(value => (Number(inputElement.value)));
       
-      // Обновляем размер шрифта в зависимости от длины ввода
       this.adjustFontSize(inputElement);
       
       if (this.validatedSellAmount() > this.balance())
@@ -361,7 +354,6 @@ export class TradeComponent implements AfterViewChecked {
     this.closeTokenPopup();
   }
 
-  // Методы управления попапом для buy
   openTokenBuyPopup(): void {
     this.popupService.openPopup('tokenChangeBuy');
   }
@@ -424,7 +416,7 @@ export class TradeComponent implements AfterViewChecked {
       console.log(`Slippage set: ${this.slippage}; (${val}%)`);
     }
 
-    //this.showSettingsPopup = false; // Закрываем popup после сохранения
+    //this.showSettingsPopup = false;
   }
 
   async swap() {
@@ -745,12 +737,10 @@ export class TradeComponent implements AfterViewChecked {
 
   
 
-  // Геттер для проверки состояния попапа
   get showConnectWalletPopup(): boolean {
     return this.popupService.getCurrentPopup() === 'connectWallet';
   }
 
-  // Обновляем методы закрытия
   closeSuccessNotification(): void {
     this.showSuccessNotification = false;
   }
@@ -759,7 +749,6 @@ export class TradeComponent implements AfterViewChecked {
     this.showFailedNotification = false;
   }
 
-  // Добавьте метод закрытия для пендинга
   closePendingNotification(): void {
     this.showPendingNotification = false;
   }
@@ -769,16 +758,14 @@ export class TradeComponent implements AfterViewChecked {
   }
 
   /**
-   * Анимирует текст с "глитч-эффектом"
-   * @param element HTML элемент для анимации
-   * @param finalText Конечный текст
-   * @param elementId Уникальный идентификатор элемента
+   * Animates text
+   * @param element HTML element for animation
+   * @param finalText result
+   * @param elementId unique id of element
    */
   animateText(element: HTMLElement, finalText: string, elementId: string): void {
-    // Сохраняем оригинальный текст для гарантированного отображения в конце
     const originalText = finalText;
     
-    // Очищаем предыдущую анимацию, если она есть
     if (this.animationTimeouts[elementId]) {
       window.clearTimeout(this.animationTimeouts[elementId]);
       delete this.animationTimeouts[elementId];
@@ -787,14 +774,11 @@ export class TradeComponent implements AfterViewChecked {
     let frame = 0;
     const totalFrames = this.animationFrames;
     
-    // Создаем массив для отслеживания "глитч-эффекта" для каждой буквы
     const glitchStates = Array(finalText.length).fill(false);
-    // Массив для отслеживания "подобранных" букв
     const resolvedChars = Array(finalText.length).fill(false);
     
     const animate = () => {
       if (frame >= totalFrames) {
-        // Гарантируем, что в конце анимации отображается оригинальный текст
         element.textContent = originalText;
         delete this.animationTimeouts[elementId];
         return;
@@ -803,23 +787,16 @@ export class TradeComponent implements AfterViewChecked {
       let result = '';
       const progress = frame / totalFrames;
       
-      // Изменяем кривую прогресса для более медленного начала и быстрого завершения
-      // Используем кубическую функцию для более плавного эффекта
       const easedProgress = Math.pow(progress, 0.6);
       
-      // Определяем, сколько букв должно быть "подобрано" на текущем кадре
-      // Используем нелинейную функцию для более интересного визуального эффекта
       const resolvedCount = Math.floor(finalText.length * easedProgress);
       
-      // Обновляем состояние "подобранных" букв
       for (let i = 0; i < resolvedCount; i++) {
         if (!resolvedChars[i]) {
           resolvedChars[i] = true;
         }
       }
       
-      // Случайно выбираем несколько букв для глитча
-      // Уменьшаем частоту глитчей в начале и увеличиваем к концу
       if (frame % 2 === 0) {
         const glitchProbability = 0.05 + (progress * 0.1);
         for (let i = 0; i < finalText.length; i++) {
@@ -830,13 +807,9 @@ export class TradeComponent implements AfterViewChecked {
       }
       
       for (let i = 0; i < finalText.length; i++) {
-        // Если буква уже "подобрана"
         if (resolvedChars[i]) {
-          // Но может быть с глитчем
           if (glitchStates[i] && frame < totalFrames * 0.95 && finalText[i] !== ' ') {
-            // Применяем глитч-эффект к уже подобранной букве
             if (Math.random() < 0.3) {
-              // Используем кибер-символы для более футуристического вида
               const cyberIndex = Math.floor(Math.random() * this.cyberChars.length);
               result += this.cyberChars[cyberIndex];
             } else {
@@ -844,7 +817,6 @@ export class TradeComponent implements AfterViewChecked {
               result += this.glitchChars[glitchIndex];
             }
           } else {
-            // Если это последние 10% анимации, всегда показываем правильную букву
             if (progress > 0.9) {
               result += finalText[i];
             } else {
@@ -852,13 +824,9 @@ export class TradeComponent implements AfterViewChecked {
             }
           }
         } else {
-          // Буква еще не "подобрана"
           if (finalText[i] === ' ') {
-            // Пробелы оставляем как есть для лучшей читаемости
             result += ' ';
           } else {
-            // Для букв выбираем случайный символ
-            // С вероятностью используем символы глитча или кибер-символы
             const rand = Math.random();
             if (rand < 0.2) {
               const glitchIndex = Math.floor(Math.random() * this.glitchChars.length);
@@ -877,14 +845,13 @@ export class TradeComponent implements AfterViewChecked {
       element.textContent = result;
       frame++;
       
-      // Динамически регулируем скорость анимации - быстрее в начале, медленнее в середине, быстрее к концу
       let currentSpeed = this.animationSpeed;
       if (progress < 0.3) {
-        currentSpeed = this.animationSpeed * 0.8; // Быстрее в начале
+        currentSpeed = this.animationSpeed * 0.8;
       } else if (progress > 0.7) {
-        currentSpeed = this.animationSpeed * 0.7; // Быстрее к концу
+        currentSpeed = this.animationSpeed * 0.7;
       } else {
-        currentSpeed = this.animationSpeed * 1.2; // Медленнее в середине
+        currentSpeed = this.animationSpeed * 1.2;
       }
       
       this.animationTimeouts[elementId] = window.setTimeout(animate, currentSpeed);
@@ -893,7 +860,6 @@ export class TradeComponent implements AfterViewChecked {
     animate();
   }
 
-  // Метод для проверки и запуска анимации текста
   private checkAndAnimateBuyText() {
     if (this.buyAmountTextElement && 
         !this.buyAmountTextAnimated && 
@@ -910,7 +876,6 @@ export class TradeComponent implements AfterViewChecked {
     this.checkAndAnimateBuyText();
   }
 
-  // Обновленный метод с более подходящими порогами
   adjustFontSize(inputElement: HTMLInputElement): void {
     const textLength = inputElement.value.length;
     const width = window.innerWidth;
@@ -981,7 +946,7 @@ export class TradeComponent implements AfterViewChecked {
         this.inputFontSize.set(36);
       }
     } else {
-      // По умолчанию
+      // default
       if (textLength > 15) {
         this.inputFontSize.set(24);
       } else if (textLength > 12) {
@@ -996,7 +961,6 @@ export class TradeComponent implements AfterViewChecked {
     }
   }
 
-  // Также обновите метод resetFontSize
   resetFontSize(): void {
     this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
   }
@@ -1015,7 +979,7 @@ export class TradeComponent implements AfterViewChecked {
     } else if (width >= 360 && width <= 479) {
       return 36; // 360-479px
     } else {
-      return 48; // По умолчанию
+      return 48; // default
     }
   }
 }

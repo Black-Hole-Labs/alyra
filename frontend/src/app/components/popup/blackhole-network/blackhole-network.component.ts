@@ -28,7 +28,6 @@ export class BlackholeNetworkComponent {
   ) {}
 
   ngOnInit(): void {
-    // Устанавливаем начальные иконки сети
     const currentNetwork = this.networks()[0];
     if (currentNetwork) {
       this.updateNetworkBackgroundIcons(currentNetwork);
@@ -44,7 +43,6 @@ export class BlackholeNetworkComponent {
 
     if(!this.blockchainStateService.connected()){
       this.blockchainStateService.updateNetwork(networkId);
-      // Закрываем попап при успешном обновлении сети, даже если пользователь не подключен
       this.popupService.closePopup('networkPopup');
       this.close.emit();
       return;
@@ -69,7 +67,6 @@ export class BlackholeNetworkComponent {
       this.blockchainStateService.updateNetwork(networkId);
       console.log(`Switched to network: ${selectedNetwork.name}`);
       
-      // Закрываем попап после успешного выбора сети через PopupService
       this.popupService.closePopup('networkPopup');
       this.close.emit();
     } catch (error) {
