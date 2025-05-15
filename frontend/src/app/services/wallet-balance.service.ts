@@ -66,13 +66,13 @@ export class WalletBalanceService {
         return "0";
       }
     
-      const currentNetwork = this.blockchainStateService.getCurrentNetwork();
-      if (!currentNetwork) {
-        console.error('Current network not found');
+      const network = this.blockchainStateService.allNetworks().find(n => n.id === token.chainId);
+      if (!network) {
+        console.error('Network not found: ', token.chainId);
         return "0";
       }
-    
-      if (currentNetwork.id === NetworkId.SOLANA_MAINNET) { // SVM
+
+      if (token.chainId === NetworkId.SOLANA_MAINNET) { // SVM
         if (token.symbol === "SOL") {
           return this.getSolanaBalance(walletAddress);
         } else {
@@ -80,10 +80,9 @@ export class WalletBalanceService {
         }
       } else { // EVM
         if (token.symbol === "ETH") {
-          const balance = await this.getEvmBalance(walletAddress, currentNetwork.rpcUrls[0], Number(token.decimals));
-          return balance;
+          return await this.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals));
         } else {
-          return await this.getEvmBalance(walletAddress, currentNetwork.rpcUrls[0], Number(token.decimals), token.contractAddress);
+          return await this.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals), token.contractAddress);
         }
       }
     }

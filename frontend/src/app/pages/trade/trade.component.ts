@@ -18,6 +18,7 @@ export interface Token {
   symbol: string;
   imageUrl: string;
   contractAddress: string;
+  chainId: number;
   decimals: string;
 }
 

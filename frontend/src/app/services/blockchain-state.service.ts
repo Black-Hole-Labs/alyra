@@ -116,6 +116,7 @@ export class BlockchainStateService {
               symbol: token.symbol,
               name: token.name,
               contractAddress: token.address,
+              chainId: token.chainId,
               imageUrl: token.logoURI,
               decimals: token.decimals
             }))
@@ -151,6 +152,7 @@ export class BlockchainStateService {
               symbol: token.symbol,
               name: token.name,
               contractAddress: token.address,
+              chainId: token.chainId,
               imageUrl: token.logoURI,
               decimals: token.decimals
             }))
@@ -180,6 +182,7 @@ export class BlockchainStateService {
                 symbol: token.symbol,
                 name: token.name,
                 contractAddress: token.address,
+                chainId: token.chainId,
                 imageUrl: token.logoURI,
                 decimals: token.decimals
             }));
