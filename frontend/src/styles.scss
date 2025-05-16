@@ -55,6 +55,28 @@ html::after {
   animation-delay: 0s;
 }
 
+html.intro-page::before,
+html.intro-page::after {
+  display: none;
+}
+
+html.intro-page::after {
+  display: block;
+  content: '';
+  position: fixed;
+  top: -250px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110%;
+  height: 110%;
+  background: url(/img/intro/bg.png);
+  background-size: cover;
+  z-index: -1;
+  filter: blur(50px);
+  animation: floatBg 40s linear infinite;
+  opacity: 1;
+}
+
 @keyframes moveGradient {
   0% { transform: translate(0, 0) rotate(0deg) scale(1); }
   25% { transform: translate(10%, 15%) rotate(90deg) scale(0.9); }
@@ -552,4 +574,22 @@ app-settings-bridge {
   .popup-closing app-token-change-buy .token-change {
     animation: popupFadeOutMobile 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
+}
+
+@keyframes floatBg {
+	0% {
+		transform: translateX(-50%) scale(1);
+	}
+	25% {
+		transform: translateX(-48%) scale(1.02);
+	}
+	50% {
+		transform: translateX(-50%) scale(1);
+	}
+	75% {
+		transform: translateX(-52%) scale(0.98);
+	}
+	100% {
+		transform: translateX(-50%) scale(1);
+	}
 }
