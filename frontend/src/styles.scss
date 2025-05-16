@@ -1,0 +1,555 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Text:wght@100..900&display=swap');
+
+:root {
+  --elem-nonactive: #5D5D5D;
+	--dark-violet: #39174F;
+	--violet: #BF57FF;
+	--dark-pink: 255, 0, 221;
+	--pink: #FF00DD;
+	--btn-dark: #2F2F2F;
+	--dark-select: #1B1B1B;
+	--red: #FF7E7E;
+	--dark-red: 54, 24, 24;
+	--dark-red-hover: #723A3A;
+	--green: #5EC46C;
+	--dark-green: 26, 36, 23;
+	--yellow: #FFBB00;
+	--dark-yellow: #4A3703;
+  --dark-bg: 47, 47, 47;
+	--white: 255, 255, 255;
+}
+
+html {
+  background-color: black;
+}
+
+html::before,
+html::after {
+  content: '';
+  position: fixed;
+  width: 60vmax;
+  height: 60vmax;
+  border-radius: 50%;
+  opacity: 0.15;
+  filter: blur(60px);
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+html::before {
+  background-image: var(--current-network-icon-1);
+  top: -20%;
+  left: -20%;
+  animation: moveGradient 35s linear infinite;
+  animation-delay: -5s;
+}
+
+html::after {
+  background-image: var(--current-network-icon-2);
+  bottom: -20%;
+  right: -20%;
+  animation: moveGradient 30s linear infinite;
+  animation-delay: 0s;
+}
+
+@keyframes moveGradient {
+  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  25% { transform: translate(10%, 15%) rotate(90deg) scale(0.9); }
+  50% { transform: translate(-5%, -10%) rotate(180deg) scale(1.1); }
+  75% { transform: translate(-15%, 5%) rotate(270deg) scale(0.9); }
+  100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+}
+
+@keyframes colorChange {
+  0% { filter: blur(60px) hue-rotate(0deg); }
+  50% { filter: blur(60px) hue-rotate(180deg); }
+  100% { filter: blur(60px) hue-rotate(360deg); }
+}
+
+@keyframes popupFadeIn {
+  from { 
+    opacity: 0; 
+    transform: translate(-50%, -20px) scale(0.95);
+  }
+  to { 
+    opacity: 1; 
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes popupFadeOut {
+  from { 
+    opacity: 1; 
+    transform: translate(-50%, 0) scale(1);
+  }
+  to { 
+    opacity: 0; 
+    transform: translate(-50%, -20px) scale(0.95);
+  }
+}
+
+@keyframes popupFadeInSide {
+  from { 
+    opacity: 0; 
+    transform: translateY(-20px) scale(0.95);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes popupFadeOutSide {
+  from { 
+    opacity: 1; 
+    transform: translateY(0) scale(1);
+  }
+  to { 
+    opacity: 0; 
+    transform: translateY(-20px) scale(0.95);
+  }
+}
+
+@keyframes popupFadeInCenter {
+  from { 
+    opacity: 0; 
+    transform: translate(-50%, -20px) scale(0.95);
+  }
+  to { 
+    opacity: 1; 
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes popupFadeOutCenter {
+  from { 
+    opacity: 1; 
+    transform: translate(-50%, 0) scale(1);
+  }
+  to { 
+    opacity: 0; 
+    transform: translate(-50%, -20px) scale(0.95);
+  }
+}
+
+@keyframes popupFadeInMobile {
+  from { 
+    opacity: 0; 
+    transform: translate(-50%, -20px) scale(0.95);
+  }
+  to { 
+    opacity: 1; 
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes popupFadeOutMobile {
+  from { 
+    opacity: 1; 
+    transform: translate(-50%, 0) scale(1);
+  }
+  to { 
+    opacity: 0; 
+    transform: translate(-50%, -20px) scale(0.95);
+  }
+}
+
+@keyframes popupFadeInMobileSide {
+  from { 
+    opacity: 0; 
+    transform: translate(-50%, -20px) scale(0.95);
+  }
+  to { 
+    opacity: 1; 
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes popupFadeOutMobileSide {
+  from { 
+    opacity: 1; 
+    transform: translate(-50%, 0) scale(1);
+  }
+  to { 
+    opacity: 0; 
+    transform: translate(-50%, -20px) scale(0.95);
+  }
+}
+
+.popup-common-list,
+.popup-menu,
+.connect-wallet,
+.settings-popup,
+.settings-bridge-popup,
+.wallet-popup,
+.network-popup,
+.blackhole-menu,
+.token-change,
+.network-change-from,
+.network-change-to,
+.bridge-tx,
+app-token-change .token-change,
+app-token-change-buy .token-change,
+.ecosystem-change {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.popup-opening .popup-common-list,
+.popup-opening .popup-menu,
+.popup-opening .connect-wallet,
+.popup-opening .settings-popup,
+.popup-opening .settings-bridge-popup,
+.popup-opening .wallet-popup,
+.popup-opening .network-popup,
+.popup-opening .blackhole-menu,
+.popup-opening app-token-change .token-change,
+.popup-opening app-token-change-buy .token-change,
+.popup-opening .popup-network,
+.popup-opening .ecosystem-change,
+.popup-opening .settings-popup,
+.popup-opening .settings-bridge-popup {
+  animation: popupFadeInSide 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.popup-closing .popup-common-list,
+.popup-closing .popup-menu,
+.popup-closing .connect-wallet,
+.popup-closing .settings-popup,
+.popup-closing .settings-bridge-popup,
+.popup-closing .wallet-popup,
+.popup-closing .network-popup,
+.popup-closing .blackhole-menu,
+.popup-closing app-token-change .token-change,
+.popup-closing app-token-change-buy .token-change,
+.popup-closing .popup-network,
+.popup-closing .ecosystem-change,
+.popup-closing .settings-popup,
+.popup-closing .settings-bridge-popup {
+  animation: popupFadeOutSide 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.popup-opening .bridge-tx,
+.popup-opening .network-change-from,
+.popup-opening .network-change-to,
+.popup-opening .token-change,
+.popup-opening app-token-change .token-change,
+.popup-opening app-token-change-buy .token-change {
+  animation: popupFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.popup-closing .bridge-tx,
+.popup-closing .network-change-from,
+.popup-closing .network-change-to,
+.popup-closing .token-change,
+.popup-closing app-token-change .token-change,
+.popup-closing app-token-change-buy .token-change {
+  animation: popupFadeOut 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+app-settings,
+app-settings-bridge {
+  position: absolute;
+  top: -35px;
+  left: 140px;
+}
+
+.wallet-popup,
+.connect-wallet {
+	position: fixed;
+  top: 155px;
+  right: 40px;
+}
+
+.blackhole-menu {
+	position: fixed;
+  top: 155px;
+  left: 40px;
+}
+
+.popup-network {
+	position: fixed;
+  top: 155px;
+  right: 130px;
+}
+
+.bridge-tx,
+.network-change-from,
+.network-change-to,
+.token-change {
+	position: fixed;
+  top: 156px;
+  left: 50%;
+  transform: translate(-50%, 0%);
+}
+
+.ecosystem-change {
+  position: fixed;
+  top: 155px;
+  right: 40px;
+}
+
+@media screen and (min-width: 1601px) and (max-width: 1920px) {
+
+	app-settings-bridge,
+	app-settings {
+		top: -23px;
+		left: 100px;
+	}
+
+	.wallet-popup,
+	.connect-wallet {
+		top: 108px;
+		right: 30px;
+	}
+
+	.blackhole-menu {
+		top: 108px;
+		left: 30px;
+	}
+
+	.popup-network {
+		top: 108px;
+		right: 55px;
+	}
+
+	.bridge-tx,
+	.network-change-from,
+	.network-change-to,
+	.token-change {
+		top: 108px;
+	}
+
+	.ecosystem-change {
+		top: 108px;
+		right: 30px;
+	}
+}
+@media screen and (min-width: 1171px) and (max-width: 1600px) {
+
+	app-settings-bridge,
+	app-settings {
+		top: -23px;
+		left: 100px;
+	}
+
+	.wallet-popup,
+	.connect-wallet {
+		top: 88px;
+		right: 20px;
+	}
+
+	.blackhole-menu {
+		top: 88px;
+		left: 20px;
+	}
+
+	.popup-network {
+		top: 88px;
+		right: 55px;
+	}
+
+	.bridge-tx,
+	.network-change-from,
+	.network-change-to,
+	.token-change {
+		top: 88px;
+	}
+
+	.ecosystem-change {
+		top: 88px;
+		right: 20px;
+	}
+}
+@media screen and (min-width: 971px) and (max-width: 1170px) {
+
+	app-settings-bridge,
+	app-settings {
+		top: -16px;
+		left: 75px;
+	}
+
+	.wallet-popup,
+	.connect-wallet {
+		top: 75px;
+		right: 20px;
+	}
+
+	.blackhole-menu {
+		top: 75px;
+		left: 20px;
+	}
+
+	.popup-network {
+		top: 75px;
+		right: 36px;
+	}
+
+	.bridge-tx,
+	.network-change-from,
+	.network-change-to,
+	.token-change {
+		top: 75px;
+	}
+
+	.ecosystem-change {
+		top: 75px;
+		right: 20px;
+	}
+}
+@media screen and (min-width: 768px) and (max-width: 970px) {
+  app-settings {
+    top: -23px;
+		left: -200px;
+		z-index: 1;
+	}
+  app-settings-bridge {
+    top: -23px;
+		left: -190px;
+		z-index: 1;
+	}
+
+	.wallet-popup,
+	.connect-wallet {
+		top: 88px;
+		right: 20px;
+	}
+
+	.blackhole-menu {
+		top: 88px;
+		left: 20px;
+	}
+
+	.popup-network {
+		top: 88px;
+		right: 55px;
+	}
+
+	.bridge-tx,
+	.network-change-from,
+	.network-change-to,
+	.token-change {
+		top: 88px;
+	}
+
+	.ecosystem-change {
+		top: 88px;
+		right: 20px;
+	}
+}
+@media screen and (min-width: 480px) and (max-width: 767px) {
+  app-settings {
+    top: -23px;
+    left: -55px;
+    z-index: 1;
+  }
+  app-settings-bridge {
+    top: -23px;
+    left: -65px;
+    z-index: 1;
+  }
+
+	.wallet-popup,
+	.connect-wallet {
+		top: 138px;
+		right: 20px;
+	}
+
+	.blackhole-menu {
+		top: 138px;
+		left: 20px;
+	}
+
+	.popup-network {
+		top: 138px;
+		right: 55px;
+	}
+
+	.bridge-tx,
+	.network-change-from,
+	.network-change-to,
+	.token-change {
+		top: 138px;
+	}
+
+	.ecosystem-change {
+		top: 138px;
+		right: 20px;
+	}
+}
+
+@media screen and (min-width: 360px) and (max-width: 479px) {
+  app-settings-bridge,
+  app-settings {
+    position: fixed;
+    top: 0px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: max-content;
+    z-index: 100;
+  }
+
+  .wallet-popup,
+  .connect-wallet,
+  .popup-network,
+  .blackhole-menu,
+  .bridge-tx,
+  .network-change-from,
+  .network-change-to,
+  .token-change,
+  .ecosystem-change {
+    position: fixed;
+    top: 108px;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    z-index: 1;
+  }
+  
+  /* Для попапов, которые обычно используют popupFadeInSide */
+  .popup-opening .connect-wallet,
+  .popup-opening .wallet-popup,
+  .popup-opening .popup-network,
+  .popup-opening .blackhole-menu,
+  .popup-opening app-settings,
+  .popup-opening app-settings-bridge,
+  .popup-opening .ecosystem-change,
+  .popup-opening .popup-common-list,
+  .popup-opening .popup-menu {
+    animation: popupFadeInMobileSide 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  
+  .popup-closing .connect-wallet,
+  .popup-closing .wallet-popup,
+  .popup-closing .popup-network,
+  .popup-closing .blackhole-menu,
+  .popup-closing app-settings,
+  .popup-closing app-settings-bridge,
+  .popup-closing .ecosystem-change,
+  .popup-closing .popup-common-list,
+  .popup-closing .popup-menu {
+    animation: popupFadeOutMobileSide 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  
+  /* Для попапов, которые обычно используют popupFadeIn */
+  .popup-opening .bridge-tx,
+  .popup-opening .network-change-from,
+  .popup-opening .network-change-to,
+  .popup-opening .token-change,
+  .popup-opening app-token-change .token-change,
+  .popup-opening app-token-change-buy .token-change {
+    animation: popupFadeInMobile 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  
+  .popup-closing .bridge-tx,
+  .popup-closing .network-change-from,
+  .popup-closing .network-change-to,
+  .popup-closing .token-change,
+  .popup-closing app-token-change .token-change,
+  .popup-closing app-token-change-buy .token-change {
+    animation: popupFadeOutMobile 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}

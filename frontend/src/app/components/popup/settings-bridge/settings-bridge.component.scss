@@ -1,0 +1,176 @@
+.settings-bridge-popup {
+  width: 380px;
+  height: 280px;
+  background-color: rgba(var(--dark-bg), 0.3);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 28px;
+  box-sizing: border-box;
+  padding: 30px;
+	z-index: 10;
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.settings-header h3 {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 21px;
+  color: white;
+}
+
+.close-button {
+  height: 19px;
+  width: 19px;
+  background: url(/img/settings/close.png);
+  opacity: 0.3;
+  background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.close-button:hover {
+  opacity: 1;
+}
+
+.settings-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.limit {
+  margin-top: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.limit-image {
+  height: 19px;
+  width: 19px;
+  background: url(/img/settings/slippage.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.limit > p {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 18px;
+  color: white;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.buttons > button {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 14px;
+  color: white;
+  padding: 6px 20px;
+  border: 1px solid var(--elem-nonactive);
+  border-radius: 16px;
+	box-sizing: border-box;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.buttons > button:hover {
+  background-color: var(--elem-nonactive);
+  color: white;
+}
+
+.buttons > button.selected {
+  background-color: white;
+  color: black;
+  border-color: white;
+}
+
+.custom {
+  position: relative;
+  width: 75px;
+  height: 35px;
+  border: 1px solid var(--elem-nonactive);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom input {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 14px;
+  color: white;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  width: 50px;
+  text-align: center;
+  z-index: 1;
+}
+
+.custom input::placeholder {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--elem-nonactive);
+}
+
+.custom span {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 14px;
+  color: white;
+}
+
+.custom span.percent {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.custom.selected {
+  border-color: white;
+  background-color: white;
+}
+
+.custom.selected input {
+  color: black;
+  background-color: transparent;
+}
+
+.custom.selected span.percent {
+  color: black;
+}
+
+.main {
+  width: 320px;
+  height: 50px;
+  margin-top: 30px;
+  background-color: white;
+  border-radius: 16px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 18px;
+  color: black;
+  transition: 0.2s;
+}
+
+.main:hover {
+  background-color: var(--elem-nonactive);
+  color: black;
+  cursor: pointer;
+}

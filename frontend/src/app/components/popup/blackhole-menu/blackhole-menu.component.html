@@ -1,0 +1,61 @@
+<div class="popup-container blackhole-menu">
+	<div class="upper">
+		<h6>Menu</h6>
+		<button (click)="closePopup()"></button>
+	</div>
+
+	<div class="devider">
+		<p>Overview</p>
+		<hr class="hr1"/>
+	</div>
+
+	<div class="overview">
+		<a routerLink="/trade" (click)="closePopup()">
+			<div class="social-img trade"></div>
+			Trade
+		</a>
+		<a routerLink="/bridge" (click)="closePopup()">
+			<div class="social-img bridge"></div>
+			Bridge
+		</a>
+		<!-- <a routerLink="/fun" (click)="closePopup()">
+			<div class="social-img fun"></div>
+			Fun
+		</a>
+		<a routerLink="/launchpad" (click)="closePopup()">
+			<div class="social-img launchpad"></div>
+			Launchpad
+		</a> -->
+		<a routerLink="/quests" (click)="closePopup()">
+			<div class="social-img quests"></div>
+			Rewards
+		</a>
+	</div>
+	
+	<div class="devider devider2">
+		<p>Social</p>
+	<hr class="hr2">
+	</div>
+
+	<div class="socials">
+		<a href="https://x.com/blackhole_labs" target="_blank" (click)="closePopup()">
+			<div class="social-img twitter"></div>
+			Twitter
+		</a>
+		<a href="https://blackholelabs.gitbook.io/blackholelabs" target="_blank" (click)="closePopup()">
+			<div class="social-img documentation"></div>
+			Documentation
+		</a>
+	</div>
+
+
+	<div class="devider devider2">
+		<p>Need help?</p>
+		<hr class="hr3">
+	</div>
+
+	<a href="https://t.me/blackhole_support" target="_blank" (click)="closePopup()">
+		<div class="social-img contact"></div>
+		Contact us
+	</a>
+</div>

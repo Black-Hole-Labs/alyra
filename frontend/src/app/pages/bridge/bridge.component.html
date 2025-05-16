@@ -1,0 +1,246 @@
+<div class="bridge">
+  <div class="bridge-window" 
+        [class.has-custom-address]="showCustomAddress"
+        [class.has-receive]="isBridgeButtonActive()">
+    <div class="header">
+			<div class="title">
+				<div class="icon-bridge"></div>
+        <h3>Bridge</h3>
+			</div>
+			<div class="icons">
+				<div class="custom-wallet-button" 					
+					[class.active]="showCustomAddress"
+					[class.hidden]="!isWalletConnected()"
+					(click)="toggleCustomAddress()">
+				</div>
+				<div class="settings" 
+					[class.active]="showSettingsBridgePopup"
+					(click)="toggleSettingsBridgePopup()">
+				</div>
+
+				<app-settings-bridge
+					*ngIf="showSettingsBridgePopup"
+					class="settings-bridge-popup"
+					(close)="popupService.closePopup('settingsBridge')"
+					(save)="onSlippageSave($event)">
+				</app-settings-bridge>
+				
+			</div>
+			
+    </div>
+
+		<div class="main" [ngClass]="{'has-custom-address': showCustomAddress}">
+			<div class="send">
+				<h4>Send</h4>
+				<div class="choose">
+					<div class="token" (click)="popupService.openPopup('tokenChange')">
+						<div class="token-icon" 
+							 *ngIf="selectedToken()?.imageUrl" 
+                [style.backgroundImage]="'url(' + selectedToken()?.imageUrl + ')'">
+						</div>
+						<p>{{ selectedToken()?.symbol || 'Select Token' }}</p>
+					</div>
+					<div class="bridge-amount">
+						<input
+							type="text"
+							id="number-input"
+							placeholder="Enter amount"
+							[(ngModel)]="sellAmountForInput"
+							(input)="processInput($event, true)"
+							(keydown)="handleKeyDown($event)"
+						/>
+						<div class="balance-container">
+							<h6 class="max-button" 
+                 (click)="setMaxSellAmount()" 
+                 *ngIf="isWalletConnected()"
+                 [attr.data-balance]="truncateTo6Decimals(balance())">MAX</h6>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="from">
+				<h4>From</h4>
+				<div class="choose-network popup-toggle" (click)="openNetworkChangeFromPopup(); $event.stopPropagation()">
+					<div class="network-from">
+						<div class="network-icon" [style.backgroundImage]="'url(' + selectedNetwork()?.logoURI + ')'"></div>
+						<p>{{ selectedNetwork()?.name }}</p>
+					</div>
+					<button></button>
+				</div>
+			</div>
+
+			<div class="changer">
+
+				<hr>
+
+				<div class="change-button" id="change-button" 
+					(click)="swapNetworks()">
+					<div class="arrow-up"></div>
+					<div class="arrow-down"></div>
+				</div>
+
+				<hr>
+
+			</div>
+
+			<div class="receive-token">
+				<h4>Receive</h4>
+				<div class="choose">
+					<div class="token" (click)="popupService.openPopup('tokenChangeBuy')">
+						<div class="token-icon" 
+							 *ngIf="selectedBuyToken()?.imageUrl" 
+							[style.backgroundImage]="'url(' + selectedBuyToken()?.imageUrl + ')'">
+						</div>
+						<p>{{ selectedBuyToken()?.symbol || 'Select Token' }}</p>
+					</div>
+					<div class="bridge-amount">
+						@if(selectedBuyToken() && validatedSellAmount() > 0 && buyAmountForInput()){								
+							<p  #receiveText class="receive-amount">{{ buyAmountForInput() }}</p>
+						}
+						@else {
+							<p class="receive-amount placeholder">0.0</p>
+						}
+						<!-- <input
+              type="text"
+              id="number-input"
+              placeholder="0.0"
+              [(ngModel)]="buyAmountForInput"
+              [disabled]=true
+            /> -->
+					</div>
+				</div>
+			</div>
+
+			<div class="to">
+				<h4>To</h4>
+				<div class="choose-network popup-toggle" (click)="openNetworkChangeToPopup(); $event.stopPropagation()">
+					<div class="network-to">
+						<div class="network-icon" 
+							 *ngIf="selectedBuyNetwork()" 
+              [style.backgroundImage]="'url(' + selectedBuyNetwork()?.logoURI + ')'">
+						</div>
+						<p>{{ selectedBuyNetwork()?.name || 'Select Network' }}</p>
+					</div>
+					<button></button>
+				</div>
+			</div>
+
+			<div class="custom-address" 
+				 *ngIf="showCustomAddress"
+				@receiveAnimation>
+				<input 
+					type="text" 
+					placeholder="Enter custom address"
+					[(ngModel)]="customAddress"
+					(input)="validateAddress($event)">
+				<div 
+					class="address-status" 
+					*ngIf="customAddress"
+					[ngClass]="{
+						'status-good': addressStatus === 'good',
+						'status-bad': addressStatus === 'bad'
+					}">
+				</div>
+			</div>
+			
+			<!-- <div class="receive"
+				 *ngIf="isBridgeButtonActive()"
+				@receiveAnimation>
+				<h4>Receive</h4>
+				<div class="choose-network" [ngClass]="{'active': isNetworkChosen}">
+					<div class="receive-network">
+						<p *ngIf="selectedBuyToken()" #receiveText></p>
+					</div>
+				</div>
+			</div>
+		</div> -->
+
+      <button 
+				class="main-button" 
+				*ngIf="isWalletConnected(); else connectWallet"
+				[class.inactive]="!isBridgeButtonActive()"
+				[class.finding]="buttonState === 'finding'"
+				[class.approve]="buttonState === 'approve'"
+				[class.wallet]="buttonState === 'wallet'"
+				[class.wrong-address]="buttonState === 'wrong-address'"
+				[class.no-available-quotes]="buttonState === 'no-available-quotes'"
+				[class.insufficient]="buttonState === 'insufficient'"
+				[disabled]="!isBridgeButtonActive() || buttonState === 'wallet' || buttonState === 'finding' || buttonState === 'wrong-address' || buttonState === 'no-available-quotes'"
+				(click)="isBridgeButtonActive() && bridge()">
+				<ng-container *ngIf="buttonState === 'finding'">Finding Routes...</ng-container>
+				<ng-container *ngIf="buttonState === 'approve'">Approve</ng-container>
+				<ng-container *ngIf="buttonState === 'wallet'">Continue in your wallet...</ng-container>
+				<ng-container *ngIf="buttonState === 'wrong-address'">Wrong address</ng-container>
+				<ng-container *ngIf="buttonState === 'bridge'">Bridge</ng-container>
+				<ng-container *ngIf="buttonState === 'insufficient'">Insufficient balance</ng-container>
+				<ng-container *ngIf="buttonState === 'no-available-quotes'">No available routes</ng-container>
+      </button>
+
+			<div class="gas-container" *ngIf="isBridgeButtonActive()" [@receiveAnimation]>
+				<div class="gas">
+					<div class="gas-img"></div>
+					<p class="gas-text">${{ gasPriceUSD | number:'1.3-3' }}</p>
+				</div>
+			</div>
+  </div>
+</div>
+
+<ng-template #connectWallet>
+  <button 
+    class="main-button"
+    (click)="openConnectWalletPopup()">
+    Connect Wallet
+  </button>
+</ng-template>
+
+<app-token-change
+	[mode]="'sell'"
+	*ngIf="popupService.getCurrentPopup() === 'tokenChange'"
+	[networkTokens]="getTokensForNetwork()"
+	(close)="popupService.closePopup('tokenChange')"
+	(tokenSelected)="onTokenSelected($event)">
+</app-token-change>
+
+<app-token-change
+	[mode]="'buy'"
+	*ngIf="popupService.getCurrentPopup() === 'tokenChangeBuy'"
+	[networkTokens]="getTokensForNetworkBuy()"
+	(close)="popupService.closePopup('tokenChangeBuy')"
+	(tokenSelected)="onTokenBuySelected($event)">
+</app-token-change>
+
+<app-network-change-from
+	*ngIf="popupService.getCurrentPopup() === 'networkChangeFrom'"
+	[networks]="availableFromNetworks()"
+	(close)="popupService.closePopup('networkChangeFrom')"
+	(networkSelected)="onNetworkSelected($event)">
+</app-network-change-from>
+
+<app-network-change-to
+	*ngIf="popupService.getCurrentPopup() === 'networkChangeTo'"
+	[networks]="availableToNetworks()"
+	(close)="popupService.closePopup('networkChangeTo')"
+	(networkSelected)="onNetworkToSelected($event)">
+</app-network-change-to>
+
+<!-- <app-bridge-tx
+	[selectedNetwork]="{id: 1, name: 'Ethereum', logoURI: '/img/trade/bnb.png', rpcUrls: 'https://ethereum.rpc.com', chainType: 'EVM', explorerUrl: 'https://etherscan.io'}"
+	[selectedNetworkTo]="{id: 56, name: 'Binance', logoURI: '/img/trade/arbitrum.png', rpcUrls: 'https://binance.rpc.com', chainType: 'EVM', explorerUrl: 'https://bscscan.com'}"
+	[selectedToken]="{symbol: 'ETH', imageUrl: '/img/trade/shib.png', contractAddress: '0x0000000000000000000000000000000000000000', decimals: '18'}"
+	[selectedReceiveToken]="{symbol: 'BNB', imageUrl: '/img/trade/usdc.png', contractAddress: '0x0000000000000000000000000000000000000000', decimals: '18'}"
+	[inputAmount]="0.0001"
+	[txHash]="''"
+	[customAddress]="''"
+	(close)="closeBridgeTxPopup()">
+</app-bridge-tx> -->
+<app-bridge-tx
+	*ngIf="popupService.getCurrentPopup() === 'bridgeTx'"
+	[selectedNetwork]="selectedNetwork()"
+	[selectedNetworkTo]="selectedBuyNetwork()"
+	[selectedToken]="selectedToken()"
+	[selectedReceiveToken]="selectedBuyToken()"
+	[inputAmount]="validatedSellAmount()"
+	[txHash]="bridgeTxHash"
+	[customAddress]="showCustomAddress ? customAddress() : ''"
+	(close)="closeBridgeTxPopup()">
+</app-bridge-tx>

@@ -1,0 +1,11 @@
+<div class="notification" [@slideInOut] *ngIf="isVisible">
+  <div class="content">
+    <div class="info">
+      <h3>{{ message ? 'Error' : 'Swap failed!' }}</h3>
+      <p>
+        {{ message ? message : (sellAmount + ' ' + (selectedToken?.symbol || '') + ' to ' + buyAmount + ' ' + (selectedBuyToken?.symbol || '')) }}
+      </p>
+    </div>
+  </div>
+  <div class="failed-icon"></div>
+</div>

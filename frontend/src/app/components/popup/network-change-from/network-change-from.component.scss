@@ -1,0 +1,148 @@
+.network-change-from {
+  width: 600px;
+  height: 786px;
+  background-color: rgba(var(--dark-bg), 0.6);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 28px;
+  box-sizing: border-box;
+  padding: 30px;
+	overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+h3 {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 28px;
+  color: white;
+}
+
+button {
+  height: 30px;
+  width: 30px;
+  background: url(/img/trade/close-icon30px.png);
+  opacity: 0.3;
+  background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+button:hover {
+  opacity: 1;
+}
+
+.search {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  width: 540px;
+  height: 60px;
+  background-color: var(--dark-select);
+  border-radius: 18px;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+input {
+  width: 476px;
+  height: 24px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 18px;
+  color: white;
+  background-color: var(--dark-select);
+  outline: none;
+  border: none;
+}
+
+input::placeholder {
+  color: var(--elem-nonactive);
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.search-button {
+  height: 24px;
+  width: 24px;
+  background: url(/img/trade/search-button.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.list {
+	position: absolute;
+	top: 197px;
+	left: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 567px;
+  height: 100%;
+  border-radius: 12px;
+}
+
+.inner-list {
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+	padding-bottom: 35%;
+}
+
+.inner-list::-webkit-scrollbar {
+  display: none;
+}
+
+.network {
+  width: 567px;
+  height: 84px;
+  background: rgba(var(--dark-bg), 0.01);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 17px;
+  transition: 0.2s ease-in-out;
+  box-sizing: border-box;
+  border-radius: 18px;
+  cursor: pointer;
+}
+
+.network:hover {
+  background: var(--dark-select);
+}
+
+.left {
+  display: flex;
+  align-items: center;
+}
+
+.image {
+  position: relative;
+  width: 49px;
+  height: 49px;
+  margin-right: 21px;
+}
+
+.network-image {
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 100%;
+}
+
+.name h6 {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  font-size: 20px;
+  color: white;
+}

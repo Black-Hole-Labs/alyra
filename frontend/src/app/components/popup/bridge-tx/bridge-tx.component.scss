@@ -1,0 +1,253 @@
+.network-icon {
+	border-radius: 100%;
+}
+.success {
+  background-color: var(--green) !important;
+}
+
+.failed {
+  background-color: var(--red) !important;
+}// todo color black on red back?//
+
+.stop-animation{
+	top:164px !important;
+	animation: none !important;
+}
+
+.pending-change{
+	color: #000000 !important;
+}
+
+.disabled-link {
+	text-decoration: none;
+	cursor: default;
+  }  
+
+.bridge-tx {
+	width: 681px;
+	height: auto;
+	background-color: rgba(var(--dark-bg), 0.6);
+	backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(5px);
+	border-radius: 28px;
+	box-sizing: border-box;
+	padding: 40px;
+	z-index: 9999;
+}
+
+.header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.heading {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 10px;
+}
+
+.icon-bridge {
+	background-image: url(/img/bridge/icon-bridge.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 24px;
+	width: 24px;
+}
+
+.heading h3 {
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 500;
+	font-size: 32px;
+	color: white;
+}
+
+.close-button {
+	height: 30px;
+	width: 30px;
+	background: url(/img/trade/close-icon30px.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+	opacity: 0.3;
+	cursor: pointer;
+	transition: 0.2s ease-in-out;
+}
+
+.close-button:hover {
+	opacity: 1;
+}
+
+.tx-visualization {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 80px;
+}
+
+.left-network,
+.right-network {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.network-icon-left,
+.network-icon-right {
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 105px;
+	width: 105px;
+}
+
+.left-network h4,
+.right-network h4 {
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 500;
+	font-size: 22px;
+	color: white;
+	margin-top: 22px;
+}
+
+.explorer-link {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-top: 8px;
+}
+
+.explorer-link button {
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 500;
+	font-size: 18px;
+	color: var(--elem-nonactive);
+	transition: 0.2s;
+}
+
+.explorer-link button:hover {
+	color: white;
+}
+
+.image-link {
+	background-image: url(/img/bridge/link.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 28px;
+	width: 9px;
+}
+
+.token-icon {
+	width: 34px;
+	height: 34px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	position: absolute;
+	left: 335px;
+	top: 270px;
+	transform-origin: 0 105px;
+	animation: moveToken 5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.line {
+	background-image: url(/img/bridge/bridge-line.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 53px;
+	width: 234px;
+	position: absolute;
+	left: 220px;
+	top: 180px;
+}
+
+.tx-info {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 25px;
+	margin-top: 57px;
+}
+
+.elem {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.elem h6 {
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 500;
+	font-size: 20px;
+	color: white;
+}
+
+.tx-status {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 108px;
+	height: 40px;
+	padding: 0px 8px;
+	background-color: var(--dark-yellow);
+	border-radius: 10px;
+}
+
+.tx-status p {
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 400;
+	font-size: 14px;
+	color: var(--yellow);
+}
+
+.elem>p {
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 300;
+	font-size: 20px;
+	color: white;
+}
+
+.view-tx-button {
+	width: 100%;
+	height: 72px;
+	background-color: rgba(var(--white), 1);
+	border-radius: 16px;
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 500;
+	font-size: 21px;
+	color: black;
+	cursor: pointer;
+	transition: 0.2s ease-in-out;
+	margin-top: 52px;
+}
+
+.view-tx-button:hover {
+	background-color: rgba(var(--white), 0.5);
+}
+
+@keyframes moveToken {
+	0% {
+		opacity: 1;
+		transform: rotate(-35deg) translateY(-105px);
+	}
+	
+	85% {
+		opacity: 1;
+		transform: rotate(28deg) translateY(-105px);
+	}
+	
+	90% {
+		opacity: 0;
+		transform: rotate(28deg) translateY(-105px);
+	}
+	
+	91% {
+		opacity: 0;
+		transform: rotate(-35deg) translateY(-105px);
+	}
+	
+	100% {
+		opacity: 1;
+		transform: rotate(-35deg) translateY(-105px);
+	}
+}

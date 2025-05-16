@@ -1,0 +1,75 @@
+.popup-network {
+	width: 277px;
+	height: 673px;
+	background-color: rgba(var(--dark-bg), 0.3);
+	backdrop-filter: blur(25px);
+	-webkit-backdrop-filter: blur(5px);
+	border-radius: 28px;
+	z-index: 1000;
+	padding: 25px 20px 0 20px;
+	box-sizing: border-box;
+}
+
+h6 {
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 500;
+	font-size: 21px;
+	color: white;
+	margin-left: 10px;
+}
+
+.network-container {
+	height: 598px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	overflow-y: auto;
+	overflow-x: hidden;
+	gap: 11px;
+	margin-top: 17px;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.network-container::-webkit-scrollbar {
+	display: none;
+}
+
+.network {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-height: 46px;
+	width: 100%;
+	background-color: transparent;
+	border-radius: 14px;
+	cursor: pointer;
+	padding-left: 10px;
+	box-sizing: border-box;
+	transition: 0.2s;
+}
+
+.network:hover {
+	background-color: var(--dark-select);
+}
+
+.network-icon {
+	width: 30px;
+	height: 30px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	border-radius: 100%;
+}
+
+p {
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 400;
+	font-size: 18px;
+	color: white;
+	pointer-events: none;
+}
+
+.last {
+	min-height: 13px;
+	width: 100%;
+}

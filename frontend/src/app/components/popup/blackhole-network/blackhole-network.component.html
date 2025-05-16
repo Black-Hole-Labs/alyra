@@ -1,0 +1,22 @@
+<div class="popup-network">
+
+	<h6>Choose Network</h6>
+  
+	<div class="network-container">
+  
+	  <div *ngFor="let network of networks()" class="network" (click)="selectNetwork(network.id)">
+		<div class="network-icon" [style.backgroundImage]="'url(' + network.logoURI"></div>
+		<p>{{ network.name }}</p>
+	  </div>
+  
+	  <div class="last"></div>
+  
+	</div>
+	
+  </div>
+
+<app-failed-notification
+*ngIf="showFailedNotification"
+[message]="errorMessage"
+(close)="showFailedNotification = false">
+</app-failed-notification>

@@ -1,0 +1,272 @@
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+	gap: 8px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+	gap: 80px;
+}
+
+.right {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+h3 {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 800;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
+a.logo {
+  width: 65px;
+  height: 65px;
+  background: url(/img/header/logo.png);
+  background-size: cover;
+  cursor: pointer;
+}
+
+img {
+  height: 65px;
+  width: 65px;
+}
+
+button {
+  cursor: pointer;
+}
+
+button.closed,
+button.network-closed {
+  background: url(/img/header/open-img.png);
+  width: 12px;
+  height: 7px;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+button.open,
+button.network-open {
+  background: url(/img/header/close-img.png);
+  width: 12px;
+  height: 7px;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 70px;
+}
+
+nav a {
+  font-size: 24px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  color: rgba(var(--white), 0.25);
+  transition: 0.2s ease-in-out;
+  position: relative;
+  overflow: visible;
+  display: inline-block;
+  letter-spacing: 0.5px;
+  padding: 5px 10px;
+  margin: -5px -10px;
+}
+
+nav a:hover {
+  color: rgba(var(--white), 1);
+}
+
+nav a.active-link {
+  color: rgba(var(--white), 1);
+}
+
+@keyframes menu-item-flash {
+  0% { color: rgba(var(--white), 0.25); }
+  50% { color: rgba(var(--white), 1); }
+  100% { color: rgba(var(--white), 0.25); }
+}
+
+.menu-item-animating {
+  animation: menu-item-flash 0.3s ease-in-out;
+}
+
+@keyframes character-shuffle {
+  0%, 100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-2px);
+  }
+}
+
+.gm {
+  position: relative;
+  overflow: visible;
+  padding: 13px;
+  background-color: var(--dark-violet);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.gm:hover {
+  background-color: #581A7F;
+}
+
+.gm p {
+  font-size: 21px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  color: var(--violet);
+}
+
+.fire-img {
+  width: 34px;
+  height: 34px;
+  background: url(/img/header/ufo.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.xp {
+  padding: 16px 27px;
+  background-color: rgba(var(--dark-pink), 0.1);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.xp:hover {
+  background-color: rgba(var(--dark-pink), 0.2);
+}
+
+.xp p {
+  font-size: 21px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  color: var(--pink);
+}
+
+.network {
+  padding: 13px;
+  background-color: rgba(var(--dark-bg), 0.3);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.network:hover {
+  background-color: rgba(var(--dark-bg), 1);
+}
+
+.network-icon {
+  width: 34px;
+  height: 34px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 100%;
+}
+
+.wallet {
+  padding: 14px 18px;
+  background-color: rgba(var(--dark-bg), 0.3);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+	gap: 16px;
+}
+
+.wallet:hover {
+  background-color: rgba(var(--dark-bg), 1);
+}
+
+.wallet-icon {
+  width: 32px;
+  height: 32px;
+  background: url(/img/header/wallet.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.wallet p {
+  font-size: 21px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  color: white;
+}
+
+.fireworks-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  background-image: url('/img/animation/ufo.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  animation: move ease-out forwards;
+  z-index: 1001;
+}
+
+.gm-popup {
+  position: absolute;
+  top: 105px;
+  right: 490px;
+  background-color: transparent;
+  color: white;
+  padding: 10px 15px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  text-align: center;
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeInOut 5s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}

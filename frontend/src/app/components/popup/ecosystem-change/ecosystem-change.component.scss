@@ -1,0 +1,118 @@
+.ecosystem-change {
+  width: 500px;
+  background-color: rgba(var(--dark-bg), 0.3);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 28px;
+  z-index: 1000;
+  padding: 40px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.upper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.upper h6 {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 22px;
+  color: white;
+}
+
+.upper button {
+  height: 19px;
+  width: 19px;
+  background: url(/img/header/popup-menu/close-icon.png);
+  opacity: 0.3;
+  background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.upper button:hover {
+  opacity: 1;
+}
+
+.scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  margin-bottom: 20px;
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.ecosystems {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ecosystem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-radius: 22px;
+  background-color: transparent;
+  box-sizing: border-box;
+  padding: 15px;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.ecosystem:hover {
+  background-color: var(--dark-select);
+}
+
+.name {
+  display: flex;
+  align-items: center;
+}
+
+.ecosystem-img {
+  width: 70px;
+  height: 70px;
+  border-radius: 16px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.info h4 {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  font-size: 20px;
+  color: white;
+}
+
+.info p {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--elem-nonactive);
+  margin: 0;
+}
+
+.disclaimer {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--elem-nonactive);
+  text-align: center;
+  margin: 0;
+}

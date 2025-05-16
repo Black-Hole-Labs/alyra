@@ -1,0 +1,639 @@
+@media screen and (min-width: 1601px) and (max-width: 1920px){
+	.bridge-tx {
+		width: 450px;
+		border-radius: 21px;
+		padding: 20px;
+	}
+
+	.header {
+		gap: 10px;
+	}
+
+	.heading {
+		gap: 10px;
+	}
+
+	.icon-bridge {
+		height: 16px;
+		width: 16px;
+	}
+
+	.heading h3 {
+		font-size: 20px;
+	}
+
+	.close-button {
+		height: 20px;
+		width: 20px;
+	}
+
+	.tx-visualization {
+		margin-top: 65px;
+	}
+
+	.network-icon-left,
+	.network-icon-right {
+		height: 70px;
+		width: 70px;
+	}
+
+	.left-network h4,
+	.right-network h4 {
+		font-size: 14px;
+		margin-top: 14px;
+	}
+
+	.explorer-link {
+		gap: 4px;
+		margin-top: 6px;
+	}
+
+	.explorer-link button {
+		font-size: 10px;
+	}
+
+	.image-link {
+		height: 18px;
+		width: 7px;
+	}
+
+	.token-icon {
+		width: 22px;
+		height: 22px;
+		left: 224px;
+		top: 162px;
+		animation: moveToken1920 5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	@keyframes moveToken1920 {
+		0% {
+			opacity: 1;
+			transform: rotate(-35deg) translateY(-50px);
+		}
+		
+		85% {
+			opacity: 1;
+			transform: rotate(28deg) translateY(-50px);
+		}
+		
+		90% {
+			opacity: 0;
+			transform: rotate(28deg) translateY(-50px);
+		}
+		
+		91% {
+			opacity: 0;
+			transform: rotate(-35deg) translateY(-50px);
+		}
+		
+		100% {
+			opacity: 1;
+			transform: rotate(-35deg) translateY(-50px);
+		}
+	}
+
+	.line {
+		height: 35px;
+		width: 154px;
+		left: 147px;
+		top: 121px;
+	}
+
+	.tx-info {
+		gap: 16px;
+		margin-top: 37px;
+	}
+
+	.elem h6 {
+		font-size: 13px;
+	}
+
+	.tx-status {
+		width: 60px;
+		height: 17px;
+		padding: 3px 12px;
+		border-radius: 7px;
+	}
+
+	.tx-status p {
+		font-size: 9px;
+	}
+
+	.elem>p {
+		font-size: 13px;
+	}
+
+	.view-tx-button {
+		height: 47px;
+		border-radius: 10px;
+		font-size: 13px;
+		margin-top: 35px;
+	}
+}
+@media screen and (min-width: 1171px) and (max-width: 1600px){
+	.bridge-tx {
+		width: 450px;
+		border-radius: 21px;
+		padding: 20px;
+	}
+
+	.header {
+		gap: 10px;
+	}
+
+	.heading {
+		gap: 10px;
+	}
+
+	.icon-bridge {
+		height: 16px;
+		width: 16px;
+	}
+
+	.heading h3 {
+		font-size: 20px;
+	}
+
+	.close-button {
+		height: 20px;
+		width: 20px;
+	}
+
+	.tx-visualization {
+		margin-top: 65px;
+	}
+
+	.network-icon-left,
+	.network-icon-right {
+		height: 70px;
+		width: 70px;
+	}
+
+	.left-network h4,
+	.right-network h4 {
+		font-size: 14px;
+		margin-top: 14px;
+	}
+
+	.explorer-link {
+		gap: 4px;
+		margin-top: 6px;
+	}
+
+	.explorer-link button {
+		font-size: 10px;
+	}
+
+	.image-link {
+		height: 18px;
+		width: 7px;
+	}
+
+	.token-icon {
+		width: 22px;
+		height: 22px;
+		left: 223px;
+		top: 163px;
+		animation: moveToken1600 5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	@keyframes moveToken1600 {
+		0% {
+			opacity: 1;
+			transform: rotate(-35deg) translateY(-50px);
+		}
+		
+		85% {
+			opacity: 1;
+			transform: rotate(28deg) translateY(-50px);
+		}
+		
+		90% {
+			opacity: 0;
+			transform: rotate(28deg) translateY(-50px);
+		}
+		
+		91% {
+			opacity: 0;
+			transform: rotate(-35deg) translateY(-50px);
+		}
+		
+		100% {
+			opacity: 1;
+			transform: rotate(-35deg) translateY(-50px);
+		}
+	}
+
+	.line {
+		height: 35px;
+		width: 154px;
+		left: 147px;
+		top: 121px;
+	}
+
+	.tx-info {
+		gap: 16px;
+		margin-top: 37px;
+	}
+
+	.elem h6 {
+		font-size: 13px;
+	}
+
+	.tx-status {
+		width: 60px;
+		height: 17px;
+		padding: 3px 12px;
+		border-radius: 7px;
+	}
+
+	.tx-status p {
+		font-size: 9px;
+	}
+
+	.elem>p {
+		font-size: 13px;
+	}
+
+	.view-tx-button {
+		height: 47px;
+		border-radius: 10px;
+		font-size: 13px;
+		margin-top: 35px;
+	}
+}
+@media screen and (min-width: 971px) and (max-width: 1170px){
+	.bridge-tx {
+		width: 330px;
+		border-radius: 13px;
+		padding: 15px;
+	}
+
+	.header {
+		gap: 7px;
+	}
+
+	.heading {
+		gap: 7px;
+	}
+
+	.icon-bridge {
+		height: 12px;
+		width: 12px;
+	}
+
+	.heading h3 {
+		font-size: 13px;
+	}
+
+	.close-button {
+		height: 14px;
+		width: 14px;
+	}
+
+	.tx-visualization {
+		margin-top: 55px;
+	}
+
+	.network-icon-left,
+	.network-icon-right {
+		height: 50px;
+		width: 50px;
+	}
+
+	.left-network h4,
+	.right-network h4 {
+		font-size: 10px;
+		margin-top: 10px;
+	}
+
+	.explorer-link {
+		gap: 3px;
+		margin-top: 4px;
+	}
+
+	.explorer-link button {
+		font-size: 8px;
+	}
+
+	.image-link {
+		height: 12px;
+		width: 4px;
+	}
+
+	.token-icon {
+		width: 16px;
+		height: 16px;
+		left: 164px;
+		top: 99px;
+		animation: moveToken1170 5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	@keyframes moveToken1170 {
+		0% {
+			opacity: 1;
+			transform: rotate(-35deg) translateY(-15px);
+		}
+		
+		85% {
+			opacity: 1;
+			transform: rotate(28deg) translateY(-15px);
+		}
+		
+		90% {
+			opacity: 0;
+			transform: rotate(28deg) translateY(-15px);
+		}
+		
+		91% {
+			opacity: 0;
+			transform: rotate(-35deg) translateY(-15px);
+		}
+		
+		100% {
+			opacity: 1;
+			transform: rotate(-35deg) translateY(-15px);
+		}
+	}
+
+	.line {
+		height: 25px;
+		width: 113px;
+		left: 108px;
+		top: 90px;
+	}
+
+	.tx-info {
+		gap: 12px;
+		margin-top: 27px;
+	}
+
+	.elem h6 {
+		font-size: 9px;
+	}
+
+	.tx-status {
+		width: 43px;
+		height: 12px;
+		padding: 1px 7px;
+		border-radius: 3px;
+	}
+
+	.tx-status p {
+		font-size: 6px;
+	}
+
+	.elem>p {
+		font-size: 9px;
+	}
+
+	.view-tx-button {
+		height: 34px;
+		border-radius: 7px;
+		font-size: 10px;
+		margin-top: 23px;
+	}
+}
+@media screen and (min-width: 480px) and (max-width: 970px) {
+	.bridge-tx {
+		width: 450px;
+		border-radius: 21px;
+		padding: 20px;
+	}
+
+	.header {
+		gap: 10px;
+	}
+
+	.heading {
+		gap: 10px;
+	}
+
+	.icon-bridge {
+		height: 16px;
+		width: 16px;
+	}
+
+	.heading h3 {
+		font-size: 20px;
+	}
+
+	.close-button {
+		height: 20px;
+		width: 20px;
+	}
+
+	.tx-visualization {
+		margin-top: 65px;
+	}
+
+	.network-icon-left,
+	.network-icon-right {
+		height: 70px;
+		width: 70px;
+	}
+
+	.left-network h4,
+	.right-network h4 {
+		font-size: 14px;
+		margin-top: 14px;
+	}
+
+	.explorer-link {
+		gap: 4px;
+		margin-top: 6px;
+	}
+
+	.explorer-link button {
+		font-size: 10px;
+	}
+
+	.image-link {
+		height: 18px;
+		width: 7px;
+	}
+
+	.token-icon {
+		width: 22px;
+		height: 22px;
+		left: 223px;
+		top: 163px;
+		animation: moveToken1600 5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	@keyframes moveToken1600 {
+		0% {
+			opacity: 1;
+			transform: rotate(-35deg) translateY(-50px);
+		}
+		
+		85% {
+			opacity: 1;
+			transform: rotate(28deg) translateY(-50px);
+		}
+		
+		90% {
+			opacity: 0;
+			transform: rotate(28deg) translateY(-50px);
+		}
+		
+		91% {
+			opacity: 0;
+			transform: rotate(-35deg) translateY(-50px);
+		}
+		
+		100% {
+			opacity: 1;
+			transform: rotate(-35deg) translateY(-50px);
+		}
+	}
+
+	.line {
+		height: 35px;
+		width: 154px;
+		left: 147px;
+		top: 121px;
+	}
+
+	.tx-info {
+		gap: 16px;
+		margin-top: 37px;
+	}
+
+	.elem h6 {
+		font-size: 13px;
+	}
+
+	.tx-status {
+		width: 60px;
+		height: 17px;
+		padding: 3px 12px;
+		border-radius: 7px;
+	}
+
+	.tx-status p {
+		font-size: 9px;
+	}
+
+	.elem>p {
+		font-size: 13px;
+	}
+
+	.view-tx-button {
+		height: 47px;
+		border-radius: 10px;
+		font-size: 13px;
+		margin-top: 35px;
+	}
+}
+
+@media screen and (min-width: 360px) and (max-width: 479px){
+	.bridge-tx {
+		width: 90vw;
+		height: 65vh;
+		border-radius: 16px;
+		padding: 15px;
+	}
+
+	.header {
+		gap: 10px;
+	}
+
+	.heading {
+		gap: 10px;
+	}
+
+	.icon-bridge {
+		height: 16px;
+		width: 16px;
+	}
+
+	.heading h3 {
+		font-size: 20px;
+	}
+
+	.close-button {
+		height: 20px;
+		width: 20px;
+	}
+
+	.tx-visualization {
+		display: none;
+		margin-top: 65px;
+	}
+
+	.network-icon-left,
+	.network-icon-right {
+		height: 70px;
+		width: 70px;
+	}
+
+	.left-network h4,
+	.right-network h4 {
+		font-size: 14px;
+		margin-top: 14px;
+	}
+
+	.explorer-link {
+		gap: 4px;
+		margin-top: 6px;
+	}
+
+	.explorer-link button {
+		font-size: 10px;
+	}
+
+	.image-link {
+		height: 18px;
+		width: 7px;
+	}
+
+	.token-icon {
+		width: 22px;
+		height: 22px;
+		left: 164px;
+		top: 118px;
+	}
+
+	.line {
+		height: 35px;
+		width: 154px;
+		left: 147px;
+		top: 121px;
+	}
+
+	.tx-info {
+		gap: 16px;
+		margin-top: 37px;
+	}
+
+	.elem h6 {
+		font-size: 13px;
+	}
+
+	.tx-status {
+		width: 60px;
+		height: 17px;
+		padding: 3px 12px;
+		border-radius: 7px;
+	}
+
+	.tx-status p {
+		font-size: 9px;
+	}
+
+	.elem>p {
+		font-size: 13px;
+	}
+
+	.view-tx-button {
+		position: absolute;
+		bottom: 15px;
+		left: 50%;
+		transform: translateX(-50%);
+		height: 47px;
+		width: 92%;
+		border-radius: 10px;
+		font-size: 13px;
+	}
+}
