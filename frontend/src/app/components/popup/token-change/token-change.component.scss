@@ -106,7 +106,6 @@ input::placeholder {
   width: 567px;
   height: calc(100% - 230px);
   border-radius: 12px;
-  overflow: scroll;
 }
 
 .inner-list {
@@ -314,6 +313,11 @@ a:hover {
   overflow-y: auto;   /* включаем прокрутку */
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-right: -8px;
+  margin-left: 0px;
+  scrollbar-width: thin;
 }
 
 .token {
