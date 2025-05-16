@@ -7,7 +7,7 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
 import { WalletBalanceService } from '../../services/wallet-balance.service';
 import { TransactionsService } from '../../services/transactions.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
+import { NetworkId, TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
 import { ethers, parseUnits, ZeroAddress } from 'ethers';
 import { PopupService } from '../../services/popup.service';
 import { SuccessNotificationComponent } from '../../components/notification/success-notification/success-notification.component';
@@ -18,6 +18,7 @@ export interface Token {
   symbol: string;
   imageUrl: string;
   contractAddress: string;
+  chainId: number;
   decimals: string;
 }
 
@@ -41,7 +42,7 @@ export interface Token {
 })
 export class TradeComponent implements AfterViewChecked {
 //[x: string]: any;
-  sellAmount: string = ''; // Значение, которое пользователь вводит в поле продажи
+  sellAmount: string = '';
   //validatedSellAmount: string = ''; 
   sellAmountForInput= signal<string | undefined>(undefined);
   validatedSellAmount = signal<number>(0);
@@ -49,14 +50,14 @@ export class TradeComponent implements AfterViewChecked {
   
   buyAmount = signal<string | undefined>(undefined);
   buyAmountForInput = signal<string | undefined>(undefined);
-  price = signal<number>(0); // Цена обмена
-  priceUsd: number = 0; // Текущая стоимость в USD за единицу
+  price = signal<number>(0);
+  priceUsd: number = 0;
   sellPriceUsd = signal<string>('');
   buyPriceUsd = signal<string>('');
   balance = signal<number>(0.0);
   balanceBuy = signal<number>(0.0);
-  rotationCount: number = 0; // Счетчик для отслеживания вращений
-	slippage: number = 0.005; //  // 0.005 is default for LIFI
+  rotationCount: number = 0;
+	slippage: number = 0.005; // 0.005 is default for LIFI
   gasPriceUSD: number | undefined;
 
   selectedToken = signal<Token | undefined>(undefined);
@@ -103,10 +104,8 @@ export class TradeComponent implements AfterViewChecked {
   private throttleActive: boolean = false;
   private isProcessingInput = signal<boolean>(false);
 
-  // Добавить новую переменную для отслеживания размера шрифта
   inputFontSize = signal<number>(48);
 
-  // Добавьте это свойство в класс
   private resizeObserver: any;
 
   constructor(
@@ -117,7 +116,6 @@ export class TradeComponent implements AfterViewChecked {
     private transactionsService: TransactionsService,
     public popupService: PopupService
   ) {
-    // Установка начального размера шрифта в зависимости от ширины экрана
     this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
 
     effect(() => 
@@ -131,7 +129,7 @@ export class TradeComponent implements AfterViewChecked {
       catch(error){
         // this.updateBuyAmount('0.0');
         // update gas = 0.0
-        console.log("error",error);
+        // console.log("error",error);
         this.buttonState = 'no-available-quotes';
       }
     }, { allowSignalWrites: true });
@@ -174,13 +172,10 @@ export class TradeComponent implements AfterViewChecked {
   }
 
   ngOnInit() {
-    // Инициализируем обработчик изменения размера окна
     this.resizeObserver = new ResizeObserver(() => {
-      // Сбрасываем размер шрифта при изменении размера окна
       this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
     });
     
-    // Наблюдаем за изменением размера окна
     this.resizeObserver.observe(document.body);
   }
 
@@ -223,7 +218,6 @@ export class TradeComponent implements AfterViewChecked {
       this.sellAmount = inputElement.value;
       this.validatedSellAmount.update(value => (Number(inputElement.value)));
       
-      // Обновляем размер шрифта в зависимости от длины ввода
       this.adjustFontSize(inputElement);
       
       if (this.validatedSellAmount() > this.balance())
@@ -255,10 +249,8 @@ export class TradeComponent implements AfterViewChecked {
       this.buyAmount.set(value); 
       this.buyAmountForInput.set(limited);
       
-      // Сбрасываем флаг анимации для возможности повторного запуска
       this.buyAmountTextAnimated = false;
       
-      // Проверяем и запускаем анимацию по необходимости
       setTimeout(() => this.checkAndAnimateBuyText(), 0);
     } else {
       this.buyAmount.set('0');
@@ -315,35 +307,19 @@ export class TradeComponent implements AfterViewChecked {
     {
       this.buttonState = 'swap';
     }
-    //this.updateBuyAmount();
-    //this.updateSellPriceUsd();
   }
 
   rotateRefresh(): void {
+    if (this.isWalletConnected())
+    {
+      this.getTxData();
+    }
     const refreshElement = document.querySelector('.refresh');
     if (refreshElement) {
       this.rotationCount += 1;
       this.renderer.setStyle(refreshElement, 'transform', `rotate(${this.rotationCount * -720}deg)`);
     }
   }
-
-  // // Управление анимацией
-  // onMouseDown(): void {
-	// 	console.log('Mouse down triggered');
-	// 	const changeButton = document.getElementById('change-button');
-	// 	if (changeButton && !changeButton.classList.contains('animate')) {
-	// 		this.renderer.addClass(changeButton, 'animate');
-	// 	}
-	// }
-	
-	// onAnimationEnd(): void {
-	// 	console.log('Animation ended, swapping tokens...');
-	// 	const changeButton = document.getElementById('change-button');
-	// 	if (changeButton && changeButton.classList.contains('animate')) {
-	// 		this.renderer.removeClass(changeButton, 'animate');
-	// 		this.swapTokens();
-	// 	}
-	// }
 	
 	swapTokens(): void {
     this.txData.update(() => undefined);
@@ -383,7 +359,6 @@ export class TradeComponent implements AfterViewChecked {
     this.closeTokenPopup();
   }
 
-  // Методы управления попапом для buy
   openTokenBuyPopup(): void {
     this.popupService.openPopup('tokenChangeBuy');
   }
@@ -431,7 +406,7 @@ export class TradeComponent implements AfterViewChecked {
 	onSlippageSave(value: string): void {
     if (value === "Auto")
     {
-      console.log("Slippate is Auto. Default value is 0.005 (0.5%)");
+      // console.log("Slippate is Auto. Default value is 0.005 (0.5%)");
       this.slippage = 0.005;
     }
     else
@@ -443,10 +418,10 @@ export class TradeComponent implements AfterViewChecked {
       }
   
       this.slippage = val / 100;
-      console.log(`Slippage set: ${this.slippage}; (${val}%)`);
+      // console.log(`Slippage set: ${this.slippage}; (${val}%)`);
     }
 
-    //this.showSettingsPopup = false; // Закрываем popup после сохранения
+    //this.showSettingsPopup = false;
   }
 
   async swap() {
@@ -461,7 +436,7 @@ export class TradeComponent implements AfterViewChecked {
     let txHash: string = "";
     try
     {
-      if (this.blockchainStateService.network()?.id === 1151111081099710) 
+      if (this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET) 
       {
         txHash = await this.svmSwap();
       } 
@@ -475,7 +450,7 @@ export class TradeComponent implements AfterViewChecked {
       this.showFailedNotification = true;
       
       this.loading.set(false);
-      //console.log(error);
+      //// console.log(error);
 
       this.cdr.detectChanges();
       setTimeout(() => {
@@ -512,7 +487,7 @@ export class TradeComponent implements AfterViewChecked {
     }
     catch (error) 
     {
-      console.log("error setting balance",error);
+      // console.log("error setting balance",error);
     }
 
     this.loading.set(false);
@@ -530,7 +505,7 @@ export class TradeComponent implements AfterViewChecked {
     this.showPendingNotification = true;
     this.buttonState = 'swap';
 
-    console.log("SVM Swap транзакция отправлена:", txHash);
+    // console.log("SVM Swap транзакция отправлена:", txHash);
     return txHash.signature;
   }
 
@@ -562,22 +537,22 @@ export class TradeComponent implements AfterViewChecked {
     const approveAmount = parseUnits(amount, fromTokenDecimals)
 
     // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
-    // console.log("allowance",allowance);
+    // // console.log("allowance",allowance);
 
     const approveTx = await erc20Contract["approve"]((this.txData() as TransactionRequestEVM).to, approveAmount);
     
-    console.log("a");
+    // console.log("a");
 
     await approveTx.wait();
 
-    console.log("Approve успешно выполнен:", approveTx.hash);
+    // console.log("Approve успешно выполнен:", approveTx.hash);
 
     const txHash = await provider.sendTx(this.txData(), true);
     
     this.showPendingNotification = true;
     this.buttonState = 'swap';
 
-    console.log("txHash",txHash);
+    // console.log("txHash",txHash);
     return txHash;
   }
 
@@ -588,8 +563,8 @@ export class TradeComponent implements AfterViewChecked {
   test(){
     this.transactionsService.runTest().subscribe({
       next: (response) => {
-        console.log('Quote:', response.quote);
-        console.log('Simulation Result:', response.simulationResult);
+        // console.log('Quote:', response.quote);
+        // console.log('Simulation Result:', response.simulationResult);
       },
       error: (error) => {
         console.error('Ошибка запроса:', error);
@@ -602,9 +577,9 @@ export class TradeComponent implements AfterViewChecked {
     const fromChain = this.blockchainStateService.network()!.id.toString();
     const toChain = this.blockchainStateService.network()!.id.toString();
     const fromTokenDecimals = this.selectedToken()!.decimals;
-    console.log("this.validatedSellAmount()",this.validatedSellAmount());
+    // console.log("this.validatedSellAmount()",this.validatedSellAmount());
     const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
-    console.log(formattedFromAmount,formattedFromAmount);
+    // console.log(formattedFromAmount,formattedFromAmount);
     const fromAmount = parseUnits(formattedFromAmount, fromTokenDecimals);
     const fromToken = this.selectedToken()!.contractAddress;
     const toToken = this.selectedBuyToken()!.contractAddress;
@@ -627,43 +602,43 @@ export class TradeComponent implements AfterViewChecked {
     }
     const adjustedFromAmount = fromAmount.toString();
 
-    console.log("fromChain",fromChain);
+    // console.log("fromChain",fromChain);
   
     if (!fromChain || !toChain || !fromAddress || !fromAmount || !fromToken || !toToken || !fromTokenDecimals) {
-      console.log("fromChain",fromChain);
-      console.log("toChain",toChain);
-      console.log("fromAddress",fromAddress);
-      console.log("fromAmount",fromAmount);
-      console.log("fromToken",fromToken);
-      console.log("toToken",toToken);
-      console.log("fromTokenDecimals",fromTokenDecimals);
+      // console.log("fromChain",fromChain);
+      // console.log("toChain",toChain);
+      // console.log("fromAddress",fromAddress);
+      // console.log("fromAmount",fromAmount);
+      // console.log("fromToken",fromToken);
+      // console.log("toToken",toToken);
+      // console.log("fromTokenDecimals",fromTokenDecimals);
       
-      console.log("adjusted From Amount",adjustedFromAmount);
+      // console.log("adjusted From Amount",adjustedFromAmount);
 
       console.error('Missing required parameters');
       return;
     }
     
-    console.log("fromAddress",fromAddress);
+    // console.log("fromAddress",fromAddress);
 
     const slippageValue = this.slippage !== 0.005 ? this.slippage: undefined; // 0.005 is default for LIFI
 
     this.transactionsService.getQuote(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, slippageValue)
     .subscribe({
       next: (response: any) => {
-        console.log('Quote received:', response);
+        // console.log('Quote received:', response);
         if (response.estimate && response.transactionRequest) 
         {
-          console.log(`fromUSD: ${response.estimate.fromAmountUSD}; toUSD: ${response.estimate.toAmountUSD}`);
+          // console.log(`fromUSD: ${response.estimate.fromAmountUSD}; toUSD: ${response.estimate.toAmountUSD}`);
           this.updateSellPriceUsd(response.estimate.fromAmountUSD);
           this.updateBuyPriceUsd(response.estimate.toAmountUSD);
 
           const toAmountNumber = Number(this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals)));
           const readableToAmount = toAmountNumber.toFixed(Number(toTokenDecimals)).replace(/\.?0+$/, '');
-          console.log('readableToAmount:', readableToAmount);
+          // console.log('readableToAmount:', readableToAmount);
           this.updateBuyAmount(readableToAmount);
           
-          // if(this.blockchainStateService.network()!.id == 1151111081099710) // SVM
+          // if(this.blockchainStateService.network()!.id == NetworkId.SOLANA_MAINNET) // SVM
           // {
           //   gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
           // }
@@ -679,7 +654,7 @@ export class TradeComponent implements AfterViewChecked {
 
           this.gasPriceUSD = Number(gasPriceUSD);
           
-          console.log('gasPriceUSD:', this.gasPriceUSD);
+          // console.log('gasPriceUSD:', this.gasPriceUSD);
 
           const fromDecimal = parseFloat(
             this.transactionsService.parseToAmount(response.estimate.fromAmount, Number(fromTokenDecimals))
@@ -704,7 +679,7 @@ export class TradeComponent implements AfterViewChecked {
 
         if(response.transactionRequest.data)
         {
-          if(this.blockchainStateService.network()?.id === 1151111081099710)
+          if(this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET)
           {
             this.txData.set(response.transactionRequest as TransactionRequestSVM);
             this.buttonState = 'swap';  
@@ -714,7 +689,7 @@ export class TradeComponent implements AfterViewChecked {
             this.txData.set(response.transactionRequest as TransactionRequestEVM);
             this.buttonState = 'swap';
             if(fromToken !== ethers.ZeroAddress){
-              console.log("this.buttonState = 'approve'");
+              // console.log("this.buttonState = 'approve'");
               this.buttonState = 'approve';
             }
           }
@@ -733,7 +708,7 @@ export class TradeComponent implements AfterViewChecked {
         }
       },
       complete: () => {
-        console.log('Quote request completed');
+        // console.log('Quote request completed');
         if(!this.blockchainStateService.walletAddress())
         {
           this.buttonState = 'insufficient';
@@ -767,12 +742,10 @@ export class TradeComponent implements AfterViewChecked {
 
   
 
-  // Геттер для проверки состояния попапа
   get showConnectWalletPopup(): boolean {
     return this.popupService.getCurrentPopup() === 'connectWallet';
   }
 
-  // Обновляем методы закрытия
   closeSuccessNotification(): void {
     this.showSuccessNotification = false;
   }
@@ -781,7 +754,6 @@ export class TradeComponent implements AfterViewChecked {
     this.showFailedNotification = false;
   }
 
-  // Добавьте метод закрытия для пендинга
   closePendingNotification(): void {
     this.showPendingNotification = false;
   }
@@ -791,16 +763,14 @@ export class TradeComponent implements AfterViewChecked {
   }
 
   /**
-   * Анимирует текст с "глитч-эффектом"
-   * @param element HTML элемент для анимации
-   * @param finalText Конечный текст
-   * @param elementId Уникальный идентификатор элемента
+   * Animates text
+   * @param element HTML element for animation
+   * @param finalText result
+   * @param elementId unique id of element
    */
   animateText(element: HTMLElement, finalText: string, elementId: string): void {
-    // Сохраняем оригинальный текст для гарантированного отображения в конце
     const originalText = finalText;
     
-    // Очищаем предыдущую анимацию, если она есть
     if (this.animationTimeouts[elementId]) {
       window.clearTimeout(this.animationTimeouts[elementId]);
       delete this.animationTimeouts[elementId];
@@ -809,14 +779,11 @@ export class TradeComponent implements AfterViewChecked {
     let frame = 0;
     const totalFrames = this.animationFrames;
     
-    // Создаем массив для отслеживания "глитч-эффекта" для каждой буквы
     const glitchStates = Array(finalText.length).fill(false);
-    // Массив для отслеживания "подобранных" букв
     const resolvedChars = Array(finalText.length).fill(false);
     
     const animate = () => {
       if (frame >= totalFrames) {
-        // Гарантируем, что в конце анимации отображается оригинальный текст
         element.textContent = originalText;
         delete this.animationTimeouts[elementId];
         return;
@@ -825,23 +792,16 @@ export class TradeComponent implements AfterViewChecked {
       let result = '';
       const progress = frame / totalFrames;
       
-      // Изменяем кривую прогресса для более медленного начала и быстрого завершения
-      // Используем кубическую функцию для более плавного эффекта
       const easedProgress = Math.pow(progress, 0.6);
       
-      // Определяем, сколько букв должно быть "подобрано" на текущем кадре
-      // Используем нелинейную функцию для более интересного визуального эффекта
       const resolvedCount = Math.floor(finalText.length * easedProgress);
       
-      // Обновляем состояние "подобранных" букв
       for (let i = 0; i < resolvedCount; i++) {
         if (!resolvedChars[i]) {
           resolvedChars[i] = true;
         }
       }
       
-      // Случайно выбираем несколько букв для глитча
-      // Уменьшаем частоту глитчей в начале и увеличиваем к концу
       if (frame % 2 === 0) {
         const glitchProbability = 0.05 + (progress * 0.1);
         for (let i = 0; i < finalText.length; i++) {
@@ -852,13 +812,9 @@ export class TradeComponent implements AfterViewChecked {
       }
       
       for (let i = 0; i < finalText.length; i++) {
-        // Если буква уже "подобрана"
         if (resolvedChars[i]) {
-          // Но может быть с глитчем
           if (glitchStates[i] && frame < totalFrames * 0.95 && finalText[i] !== ' ') {
-            // Применяем глитч-эффект к уже подобранной букве
             if (Math.random() < 0.3) {
-              // Используем кибер-символы для более футуристического вида
               const cyberIndex = Math.floor(Math.random() * this.cyberChars.length);
               result += this.cyberChars[cyberIndex];
             } else {
@@ -866,7 +822,6 @@ export class TradeComponent implements AfterViewChecked {
               result += this.glitchChars[glitchIndex];
             }
           } else {
-            // Если это последние 10% анимации, всегда показываем правильную букву
             if (progress > 0.9) {
               result += finalText[i];
             } else {
@@ -874,13 +829,9 @@ export class TradeComponent implements AfterViewChecked {
             }
           }
         } else {
-          // Буква еще не "подобрана"
           if (finalText[i] === ' ') {
-            // Пробелы оставляем как есть для лучшей читаемости
             result += ' ';
           } else {
-            // Для букв выбираем случайный символ
-            // С вероятностью используем символы глитча или кибер-символы
             const rand = Math.random();
             if (rand < 0.2) {
               const glitchIndex = Math.floor(Math.random() * this.glitchChars.length);
@@ -899,14 +850,13 @@ export class TradeComponent implements AfterViewChecked {
       element.textContent = result;
       frame++;
       
-      // Динамически регулируем скорость анимации - быстрее в начале, медленнее в середине, быстрее к концу
       let currentSpeed = this.animationSpeed;
       if (progress < 0.3) {
-        currentSpeed = this.animationSpeed * 0.8; // Быстрее в начале
+        currentSpeed = this.animationSpeed * 0.8;
       } else if (progress > 0.7) {
-        currentSpeed = this.animationSpeed * 0.7; // Быстрее к концу
+        currentSpeed = this.animationSpeed * 0.7;
       } else {
-        currentSpeed = this.animationSpeed * 1.2; // Медленнее в середине
+        currentSpeed = this.animationSpeed * 1.2;
       }
       
       this.animationTimeouts[elementId] = window.setTimeout(animate, currentSpeed);
@@ -915,7 +865,6 @@ export class TradeComponent implements AfterViewChecked {
     animate();
   }
 
-  // Метод для проверки и запуска анимации текста
   private checkAndAnimateBuyText() {
     if (this.buyAmountTextElement && 
         !this.buyAmountTextAnimated && 
@@ -932,7 +881,6 @@ export class TradeComponent implements AfterViewChecked {
     this.checkAndAnimateBuyText();
   }
 
-  // Обновленный метод с более подходящими порогами
   adjustFontSize(inputElement: HTMLInputElement): void {
     const textLength = inputElement.value.length;
     const width = window.innerWidth;
@@ -1003,7 +951,7 @@ export class TradeComponent implements AfterViewChecked {
         this.inputFontSize.set(36);
       }
     } else {
-      // По умолчанию
+      // default
       if (textLength > 15) {
         this.inputFontSize.set(24);
       } else if (textLength > 12) {
@@ -1018,7 +966,6 @@ export class TradeComponent implements AfterViewChecked {
     }
   }
 
-  // Также обновите метод resetFontSize
   resetFontSize(): void {
     this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
   }
@@ -1037,7 +984,7 @@ export class TradeComponent implements AfterViewChecked {
     } else if (width >= 360 && width <= 479) {
       return 36; // 360-479px
     } else {
-      return 48; // По умолчанию
+      return 48; // default
     }
   }
 }

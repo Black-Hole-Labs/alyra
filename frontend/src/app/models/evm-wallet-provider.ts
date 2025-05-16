@@ -1,5 +1,5 @@
 import { ethers, JsonRpcSigner } from 'ethers';
-import { TransactionRequestEVM, WalletProvider } from './wallet-provider.interface';
+import { ProviderType, TransactionRequestEVM, WalletProvider } from './wallet-provider.interface';
 import { Injector } from '@angular/core';
 import { BlockchainStateService } from '../services/blockchain-state.service';
 
@@ -32,7 +32,7 @@ export class EvmWalletProvider implements WalletProvider {
     this.signer = await ethersProvider.getSigner();
 
     if(!isMultichain){
-      this.blockchainStateService.loadNetworks("EVM");
+      this.blockchainStateService.loadNetworks(ProviderType.EVM);
     }
 
     return { address: this.address, network: this.network };
@@ -89,7 +89,7 @@ export class EvmWalletProvider implements WalletProvider {
       } else {
         txParams.value = '0x0';
       }
-      console.log('Отправка транзакции:', txParams);
+      // console.log('Отправка транзакции:', txParams);
       return await this.provider.request({
         method: 'eth_sendTransaction',
         params: [txParams],

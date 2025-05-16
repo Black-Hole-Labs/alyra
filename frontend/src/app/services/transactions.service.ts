@@ -122,7 +122,7 @@ export class TransactionsService {
     try {
       return await this.getStatus(txHash);
     } catch (error) {
-      console.log('Error fetching initial status:', error);
+      // console.log('Error fetching initial status:', error);
       return {};
     }
   }
@@ -135,7 +135,7 @@ export class TransactionsService {
         result = await this.getStatus(txHash);
         await this.delay(1000);
       } catch (error) {
-        console.log('Error polling status:', error);
+        // console.log('Error polling status:', error);
         await this.delay(1000);
       }
     } while (!result || (result.status !== 'DONE' && result.status !== 'FAILED'));
@@ -181,20 +181,15 @@ export class TransactionsService {
   
 
   parseGasPriceUSD(gasPriceHex: string, gasLimitHex: string, token: { decimals: number; priceUSD: string }): string {
-    // Конвертируем gasPrice и gasLimit из hex в десятичное число
     const gasPriceWei = parseInt(gasPriceHex, 16);
     const gasLimit = parseInt(gasLimitHex, 16);
   
-    // Рассчитываем общую стоимость газа в Wei
     const gasCostWei = gasPriceWei * gasLimit;
   
-    // Переводим Wei в токены, используя decimals токена
     const gasCostInToken = gasCostWei / Math.pow(10, token.decimals);
   
-    // Умножаем на цену токена в USD
     const gasCostUSD = gasCostInToken * parseFloat(token.priceUSD);
   
-    // Форматируем результат
-    return gasCostUSD.toFixed(2); // Округляем до 2 знаков после запятой
+    return gasCostUSD.toFixed(2);
   }
 }

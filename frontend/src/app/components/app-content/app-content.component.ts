@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
-import { Network } from '../../models/wallet-provider.interface';
+import { NetworkId, ProviderType } from '../../models/wallet-provider.interface';
 import { PopupService } from '../../services/popup.service';
 import { BlackholeMenuComponent } from '../popup/blackhole-menu/blackhole-menu.component';
 import { BlackholeNetworkComponent } from '../popup/blackhole-network/blackhole-network.component';
@@ -20,21 +20,26 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
 		'./app-content.component.scss',
 		'./app-content.component.adaptives.scss'
 	],
-  imports: [RouterOutlet, RouterModule, BlackholeMenuComponent, CommonModule, BlackholeNetworkComponent, WalletComponent, ConnectWalletComponent, EcosystemChangeComponent]
+  imports: [
+    RouterOutlet,
+    RouterModule,
+    BlackholeMenuComponent,
+    CommonModule,
+    BlackholeNetworkComponent,
+    WalletComponent,
+    ConnectWalletComponent,
+    EcosystemChangeComponent
+  ]
 })
 export class AppContentComponent {
   isPopupVisible = false;
   isNetworkPopupVisible = false;
-  selectedNetwork = 'ethereum';
-  showDefaultLayout = true;
-  networks: Network[] = [];
 
   constructor(
     private router: Router, 
     public popupService: PopupService,
     private blockchainStateService: BlockchainStateService,
   ) {
-      //this.networks = this.networkService.getNetworks();
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
@@ -56,10 +61,13 @@ export class AppContentComponent {
   }
 
   onEcosystemSelected(ecosystemId: string): void {
-    if (ecosystemId === 'evm') {
-      this.blockchainStateService.updateNetwork(1);
-    } else if (ecosystemId === 'svm') {
-      this.blockchainStateService.updateNetwork(1151111081099710);
+    if (ecosystemId === ProviderType.EVM)
+    {
+      this.blockchainStateService.updateNetwork(NetworkId.ETHEREUM_MAINNET);
+    }
+    else if (ecosystemId === ProviderType.SVM)
+    {
+      this.blockchainStateService.updateNetwork(NetworkId.SOLANA_MAINNET);
     }
     
     const provider = this.blockchainStateService.getCurrentProvider();

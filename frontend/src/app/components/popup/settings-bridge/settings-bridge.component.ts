@@ -23,7 +23,6 @@ export class SettingsBridgeComponent implements OnInit {
   constructor(private popupService: PopupService) {}
 
   ngOnInit() {
-    // Загружаем сохраненные значения при инициализации
     const savedIndex = localStorage.getItem('selectedIndex');
     const savedCustomValue = localStorage.getItem('customValue');
 
@@ -59,15 +58,13 @@ export class SettingsBridgeComponent implements OnInit {
   restrictInput(event: KeyboardEvent): void {
     const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', '.', ','];
 
-    // Разрешить цифры и некоторые управляющие клавиши
     if (
       (event.key >= '0' && event.key <= '9') || 
       allowedKeys.includes(event.key)
     ) {
-      return; // Разрешённый ввод
+      return;
     }
 
-    // Блокируем остальные символы
     event.preventDefault();
   }
 
@@ -75,25 +72,20 @@ export class SettingsBridgeComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     let value = inputElement.value;
 
-    // Заменяем ',' на '.'
     value = value.replace(/,/g, '.');
 
-    // Если ввод начинается с точки, добавляем 0 перед ней
     if (value.startsWith('.')) {
       value = '0' + value;
     }
 
-    // Удаляем все символы, кроме цифр и точки
     value = value.replace(/[^0-9.]/g, '');
 
-    // Удаляем лишние точки, оставляя только одну
     const firstDotIndex = value.indexOf('.');
     if (firstDotIndex !== -1) {
       value = value.slice(0, firstDotIndex + 1) +
         value.slice(firstDotIndex + 1).replace(/\./g, '');
     }
 
-    // Ограничиваем длину до 4 символов
     value = value.slice(0, 4);
 
     this.customValue = value;
@@ -118,7 +110,6 @@ export class SettingsBridgeComponent implements OnInit {
       this.save.emit(value);
     }
     
-    // Закрытие попапа теперь происходит только здесь, а не в обработчике события save
     this.popupService.closePopup('settingsBridge');
     this.close.emit();
   }

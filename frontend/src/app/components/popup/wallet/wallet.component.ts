@@ -44,7 +44,6 @@ export class WalletComponent {
       percentChange: '(-1.28%)',
       image: '/img/trade/arbitrum.png'
     },
-    // ... добавьте остальные токены
   ];
 
   constructor(private blockchainStateService: BlockchainStateService, private popupService: PopupService) {
@@ -57,7 +56,6 @@ export class WalletComponent {
 
   get totalUsdChange(): number {
     return this.tokens.reduce((sum, token) => {
-      // Извлекаем число из строки вида '-$1.4'
       const change = parseFloat(token.usdChange.replace('$', ''));
       return sum + change;
     }, 0);
@@ -65,26 +63,22 @@ export class WalletComponent {
 
   get averagePercentChange(): number {
     const total = this.tokens.reduce((sum, token) => {
-      // Извлекаем число из строки вида '(-0.34%)'
       const percent = parseFloat(token.percentChange.replace('(', '').replace('%)', ''));
       return sum + percent;
     }, 0);
     
-    // Вычисляем среднее значение
     return total / this.tokens.length;
   }
 
-  // Форматируем изменение с знаком доллара
   get formattedUsdChange(): string {
     return `$${this.totalUsdChange.toFixed(1)}`;
   }
 
-  // Форматируем процентное изменение
   get formattedPercentChange(): string {
     return `(${this.averagePercentChange.toFixed(2)}%)`;
   }
 
-  closePopup(): void {  // переименовали метод с onClose на closePopup
+  closePopup(): void {
     this.popupService.closePopup('wallet');
     this.close.emit();
   }

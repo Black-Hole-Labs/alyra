@@ -38,7 +38,7 @@ export class BridgeTxComponent implements OnInit {
   }
 
   async ngOnInit() {
-    console.log('BridgeTx initialized with amount:', this.inputAmount);
+    // console.log('BridgeTx initialized with amount:', this.inputAmount);
     
     try {
       const initialStatus = await this.transactionsService.getInitialStatus(this.txHash);

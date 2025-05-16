@@ -1,5 +1,5 @@
 import { Connection, VersionedTransaction } from '@solana/web3.js';
-import { TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
+import { NetworkId, ProviderType, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
 import { BlockchainStateService } from '../services/blockchain-state.service';
 import { Injector } from '@angular/core';
 
@@ -19,7 +19,6 @@ export class SvmWalletProvider implements WalletProvider {
     return !!this.provider;
   }
 
-  // Provide a default implementation that forces override
   async connect(_provider?: any, isMultichain?: boolean): Promise<{ address: string; network: string }>  {
     if (_provider) this.provider = _provider;
     if (!this.provider) throw new Error('Solana not installed');
@@ -32,7 +31,7 @@ export class SvmWalletProvider implements WalletProvider {
     this.network = await this.getNetwork();
 
     if(!isMultichain){
-      this.blockchainStateService.loadNetworks("SVM");
+      this.blockchainStateService.loadNetworks(ProviderType.SVM);
     }
 
     return { address: this.address, network: this.network };
@@ -55,12 +54,12 @@ export class SvmWalletProvider implements WalletProvider {
   }
 
   async sendTx(txData: TransactionRequestSVM): Promise<string> {
-    const solanaRPC = this.blockchainStateService.allNetworks().find((network: { id: number; }) => network.id === 1151111081099710)?.rpcUrls[0] || "https://solana-rpc.publicnode.com";
+    const solanaRPC = this.blockchainStateService.allNetworks().find((network: { id: number; }) => network.id === NetworkId.SOLANA_MAINNET)?.rpcUrls[0] || "https://solana-rpc.publicnode.com";
     const connection = new Connection(solanaRPC!, 'confirmed');//todo rpc error after bridge
     const decodedTx = Uint8Array.from(atob(txData.data.toString()), c => c.charCodeAt(0));
     const versionedTx = VersionedTransaction.deserialize(decodedTx);
     const signedTx = await this.provider.signAndSendTransaction(versionedTx);
-    console.log('SVM Transaction sent:', signedTx);
+    // console.log('SVM Transaction sent:', signedTx);
     await connection.confirmTransaction(signedTx, 'confirmed');
     return signedTx;
   }

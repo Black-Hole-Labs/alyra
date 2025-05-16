@@ -19,6 +19,9 @@ export class BlackholeNetworkComponent {
   selectedNetwork: number | null = null;
   showFailedNotification = false;
   errorMessage = '';
+  
+  private currentNetworkIcon1: string | null = null;
+  private currentNetworkIcon2: string | null = null;
 
   @Output() close = new EventEmitter<void>();
 
@@ -28,10 +31,22 @@ export class BlackholeNetworkComponent {
   ) {}
 
   ngOnInit(): void {
-    // Устанавливаем начальные иконки сети
-    const currentNetwork = this.networks()[0];
+    const root = document.documentElement;
+    this.currentNetworkIcon1 = root.style.getPropertyValue('--current-network-icon-1');
+    this.currentNetworkIcon2 = root.style.getPropertyValue('--current-network-icon-2');
+    
+    const currentNetwork = this.blockchainStateService.getCurrentNetwork();
     if (currentNetwork) {
-      this.updateNetworkBackgroundIcons(currentNetwork);
+      this.selectedNetwork = currentNetwork.id;
+    }
+  }
+  
+  ngOnDestroy(): void {
+    const currentNetwork = this.blockchainStateService.getCurrentNetwork();
+    if (currentNetwork) {
+      const root = document.documentElement;
+      root.style.setProperty('--current-network-icon-1', `url(${currentNetwork.logoURI})`);
+      root.style.setProperty('--current-network-icon-2', `url(${currentNetwork.logoURI})`);
     }
   }
 
@@ -42,12 +57,8 @@ export class BlackholeNetworkComponent {
       return;
     }
 
-    // Обновляем иконки сети в фоне
-    this.updateNetworkBackgroundIcons(selectedNetwork);
-
     if(!this.blockchainStateService.connected()){
       this.blockchainStateService.updateNetwork(networkId);
-      // Закрываем попап при успешном обновлении сети, даже если пользователь не подключен
       this.popupService.closePopup('networkPopup');
       this.close.emit();
       return;
@@ -70,9 +81,7 @@ export class BlackholeNetworkComponent {
       this.selectedNetwork = networkId;
       this.blockchainStateService.updateWalletAddress(provider.address);
       this.blockchainStateService.updateNetwork(networkId);
-      console.log(`Switched to network: ${selectedNetwork.name}`);
       
-      // Закрываем попап после успешного выбора сети через PopupService
       this.popupService.closePopup('networkPopup');
       this.close.emit();
     } catch (error) {
@@ -82,7 +91,6 @@ export class BlackholeNetworkComponent {
     }
   }
 
-  // Method to get the current selected network object
   getCurrentNetwork(): any {
     if (!this.selectedNetwork) return null;
     return this.networks().find(n => n.id === this.selectedNetwork);

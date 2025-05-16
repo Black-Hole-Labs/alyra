@@ -6,7 +6,7 @@ import { NetworkChangeToPopupComponent } from '../../components/popup/network-ch
 import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
 import { Subscription } from 'rxjs';
 import { BridgeTxComponent } from '../../components/popup/bridge-tx/bridge-tx.component';
-import { Network, TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
+import { Network, NetworkId, TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
 import { Token } from '../trade/trade.component';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
 import { WalletBalanceService } from '../../services/wallet-balance.service';
@@ -116,7 +116,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
   //walletTimer: any = null;
   private _buttonState: 'bridge' | 'finding' | 'approve' | 'wallet' | 'no-available-quotes' | 'wrong-address' | 'insufficient' = 'bridge';
 
-  // Свойства для анимации текста
   private possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}:"<>?|';
   private glitchChars = '!@#$%^&*()_+{}:"<>?|\\';
   private cyberChars = '01010101110010101010101110101010';
@@ -167,7 +166,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
         catch(error){
           // this.updateBuyAmount('0.0');
           // update gas = 0.0
-          console.log("error",error);
+          // console.log("error",error);
           this.setButtonState('no-available-quotes');
         }
         
@@ -269,8 +268,8 @@ export class BridgeComponent implements OnInit, OnDestroy {
     effect(() => {
       let isConnected = this.blockchainStateService.connected();
       if (isConnected && 
-        (this.selectedNetwork()?.id == 1151111081099710 ||
-         this.selectedBuyNetwork()?.id == 1151111081099710))
+        (this.selectedNetwork()?.id == NetworkId.SOLANA_MAINNET ||
+         this.selectedBuyNetwork()?.id == NetworkId.SOLANA_MAINNET))
       {
         this.showCustomAddress = true;
       }
@@ -356,15 +355,15 @@ export class BridgeComponent implements OnInit, OnDestroy {
     }
   
     if (!fromChain || !toChain || !fromAddress || !fromAmount || !fromToken || !toToken || !fromTokenDecimals) {
-      console.log("fromChain",fromChain);
-      console.log("toChain",toChain);
-      console.log("fromAddress",fromAddress);
-      console.log("fromAmount",fromAmount);
-      console.log("fromToken",fromToken);
-      console.log("toToken",toToken);
-      console.log("fromTokenDecimals",fromTokenDecimals);
+      // console.log("fromChain",fromChain);
+      // console.log("toChain",toChain);
+      // console.log("fromAddress",fromAddress);
+      // console.log("fromAmount",fromAmount);
+      // console.log("fromToken",fromToken);
+      // console.log("toToken",toToken);
+      // console.log("fromTokenDecimals",fromTokenDecimals);
       
-      console.log("adjusted From Amount",adjustedFromAmount);
+      // console.log("adjusted From Amount",adjustedFromAmount);
 
       console.error('Missing required parameters');
       return;
@@ -374,15 +373,15 @@ export class BridgeComponent implements OnInit, OnDestroy {
       fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress, slippageValue)
     .subscribe({
       next: (response: any) => {
-        console.log('Quote received:', response);
+        // console.log('Quote received:', response);
         if (response.estimate && response.transactionRequest) 
         {
           const toAmountNumber = Number(this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals)));
           const readableToAmount = toAmountNumber.toFixed(Number(toTokenDecimals)).replace(/\.?0+$/, '');
-          console.log('readableToAmount:', readableToAmount);
+          // console.log('readableToAmount:', readableToAmount);
           this.updateBuyAmount(readableToAmount);
           
-          // if(this.blockchainStateService.network()!.id == 1151111081099710) // SVM
+          // if(this.blockchainStateService.network()!.id == NetworkId.SOLANA_MAINNET) // SVM
           // {
           //   gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
           // }
@@ -398,7 +397,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
           this.gasPriceUSD = Number(gasPriceUSD);
           
-          console.log('gasPriceUSD:', this.gasPriceUSD);
+          // console.log('gasPriceUSD:', this.gasPriceUSD);
         }
         else 
         {
@@ -407,7 +406,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
         if(response.transactionRequest.data)
         {
-          if(this.blockchainStateService.network()?.id === 1151111081099710)
+          if(this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET)
           {
             this.txData.set(response.transactionRequest as TransactionRequestSVM);
           }
@@ -415,7 +414,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
           {
             this.txData.set(response.transactionRequest as TransactionRequestEVM);            
             if(fromToken !== ethers.ZeroAddress){
-              console.log("this.buttonState = 'approve'");
+              // console.log("this.buttonState = 'approve'");
               this.setButtonState('approve');
             }
           }
@@ -442,7 +441,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
           return;
         }
         this.setButtonState('bridge');
-        console.log('Quote request completed');
+        // console.log('Quote request completed');
       }
     });
 
@@ -460,7 +459,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewChecked() {
-    // Проверяем, нужно ли анимировать текст
     this.checkAndAnimateReceiveText();
   }
 
@@ -477,7 +475,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   selectNetwork(networkId: string) {
-    console.log(`Selected network: ${networkId}`);
+    // console.log(`Selected network: ${networkId}`);
     // Handle the selected network
   }
   closeNetworkChangeFromPopup(): void {
@@ -506,11 +504,11 @@ export class BridgeComponent implements OnInit, OnDestroy {
       });
       this.receiveTextAnimated = false;
 
-      if (event.id == 1151111081099710) // Solana
+      if (event.id == NetworkId.SOLANA_MAINNET) // Solana
       {
         this.showCustomAddress = true;
       }
-      else if (this.selectedBuyNetwork()?.id != 1151111081099710)
+      else if (this.selectedBuyNetwork()?.id != NetworkId.SOLANA_MAINNET)
       {
         this.showCustomAddress = false;
       }
@@ -527,11 +525,11 @@ export class BridgeComponent implements OnInit, OnDestroy {
     });
     this.receiveTextAnimated = false;
 
-    if (event.id == 1151111081099710) // Solana
+    if (event.id == NetworkId.SOLANA_MAINNET) // Solana
     {
       this.showCustomAddress = true;
     }
-    else if (this.selectedNetwork()?.id != 1151111081099710)
+    else if (this.selectedNetwork()?.id != NetworkId.SOLANA_MAINNET)
     {
       this.showCustomAddress = false;
     }
@@ -602,12 +600,12 @@ export class BridgeComponent implements OnInit, OnDestroy {
         }, 2000);
       }
     }
-    console.log("some data");
+    // console.log("some data");
   }
 
   updateBuyAmount(value: string): void {
     const limited = this.limitDecimals(value, 6);
-    console.log("limited",limited);
+    // console.log("limited",limited);
     const num = Number(limited);
   
     if (!isNaN(num)) {
@@ -637,7 +635,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
     return value;
   }
 
-  // Управление анимацией
   onMouseDown(): void {
     const changeButton = document.getElementById('change-button');
     if (changeButton && !changeButton.classList.contains('animate')) {
@@ -654,7 +651,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
   
   swapNetworks(): void {
-    console.log('Swapping networks...');
+    // console.log('Swapping networks...');
     this.txData.set(undefined);
 
     const tempNetwork = this.selectedNetwork();
@@ -677,7 +674,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   openBridgeTxPopup(): void {
-    // Скрываем контент с комиссиями при открытии попапа
     this.feesVisible = false;
     this.isNetworkChosen = false;
     this.showBridgeTxPopup = true;
@@ -761,22 +757,14 @@ export class BridgeComponent implements OnInit, OnDestroy {
   toggleCustomAddress(): void {
     
     if (this.showCustomAddress) {
-      // Если инпут открыт, просто закрываем его
       this.showCustomAddress = false;
     } else {
-      // Если инпут закрыт, открываем его
       this.showCustomAddress = true;
     }
     
-    // Сбрасываем флаг анимации при переключении пользовательского адреса
     this.receiveTextAnimated = false;
   }
 
-  // Нам больше не нужен метод onAnimationDone, так как Angular анимации
-  // автоматически обрабатывают появление и исчезновение элементов
-  // Можно удалить или оставить пустым для логирования
-
-  // Новый метод для управления состоянием кнопки
   // startFindingRoutesProcess(): void {
   //   this.resetTimers();
     
@@ -799,7 +787,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   async bridge(): Promise<void> {
     let txHash: string;
-    if(this.blockchainStateService.network()?.id === 1151111081099710)
+    if(this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET)
     {
       txHash = await this.svmSwap();
     }
@@ -820,7 +808,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
     }
     catch (error) 
     {
-      console.log("error setting balance",error);
+      // console.log("error setting balance",error);
     }
   }
 
@@ -832,7 +820,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
     const provider = this.blockchainStateService.getCurrentProvider().provider;
   
     const txHash = await provider.sendTx(txData);
-    console.log("SVM Swap транзакция отправлена:", txHash);
+    // console.log("SVM Swap транзакция отправлена:", txHash);
     return txHash.signature;
   }
   
@@ -864,25 +852,24 @@ export class BridgeComponent implements OnInit, OnDestroy {
     const approveAmount = parseUnits(amount, fromTokenDecimals);
 
     // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
-    // console.log("allowance",allowance);
+    // // console.log("allowance",allowance);
 
     const approveTx = await erc20Contract["approve"]((this.txData() as TransactionRequestEVM).to, approveAmount);
     
 
     await approveTx.wait();
 
-    console.log("Approve успешно выполнен:", approveTx.hash);
+    // console.log("Approve успешно выполнен:", approveTx.hash);
 
     const txHash = await provider.sendTx(this.txData(), true);
 
     this.setButtonState('bridge');
     this.buttonState === 'bridge'
 
-    console.log("txHash",txHash);
+    // console.log("txHash",txHash);
     return txHash;
   }
   
-  // Метод для сброса таймеров
   // resetTimers(): void {
   //   if (this.findingRoutesTimer) {
   //     clearTimeout(this.findingRoutesTimer);
@@ -894,7 +881,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
   //   }
   // }
   
-  // Метод для сброса состояния кнопки
   resetButtonState(): void {
     //this.resetTimers();
     this.setButtonState('bridge');
@@ -909,7 +895,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   }
 
   get buttonState(): 'bridge' | 'finding' | 'approve' | 'wallet' | 'wrong-address' | 'no-available-quotes' | 'insufficient' {
-    //console.log("uncoment, auto load fix???"); todo
+    //// console.log("uncoment, auto load fix???"); todo
 
     if (this.showCustomAddress && this.addressStatus === 'bad') {
       return 'wrong-address';
@@ -917,26 +903,22 @@ export class BridgeComponent implements OnInit, OnDestroy {
     return this._buttonState;
   }
   
-  // Добавляем сеттер для изменения состояния
   private setButtonState(state: 'bridge' | 'finding' | 'approve' | 'wallet' | 'no-available-quotes' | 'wrong-address' | 'insufficient'): void {
     if (this._buttonState !== state) {
       this._buttonState = state;
-      // Сбрасываем флаг анимации, чтобы текст анимировался заново при изменении состояния
       this.receiveTextAnimated = false;
     }
   }
 
   /**
-   * Анимирует текст с эффектом "подбора символов"
-   * @param element Элемент, в котором нужно анимировать текст
-   * @param finalText Конечный текст
-   * @param elementId Уникальный идентификатор элемента
+   * Animates text
+   * @param element element where we need to animate text
+   * @param finalText result
+   * @param elementId unique id of element
    */
   animateText(element: HTMLElement, finalText: string, elementId: string): void {
-    // Сохраняем оригинальный текст для гарантированного отображения в конце
     const originalText = finalText;
     
-    // Очищаем предыдущую анимацию, если она есть
     if (this.animationTimeouts[elementId]) {
       window.clearTimeout(this.animationTimeouts[elementId]);
       delete this.animationTimeouts[elementId];
@@ -945,14 +927,11 @@ export class BridgeComponent implements OnInit, OnDestroy {
     let frame = 0;
     const totalFrames = this.animationFrames;
     
-    // Создаем массив для отслеживания "глитч-эффекта" для каждой буквы
     const glitchStates = Array(finalText.length).fill(false);
-    // Массив для отслеживания "подобранных" букв
     const resolvedChars = Array(finalText.length).fill(false);
     
     const animate = () => {
       if (frame >= totalFrames) {
-        // Гарантируем, что в конце анимации отображается оригинальный текст
         element.textContent = originalText;
         delete this.animationTimeouts[elementId];
         return;
@@ -961,23 +940,16 @@ export class BridgeComponent implements OnInit, OnDestroy {
       let result = '';
       const progress = frame / totalFrames;
       
-      // Изменяем кривую прогресса для более медленного начала и быстрого завершения
-      // Используем кубическую функцию для более плавного эффекта
       const easedProgress = Math.pow(progress, 0.6);
       
-      // Определяем, сколько букв должно быть "подобрано" на текущем кадре
-      // Используем нелинейную функцию для более интересного визуального эффекта
       const resolvedCount = Math.floor(finalText.length * easedProgress);
       
-      // Обновляем состояние "подобранных" букв
       for (let i = 0; i < resolvedCount; i++) {
         if (!resolvedChars[i]) {
           resolvedChars[i] = true;
         }
       }
       
-      // Случайно выбираем несколько букв для глитча
-      // Уменьшаем частоту глитчей в начале и увеличиваем к концу
       if (frame % 2 === 0) {
         const glitchProbability = 0.05 + (progress * 0.1);
         for (let i = 0; i < finalText.length; i++) {
@@ -988,13 +960,9 @@ export class BridgeComponent implements OnInit, OnDestroy {
       }
       
       for (let i = 0; i < finalText.length; i++) {
-        // Если буква уже "подобрана"
         if (resolvedChars[i]) {
-          // Но может быть с глитчем
           if (glitchStates[i] && frame < totalFrames * 0.95 && finalText[i] !== ' ') {
-            // Применяем глитч-эффект к уже подобранной букве
             if (Math.random() < 0.3) {
-              // Используем кибер-символы для более футуристического вида
               const cyberIndex = Math.floor(Math.random() * this.cyberChars.length);
               result += this.cyberChars[cyberIndex];
             } else {
@@ -1002,7 +970,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
               result += this.glitchChars[glitchIndex];
             }
           } else {
-            // Если это последние 10% анимации, всегда показываем правильную букву
             if (progress > 0.9) {
               result += finalText[i];
             } else {
@@ -1010,13 +977,9 @@ export class BridgeComponent implements OnInit, OnDestroy {
             }
           }
         } else {
-          // Буква еще не "подобрана"
           if (finalText[i] === ' ') {
-            // Пробелы оставляем как есть для лучшей читаемости
             result += ' ';
           } else {
-            // Для букв выбираем случайный символ
-            // С вероятностью используем символы глитча или кибер-символы
             const rand = Math.random();
             if (rand < 0.2) {
               const glitchIndex = Math.floor(Math.random() * this.glitchChars.length);
@@ -1035,7 +998,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
       element.textContent = result;
       frame++;
       
-      // Динамически регулируем скорость анимации - быстрее в начале, медленнее в середине, быстрее к концу
       let currentSpeed = this.animationSpeed;
       if (progress < 0.3) {
         currentSpeed = this.animationSpeed * 0.8; // Быстрее в начале
@@ -1051,7 +1013,6 @@ export class BridgeComponent implements OnInit, OnDestroy {
     animate();
   }
 
-  // Метод для проверки и запуска анимации текста
   private checkAndAnimateReceiveText() {
     if (this.receiveTextElement && 
         !this.receiveTextAnimated && 
@@ -1091,7 +1052,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 	onSlippageSave(value: string): void {
     if (value === "Auto")
     {
-      console.log("Slippate is Auto. Default value is 0.005 (0.5%)");
+      // console.log("Slippate is Auto. Default value is 0.005 (0.5%)");
       this.slippage = 0.005;
     }
     else
@@ -1103,8 +1064,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
       }
   
       this.slippage = val / 100;
-      console.log(`Slippage set: ${this.slippage}; (${val}%)`);
+      // console.log(`Slippage set: ${this.slippage}; (${val}%)`);
     }
-    // Не закрываем попап здесь, так как это уже происходит в компоненте settings-bridge
   }
 }

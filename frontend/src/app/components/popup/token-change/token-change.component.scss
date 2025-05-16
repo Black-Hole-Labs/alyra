@@ -304,19 +304,29 @@ a:hover {
 	margin-left: 10px;
 }
 
-.token-viewport {
-  /* сохраняем overflow, но прячем скроллбары */
-  overflow: auto;
-
-  /* Firefox */
-  scrollbar-width: none;
-  /* IE 10+ */
-  -ms-overflow-style: none;
+.list {
+  height: 100%;       /* чтобы контейнер растягивался */
 }
 
-/* Webkit-браузеры (Chrome, Safari, Opera) */
-.token-viewport::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  background: transparent;
+.token-list {
+  height: 100%;       /* займёт всю высоту родителя */
+  overflow-y: auto;   /* включаем прокрутку */
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-right: -8px;
+  margin-left: 0px;
+  scrollbar-width: thin;
+}
+
+.token {
+  /* здесь ваши стили для строки */
+  /* например фиксированная высота: */
+  height: 80px;
+  flex-shrink: 0;     /* чтобы все строки были одной высоты */
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-sizing: border-box;
 }

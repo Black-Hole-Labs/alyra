@@ -47,6 +47,6 @@ export class SuccessNotificationComponent implements OnInit {
     this.isVisible = false;
     setTimeout(() => {
       this.close.emit();
-    }, 300); // Ждем завершения анимации перед удалением
+    }, 300);
   }
 }
