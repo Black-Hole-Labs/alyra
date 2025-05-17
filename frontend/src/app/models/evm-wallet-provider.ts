@@ -48,6 +48,12 @@ export class EvmWalletProvider implements WalletProvider {
     } catch (error: any) {
       if (error.code === 4902) {
         await this.addNetwork(selectedNetwork);
+
+        await this.provider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: selectedNetwork.idHex }],
+        });
+        this.network = selectedNetwork.idHex;
       } else {
         throw error;
       }
