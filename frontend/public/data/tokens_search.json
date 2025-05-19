@@ -77053,7 +77053,7 @@
         "symbol": "ETH",
         "name": "ETH",
         "decimals": 18,
-        "priceUSD": "2422.13",
+        "priceUSD": "2406.2092",
         "coinKey": "ETH",
         "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
       },
@@ -77063,7 +77063,7 @@
         "symbol": "WETH",
         "name": "WETH",
         "decimals": 18,
-        "priceUSD": "2422.13",
+        "priceUSD": "2406.2092",
         "coinKey": "WETH",
         "logoURI": "https://static.debank.com/image/eth_token/logo_url/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/61844453e63cf81301f845d7864236f6.png"
       },
@@ -77073,9 +77073,59 @@
         "symbol": "USDC.e",
         "name": "Bridged USDC (Stargate)",
         "decimals": 6,
-        "priceUSD": "0.99999994",
+        "priceUSD": "0.99985",
         "coinKey": "USDCe",
         "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+      },
+      {
+        "chainId": 57073,
+        "address": "0x0200C29006150606B650577BBE7B6248F58470c1",
+        "symbol": "USD₮0",
+        "name": "USD₮0",
+        "decimals": 6,
+        "priceUSD": "1.00020707",
+        "coinKey": "USD₮0",
+        "logoURI": "https://static.debank.com/image/ink_token/logo_url/0x0200c29006150606b650577bbe7b6248f58470c1/8bba37fddc2774e06a94b8952e3e3ad7.png"
+      },
+      {
+        "chainId": 57073,
+        "address": "0x5Bff88cA1442c2496f7E475E9e7786383Bc070c0",
+        "symbol": "sfrxUSD",
+        "name": "Staked Frax USD",
+        "decimals": 18,
+        "priceUSD": "1.1151636713165696",
+        "coinKey": "sfrxUSD",
+        "logoURI": "https://static.debank.com/image/eth_token/logo_url/0xcf62f905562626cfcdd2261162a51fd02fc9c5b6/afe8a7ab1731c4322c252e0e38d034f5.png"
+      },
+      {
+        "chainId": 57073,
+        "address": "0x43eDD7f3831b08FE70B7555ddD373C8bF65a9050",
+        "symbol": "frxETH",
+        "name": "Frax Ether",
+        "decimals": 18,
+        "priceUSD": "2406.2092",
+        "coinKey": "frxETH",
+        "logoURI": "https://static.debank.com/image/ink_token/logo_url/0x43edd7f3831b08fe70b7555ddd373c8bf65a9050/4313f25f6c5196e8fce2c80fa34c73d0.png"
+      },
+      {
+        "chainId": 57073,
+        "address": "0x80Eede496655FB9047dd39d9f418d5483ED600df",
+        "symbol": "frxUSD",
+        "name": "Frax USD",
+        "decimals": 18,
+        "priceUSD": "0.99995145",
+        "coinKey": "frxUSD",
+        "logoURI": "https://static.debank.com/image/eth_token/logo_url/0xcacd6fd266af91b8aed52accc382b4e165586e29/7610ebe75cb08ff21ee6dfb7e1592e25.png"
+      },
+      {
+        "chainId": 57073,
+        "address": "0x3Ec3849C33291a9eF4c5dB86De593EB4A37fDe45",
+        "symbol": "sfrxETH",
+        "name": "Staked Frax Ether",
+        "decimals": 18,
+        "priceUSD": "2696.73113730883",
+        "coinKey": "sfrxETH",
+        "logoURI": "https://static.debank.com/image/ink_token/logo_url/0x3ec3849c33291a9ef4c5db86de593eb4a37fde45/b0802881acff20fd906a2e189a4ea882.png"
       }
     ],
     "59144": [

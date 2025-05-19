@@ -539,5 +539,58 @@
       "decimals": 18
     },
     "explorerUrl": "https://explorer.lens.xyz/token/"
+  },
+  {
+    "key": "ink",
+    "chainType": "EVM",
+    "name": "Ink",
+    "id": 57073,
+    "idHex": "0xdef1",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/ink.svg",
+    "rpcUrls": [
+      "https://rpc-gel.inkonchain.com"
+    ],
+    "nativeCurrency": {
+      "name": "Ether",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://explorer.inkonchain.com/"
+  },
+  {
+    "key": "wcc",
+    "chainType": "EVM",
+    "name": "World Chain",
+    "id": 480,
+    "idHex": "0x1e0",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/world.svg",
+    "rpcUrls": [
+      "https://worldchain-mainnet.g.alchemy.com/public",
+      "https://worldchain-mainnet.gateway.tenderly.co"
+    ],
+    "nativeCurrency": {
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://worldscan.io/token/"
+  },
+  {
+    "key": "mod",
+    "chainType": "EVM",
+    "name": "Mode",
+    "id": 34443,
+    "idHex": "0x868b",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/mode.png",
+    "rpcUrls": [
+      "https://mainnet.mode.network",
+      "https://mode.drpc.org"
+    ],
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://modescan.io/token/"
   }
 ]
