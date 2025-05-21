@@ -8,9 +8,9 @@
 		height: 48px;
 		border-radius: 13px;
 	}
-	.header .logo .logo-img {
-		width: 32px;
-		height: 32px;
+	.logo-img {
+		width: 52px;
+		height: 52px;
 	}
 	p {
 		font-size: 24px;
@@ -25,12 +25,19 @@
 	.launch p {
 		font-size: 20px;
 	}
+	.launch::after {
+		right: 12px;
+		font-size: 20px;
+	}
+	.launch:hover {
+		padding-right: 35px;
+	}
 	.info {
 		bottom: 130px;
 		gap: 40px;
 	}
 	.title {
-		gap: 0px;
+		gap: 10px;
 	}
 	h1 {
 		font-size: 52px;
@@ -53,8 +60,19 @@
 		}
 	}
 	.icons {
-		top: 30px;
+		top: 20px;
 		right: 25px;
+	}
+	.statistic:hover {
+		.icons1 {
+			top: 40px;
+		}
+		.icons2 {
+			top: 60px;
+		}
+		.icons3 {
+			top: 80px;
+		}
 	}
 	.icon {
 		width: 32px;
@@ -66,21 +84,91 @@
 		left: 30px;
 		gap: 10px;
 	}
+	.footer h3 {
+		font-size: 14px;
+	}
+	.supporters h3 {
+		font-size: 14px;
+	}
 	.supporters {
-		gap: 20px;
+		gap: 10px;
 	}
 	.supporter {
 		gap: 10px;
 		padding: 6px 16px;
-		border-radius: 13px;
+		border-radius: 8px;
+	}
+	.supporter::before {
+		border-radius: 8px;
+	}
+	.supporter::after {
+		border-radius: 8px;
 	}
 	.sup-logo {
-		width: 28px;
-		height: 28px;
+		width: 22px;
+		height: 22px;
 	}
 	.bfg {
-		width: 56px;
+		width: 46px;
 	}
+
+	.token-1 {
+		width: 90px;
+		height: 90px;
+		top: 300px;
+		left: 100px;
+	}
+	
+	.token-2 {
+		width: 75px;
+		height: 75px;
+		top: 650px;
+		left: 1600px;
+	}
+	
+	.token-3 {
+		width: 85px;
+		height: 85px;
+		top: 300px;
+		left: 1700px;
+	}
+	
+	.token-4 {
+		width: 70px;
+		height: 70px;
+		top: 10px;
+		left: 1400px;
+	}
+	
+	.token-5 {
+		width: 80px;
+		height: 80px;
+		top: -250px;
+		left: 1300px;
+	}
+	
+	.token-6 {
+		width: 65px;
+		height: 65px;
+		top: -150px;
+		left: 1000px;
+	}
+	
+	.token-7 {
+		width: 95px;
+		height: 95px;
+		top: -350px;
+		left: 500px;
+	}
+	
+	.token-8 {
+		width: 85px;
+		height: 85px;
+		top: 10px;
+		left: 240px;
+	}
+
+	
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
 	.header {
@@ -92,9 +180,9 @@
 		height: 48px;
 		border-radius: 13px;
 	}
-	.header .logo .logo-img {
-		width: 32px;
-		height: 32px;
+	.logo-img {
+		width: 52px;
+		height: 52px;
 	}
 	p {
 		font-size: 24px;
@@ -109,12 +197,19 @@
 	.launch p {
 		font-size: 20px;
 	}
+	.launch::after {
+		right: 12px;
+		font-size: 20px;
+	}
+	.launch:hover {
+		padding-right: 35px;
+	}
 	.info {
 		bottom: 130px;
 		gap: 40px;
 	}
 	.title {
-		gap: 0px;
+		gap: 10px;
 	}
 	h1 {
 		font-size: 52px;
@@ -136,9 +231,26 @@
 			font-size: 18px;
 		}
 	}
+	.statistic::after {
+		border-radius: 28px;
+	}
+	.statistic::before {
+		border-radius: 28px;
+	}
 	.icons {
-		top: 30px;
+		top: 20px;
 		right: 25px;
+	}
+	.statistic:hover {
+		.icons1 {
+			top: 40px;
+		}
+		.icons2 {
+			top: 60px;
+		}
+		.icons3 {
+			top: 80px;
+		}
 	}
 	.icon {
 		width: 32px;
@@ -148,7 +260,13 @@
 	.footer {
 		bottom: 10px;
 		left: 20px;
-		gap: 10px;
+		gap: 5px;
+	}
+	.footer h3 {
+		font-size: 14px;
+	}
+	.supporters h3 {
+		font-size: 14px;
 	}
 	.supporters {
 		gap: 10px;
@@ -156,14 +274,76 @@
 	.supporter {
 		gap: 10px;
 		padding: 6px 16px;
-		border-radius: 13px;
+		border-radius: 8px;
+	}
+	.supporter::before {
+		border-radius: 8px;
+	}
+	.supporter::after {
+		border-radius: 8px;
 	}
 	.sup-logo {
-		width: 28px;
-		height: 28px;
+		width: 22px;
+		height: 22px;
 	}
 	.bfg {
-		width: 56px;
+		width: 46px;
+	}
+
+	.token-1 {
+		width: 90px;
+		height: 90px;
+		top: 300px;
+		left: 70px;
+	}
+	
+	.token-2 {
+		width: 75px;
+		height: 75px;
+		top: 450px;
+		left: 1250px;
+	}
+	
+	.token-3 {
+		width: 85px;
+		height: 85px;
+		top: 200px;
+		left: 1300px;
+	}
+	
+	.token-4 {
+		width: 70px;
+		height: 70px;
+		top: 10px;
+		left: 1100px;
+	}
+	
+	.token-5 {
+		width: 80px;
+		height: 80px;
+		top: -250px;
+		left: 1200px;
+	}
+	
+	.token-6 {
+		width: 65px;
+		height: 65px;
+		top: -150px;
+		left: 800px;
+	}
+	
+	.token-7 {
+		width: 95px;
+		height: 95px;
+		top: -350px;
+		left: 400px;
+	}
+	
+	.token-8 {
+		width: 85px;
+		height: 85px;
+		top: 10px;
+		left: 140px;
 	}
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
@@ -176,9 +356,9 @@
 		height: 44px;
 		border-radius: 10px;
 	}
-	.header .logo .logo-img {
-		width: 32px;
-		height: 32px;
+	.logo-img {
+		width: 48px;
+		height: 48px;
 	}
 	p {
 		font-size: 24px;
@@ -191,14 +371,21 @@
 		height: 28px;
 	}
 	.launch p {
-		font-size: 20px;
+		font-size: 18px;
+	}
+	.launch::after {
+		right: 10px;
+		font-size: 18px;
+	}
+	.launch:hover {
+		padding-right: 32px;
 	}
 	.info {
 		bottom: 110px;
 		gap: 30px;
 	}
 	.title {
-		gap: 0px;
+		gap: 8px;
 	}
 	h1 {
 		font-size: 40px;
@@ -220,9 +407,26 @@
 			font-size: 16px;
 		}
 	}
+	.statistic::after {
+		border-radius: 24px;
+	}
+	.statistic::before {
+		border-radius: 24px;
+	}
 	.icons {
 		top: 20px;
 		right: 20px;
+	}
+	.statistic:hover {
+		.icons1 {
+			top: 40px;
+		}
+		.icons2 {
+			top: 60px;
+		}
+		.icons3 {
+			top: 80px;
+		}
 	}
 	.icon {
 		width: 28px;
@@ -232,15 +436,27 @@
 	.footer {
 		bottom: 10px;
 		left: 20px;
-		gap: 10px;
+		gap: 5px;
+	}
+	.footer h3 {
+		font-size: 12px;
+	}
+	.supporters h3 {
+		font-size: 12px;
 	}
 	.supporters {
-		gap: 10px;
+		gap: 5px;
 	}
 	.supporter {
 		gap: 10px;
 		padding: 4px 12px;
-		border-radius: 10px;
+		border-radius: 8px;
+	}
+	.supporter::before {
+		border-radius: 8px;
+	}
+	.supporter::after {
+		border-radius: 8px;
 	}
 	.sup-logo {
 		width: 22px;
@@ -260,9 +476,9 @@
 		height: 44px;
 		border-radius: 10px;
 	}
-	.header .logo .logo-img {
-		width: 32px;
-		height: 32px;
+	.logo-img {
+		width: 45px;
+		height: 45px;
 	}
 	p {
 		font-size: 24px;
@@ -278,7 +494,14 @@
 		height: 28px;
 	}
 	.launch p {
-		font-size: 20px;
+		font-size: 18px;
+	}
+	.launch::after {
+		right: 10px;
+		font-size: 18px;
+	}
+	.launch:hover {
+		padding-right: 32px;
 	}
 	.info {
 		bottom: 180px;
@@ -309,10 +532,27 @@
 			font-size: 14px;
 		}
 	}
+	.statistic::after {
+		border-radius: 20px;
+	}
+	.statistic::before {
+		border-radius: 20px;
+	}
 	.icons {
 		top: 85px;
 		right: 50%;
 		transform: translateX(50%);
+	}
+	.statistic:hover {
+		.icons1 {
+			display: none;
+		}
+		.icons2 {
+			display: none;
+		}
+		.icons3 {
+			display: none;
+		}
 	}
 	.icon {
 		width: 24px;
@@ -322,24 +562,36 @@
 	.footer {
 		bottom: 10px;
 		left: 20px;
-		gap: 10px;
+		gap: 8px;
+	}
+	.footer h3 {
+		font-size: 12px;
+	}
+	.supporters h3 {
+		font-size: 12px;
 	}
 	.supporters {
 		flex-direction: column;
 		align-items: flex-start;
-		gap: 10px;
+		gap: 8px;
 	}
 	.supporter {
-		gap: 10px;
+		gap: 8px;
 		padding: 4px 12px;
-		border-radius: 10px;
+		border-radius: 5px;
+	}
+	.supporter::before {
+		border-radius: 8px;
+	}
+	.supporter::after {
+		border-radius: 8px;
 	}
 	.sup-logo {
-		width: 22px;
-		height: 22px;
+		width: 18px;
+		height: 18px;
 	}
 	.bfg {
-		width: 46px;
+		width: 38px;
 	}
 }
 
@@ -353,9 +605,9 @@
 		height: 44px;
 		border-radius: 10px;
 	}
-	.header .logo .logo-img {
-		width: 32px;
-		height: 32px;
+	.logo-img {
+		width: 40px;
+		height: 40px;
 	}
 	p {
 		font-size: 18px;
@@ -372,6 +624,13 @@
 	}
 	.launch p {
 		font-size: 16px;
+	}
+	.launch::after {
+		right: 10px;
+		font-size: 16px;
+	}
+	.launch:hover {
+		padding-right: 30px;
 	}
 	.info {
 		width: 340px;
@@ -404,10 +663,27 @@
 			font-size: 14px;
 		}
 	}
+	.statistic::after {
+		border-radius: 20px;
+	}
+	.statistic::before {
+		border-radius: 20px;
+	}
 	.icons {
 		top: 50%;
 		right: 20px;
 		transform: translateY(-50%);
+	}
+	.statistic:hover {
+		.icons1 {
+			display: none;
+		}
+		.icons2 {
+			display: none;
+		}
+		.icons3 {
+			display: none;
+		}
 	}
 	.icon {
 		width: 36px;
@@ -415,11 +691,13 @@
 		margin-left: -4px;
 	}
 	.footer {
+		position: absolute;
 		width: 340px;
+		left: 0;
+		right: 0;
+		margin: 0 auto;
 		align-items: center;
 		bottom: 10px;
-		left: 50%;
-		transform: translateX(-50%);
 		gap: 10px;
 	}
 	.footer h3 {
