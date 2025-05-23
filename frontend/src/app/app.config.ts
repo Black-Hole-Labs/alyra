@@ -10,8 +10,9 @@ import {
   BackpackProvider, TrustWalletProvider, OkxWalletProvider,
   CoinbaseWalletProvider, RabbyWalletProvider, WalletProviderManager
 } from './models/network.model';
+import { WalletConnectEvmProvider } from './models/walletconnect-provider';
 
-function registerProviders(stateService: BlockchainStateService, providers: any[], walletManager: WalletProviderManager, injector: Injector): void {
+function registerProviders(stateService: BlockchainStateService, providers: any[], walletManager: WalletProviderManager, injector: Injector, networks: Network[]): void {
   providers.forEach(provider => {
     switch (provider.id) {
       case 'metamask':
@@ -41,6 +42,9 @@ function registerProviders(stateService: BlockchainStateService, providers: any[
       case 'rabby-wallet':
         stateService.registerProvider(provider.id, new RabbyWalletProvider(walletManager, injector), provider.type as ProviderType);
         break;
+      case 'walletconnect':
+        stateService.registerProvider(provider.id, new WalletConnectEvmProvider(injector, networks), provider.type as ProviderType);
+        break;
       default:
         console.warn(`Provider ${provider.id} is not yet implemented.`);
     }
@@ -52,12 +56,20 @@ async function initializeApp(injector: Injector): Promise<void> {
   const stateService = injector.get(BlockchainStateService);
 
   try {
-    const response = await fetch('/data/providers.json');
-    if (!response.ok) throw new Error('Failed to load providers');
-    const providers = await response.json();
-    registerProviders(stateService, providers, walletManager, injector);
+    const [provRes, netRes] = await Promise.all([
+      fetch('/data/providers.json'),
+      fetch('/data/networks.json'),
+    ]);
+
+    if (!provRes.ok) throw new Error('Failed to load providers');
+    if (!netRes.ok) throw new Error('Failed to load networks');
+
+    const providers: any[] = await provRes.json();
+    const networks: Network[] = await netRes.json();
+
+    registerProviders(stateService, providers, walletManager, injector, networks);
   } catch (error) {
-    console.error('Error loading providers:', error);
+    console.error('Error loading config:', error);
   }
 
   try {

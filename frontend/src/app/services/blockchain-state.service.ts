@@ -238,6 +238,7 @@ public loadNetworks(type: ProviderType, force: boolean = false): void {
   disconnect(): void {
     this.walletAddress.set(null);
     this.loadNetworks(ProviderType.MULTICHAIN, true);
+    sessionStorage.clear();
     //this.network.set(null);
     this.connected.set(false);
   }

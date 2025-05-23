@@ -70,5 +70,13 @@
     "cssClass": "magic-eden",
     "installUrl": "https://magiceden.io/download",
     "iconUrl": "/img/wallet-icns/MagicEden.png"
+  },
+  {
+    "id": "walletconnect",
+    "name": "WalletConnect",
+    "type": "EVM",
+    "cssClass": "walletconnect",
+    "installUrl": "",
+    "iconUrl": "/img/wallet-icns/WalletConnect.png"
   }
 ]

@@ -9,11 +9,19 @@ export interface WalletProvider {
 export interface Network {
   id: number;
   name: string;
-  rpcUrls: string;
+  rpcUrls: string[];
   logoURI?: string;
   idHex?:string;
   chainType: string; // Network type (EVM, SVM)
   explorerUrl: string;
+  key:string,
+  nativeCurrency: INativeCurrency;
+}
+
+export interface INativeCurrency {
+  name: string,
+  symbol: string,
+  decimals: number
 }
 
 export interface TransactionRequestEVM {
