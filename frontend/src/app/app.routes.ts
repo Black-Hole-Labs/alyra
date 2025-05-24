@@ -7,7 +7,7 @@ import { QuestsComponent } from './pages/quests/quests.component';
 export const routes: Routes = [
   { path: 'trade', component: TradeComponent, data: { title: 'Trade' } },
   { path: 'bridge', component: BridgeComponent, data: { title: 'Bridge' } },
-  { path: 'quests', component: QuestsComponent, data: { title: 'Rewards' } },
+  { path: 'rewards', component: QuestsComponent, data: { title: 'Rewards' } },
   { path: '', redirectTo: '/trade', pathMatch: 'full' },
 ];
 
