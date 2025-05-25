@@ -143,14 +143,9 @@ export class BlockchainStateService {
   }
 
   private loadTokensForNetwork(network: number): void {
-    console.log('Loading tokens for network:', network);
     const tokensData = tokens as unknown as TokensData;
     const networkKey = network.toString();
-    console.log('Network key:', networkKey);
-    console.log('Available EVM tokens:', Object.keys(tokensData.tokensEVM));
-    console.log('Available SVM tokens:', Object.keys(tokensData.tokensSVM));
     const tokensForNetwork = tokensData.tokensEVM[networkKey] || tokensData.tokensSVM[networkKey];
-    console.log('Found tokens for network:', tokensForNetwork?.length || 0);
 
     if (tokensForNetwork) {
       this.tokens.set(
@@ -163,7 +158,6 @@ export class BlockchainStateService {
           decimals: token.decimals.toString(),
         })) as Token[],
       );
-      console.log('Set tokens:', this.tokens());
     } else {
       console.warn(`No tokens found for network ${network}`);
       this.tokens.set([]);
@@ -171,7 +165,6 @@ export class BlockchainStateService {
   }
 
   async fetchTokensForNetwork(networkId: number): Promise<Token[]> {
-    console.log('fetching tokens for network', networkId);
     try {
       const response = await fetch(`/data/tokens.json`);
       if (!response.ok) {
@@ -226,9 +219,7 @@ export class BlockchainStateService {
   }
 
   updateNetwork(chainId: number): void {
-    console.log('Updating network to:', chainId);
     const foundNetwork = this.networks().find((n) => n.id === chainId);
-    console.log('Found network:', foundNetwork);
     this.network.set(foundNetwork ?? null);
     if (foundNetwork) {
       this.updateNetworkBackgroundIcons(foundNetwork);
