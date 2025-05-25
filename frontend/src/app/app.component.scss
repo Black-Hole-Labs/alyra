@@ -9,6 +9,15 @@
   }
 }
 
+.intro-page {
+	height: 100%;
+}
+
+:host-context(.intro-page) app-header,
+:host-context(.intro-page) app-footer {
+  display: none;
+}
+
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
 	:host {
 		padding: 30px 30px 20px 30px;
@@ -24,7 +33,7 @@
 		padding: 20px 20px 10px 20px;
 	}
 }
-@media screen and (min-width: 769px) and (max-width: 970px) {
+@media screen and (min-width: 480px) and (max-width: 970px) {
 	:host {
 		padding: 20px 20px 10px 20px;
 	}
