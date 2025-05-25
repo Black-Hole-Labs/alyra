@@ -4,7 +4,7 @@ import { PopupService } from '../../services/popup.service';
 import { Subscription } from 'rxjs';
 import { Component, ElementRef, Renderer2, EventEmitter, Output, OnInit, OnDestroy, computed, signal, effect } from '@angular/core';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
-import { Wallets } from '../../models/wallet-provider.interface';
+import { NetworkId, Wallets } from '../../models/wallet-provider.interface';
 import { WalletBalanceService } from '../../services/wallet-balance.service';
 
 
@@ -52,12 +52,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private animationSpeed = 20;
   private animationTimeouts: { [key: string]: number } = {};
 
+  NetworkId = NetworkId;
+
   constructor(
     private renderer: Renderer2,
     private elRef: ElementRef,
     public blockchainStateService: BlockchainStateService,
     public popupService: PopupService,
-    private walletBalanceService: WalletBalanceService
+    public walletBalanceService: WalletBalanceService
   ) {
     this.subscription = this.popupService.activePopup$.subscribe(popupType => {
       this.showBlackholeMenu = false;

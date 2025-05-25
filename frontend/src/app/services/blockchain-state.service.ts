@@ -14,6 +14,8 @@ export class BlockchainStateService {
   readonly connected = signal<boolean>(false);
   readonly allNetworks = signal<Network[]>([]);
 
+  customAddress = signal<string>("");
+
   searchText = signal<string>('');
 
   networks = signal<Network[]>([]);
@@ -48,7 +50,11 @@ export class BlockchainStateService {
   public tryAutoConnect(): Promise<void> {
       const providerId = sessionStorage.getItem('currentProvider');
       const networkId = sessionStorage.getItem('networkId');
-      if (!providerId) return Promise.resolve();
+      if (!providerId){
+        this.updateNetwork(NetworkId.ETHEREUM_MAINNET);
+        return Promise.resolve();
+      }
+      
       const provider = this.getProvider(providerId);
       if (!provider) return Promise.resolve();
 
@@ -233,6 +239,10 @@ public loadNetworks(type: ProviderType, force: boolean = false): void {
 
   getCurrentNetwork(): Network | null {
     return this.network();
+  }
+
+  setCustomAddress(customAddress: string){
+    this.customAddress.set(customAddress);
   }
 
   disconnect(): void {

@@ -30,23 +30,10 @@ export class AppComponent {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private titleService = inject(Title);
-  private blockchainStateService = inject(BlockchainStateService);
   public popupService = inject(PopupService);
 
   constructor() {
     this.setDynamicTitle();
-    this.initializeNetworks();
-  }
-
-  private async initializeNetworks() {
-    try {
-      const response = await fetch('/data/networks.json');
-      const networks = await response.json();
-      this.blockchainStateService.allNetworks.set(networks);
-      this.blockchainStateService.loadNetworks(ProviderType.MULTICHAIN, true);
-    } catch (error) {
-      console.error('Failed to load networks:', error);
-    }
   }
 
   private setDynamicTitle() {

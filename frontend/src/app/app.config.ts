@@ -85,7 +85,6 @@ async function initializeApp(injector: Injector): Promise<void> {
 
     stateService.allNetworks.set(allNetworks);
     stateService.networks.set(allNetworks);
-    stateService.updateNetwork(NetworkId.ETHEREUM_MAINNET);
     stateService.tryAutoConnect();
 
   } catch (error) {

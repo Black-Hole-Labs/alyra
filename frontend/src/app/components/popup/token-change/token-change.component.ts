@@ -257,11 +257,26 @@ export class TokenChangePopupComponent {
    
     if (this.mode === 'sell') {
       TokenChangePopupComponent.selectedSellNetworkId = network.id;
+
+      if(!this.blockchainStateService.connected()){
+        this.blockchainStateService.updateNetwork(network.id);
+      }
+
+      const currentProvider = this.blockchainStateService.getCurrentProvider();
+      if (!currentProvider) {
+        console.error('No provider selected');
+        return;
+      }
+      
+      const provider = currentProvider.provider;
+      await provider.switchNetwork(network);
+      this.blockchainStateService.updateNetwork(network.id);
+      this.blockchainStateService.updateWalletAddress(provider.address);
+      
     } else {
       TokenChangePopupComponent.selectedBuyNetworkId = network.id;
     }
-    
-    
+
     this.selectedNetworkId.set(network.id);
     
    

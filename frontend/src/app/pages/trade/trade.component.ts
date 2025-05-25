@@ -149,7 +149,7 @@ export class TradeComponent implements AfterViewChecked {
     }, { allowSignalWrites: true });
 
     effect(() => {
-      const tokens = this.blockchainStateService.filteredTokens();
+      const tokens = this.blockchainStateService.tokens();
       if (this.userSelectedTokens || this.isSwapping) {
         return;
       }
@@ -173,7 +173,7 @@ export class TradeComponent implements AfterViewChecked {
             })
             .catch((error) => {
               console.error('Error getting balance sell: ', error);
-              this.balance.set(0.0);
+              // this.balance.set(0.0);
             });
         }
     
@@ -184,7 +184,7 @@ export class TradeComponent implements AfterViewChecked {
             })
             .catch((error) => {
               console.error('Error getting balance buy: ', error);
-              this.balanceBuy.set(0.0);
+              // this.balanceBuy.set(0.0);
             });
         }
       });
@@ -635,8 +635,8 @@ export class TradeComponent implements AfterViewChecked {
 
   getTxData() {
     this.buttonState = 'finding';
-    const fromChain = this.blockchainStateService.network()!.id.toString();
-    const toChain = this.blockchainStateService.network()!.id.toString();
+    const fromChain = this.sellNetwork()!.id.toString();
+    const toChain = this.buyNetwork()!.id.toString();
     const fromTokenDecimals = this.selectedToken()!.decimals;
     // console.log("this.validatedSellAmount()",this.validatedSellAmount());
     const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
@@ -645,22 +645,34 @@ export class TradeComponent implements AfterViewChecked {
     const fromToken = this.selectedToken()!.contractAddress;
     const toToken = this.selectedBuyToken()!.contractAddress;
     const toTokenDecimals = this.selectedBuyToken()!.decimals;
+
     let fromAddress = '';
-    if(!this.blockchainStateService.walletAddress())
-    {
-      if(fromToken !== ethers.ZeroAddress)
-      {
-        fromAddress = fromToken;
+    let toAddress = this.customAddress() !== '' ? this.customAddress() : undefined;
+    
+    const CONSTANT_ETH_ADDRESS = "0x1111111111111111111111111111111111111111";
+    const CONSTANT_SOL_ADDRESS = "11111111111111111111111111111111";
+
+    if (!this.blockchainStateService.walletAddress()) {
+      const fromChainType = this.sellNetwork()?.chainType;
+      const toChainType = this.buyNetwork()?.chainType;
+      
+      if (fromChainType === "EVM") {
+        fromAddress = CONSTANT_ETH_ADDRESS;
+      } else if (fromChainType === "SVM") {
+        fromAddress = CONSTANT_SOL_ADDRESS;
       }
-      else
-      {
-        fromAddress = toToken;
+      
+      if (!toAddress) {
+        if (toChainType === "EVM") {
+          toAddress = CONSTANT_ETH_ADDRESS;
+        } else if (toChainType === "SVM") {
+          toAddress = CONSTANT_SOL_ADDRESS;
+        }
       }
-    }
-    else
-    {
+    } else {
       fromAddress = this.blockchainStateService.walletAddress()!;
     }
+  
     const adjustedFromAmount = fromAmount.toString();
 
     // console.log("fromChain",fromChain);
@@ -684,7 +696,7 @@ export class TradeComponent implements AfterViewChecked {
 
     const slippageValue = this.slippage !== 0.005 ? this.slippage: undefined; // 0.005 is default for LIFI
 
-    this.transactionsService.getQuote(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, slippageValue)
+    this.transactionsService.getQuoteBridge(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress, slippageValue)
     .subscribe({
       next: (response: any) => {
         // console.log('Quote received:', response);
@@ -1051,6 +1063,7 @@ export class TradeComponent implements AfterViewChecked {
 
   validateAddress(event: Event): void {
     const input = event.target as HTMLInputElement;
+    this.blockchainStateService.setCustomAddress(input.value);
     this.customAddress.set(input.value);
   }
 
