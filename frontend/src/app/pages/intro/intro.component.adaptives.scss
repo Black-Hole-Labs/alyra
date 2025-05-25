@@ -115,60 +115,86 @@
 	.token-1 {
 		width: 90px;
 		height: 90px;
-		top: 300px;
-		left: 100px;
+		bottom: 50px;
+		right: 80px;
 	}
 	
 	.token-2 {
 		width: 75px;
 		height: 75px;
-		top: 650px;
-		left: 1600px;
+		bottom: 250px;
+		right: 200px;
 	}
 	
 	.token-3 {
 		width: 85px;
 		height: 85px;
-		top: 300px;
-		left: 1700px;
+		bottom: 500px;
+		right: 160px;
 	}
 	
 	.token-4 {
 		width: 70px;
 		height: 70px;
-		top: 10px;
-		left: 1400px;
+		bottom: 120px;
+		left: 150px;
 	}
 	
 	.token-5 {
 		width: 80px;
 		height: 80px;
-		top: -250px;
-		left: 1300px;
+		bottom: 280px;
+		left: 50px;
 	}
 	
 	.token-6 {
 		width: 65px;
 		height: 65px;
-		top: -150px;
-		left: 1000px;
+		bottom: 500px;
+		left: 250px;
 	}
 	
 	.token-7 {
 		width: 95px;
 		height: 95px;
-		top: -350px;
-		left: 500px;
+		top: 120px;
+		left: 320px;
 	}
 	
 	.token-8 {
 		width: 85px;
 		height: 85px;
-		top: 10px;
-		left: 240px;
+		top: 240px;
+		left: 640px;
 	}
 
+	.token-9 {
+		width: 75px;
+		height: 75px;
+		top: 200px;
+		right: 300px;
+	}
 	
+	.token-10 {
+		width: 65px;
+		height: 65px;
+		top: 100px;
+		right: 500px;
+	}
+	
+	.token-11 {
+		width: 80px;
+		height: 80px;
+		top: 320px;
+		left: 920px;
+	}
+	
+	.token-12 {
+		width: 70px;
+		height: 70px;
+		top: 240px;
+		left: 120px;
+	}
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
 	.header {
@@ -291,59 +317,87 @@
 	}
 
 	.token-1 {
-		width: 90px;
-		height: 90px;
-		top: 300px;
-		left: 70px;
+		width: 80px;
+		height: 80px;
+		bottom: 40px;
+		right: 60px;
 	}
 	
 	.token-2 {
-		width: 75px;
-		height: 75px;
-		top: 450px;
-		left: 1250px;
+		width: 65px;
+		height: 65px;
+		bottom: 300px;
+		right: 100px;
 	}
 	
 	.token-3 {
-		width: 85px;
-		height: 85px;
-		top: 200px;
-		left: 1300px;
+		width: 75px;
+		height: 75px;
+		bottom: 500px;
+		right: 250px;
 	}
 	
 	.token-4 {
-		width: 70px;
-		height: 70px;
-		top: 10px;
-		left: 1100px;
+		width: 60px;
+		height: 60px;
+		bottom: 600px;
+		left: 280px;
 	}
 	
 	.token-5 {
-		width: 80px;
-		height: 80px;
-		top: -250px;
-		left: 1200px;
+		width: 70px;
+		height: 70px;
+		bottom: 240px;
+		left: 40px;
 	}
 	
 	.token-6 {
-		width: 65px;
-		height: 65px;
-		top: -150px;
-		left: 800px;
+		width: 55px;
+		height: 55px;
+		bottom: 450px;
+		left: 80px;
 	}
 	
 	.token-7 {
-		width: 95px;
-		height: 95px;
-		top: -350px;
-		left: 400px;
+		width: 85px;
+		height: 85px;
+		top: 100px;
+		left: 280px;
 	}
 	
 	.token-8 {
-		width: 85px;
-		height: 85px;
-		top: 10px;
-		left: 140px;
+		width: 75px;
+		height: 75px;
+		top: 200px;
+		left: 560px;
+	}
+
+	.token-9 {
+		width: 65px;
+		height: 65px;
+		top: 180px;
+		right: 200px;
+	}
+	
+	.token-10 {
+		width: 55px;
+		height: 55px;
+		top: 70px;
+		right: 400px;
+	}
+	
+	.token-11 {
+		width: 70px;
+		height: 70px;
+		top: 350px;
+		left: 630px;
+	}
+	
+	.token-12 {
+		width: 60px;
+		height: 60px;
+		top: 200px;
+		left: 100px;
 	}
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
@@ -464,6 +518,90 @@
 	}
 	.bfg {
 		width: 46px;
+	}
+
+	.token-1 {
+		width: 70px;
+		height: 70px;
+		bottom: 30px;
+		right: 40px;
+	}
+	
+	.token-2 {
+		width: 55px;
+		height: 55px;
+		bottom: 140px;
+		right: 240px;
+	}
+	
+	.token-3 {
+		width: 65px;
+		height: 65px;
+		bottom: 400px;
+		right: 120px;
+	}
+	
+	.token-4 {
+		width: 50px;
+		height: 50px;
+		bottom: 500px;
+		left: 240px;
+	}
+	
+	.token-5 {
+		width: 60px;
+		height: 60px;
+		bottom: 200px;
+		left: 30px;
+	}
+	
+	.token-6 {
+		width: 45px;
+		height: 45px;
+		bottom: 600px;
+		left: 70px;
+	}
+	
+	.token-7 {
+		width: 75px;
+		height: 75px;
+		top: 80px;
+		left: 240px;
+	}
+	
+	.token-8 {
+		width: 65px;
+		height: 65px;
+		top: 160px;
+		left: 480px;
+	}
+
+	.token-9 {
+		width: 55px;
+		height: 55px;
+		top: 300px;
+		right: 320px;
+	}
+	
+	.token-10 {
+		width: 45px;
+		height: 45px;
+		top: 240px;
+		right: 560px;
+	}
+	
+	.token-11 {
+		width: 60px;
+		height: 60px;
+		top: 200px;
+		left: 800px;
+	}
+	
+	.token-12 {
+		width: 50px;
+		height: 50px;
+		top: 160px;
+		left: 80px;
 	}
 }
 @media screen and (min-width: 480px) and (max-width: 970px) {
@@ -593,6 +731,90 @@
 	.bfg {
 		width: 38px;
 	}
+
+	.token-1 {
+		width: 60px;
+		height: 60px;
+		bottom: 20px;
+		right: 30px;
+	}
+	
+	.token-2 {
+		width: 45px;
+		height: 45px;
+		bottom: 120px;
+		right: 200px;
+	}
+	
+	.token-3 {
+		width: 55px;
+		height: 55px;
+		bottom: 250px;
+		right: 100px;
+	}
+	
+	.token-4 {
+		width: 40px;
+		height: 40px;
+		bottom: 60px;
+		left: 200px;
+	}
+	
+	.token-5 {
+		width: 50px;
+		height: 50px;
+		bottom: 160px;
+		left: 20px;
+	}
+	
+	.token-6 {
+		width: 35px;
+		height: 35px;
+		bottom: 450px;
+		left: 120px;
+	}
+	
+	.token-7 {
+		width: 65px;
+		height: 65px;
+		top: 260px;
+		left: 200px;
+	}
+	
+	.token-8 {
+		width: 55px;
+		height: 55px;
+		top: 120px;
+		left: 400px;
+	}
+
+	.token-9 {
+		width: 45px;
+		height: 45px;
+		top: 300px;
+		right: 240px;
+	}
+	
+	.token-10 {
+		width: 35px;
+		height: 35px;
+		top: 350px;
+		right: 400px;
+	}
+	
+	.token-11 {
+		width: 50px;
+		height: 50px;
+		top: 200px;
+		left: 660px;
+	}
+	
+	.token-12 {
+		width: 40px;
+		height: 40px;
+		top: 120px;
+		left: 60px;
+	}
 }
 
 @media screen and (min-width: 360px) and (max-width: 479px) {
@@ -719,6 +941,90 @@
 	}
 	.bfg {
 		width: 46px;
+	}
+
+	.token-1 {
+		width: 50px;
+		height: 50px;
+		bottom: 15px;
+		right: 20px;
+	}
+	
+	.token-2 {
+		width: 35px;
+		height: 35px;
+		bottom: 100px;
+		right: 160px;
+	}
+	
+	.token-3 {
+		width: 45px;
+		height: 45px;
+		bottom: 200px;
+		right: 80px;
+	}
+	
+	.token-4 {
+		width: 30px;
+		height: 30px;
+		bottom: 40px;
+		left: 160px;
+	}
+	
+	.token-5 {
+		width: 40px;
+		height: 40px;
+		bottom: 120px;
+		left: 15px;
+	}
+	
+	.token-6 {
+		width: 25px;
+		height: 25px;
+		bottom: 200px;
+		left: 100px;
+	}
+	
+	.token-7 {
+		width: 55px;
+		height: 55px;
+		top: 320px;
+		left: 320px;
+	}
+	
+	.token-8 {
+		width: 45px;
+		height: 45px;
+		top: 100px;
+		left: 320px;
+	}
+
+	.token-9 {
+		width: 35px;
+		height: 35px;
+		top: 120px;
+		right: 200px;
+	}
+	
+	.token-10 {
+		width: 25px;
+		height: 25px;
+		top: 340px;
+		right: 320px;
+	}
+	
+	.token-11 {
+		width: 40px;
+		height: 40px;
+		top: 160px;
+		left: 440px;
+	}
+	
+	.token-12 {
+		width: 30px;
+		height: 30px;
+		top: 100px;
+		left: 40px;
 	}
 }
 

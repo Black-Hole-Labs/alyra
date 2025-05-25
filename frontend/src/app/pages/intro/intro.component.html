@@ -55,6 +55,34 @@
 			<div>+2.45%</div>
 		</div>
 	</div>
+	<div class="token token-9">
+		<div class="token-img" #tokenImg></div>
+		<div class="token-info">
+			<div>ARB</div>
+			<div>+2.45%</div>
+		</div>
+	</div>
+	<div class="token token-10">
+		<div class="token-img" #tokenImg></div>
+		<div class="token-info">
+			<div>ARB</div>
+			<div>+2.45%</div>
+		</div>
+	</div>
+	<div class="token token-11">
+		<div class="token-img" #tokenImg></div>
+		<div class="token-info">
+			<div>ARB</div>
+			<div>+2.45%</div>
+		</div>
+	</div>
+	<div class="token token-12">
+		<div class="token-img" #tokenImg></div>
+		<div class="token-info">
+			<div>ARB</div>
+			<div>+2.45%</div>
+		</div>
+	</div>
 </div>
 
 <div class="intro-container">
@@ -96,7 +124,8 @@
 		<div class="statistics">
 			<div class="statistic" 
 				(mousemove)="onMouseMove($event, $event.currentTarget)"
-				(mouseleave)="onMouseLeave($event.currentTarget)">
+				(mouseleave)="onMouseLeave($event.currentTarget)"
+				(click)="launchApp()">
 				<h1>{{chainsCount}}</h1>
 				<h3>Chains</h3>
 				<div class="icons icons0">
@@ -126,7 +155,8 @@
 			</div>
 			<div class="statistic"
 				(mousemove)="onMouseMove($event, $event.currentTarget)"
-				(mouseleave)="onMouseLeave($event.currentTarget)">
+				(mouseleave)="onMouseLeave($event.currentTarget)"
+				(click)="launchApp()">
 				<h1>{{bridgesCount}}</h1>
 				<h3>Bridges</h3>
 				<div class="icons icons0">
@@ -150,7 +180,8 @@
 			</div>
 			<div class="statistic"
 				(mousemove)="onMouseMove($event, $event.currentTarget)"
-				(mouseleave)="onMouseLeave($event.currentTarget)">
+				(mouseleave)="onMouseLeave($event.currentTarget)"
+				(click)="launchApp()">
 				<h1>{{dexsCount}}</h1>
 				<h3>DEXs</h3>
 				<div class="icons icons0">
