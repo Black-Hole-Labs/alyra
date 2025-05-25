@@ -18,6 +18,7 @@
 	--dark-yellow: #4A3703;
   --dark-bg: 47, 47, 47;
 	--white: 255, 255, 255;
+	--gradient: linear-gradient(135deg, var(--violet) 0%, var(--pink) 100%);
 }
 
 html {
@@ -253,12 +254,11 @@ app-token-change-buy .token-change,
 app-settings,
 app-settings-bridge {
   position: absolute;
-  top: -35px;
-  left: 140px;
+  top: -30px;
+  left: 200px;
 }
 
-.wallet-popup,
-.connect-wallet {
+.wallet-popup {
 	position: fixed;
   top: 155px;
   right: 40px;
@@ -284,6 +284,7 @@ app-settings-bridge {
   top: 156px;
   left: 50%;
   transform: translate(-50%, 0%);
+	z-index: 100;
 }
 
 .ecosystem-change {
@@ -296,12 +297,11 @@ app-settings-bridge {
 
 	app-settings-bridge,
 	app-settings {
-		top: -23px;
-		left: 100px;
+		top: -20px;
+		left: 150px;
 	}
 
-	.wallet-popup,
-	.connect-wallet {
+	.wallet-popup {
 		top: 108px;
 		right: 30px;
 	}
@@ -332,12 +332,11 @@ app-settings-bridge {
 
 	app-settings-bridge,
 	app-settings {
-		top: -23px;
-		left: 100px;
+		top: -20px;
+		left: 150px;
 	}
 
-	.wallet-popup,
-	.connect-wallet {
+	.wallet-popup {
 		top: 88px;
 		right: 20px;
 	}
@@ -368,12 +367,11 @@ app-settings-bridge {
 
 	app-settings-bridge,
 	app-settings {
-		top: -16px;
-		left: 75px;
+		top: -15px;
+		left: 105px;
 	}
 
-	.wallet-popup,
-	.connect-wallet {
+	.wallet-popup {
 		top: 75px;
 		right: 20px;
 	}
@@ -402,8 +400,8 @@ app-settings-bridge {
 }
 @media screen and (min-width: 768px) and (max-width: 970px) {
   app-settings {
-    top: -23px;
-		left: -200px;
+    top: -20px;
+		left: -135px;
 		z-index: 1;
 	}
   app-settings-bridge {
@@ -412,8 +410,7 @@ app-settings-bridge {
 		z-index: 1;
 	}
 
-	.wallet-popup,
-	.connect-wallet {
+	.wallet-popup {
 		top: 88px;
 		right: 20px;
 	}
@@ -442,8 +439,8 @@ app-settings-bridge {
 }
 @media screen and (min-width: 480px) and (max-width: 767px) {
   app-settings {
-    top: -23px;
-    left: -55px;
+    top: -20px;
+    left: -135px;
     z-index: 1;
   }
   app-settings-bridge {
@@ -452,15 +449,14 @@ app-settings-bridge {
     z-index: 1;
   }
 
-	.wallet-popup,
-	.connect-wallet {
+	.wallet-popup {
 		top: 138px;
 		right: 20px;
 	}
 
 	.blackhole-menu {
 		top: 138px;
-		left: 20px;
+		left: 40px;
 	}
 
 	.popup-network {

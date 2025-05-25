@@ -7,12 +7,13 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
 import { WalletBalanceService } from '../../services/wallet-balance.service';
 import { TransactionsService } from '../../services/transactions.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { NetworkId, TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
+import { NetworkId, TransactionRequestEVM, TransactionRequestSVM, Network } from '../../models/wallet-provider.interface';
 import { ethers, parseUnits, ZeroAddress } from 'ethers';
 import { PopupService } from '../../services/popup.service';
 import { SuccessNotificationComponent } from '../../components/notification/success-notification/success-notification.component';
 import { FailedNotificationComponent } from '../../components/notification/failed-notification/failed-notification.component';
 import { PendingNotificationComponent } from '../../components/notification/pending-notification/pending-notification.component';
+import { PublicKey } from '@solana/web3.js';
 
 export interface Token {
   symbol: string;
@@ -65,12 +66,18 @@ export class TradeComponent implements AfterViewChecked {
   //showConnectWalletPopup: boolean = false;
   txData = signal<TransactionRequestEVM | TransactionRequestSVM | undefined> (undefined);
 
+  sellNetwork = signal<Network | undefined>(undefined);
+  buyNetwork = signal<Network | undefined>(undefined);
+
   walletTimer: any = null;
   findingRoutesTimer: any = null;
 
   showSuccessNotification = false;
   showFailedNotification = false;
   showPendingNotification = false;
+
+  customAddress = signal<string>('');
+  showCustomAddress: boolean = false;
 
   buttonState: 'swap' | 'finding' | 'approve' | 'wallet' | 'insufficient' | 'no-available-quotes' = 'swap';
   
@@ -108,6 +115,11 @@ export class TradeComponent implements AfterViewChecked {
 
   private resizeObserver: any;
 
+  private networkUpdateInterval: any;
+
+  private userSelectedTokens = false;
+  private isSwapping = false;
+
   constructor(
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
@@ -117,6 +129,8 @@ export class TradeComponent implements AfterViewChecked {
     public popupService: PopupService
   ) {
     this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
+
+    this.initializeNetworks();
 
     effect(() => 
     {
@@ -136,11 +150,17 @@ export class TradeComponent implements AfterViewChecked {
 
     effect(() => {
       const tokens = this.blockchainStateService.filteredTokens();
+      if (this.userSelectedTokens || this.isSwapping) {
+        return;
+      }
+      
       const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
       const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
   
       this.selectedToken.set(newSelectedToken);
       this.selectedBuyToken.set(newSelectedBuyToken);
+      this.updateNetworksBasedOnTokens();
+      
       if(!this.blockchainStateService.connected()){
         return;
       }
@@ -177,12 +197,15 @@ export class TradeComponent implements AfterViewChecked {
     });
     
     this.resizeObserver.observe(document.body);
+
+    this.startNetworkUpdateInterval();
   }
 
   ngOnDestroy() {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }
+    this.stopNetworkUpdateInterval();
   }
   
   handleKeyDown(event: KeyboardEvent): void {
@@ -301,7 +324,6 @@ export class TradeComponent implements AfterViewChecked {
     this.validatedSellAmount.update(value => this.balance());
     if (Number(this.validatedSellAmount()) > this.balance()) {
       this.buttonState = 'insufficient';
-      this.updateBuyAmount('0.0');
     }
     else
     {
@@ -322,22 +344,67 @@ export class TradeComponent implements AfterViewChecked {
   }
 	
 	swapTokens(): void {
+    this.isSwapping = true; // Устанавливаем флаг смены
     this.txData.update(() => undefined);
     this.buttonState = "swap";
 	
+    // Сохраняем текущие значения
     const tempToken = this.selectedToken();
-    this.selectedToken.update(() => this.selectedBuyToken());
-    this.selectedBuyToken.update(() => tempToken);
-
+    const tempBuyToken = this.selectedBuyToken();
     const tempBalance = this.balance(); 
-    this.balance.update(() => this.balanceBuy());
-    this.balanceBuy.update(() => tempBalance);
-
+    const tempBalanceBuy = this.balanceBuy();
     const tempSellAmount = this.validatedSellAmount();
-    this.updateSellAmount(this.buyAmountForInput()!);
-    this.validatedSellAmount.set(Number(this.buyAmountForInput()));
-    this.updateBuyAmount(String(tempSellAmount));
-    //this.getTxData();
+    const tempBuyAmount = this.buyAmountForInput();
+    const tempSellNetwork = this.sellNetwork();
+    const tempBuyNetwork = this.buyNetwork();
+
+    this.selectedToken.set(tempBuyToken);
+    this.selectedBuyToken.set(tempToken);
+
+    this.balance.set(tempBalanceBuy);
+    this.balanceBuy.set(tempBalance);
+
+    if (tempBuyAmount && tempBuyAmount !== '0' && tempBuyAmount !== '0.0') {
+      this.updateSellAmount(tempBuyAmount);
+      this.validatedSellAmount.set(Number(tempBuyAmount));
+    } else {
+      this.updateSellAmount('0');
+      this.validatedSellAmount.set(0);
+    }
+    
+    if (tempSellAmount > 0) {
+      this.updateBuyAmount(String(tempSellAmount));
+    } else {
+      this.updateBuyAmount('0');
+    }
+
+    this.sellNetwork.set(tempBuyNetwork);
+    this.buyNetwork.set(tempSellNetwork);
+
+    const newSellNetwork = this.sellNetwork();
+    if (newSellNetwork) {
+      this.updateNetworkBackgroundIcons(newSellNetwork);
+    }
+
+    this.swapNetworkIds();
+    
+    this.cdr.detectChanges();
+    
+    setTimeout(() => {
+      this.isSwapping = false;
+    }, 100);
+  }
+
+  private swapNetworkIds(): void {
+    const currentSellNetworkId = this.getSelectedSellNetworkId();
+    const currentBuyNetworkId = this.getSelectedBuyNetworkId();
+
+    try {
+      (TokenChangePopupComponent as any).selectedSellNetworkId = currentBuyNetworkId;
+      (TokenChangePopupComponent as any).selectedBuyNetworkId = currentSellNetworkId;
+    } catch (error) {
+      console.warn('Error swapping network IDs:', error);
+    }
   }
 
   openTokenPopup(): void {
@@ -351,11 +418,8 @@ export class TradeComponent implements AfterViewChecked {
   async onTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.selectedToken.set(token);
+    this.userSelectedTokens = true; // Пользователь выбрал токен
     this.balance.set(Number((parseFloat(await this.walletBalanceService.getBalanceForToken(token)))));
-    // this.selectedToken = token.symbol;
-    // this.selectedTokenImage = token.imageUrl;
-    // this.selectedTokenAddress = token.contractAddress;
-    // this.selectedTokendecimals = token.decimals;
     this.closeTokenPopup();
   }
 
@@ -370,11 +434,8 @@ export class TradeComponent implements AfterViewChecked {
   async onBuyTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.selectedBuyToken.set(token);
+    this.userSelectedTokens = true; // Пользователь выбрал токен
     this.balanceBuy.set(Number(parseFloat(await this.walletBalanceService.getBalanceForToken(token)).toFixed(6)));
-    // this.selectedBuyToken = token.symbol;
-    // this.selectedBuyTokenImage = token.imageUrl;
-    // this.selectedBuyTokenAddress = token.contractAddress;
-    // this.selectedTokenBuydecimals = token.decimals;
     this.closeTokenBuyPopup();
     this.popupService.closeAllPopups();
   }
@@ -986,6 +1047,149 @@ export class TradeComponent implements AfterViewChecked {
     } else {
       return 48; // default
     }
+  }
+
+  validateAddress(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.customAddress.set(input.value);
+  }
+
+  toggleCustomAddress(): void {
+    this.showCustomAddress = !this.showCustomAddress;
+  }
+
+  get addressStatus(): 'none' | 'good' | 'bad' {
+    const addr = this.customAddress();
+    if (!addr) {
+      return 'none';
+    }
+    const currentNetwork = this.blockchainStateService.network();
+    const chainType = currentNetwork?.chainType || 'EVM';
+    return this.isValidWalletAddress(addr, chainType) ? 'good' : 'bad';
+  }
+
+  private isValidWalletAddress(address: string, chainType: string): boolean {
+    if (chainType === 'EVM') {
+      return /^0x[a-fA-F0-9]{40}$/.test(address);
+    } else {
+      try {
+        new PublicKey(address);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+  }
+
+  private getSelectedSellNetworkId(): number | undefined {
+    try {
+      return (TokenChangePopupComponent as any).selectedSellNetworkId;
+    } catch {
+      return undefined;
+    }
+  }
+
+  private getSelectedBuyNetworkId(): number | undefined {
+    try {
+      return (TokenChangePopupComponent as any).selectedBuyNetworkId;
+    } catch {
+      return undefined;
+    }
+  }
+
+  private initializeNetworks(): void {
+    const selectedSellNetworkId = this.getSelectedSellNetworkId();
+    const selectedBuyNetworkId = this.getSelectedBuyNetworkId();
+    
+    const allNetworks = this.blockchainStateService.allNetworks();
+    
+    if (selectedSellNetworkId) {
+      const sellNet = allNetworks.find(n => n.id === selectedSellNetworkId);
+      this.sellNetwork.set(sellNet);
+    } else {
+      const sellToken = this.selectedToken();
+      if (sellToken) {
+        const tokenNetwork = allNetworks.find(n => n.id === sellToken.chainId);
+        this.sellNetwork.set(tokenNetwork || this.blockchainStateService.network() || undefined);
+      } else {
+        this.sellNetwork.set(this.blockchainStateService.network() || undefined);
+      }
+    }
+    
+    if (selectedBuyNetworkId) {
+      const buyNet = allNetworks.find(n => n.id === selectedBuyNetworkId);
+      this.buyNetwork.set(buyNet);
+    } else {
+      const buyToken = this.selectedBuyToken();
+      if (buyToken) {
+        const tokenNetwork = allNetworks.find(n => n.id === buyToken.chainId);
+        this.buyNetwork.set(tokenNetwork || this.blockchainStateService.network() || undefined);
+      } else {
+        this.buyNetwork.set(this.blockchainStateService.network() || undefined);
+      }
+    }
+  }
+
+  private updateNetworks(): void {
+    const selectedSellNetworkId = this.getSelectedSellNetworkId();
+    const selectedBuyNetworkId = this.getSelectedBuyNetworkId();
+    const allNetworks = this.blockchainStateService.allNetworks();
+    
+    if (selectedSellNetworkId) {
+      const sellNet = allNetworks.find(n => n.id === selectedSellNetworkId);
+      if (sellNet && sellNet.id !== this.sellNetwork()?.id) {
+        this.sellNetwork.set(sellNet);
+      }
+    } else {
+      const sellToken = this.selectedToken();
+      if (sellToken) {
+        const tokenNetwork = allNetworks.find(n => n.id === sellToken.chainId);
+        const networkToSet = tokenNetwork || this.blockchainStateService.network() || undefined;
+        if (networkToSet && networkToSet.id !== this.sellNetwork()?.id) {
+          this.sellNetwork.set(networkToSet);
+        }
+      }
+    }
+    
+    if (selectedBuyNetworkId) {
+      const buyNet = allNetworks.find(n => n.id === selectedBuyNetworkId);
+      if (buyNet && buyNet.id !== this.buyNetwork()?.id) {
+        this.buyNetwork.set(buyNet);
+      }
+    } else {
+      const buyToken = this.selectedBuyToken();
+      if (buyToken) {
+        const tokenNetwork = allNetworks.find(n => n.id === buyToken.chainId);
+        const networkToSet = tokenNetwork || this.blockchainStateService.network() || undefined;
+        if (networkToSet && networkToSet.id !== this.buyNetwork()?.id) {
+          this.buyNetwork.set(networkToSet);
+        }
+      }
+    }
+  }
+
+  private startNetworkUpdateInterval(): void {
+    this.networkUpdateInterval = setInterval(() => {
+      this.updateNetworks();
+    }, 500);
+  }
+
+  private stopNetworkUpdateInterval(): void {
+    if (this.networkUpdateInterval) {
+      clearInterval(this.networkUpdateInterval);
+      this.networkUpdateInterval = null;
+    }
+  }
+
+  private updateNetworksBasedOnTokens(): void {
+    this.updateNetworks();
+  }
+
+  private updateNetworkBackgroundIcons(network: Network | undefined): void {
+    if (!network) return;
+    const root = document.documentElement;
+    root.style.setProperty('--current-network-icon-1', `url(${network.logoURI})`);
+    root.style.setProperty('--current-network-icon-2', `url(${network.logoURI})`);
   }
 }
 

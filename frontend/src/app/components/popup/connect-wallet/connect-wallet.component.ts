@@ -23,6 +23,7 @@ export class ConnectWalletComponent implements OnInit {
   allWallets: Wallets[] = [];
   availableWallets: Wallets[] = [];
   otherWallets: Wallets[] = [];
+  isOtherWalletsVisible = false;
 
   private allProviders: string[] = [];
 
@@ -135,5 +136,9 @@ export class ConnectWalletComponent implements OnInit {
     } else {
       this.onWalletClick(wallet.id);
     }
+  }
+
+  toggleOtherWallets(): void {
+    this.isOtherWalletsVisible = !this.isOtherWalletsVisible;
   }
 }
