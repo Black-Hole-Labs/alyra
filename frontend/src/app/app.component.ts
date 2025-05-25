@@ -12,19 +12,15 @@ import { PopupService } from './services/popup.service';
 import { BlockchainStateService } from './services/blockchain-state.service';
 import { ProviderType } from './models/wallet-provider.interface';
 
+import networks from './../../public/data/networks.json';
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    HeaderComponent,
-    FooterComponent,
-    AppContentComponent
-  ],
+  imports: [CommonModule, RouterModule, HeaderComponent, FooterComponent, AppContentComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  hostDirectives: [ClosePopupsDirective]
+  hostDirectives: [ClosePopupsDirective],
 })
 export class AppComponent {
   private router = inject(Router);
@@ -39,18 +35,16 @@ export class AppComponent {
   private setDynamicTitle() {
     this.router.events
       .pipe(
-        filter(event => event instanceof NavigationEnd),
+        filter((event) => event instanceof NavigationEnd),
         map(() => {
           let route = this.activatedRoute;
           while (route.firstChild) route = route.firstChild;
           return route;
         }),
-        mergeMap(route => route.data)
+        mergeMap((route) => route.data),
       )
-      .subscribe(data => {
-        const pageTitle = data['title']
-          ? `Blackhole | ${data['title']}` 
-          : 'Blackhole';
+      .subscribe((data) => {
+        const pageTitle = data['title'] ? `Blackhole | ${data['title']}` : 'Blackhole';
         this.titleService.setTitle(pageTitle);
       });
   }
