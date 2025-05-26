@@ -71,20 +71,20 @@ export class TokenChangePopupComponent {
 
   tokenList: Signal<TokenDisplay[]> = computed(() => {
     const search = this.searchText().toLowerCase().trim();
-    
 
     let tokens: Token[];
-    if (this.selectedNetworkId()) {
-
-      tokens = this.selectedNetworkTokens();
-    } else if (this.networkTokens?.length) {
-
-      tokens = this.networkTokens;
-    } else {
-
-      tokens = this.blockchainStateService.filteredTokens();
+    if (search) {
+      tokens = this.blockchainStateService.allTokens();
+    } 
+    else {
+      if (this.selectedNetworkId()) {
+        tokens = this.selectedNetworkTokens();
+      } else if (this.networkTokens?.length) {
+        tokens = this.networkTokens;
+      } else {
+        tokens = this.blockchainStateService.filteredTokens();
+      }
     }
-
 
     let filteredTokens = tokens;
     if (search) {
@@ -94,15 +94,15 @@ export class TokenChangePopupComponent {
       );
     }
 
-
     if (this.mode === 'buy' && this.excludeToken) {
-      filteredTokens = filteredTokens.filter(token => 
+      filteredTokens = filteredTokens.filter(token =>
         token.contractAddress !== this.excludeToken!.contractAddress
       );
     }
 
     return filteredTokens as TokenDisplay[];
   });
+
 
   displayedTokens: Signal<TokenDisplay[]> = computed(() => {
     return (this.tokenList() || []).slice(0, 15);
