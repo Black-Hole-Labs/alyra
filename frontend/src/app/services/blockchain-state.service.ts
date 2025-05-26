@@ -138,7 +138,7 @@ export class BlockchainStateService {
           contractAddress: token.address,
           chainId: token.chainId,
           imageUrl: token.logoURI,
-          decimals: token.decimals.toString(),
+          decimals: token.decimals,
         })) as Token[],
       );
     } else {
@@ -160,7 +160,7 @@ export class BlockchainStateService {
           contractAddress: token.address,
           chainId: token.chainId,
           imageUrl: token.logoURI,
-          decimals: token.decimals.toString(),
+          decimals: token.decimals,
         })) as Token[],
       );
     } else {

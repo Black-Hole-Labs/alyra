@@ -23,7 +23,7 @@ import {
   TransactionRequestSVM,
   Network,
 } from '../../models/wallet-provider.interface';
-import { ethers, parseUnits, ZeroAddress } from 'ethers';
+import { ethers, parseUnits } from 'ethers';
 import { PopupService } from '../../services/popup.service';
 import { SuccessNotificationComponent } from '../../components/notification/success-notification/success-notification.component';
 import { FailedNotificationComponent } from '../../components/notification/failed-notification/failed-notification.component';
@@ -35,7 +35,7 @@ export interface Token {
   imageUrl: string;
   contractAddress: string;
   chainId: number;
-  decimals: string;
+  decimals: number;
 }
 
 @Component({
@@ -167,7 +167,7 @@ export class TradeComponent implements AfterViewChecked {
       
       const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
       const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
-  
+
       this.selectedToken.set(newSelectedToken);
       this.selectedBuyToken.set(newSelectedBuyToken);
       this.updateNetworksBasedOnTokens();
@@ -632,7 +632,6 @@ export class TradeComponent implements AfterViewChecked {
     const fromTokenDecimals = this.selectedToken()!.decimals;
     // console.log("this.validatedSellAmount()",this.validatedSellAmount());
     const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
-    // console.log(formattedFromAmount,formattedFromAmount);
     const fromAmount = parseUnits(formattedFromAmount, fromTokenDecimals);
     const fromToken = this.selectedToken()!.contractAddress;
     const toToken = this.selectedBuyToken()!.contractAddress;
@@ -699,9 +698,9 @@ export class TradeComponent implements AfterViewChecked {
           this.updateBuyPriceUsd(response.estimate.toAmountUSD);
 
             const toAmountNumber = Number(
-              this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals)),
+              this.transactionsService.parseToAmount(response.estimate.toAmount, toTokenDecimals),
             );
-            const readableToAmount = toAmountNumber.toFixed(Number(toTokenDecimals)).replace(/\.?0+$/, '');
+            const readableToAmount = toAmountNumber.toFixed(toTokenDecimals).replace(/\.?0+$/, '');
             // console.log('readableToAmount:', readableToAmount);
             this.updateBuyAmount(readableToAmount);
 
@@ -724,10 +723,10 @@ export class TradeComponent implements AfterViewChecked {
             // console.log('gasPriceUSD:', this.gasPriceUSD);
 
             const fromDecimal = parseFloat(
-              this.transactionsService.parseToAmount(response.estimate.fromAmount, Number(fromTokenDecimals)),
+              this.transactionsService.parseToAmount(response.estimate.fromAmount, fromTokenDecimals),
             );
             const toDecimal = parseFloat(
-              this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals)),
+              this.transactionsService.parseToAmount(response.estimate.toAmount, toTokenDecimals),
             );
 
             if (fromDecimal > 0) {

@@ -429,7 +429,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         imageUrl: '',
         contractAddress: network.chainType === 'SVM' ? address : '0x0000000000000000000000000000000000000000',
         chainId: network.id,
-        decimals: network.nativeCurrency.decimals.toString(),
+        decimals: network.nativeCurrency.decimals,
       };
       const balance = await this.walletBalanceService.getBalanceForToken(nativeToken);
       this.nativeBalance.set(this.truncateTo6Decimals(parseFloat(balance)));
