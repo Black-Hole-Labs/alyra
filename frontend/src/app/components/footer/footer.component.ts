@@ -38,6 +38,7 @@ export class FooterComponent implements OnInit, OnDestroy {
           this.providerEvm.set(new ethers.JsonRpcProvider(network.rpcUrls[0]));
           this.updateBlockNumber();
         }
+        this.updateBlockNumber();
       },
       { allowSignalWrites: true },
     );
