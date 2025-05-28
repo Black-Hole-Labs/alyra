@@ -4,7 +4,7 @@
 	}
 	
 	.left {
-		gap: 60px;
+		gap: 40px;
 	}
 	
 	.right {
@@ -39,7 +39,7 @@
 	}
 
 	nav {
-		gap: 50px;
+		gap: 30px;
 	}
 	
 	nav a {
@@ -47,7 +47,7 @@
 	}
 
 	.xp {
-		padding: 12px 20px;
+		padding: 6px 20px;
 		border-radius: 10px;
 	}
 
@@ -66,7 +66,7 @@
 		height: 24px;
 	}
 	
-	.wallet {
+	.wallet, .balance {
 		padding: 10px 13px;
 		border-radius: 10px;
 		gap: 12px;
@@ -78,6 +78,9 @@
 	}
 	
 	.wallet p {
+		font-size: 15px;
+	}
+	.balance p {
 		font-size: 15px;
 	}
 }
@@ -87,7 +90,7 @@
 	}
 	
 	.left {
-		gap: 60px;
+		gap: 40px;
 	}
 	
 	.right {
@@ -122,7 +125,7 @@
 	}
 
 	nav {
-		gap: 50px;
+		gap: 30px;
 	}
 	
 	nav a {
@@ -130,7 +133,7 @@
 	}
 
 	.xp {
-		padding: 12px 20px;
+		padding: 6px 20px;
 		border-radius: 10px;
 	}
 
@@ -149,7 +152,7 @@
 		height: 24px;
 	}
 	
-	.wallet {
+	.wallet, .balance {
 		padding: 10px 13px;
 		border-radius: 10px;
 		gap: 12px;
@@ -163,6 +166,9 @@
 	.wallet p {
 		font-size: 15px;
 	}
+	.balance p {
+		font-size: 15px;
+	}
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
 	.menu {
@@ -170,7 +176,7 @@
 	}
 	
 	.left {
-		gap: 50px;
+		gap: 30px;
 	}
 	
 	.right {
@@ -205,7 +211,7 @@
 	}
 
 	nav {
-		gap: 35px;
+		gap: 20px;
 	}
 	
 	nav a {
@@ -213,7 +219,7 @@
 	}
 
 	.xp {
-		padding: 8px 15px;
+		padding: 2px 10px;
 		border-radius: 7px;
 	}
 
@@ -232,7 +238,7 @@
 		height: 17px;
 	}
 	
-	.wallet {
+	.wallet, .balance {
 		padding: 7px 10px;
 		border-radius: 7px;
 		gap: 8px;
@@ -246,6 +252,10 @@
 	.wallet p {
 		font-size: 11px;
 	}
+
+	.balance p {
+		font-size: 11px;
+	}
 }
 @media screen and (min-width: 480px) and (max-width: 970px) {
 	.menu {
@@ -253,7 +263,7 @@
 	}
 	
 	.left {
-		gap: 60px;
+		gap: 40px;
 	}
 	
 	.right {
@@ -296,8 +306,7 @@
 	}
 
 	.xp {
-		padding: 12px 20px;
-		border-radius: 10px;
+		display: none;
 	}
 
 	.xp p {
@@ -314,6 +323,10 @@
 		width: 24px;
 		height: 24px;
 	}
+
+	.balance {
+		display: none;
+	}
 	
 	.wallet {
 		padding: 10px 13px;
@@ -327,6 +340,9 @@
 	}
 	
 	.wallet p {
+		font-size: 15px;
+	}
+	.balance p {
 		font-size: 15px;
 	}
 }
@@ -376,7 +392,12 @@
 	}
 
 	.xp {
-		display: none;
+		padding: 2px 8px;
+		border-radius: 7px;
+	}
+
+	.xp p {
+		font-size: 14px;
 	}
 
 	.network {
@@ -388,6 +409,10 @@
 	.network-icon {
 		width: 24px;
 		height: 24px;
+	}
+
+	.balance {
+		display: none;
 	}
 	
 	.wallet {

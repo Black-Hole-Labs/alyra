@@ -2,23 +2,30 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PopupService } from '../../services/popup.service';
 import { Subscription } from 'rxjs';
-import { Component, ElementRef, Renderer2, EventEmitter, Output, OnInit, OnDestroy, computed, signal, effect } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Renderer2,
+  EventEmitter,
+  Output,
+  OnInit,
+  OnDestroy,
+  computed,
+  signal,
+  effect,
+} from '@angular/core';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
-import { Wallets } from '../../models/wallet-provider.interface';
+import { NetworkId, Wallets } from '../../models/wallet-provider.interface';
+import { WalletBalanceService } from '../../services/wallet-balance.service';
 
+import providers from '@public/data/providers.json';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [
-    RouterModule,
-    CommonModule,
-  ],
+  imports: [RouterModule, CommonModule],
   templateUrl: './header.component.html',
-  styleUrls: [
-	'./header.component.scss',
-	'./header.component.adaptives.scss'
-	],
+  styleUrls: ['./header.component.scss', './header.component.adaptives.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   //@Input() isPopupVisible: boolean = false;
@@ -38,11 +45,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   private providers: Wallets[] = [];
   walletIcon = signal<string>('/img/header/wallet.png');
+  nativeBalance = signal<string>('0');
 
   @Output() toggleMenu = new EventEmitter<void>();
   @Output() toggleNetwork = new EventEmitter<void>();
 
-  private menuItems: { element: HTMLElement, originalText: string }[] = [];
+  private menuItems: { element: HTMLElement; originalText: string }[] = [];
   private possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}:"<>?|';
   private glitchChars = '!@#$%^&*()_+{}:"<>?|\\';
   private cyberChars = '01010101110010101010101110101010';
@@ -50,18 +58,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private animationSpeed = 20;
   private animationTimeouts: { [key: string]: number } = {};
 
+  NetworkId = NetworkId;
+
   constructor(
     private renderer: Renderer2,
     private elRef: ElementRef,
     public blockchainStateService: BlockchainStateService,
-    public popupService: PopupService
+    public popupService: PopupService,
+    public walletBalanceService: WalletBalanceService
   ) {
-    this.subscription = this.popupService.activePopup$.subscribe(popupType => {
+    this.subscription = this.popupService.activePopup$.subscribe((popupType) => {
       this.showBlackholeMenu = false;
       this.showConnectWalletPopup = false;
       this.showWalletPopup = false;
 
-      switch(popupType) {
+      switch (popupType) {
         case 'blackholeMenu':
           this.showBlackholeMenu = true;
           break;
@@ -74,29 +85,36 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     });
 
-    effect(() => {
-      const isConnected = this.blockchainStateService.connected();
-      // console.log('Connection status changed:', isConnected);
-      
-      if (!isConnected) {
-        // console.log('Wallet disconnected, resetting icon');
-        this.walletIcon.set('/img/header/wallet.png');
-      }
-    }, { allowSignalWrites: true });
+    effect(
+      () => {
+        const isConnected = this.blockchainStateService.connected();
+        if (!isConnected) {
+          this.walletIcon.set('/img/header/wallet.png');
+          return;
+        }
 
-    effect(() => {
-      // console.log('Header effect triggered');
-      const providerId = this.blockchainStateService.getCurrentProviderId();
-      // console.log('Provider ID in header effect:', providerId);
-      
-      if (this.providers.length === 0) {
-        // console.log('Loading providers...');
-        this.loadProviders();
-      } else {
-        // console.log('Updating wallet icon...');
-        this.updateWalletIcon();
-      }
-    }, { allowSignalWrites: true });
+        if (this.providers.length === 0) {
+          this.loadProviders();
+          this.updateWalletIcon();
+        } else {
+          this.updateWalletIcon();
+        }
+      },
+      { allowSignalWrites: true },
+    );
+
+    effect(
+      () => {
+        const network = this.blockchainStateService.network();
+        const address = this.blockchainStateService.walletAddress();
+        if (network && address) {
+          this.loadNativeBalance();
+        } else {
+          this.nativeBalance.set('0');
+        }
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   selectedNetwork = computed(() => {
@@ -107,7 +125,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadGmCount();
     this.loadProviders();
-    
+
     setTimeout(() => {
       this.initTextAnimation();
     }, 0);
@@ -117,8 +135,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-    
-    Object.values(this.animationTimeouts).forEach(timeoutId => {
+
+    Object.values(this.animationTimeouts).forEach((timeoutId) => {
       clearTimeout(timeoutId);
     });
   }
@@ -282,53 +300,53 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private initTextAnimation(): void {
     const menuLinks = this.elRef.nativeElement.querySelectorAll('nav a');
-    
+
     menuLinks.forEach((link: HTMLElement) => {
       const originalText = link.textContent || '';
       this.menuItems.push({ element: link, originalText });
-      
+
       this.renderer.listen(link, 'mouseenter', () => {
         this.animateText(link, originalText);
       });
-      
+
       this.renderer.listen(link, 'mouseleave', () => {
         link.textContent = originalText;
       });
     });
   }
-  
+
   private animateText(element: HTMLElement, finalText: string): void {
     const elementId = element.getAttribute('data-animation-id') || Math.random().toString(36).substring(2, 9);
     element.setAttribute('data-animation-id', elementId);
-    
+
     if (this.animationTimeouts[elementId]) {
       clearTimeout(this.animationTimeouts[elementId]);
     }
-    
+
     let frame = 0;
     const totalFrames = this.animationFrames;
-    
+
     const glitchStates = Array(finalText.length).fill(false);
     const resolvedChars = Array(finalText.length).fill(false);
-    
+
     const animate = () => {
       if (frame >= totalFrames) {
         element.textContent = finalText;
         delete this.animationTimeouts[elementId];
         return;
       }
-      
+
       let result = '';
       const progress = frame / totalFrames;
-      
+
       const resolvedCount = Math.floor(finalText.length * Math.pow(progress, 0.8));
-      
+
       for (let i = 0; i < resolvedCount; i++) {
         if (!resolvedChars[i]) {
           resolvedChars[i] = true;
         }
       }
-      
+
       if (frame % 3 === 0) {
         for (let i = 0; i < finalText.length; i++) {
           if (Math.random() < 0.1) {
@@ -336,7 +354,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
           }
         }
       }
-      
+
       for (let i = 0; i < finalText.length; i++) {
         if (resolvedChars[i]) {
           if (glitchStates[i] && frame < totalFrames * 0.9 && finalText[i] !== ' ') {
@@ -368,49 +386,59 @@ export class HeaderComponent implements OnInit, OnDestroy {
           }
         }
       }
-      
+
       element.textContent = result;
       frame++;
-      
+
       this.animationTimeouts[elementId] = window.setTimeout(animate, this.animationSpeed);
     };
-    
+
     animate();
   }
 
-  async loadProviders(): Promise<void> {
-    // console.log('Loading providers...');
-    try {
-      const response = await fetch('/data/providers.json');
-      const data = await response.json();
-      this.providers = data;
-      // console.log('Providers loaded:', this.providers);
-      this.updateWalletIcon();
-    } catch (error) {
-      console.error('Error loading providers:', error);
-    }
+  loadProviders() {
+    this.providers = providers;
+    return this.updateWalletIcon();
   }
 
   updateWalletIcon(): void {
-    // console.log('Updating wallet icon...');
     const providerId = this.blockchainStateService.getCurrentProviderId();
-    // console.log('Current provider ID:', providerId);
-    
-    if (!providerId) {
-      // console.log('No provider ID, using default icon');
+    if (!providerId || !this.blockchainStateService.connected()) {
       this.walletIcon.set('/img/header/wallet.png');
       return;
     }
 
-    const provider = this.providers.find(p => p.id === providerId);
-    // console.log('Found provider:', provider);
-    
-    if (provider && provider.iconUrl) {
-      // console.log('Setting wallet icon to:', provider.iconUrl);
+    const provider = this.providers.find((p) => p.id === providerId);
+    if (provider?.iconUrl) {
       this.walletIcon.set(provider.iconUrl);
     } else {
-      // console.log('Provider not found or no icon URL, using default icon');
       this.walletIcon.set('/img/header/wallet.png');
     }
+  }
+
+  async loadNativeBalance() {
+    const network = this.blockchainStateService.network();
+    const address = this.blockchainStateService.walletAddress();
+    if (!network || !address) {
+      this.nativeBalance.set('0');
+      return;
+    }
+    try {
+      const nativeToken = {
+        symbol: network.nativeCurrency.symbol,
+        imageUrl: '',
+        contractAddress: network.chainType === 'SVM' ? address : '0x0000000000000000000000000000000000000000',
+        chainId: network.id,
+        decimals: network.nativeCurrency.decimals,
+      };
+      const balance = await this.walletBalanceService.getBalanceForToken(nativeToken);
+      this.nativeBalance.set(this.truncateTo6Decimals(parseFloat(balance)));
+    } catch (e) {
+      this.nativeBalance.set('0');
+    }
+  }
+
+  truncateTo6Decimals(value: number): string {
+    return (Math.trunc(value * 1e6) / 1e6).toString();
   }
 }

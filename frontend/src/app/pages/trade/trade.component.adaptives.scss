@@ -9,10 +9,15 @@
 		font-size: 20px;
 	}
 	.icons{
-		gap: 10px;
+		gap: 5px;
+	}
+
+	.icon {
+		padding: 5px;
+		border-radius: 8px;
 	}
 	
-	.refresh, .settings {
+	.refresh, .settings, .custom-wallet-button {
 		height: 25px;
 		width: 25px;
 	}
@@ -58,7 +63,7 @@
 		width: 410px;
 		height: 117px;
 		border-radius: 12px;
-		padding: 15px 20px 10px 20px;
+		padding: 15px 20px 5px 20px;
 	}
 	
 	.sell {
@@ -84,12 +89,20 @@
 	}
 	
 	.token {
+		margin-top: 8px;
 		gap: 10px;
 	}
 	
 	.token-icon {
 		height: 32px;
 		width: 32px;
+	}
+
+	.network-icon {
+		top: -5px;
+		right: -5px;
+		height: 18px;
+		width: 18px;
 	}
 	
 	.token > p {
@@ -122,25 +135,26 @@
 	}
 	
 	.info {
-		width: 410px;
+		gap: 10px;
+		margin-top: 20px;
+	}
+	.custom-address {
+		border-radius: 10px;
+		padding: 0 15px;
+	}
+
+	.custom-address.show {
+		max-height: 50px;
+		padding: 15px 20px;
 		margin-top: 10px;
 	}
 
-	.price > p {
-		font-size: 12px;
+	.custom-address input {
+		font-size: 14px;
 	}
-
-	.gas {
-		gap: 4px;
-	}
-	
-	.gas-img {
-		height: 14px;
-		width: 14px;
-	}
-	
-	.gas-text {
-		font-size: 12px;
+	.address-status {
+		width: 20px;
+		height: 20px;
 	}
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
@@ -154,10 +168,15 @@
 		font-size: 20px;
 	}
 	.icons{
-		gap: 10px;
+		gap: 5px;
+	}
+
+	.icon {
+		padding: 5px;
+		border-radius: 8px;
 	}
 	
-	.refresh, .settings {
+	.refresh, .settings, .custom-wallet-button {
 		height: 25px;
 		width: 25px;
 	}
@@ -183,6 +202,18 @@
 		margin-top: 5px;
 	}
 
+	@keyframes click-animation-up {
+		0% { margin-top: 15px; }
+		50% { margin-top: -80px; }
+		100% { margin-top: 15px; }
+	}
+	
+	@keyframes click-animation-down {
+		0% { margin-top: 5px; }
+		50% { margin-top: 90px; }
+		100% { margin-top: 5px; }
+	}
+	
 	.swap-container{
 		margin-top: 20px;
 	}
@@ -191,7 +222,7 @@
 		width: 410px;
 		height: 117px;
 		border-radius: 12px;
-		padding: 15px 20px 10px 20px;
+		padding: 15px 20px 5px 20px;
 	}
 	
 	.sell {
@@ -217,12 +248,20 @@
 	}
 	
 	.token {
+		margin-top: 8px;
 		gap: 10px;
 	}
 	
 	.token-icon {
 		height: 32px;
 		width: 32px;
+	}
+
+	.network-icon {
+		top: -5px;
+		right: -5px;
+		height: 18px;
+		width: 18px;
 	}
 	
 	.token > p {
@@ -255,25 +294,26 @@
 	}
 	
 	.info {
-		width: 410px;
+		gap: 10px;
+		margin-top: 20px;
+	}
+	.custom-address {
+		border-radius: 10px;
+		padding: 0 15px;
+	}
+
+	.custom-address.show {
+		max-height: 50px;
+		padding: 15px 20px;
 		margin-top: 10px;
 	}
 
-	.price > p {
-		font-size: 12px;
+	.custom-address input {
+		font-size: 14px;
 	}
-
-	.gas {
-		gap: 4px;
-	}
-	
-	.gas-img {
-		height: 14px;
-		width: 14px;
-	}
-	
-	.gas-text {
-		font-size: 12px;
+	.address-status {
+		width: 20px;
+		height: 20px;
 	}
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
@@ -289,8 +329,13 @@
 	.icons{
 		gap: 7px;
 	}
+
+	.icon {
+		padding: 2px;
+		border-radius: 4px;
+	}
 	
-	.refresh, .settings {
+	.refresh, .settings, .custom-wallet-button {
 		height: 18px;
 		width: 18px;
 	}
@@ -336,7 +381,7 @@
 		width: 300px;
 		height: 85px;
 		border-radius: 8px;
-		padding: 10px 15px 10px 15px;
+		padding: 10px 15px 5px 15px;
 	}
 	
 	.sell {
@@ -363,6 +408,14 @@
 	
 	.token {
 		gap: 7px;
+		margin-top: 8px;
+	}
+
+	.network-icon {
+		top: -5px;
+		right: -5px;
+		height: 14px;
+		width: 14px;
 	}
 	
 	.token-icon {
@@ -400,25 +453,26 @@
 	}
 	
 	.info {
-		width: 302px;
-		margin-top: 5px;
+		gap: 10px;
+		margin-top: 15px;
+	}
+	.custom-address {
+		border-radius: 8px;
+		padding: 0 15px;
 	}
 
-	.price > p {
-		font-size: 8px;
+	.custom-address.show {
+		max-height: 35px;
+		padding: 10px 15px;
+		margin-top: 8px;
 	}
 
-	.gas {
-		gap: 3px;
+	.custom-address input {
+		font-size: 10px;
 	}
-	
-	.gas-img {
-		height: 10px;
-		width: 10px;
-	}
-	
-	.gas-text {
-		font-size: 8px;
+	.address-status {
+		width: 14px;
+		height: 14px;
 	}
 }
 @media screen and (min-width: 480px) and (max-width: 970px) {
@@ -432,10 +486,15 @@
 		font-size: 20px;
 	}
 	.icons{
-		gap: 10px;
+		gap: 5px;
+	}
+
+	.icon {
+		padding: 5px;
+		border-radius: 8px;
 	}
 	
-	.refresh, .settings {
+	.refresh, .settings, .custom-wallet-button {
 		height: 25px;
 		width: 25px;
 	}
@@ -463,13 +522,13 @@
 
 	@keyframes click-animation-up {
 		0% { margin-top: 15px; }
-		50% { margin-top: -120px; }
+		50% { margin-top: -80px; }
 		100% { margin-top: 15px; }
 	}
 	
 	@keyframes click-animation-down {
 		0% { margin-top: 5px; }
-		50% { margin-top: 132px; }
+		50% { margin-top: 90px; }
 		100% { margin-top: 5px; }
 	}
 	
@@ -481,7 +540,7 @@
 		width: 410px;
 		height: 117px;
 		border-radius: 12px;
-		padding: 15px 20px 10px 20px;
+		padding: 15px 20px 5px 20px;
 	}
 	
 	.sell {
@@ -507,12 +566,20 @@
 	}
 	
 	.token {
+		margin-top: 8px;
 		gap: 10px;
 	}
 	
 	.token-icon {
 		height: 32px;
 		width: 32px;
+	}
+
+	.network-icon {
+		top: -5px;
+		right: -5px;
+		height: 18px;
+		width: 18px;
 	}
 	
 	.token > p {
@@ -545,25 +612,26 @@
 	}
 	
 	.info {
-		width: 410px;
+		gap: 10px;
+		margin-top: 20px;
+	}
+	.custom-address {
+		border-radius: 10px;
+		padding: 0 15px;
+	}
+
+	.custom-address.show {
+		max-height: 50px;
+		padding: 15px 20px;
 		margin-top: 10px;
 	}
 
-	.price > p {
-		font-size: 12px;
+	.custom-address input {
+		font-size: 14px;
 	}
-
-	.gas {
-		gap: 4px;
-	}
-	
-	.gas-img {
-		height: 14px;
-		width: 14px;
-	}
-	
-	.gas-text {
-		font-size: 12px;
+	.address-status {
+		width: 20px;
+		height: 20px;
 	}
 }
 
@@ -581,10 +649,15 @@
 		font-size: 18px;
 	}
 	.icons{
-		gap: 10px;
+		gap: 5px;
+	}
+
+	.icon {
+		padding: 5px;
+		border-radius: 8px;
 	}
 	
-	.refresh, .settings {
+	.refresh, .settings, .custom-wallet-button {
 		height: 25px;
 		width: 25px;
 	}
@@ -631,7 +704,7 @@
 		width: 100%;
 		height: 117px;
 		border-radius: 12px;
-		padding: 15px 20px 10px 20px;
+		padding: 15px 20px 5px 20px;
 		position: relative;
 	}
 	
@@ -658,12 +731,20 @@
 	}
 	
 	.token {
+		margin-top: 8px;
 		gap: 10px;
 	}
 	
 	.token-icon {
 		height: 32px;
 		width: 32px;
+	}
+
+	.network-icon {
+		top: -5px;
+		right: -5px;
+		height: 18px;
+		width: 18px;
 	}
 	
 	.token > p {
@@ -696,24 +777,25 @@
 	}
 	
 	.info {
-		width: 100%;
+		gap: 10px;
+		margin-top: 20px;
+	}
+	.custom-address {
+		border-radius: 10px;
+		padding: 0 15px;
+	}
+
+	.custom-address.show {
+		max-height: 50px;
+		padding: 15px 20px;
 		margin-top: 10px;
 	}
 
-	.price > p {
-		font-size: 12px;
+	.custom-address input {
+		font-size: 14px;
 	}
-
-	.gas {
-		gap: 4px;
-	}
-	
-	.gas-img {
-		height: 14px;
-		width: 14px;
-	}
-	
-	.gas-text {
-		font-size: 12px;
+	.address-status {
+		width: 20px;
+		height: 20px;
 	}
 }

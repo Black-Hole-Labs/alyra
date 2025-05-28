@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { ethers } from 'ethers';
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Token } from '../pages/trade/trade.component';
@@ -11,6 +11,9 @@ import { NetworkId } from '../models/wallet-provider.interface';
 export class WalletBalanceService {
   private solanaRpcUrl: string;
   private solanaConnection: Connection;
+
+  nativeSolBalance = signal<string>('0');
+  nativeEthBalance = signal<string>('0');
 
   constructor(private blockchainStateService: BlockchainStateService) {
     this.solanaRpcUrl = this.blockchainStateService.allNetworks().find((network: { id: number; }) => network.id === NetworkId.SOLANA_MAINNET)?.rpcUrls[0] 
@@ -60,7 +63,17 @@ export class WalletBalanceService {
   }
 
   async getBalanceForToken(token: Token): Promise<string> {
-      const walletAddress = this.blockchainStateService.getCurrentWalletAddress();
+      let walletAddress = this.blockchainStateService.getCurrentWalletAddress();
+      
+      if(token.chainId !== this.blockchainStateService.network()?.id){
+        if(this.blockchainStateService.customAddress() !== ""){
+          walletAddress = this.blockchainStateService.customAddress();
+        }
+        else{
+          return "0";
+        }
+      }
+      
       if (!walletAddress) {
         console.error(`Failed to get wallet address`);
         return "0";
@@ -74,13 +87,17 @@ export class WalletBalanceService {
 
       if (token.chainId === NetworkId.SOLANA_MAINNET) { // SVM
         if (token.symbol === "SOL") {
-          return this.getSolanaBalance(walletAddress);
+          const solBalance = await this.getSolanaBalance(walletAddress);
+          this.nativeSolBalance.set(solBalance);
+          return solBalance;
         } else {
           return this.getSolanaBalance(walletAddress, token.contractAddress);
         }
       } else { // EVM
         if (token.symbol === "ETH") {
-          return await this.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals));
+          const ethBalance = await this.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals));
+          this.nativeEthBalance.set(ethBalance);
+          return ethBalance;
         } else {
           return await this.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals), token.contractAddress);
         }

@@ -10,10 +10,10 @@
 	
 		<nav>
 			<a routerLink="/trade" routerLinkActive="active-link">Trade</a>
-			<a routerLink="/bridge" routerLinkActive="active-link">Bridge</a>
+			<!-- <a routerLink="/bridge" routerLinkActive="active-link">Bridge</a> -->
 			<!-- <a routerLink="/fun" routerLinkActive="active-link">Fun</a>
 			<a routerLink="/launchpad" routerLinkActive="active-link">Launchpad</a> -->
-			<a routerLink="/quests" routerLinkActive="active-link">Rewards</a>
+			<a routerLink="/rewards" routerLinkActive="active-link">Rewards</a>
 		</nav>
 	</div>
 
@@ -36,18 +36,31 @@
 
 	<!-- </div>  -->
 		<!-- XP WIDGET -->
-		<!-- <div class="xp" *ngIf="blockchainStateService.connected()">
+		<div class="xp" *ngIf="blockchainStateService.connected()" routerLink="/rewards">
 			<p>0 XP</p>
-		</div> -->
+		</div>
 
 		<!-- NETWORK CHANGE -->
-		<div (click)="toggleNetworkPopup($event)" class="network">
+		<!-- <div (click)="toggleNetworkPopup($event)" class="network">
 			<div class="network-icon" 
 				[style.background-image]="'url(' + selectedNetwork()?.logoURI + ')'">
 			</div>
 			<button (click)="toggleNetworkPopup($event)" 
 				[ngClass]="{'network-open': isNetworkPopupVisible, 'network-closed': !isNetworkPopupVisible}">
 			</button>
+		</div> -->
+
+		<div class="balance" *ngIf="blockchainStateService.connected()">
+			<div class="wallet-icon"></div>
+			<p *ngIf="blockchainStateService.connected() && blockchainStateService.network() as net">
+				@if(blockchainStateService.network()!.id === NetworkId.ETHEREUM_MAINNET){
+					{{ walletBalanceService.nativeEthBalance() | number:'1.6-6' }} {{ net.nativeCurrency.symbol }}
+				}
+				@else {
+					{{ walletBalanceService.nativeSolBalance() | number:'1.6-6' }} {{ net.nativeCurrency.symbol }}
+				}
+				
+			</p>
 		</div>
 
 		<!-- WALLET -->

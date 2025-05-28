@@ -18,10 +18,12 @@
 	--dark-yellow: #4A3703;
   --dark-bg: 47, 47, 47;
 	--white: 255, 255, 255;
+	--gradient: linear-gradient(135deg, var(--violet) 0%, var(--pink) 100%);
 }
 
 html {
   background-color: black;
+  overflow: hidden;
 }
 
 html::before,
@@ -64,7 +66,7 @@ html.intro-page::after {
   display: block;
   content: '';
   position: fixed;
-  top: -250px;
+  top: -300px;
   left: 50%;
   transform: translateX(-50%);
   width: 110%;
@@ -72,9 +74,8 @@ html.intro-page::after {
   background: url(/img/intro/bg.png);
   background-size: cover;
   z-index: -1;
-  filter: blur(50px);
-  animation: floatBg 40s linear infinite;
-  opacity: 1;
+  animation: floatBg 20s ease-in-out infinite, fadeInBg 2s ease-out forwards;
+  opacity: 0;
 }
 
 @keyframes moveGradient {
@@ -275,12 +276,11 @@ app-token-change-buy .token-change,
 app-settings,
 app-settings-bridge {
   position: absolute;
-  top: -35px;
-  left: 140px;
+  top: -30px;
+  left: 200px;
 }
 
-.wallet-popup,
-.connect-wallet {
+.wallet-popup {
 	position: fixed;
   top: 155px;
   right: 40px;
@@ -306,6 +306,7 @@ app-settings-bridge {
   top: 156px;
   left: 50%;
   transform: translate(-50%, 0%);
+	z-index: 100;
 }
 
 .ecosystem-change {
@@ -318,12 +319,11 @@ app-settings-bridge {
 
 	app-settings-bridge,
 	app-settings {
-		top: -23px;
-		left: 100px;
+		top: -20px;
+		left: 150px;
 	}
 
-	.wallet-popup,
-	.connect-wallet {
+	.wallet-popup {
 		top: 108px;
 		right: 30px;
 	}
@@ -354,12 +354,11 @@ app-settings-bridge {
 
 	app-settings-bridge,
 	app-settings {
-		top: -23px;
-		left: 100px;
+		top: -20px;
+		left: 150px;
 	}
 
-	.wallet-popup,
-	.connect-wallet {
+	.wallet-popup {
 		top: 88px;
 		right: 20px;
 	}
@@ -390,12 +389,11 @@ app-settings-bridge {
 
 	app-settings-bridge,
 	app-settings {
-		top: -16px;
-		left: 75px;
+		top: -15px;
+		left: 105px;
 	}
 
-	.wallet-popup,
-	.connect-wallet {
+	.wallet-popup {
 		top: 75px;
 		right: 20px;
 	}
@@ -424,8 +422,8 @@ app-settings-bridge {
 }
 @media screen and (min-width: 768px) and (max-width: 970px) {
   app-settings {
-    top: -23px;
-		left: -200px;
+    top: -20px;
+		left: -135px;
 		z-index: 1;
 	}
   app-settings-bridge {
@@ -434,8 +432,7 @@ app-settings-bridge {
 		z-index: 1;
 	}
 
-	.wallet-popup,
-	.connect-wallet {
+	.wallet-popup {
 		top: 88px;
 		right: 20px;
 	}
@@ -464,8 +461,8 @@ app-settings-bridge {
 }
 @media screen and (min-width: 480px) and (max-width: 767px) {
   app-settings {
-    top: -23px;
-    left: -55px;
+    top: -20px;
+    left: -135px;
     z-index: 1;
   }
   app-settings-bridge {
@@ -474,15 +471,14 @@ app-settings-bridge {
     z-index: 1;
   }
 
-	.wallet-popup,
-	.connect-wallet {
+	.wallet-popup {
 		top: 138px;
 		right: 20px;
 	}
 
 	.blackhole-menu {
 		top: 138px;
-		left: 20px;
+		left: 40px;
 	}
 
 	.popup-network {
@@ -576,20 +572,28 @@ app-settings-bridge {
   }
 }
 
+@keyframes fadeInBg {
+  0% {
+    opacity: 0;
+    filter: blur(100px) brightness(0.5);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(40px) brightness(1);
+  }
+}
+
 @keyframes floatBg {
-	0% {
-		transform: translateX(-50%) scale(1);
-	}
-	25% {
-		transform: translateX(-48%) scale(1.02);
-	}
-	50% {
-		transform: translateX(-50%) scale(1);
-	}
-	75% {
-		transform: translateX(-52%) scale(0.98);
-	}
-	100% {
-		transform: translateX(-50%) scale(1);
-	}
+  0% {
+    transform: translateX(-50%) scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
+  50% {
+    transform: translateX(-45%) scale(1.08) rotate(2deg);
+    filter: brightness(1.2);
+  }
+  100% {
+    transform: translateX(-50%) scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
 }

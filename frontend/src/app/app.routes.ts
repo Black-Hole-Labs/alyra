@@ -7,8 +7,8 @@ import { IntroComponent } from './pages/intro/intro.component';
 
 export const routes: Routes = [
   { path: 'trade', component: TradeComponent, data: { title: 'Trade' } },
-  { path: 'bridge', component: BridgeComponent, data: { title: 'Bridge' } },
-  { path: 'quests', component: QuestsComponent, data: { title: 'Rewards' } },
+  // { path: 'bridge', component: BridgeComponent, data: { title: 'Bridge' } },
+  { path: 'rewards', component: QuestsComponent, data: { title: 'Rewards' } },
   { path: '', component: IntroComponent, data: { title: 'Intro', isIntroPage: true } },
 ];
 
