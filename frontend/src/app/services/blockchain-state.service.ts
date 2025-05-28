@@ -35,7 +35,7 @@ export class BlockchainStateService {
   readonly connected = signal<boolean>(false);
   readonly allNetworks = signal<Network[]>([]);
 
-  customAddress = signal<string>("");
+  customAddress = signal<string>('');
 
   searchText = signal<string>('');
 
@@ -70,23 +70,24 @@ export class BlockchainStateService {
   }
 
   public tryAutoConnect(): Promise<void> {
-      const providerId = sessionStorage.getItem('currentProvider');
-      const networkId = sessionStorage.getItem('networkId');
-      if (!providerId){
-        this.updateNetwork(NetworkId.ETHEREUM_MAINNET);
-        return Promise.resolve();
-      }
-      
-      const provider = this.getProvider(providerId);
-      if (!provider) return Promise.resolve();
+    const providerId = sessionStorage.getItem('currentProvider');
+    const networkId = sessionStorage.getItem('networkId');
+    if (!providerId) {
+      this.updateNetwork(NetworkId.ETHEREUM_MAINNET);
+      return Promise.resolve();
+    }
 
-      return provider.connect()
-        .then(({ address } : { address: string }) => {
-          this.updateWalletAddress(address);
-          this.setCurrentProvider(providerId);
-          this.updateNetwork(Number(networkId!))
-        })
-        .catch(console.error);
+    const provider = this.getProvider(providerId);
+    if (!provider) return Promise.resolve();
+
+    return provider
+      .connect()
+      .then(({ address }: { address: string }) => {
+        this.updateWalletAddress(address);
+        this.setCurrentProvider(providerId);
+        this.updateNetwork(Number(networkId!));
+      })
+      .catch(console.error);
   }
 
   setSearchText(value: string) {
@@ -235,7 +236,7 @@ export class BlockchainStateService {
     return this.network();
   }
 
-  setCustomAddress(customAddress: string){
+  setCustomAddress(customAddress: string) {
     this.customAddress.set(customAddress);
   }
 
@@ -251,5 +252,9 @@ export class BlockchainStateService {
     const root = document.documentElement;
     root.style.setProperty('--current-network-icon-1', `url(${network.logoURI})`);
     root.style.setProperty('--current-network-icon-2', `url(${network.logoURI})`);
+  }
+
+  public getNetworkById(id: number): Network | undefined {
+    return this.networks().find((network) => network.id === id);
   }
 }

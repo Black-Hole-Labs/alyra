@@ -29,6 +29,7 @@ import { SuccessNotificationComponent } from '../../components/notification/succ
 import { FailedNotificationComponent } from '../../components/notification/failed-notification/failed-notification.component';
 import { PendingNotificationComponent } from '../../components/notification/pending-notification/pending-notification.component';
 import { PublicKey } from '@solana/web3.js';
+import { TokenService } from '../../services/token.service';
 
 export interface Token {
   symbol: string;
@@ -138,6 +139,7 @@ export class TradeComponent implements AfterViewChecked {
     private walletBalanceService: WalletBalanceService,
     private transactionsService: TransactionsService,
     public popupService: PopupService,
+    private tokenService: TokenService,
   ) {
     this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
 
@@ -159,47 +161,52 @@ export class TradeComponent implements AfterViewChecked {
       { allowSignalWrites: true },
     );
 
-    effect(() => {
-      const tokens = this.blockchainStateService.tokens();
-      if (this.userSelectedTokens || this.isSwapping) {
-        return;
-      }
-      
-      const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
-      const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
+    effect(
+      () => {
+        const tokens = this.blockchainStateService.tokens();
+        if (this.userSelectedTokens || this.isSwapping) {
+          return;
+        }
 
-      this.selectedToken.set(newSelectedToken);
-      this.selectedBuyToken.set(newSelectedBuyToken);
-      this.updateNetworksBasedOnTokens();
-      
-      if(!this.blockchainStateService.connected()){
-        return;
-      }
-      Promise.resolve().then(() => {
-    
-        if (this.selectedToken()) {
-          this.walletBalanceService.getBalanceForToken(this.selectedToken()!)
-            .then((balanceStr) => {
-              this.balance.set(Number(parseFloat(balanceStr)));
-            })
-            .catch((error) => {
-              console.error('Error getting balance sell: ', error);
-              // this.balance.set(0.0);
-            });
+        const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
+        const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
+
+        this.selectedToken.set(newSelectedToken);
+        this.tokenService.setSelectedToken(newSelectedToken);
+        this.selectedBuyToken.set(newSelectedBuyToken);
+        this.updateNetworksBasedOnTokens();
+
+        if (!this.blockchainStateService.connected()) {
+          return;
         }
-    
-        if (this.selectedBuyToken()) {
-          this.walletBalanceService.getBalanceForToken(this.selectedBuyToken()!)
-            .then((balanceStr) => {
-              this.balanceBuy.set(Number(parseFloat(balanceStr)));
-            })
-            .catch((error) => {
-              console.error('Error getting balance buy: ', error);
-              // this.balanceBuy.set(0.0);
-            });
-        }
-      });
-    }, { allowSignalWrites: true });
+        Promise.resolve().then(() => {
+          if (this.selectedToken()) {
+            this.walletBalanceService
+              .getBalanceForToken(this.selectedToken()!)
+              .then((balanceStr) => {
+                this.balance.set(Number(parseFloat(balanceStr)));
+              })
+              .catch((error) => {
+                console.error('Error getting balance sell: ', error);
+                // this.balance.set(0.0);
+              });
+          }
+
+          if (this.selectedBuyToken()) {
+            this.walletBalanceService
+              .getBalanceForToken(this.selectedBuyToken()!)
+              .then((balanceStr) => {
+                this.balanceBuy.set(Number(parseFloat(balanceStr)));
+              })
+              .catch((error) => {
+                console.error('Error getting balance buy: ', error);
+                // this.balanceBuy.set(0.0);
+              });
+          }
+        });
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   ngOnInit() {
@@ -421,9 +428,9 @@ export class TradeComponent implements AfterViewChecked {
   async onTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.selectedToken.set(token);
-    this.userSelectedTokens = true; // Пользователь выбрал токен
+    this.tokenService.setSelectedToken(token);
+    this.userSelectedTokens = true;
     this.balance.set(Number(parseFloat(await this.walletBalanceService.getBalanceForToken(token))));
-    this.closeTokenPopup();
   }
 
   openTokenBuyPopup(): void {
@@ -639,31 +646,31 @@ export class TradeComponent implements AfterViewChecked {
 
     let fromAddress = '';
     let toAddress = this.customAddress() !== '' ? this.customAddress() : undefined;
-    
-    const CONSTANT_ETH_ADDRESS = "0x1111111111111111111111111111111111111111";
-    const CONSTANT_SOL_ADDRESS = "11111111111111111111111111111111";
+
+    const CONSTANT_ETH_ADDRESS = '0x1111111111111111111111111111111111111111';
+    const CONSTANT_SOL_ADDRESS = '11111111111111111111111111111111';
 
     if (!this.blockchainStateService.walletAddress()) {
       const fromChainType = this.sellNetwork()?.chainType;
       const toChainType = this.buyNetwork()?.chainType;
-      
-      if (fromChainType === "EVM") {
+
+      if (fromChainType === 'EVM') {
         fromAddress = CONSTANT_ETH_ADDRESS;
-      } else if (fromChainType === "SVM") {
+      } else if (fromChainType === 'SVM') {
         fromAddress = CONSTANT_SOL_ADDRESS;
       }
-      
+
       if (!toAddress) {
-        if (toChainType === "EVM") {
+        if (toChainType === 'EVM') {
           toAddress = CONSTANT_ETH_ADDRESS;
-        } else if (toChainType === "SVM") {
+        } else if (toChainType === 'SVM') {
           toAddress = CONSTANT_SOL_ADDRESS;
         }
       }
     } else {
       fromAddress = this.blockchainStateService.walletAddress()!;
     }
-  
+
     const adjustedFromAmount = fromAmount.toString();
 
     // console.log("fromChain",fromChain);
@@ -687,15 +694,15 @@ export class TradeComponent implements AfterViewChecked {
 
     const slippageValue = this.slippage !== 0.005 ? this.slippage : undefined; // 0.005 is default for LIFI
 
-    this.transactionsService.getQuoteBridge(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress, slippageValue)
-    .subscribe({
-      next: (response: any) => {
-        // console.log('Quote received:', response);
-        if (response.estimate && response.transactionRequest) 
-        {
-          // console.log(`fromUSD: ${response.estimate.fromAmountUSD}; toUSD: ${response.estimate.toAmountUSD}`);
-          this.updateSellPriceUsd(response.estimate.fromAmountUSD);
-          this.updateBuyPriceUsd(response.estimate.toAmountUSD);
+    this.transactionsService
+      .getQuoteBridge(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress, slippageValue)
+      .subscribe({
+        next: (response: any) => {
+          // console.log('Quote received:', response);
+          if (response.estimate && response.transactionRequest) {
+            // console.log(`fromUSD: ${response.estimate.fromAmountUSD}; toUSD: ${response.estimate.toAmountUSD}`);
+            this.updateSellPriceUsd(response.estimate.fromAmountUSD);
+            this.updateBuyPriceUsd(response.estimate.toAmountUSD);
 
             const toAmountNumber = Number(
               this.transactionsService.parseToAmount(response.estimate.toAmount, toTokenDecimals),
