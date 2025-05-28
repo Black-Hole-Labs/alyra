@@ -38,6 +38,10 @@
 	.inner-wallets {
 		gap: 8px;
 		margin-top: 17px;
+
+		&:first-of-type {
+			max-height: 300px;
+		}
 	}
 	
 	.wallet {
@@ -115,6 +119,10 @@
 	.inner-wallets {
 		gap: 8px;
 		margin-top: 17px;
+
+		&:first-of-type {
+			max-height: 300px;
+		}
 	}
 	
 	.wallet {
@@ -197,6 +205,10 @@
 	.inner-wallets {
 		gap: 5px;
 		margin-top: 12px;
+
+		&:first-of-type {
+			max-height: 250px;
+		}
 	}
 	
 	.wallet {
@@ -274,6 +286,10 @@
 	.inner-wallets {
 		gap: 8px;
 		margin-top: 17px;
+
+		&:first-of-type {
+			max-height: 300px;
+		}
 	}
 	
 	.wallet {
@@ -357,6 +373,10 @@
 	.inner-wallets {
 		gap: 0px;
 		margin-top: 0px;
+
+		&:first-of-type {
+			max-height: 280px;
+		}
 	}
 	
 	.wallet {

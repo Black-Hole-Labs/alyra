@@ -9,14 +9,13 @@
 				(click)="toggleCustomAddress()">
 				</div>
 			</div>
-			<div class="icon" *ngIf="isWalletConnected()">
+			<div class="icon">
 				<div class="refresh" (mousedown)="rotateRefresh()"></div>
 			</div>
-			<div class="icon">
+			<div class="icon" [class.active]="showSettingsPopup">
 				<div class="settings" 
 					[class.active]="showSettingsPopup"
 					(click)="toggleSettingsPopup()"
-					[class.hidden]="!isWalletConnected()"
 					>
 				</div>
 			</div>
@@ -24,7 +23,6 @@
 			<app-settings
 				*ngIf="showSettingsPopup"
 				class="settings-popup"
-				(close)="popupService.closePopup('settings')"
 				(save)="onSlippageSave($event)">
 			</app-settings>
 
@@ -168,7 +166,17 @@
 		<div class="info">
 			<div class="info-item">
 				<p>Price rate:</p>
-				<p><span>1 ETH = $1800.34</span> 1800.35 USDT</p>
+				<div class="price" >
+					<p>1</p>
+					<p>{{ selectedToken()?.symbol }}</p>
+					<p>=</p>
+					<p id="price">{{ price() }}</p>
+					<p>{{ selectedBuyToken()?.symbol }}</p>
+					<p class="price-usd">($</p>
+					<p class="price-usd" id="price-usd">{{ priceUsd }}</p>
+					<p class="price-usd">)</p>
+				</div>
+				<!-- <p><span>1 ETH = $1800.34</span> 1800.35 USDT</p> -->
 			</div>
 			<div class="trade-info" [class.show]="validatedSellAmount() > 0">
 				<div class="info-item">

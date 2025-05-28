@@ -57,6 +57,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private animationFrames = 20;
   private animationSpeed = 20;
   private animationTimeouts: { [key: string]: number } = {};
+  private isSafari: boolean;
 
   NetworkId = NetworkId;
 
@@ -67,6 +68,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public popupService: PopupService,
     public walletBalanceService: WalletBalanceService
   ) {
+    // Определяем Safari
+    this.isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
     this.subscription = this.popupService.activePopup$.subscribe((popupType) => {
       this.showBlackholeMenu = false;
       this.showConnectWalletPopup = false;
@@ -306,7 +310,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.menuItems.push({ element: link, originalText });
 
       this.renderer.listen(link, 'mouseenter', () => {
-        this.animateText(link, originalText);
+        if (this.isSafari) {
+          // Для Safari просто меняем текст без анимации
+          link.textContent = originalText;
+        } else {
+          this.animateText(link, originalText);
+        }
       });
 
       this.renderer.listen(link, 'mouseleave', () => {

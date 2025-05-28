@@ -1,6 +1,6 @@
 .token-change {
   width: 600px;
-  height: 786px;
+  height: 865px;
   background-color: rgba(var(--dark-bg), 0.6);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(5px);
@@ -199,7 +199,7 @@ input::placeholder {
   top: 410px;
   left: 16px;
   width: 567px;
-  height: 400px;
+  height: 454px;
   border-radius: 12px;
 }
 
@@ -212,8 +212,12 @@ input::placeholder {
   overflow-x: hidden;
   margin-right: -8px;
   margin-left: 0px;
-  scrollbar-width: thin;
-  padding-bottom: 30px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
 }
 
 .token {

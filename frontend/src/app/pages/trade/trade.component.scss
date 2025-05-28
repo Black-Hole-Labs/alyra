@@ -30,11 +30,18 @@ h3{
 }
 
 .icon:hover {
+	cursor: pointer;
 	background-color: var(--dark-select);
+	.refresh, .settings, .custom-wallet-button{
+		opacity: 1;
+	}
 }
 
 .icon.active {
 	background-color: var(--dark-select);
+	.refresh, .settings, .custom-wallet-button{
+		opacity: 1;
+	}
 }
 
 .refresh, .settings, .custom-wallet-button {
@@ -56,10 +63,6 @@ h3{
 
 .settings {
   background-image: url(/img/trade/settings.png);
-}
-
-.refresh:hover, .settings:hover, .settings.active {
-  opacity: 1;
 }
 
 .rotate {
@@ -460,20 +463,21 @@ p {
 //   margin-top: 20px;
 // }
 
-// .price {
-//   display: flex;
-// }
+.price {
+  display: flex;
+	gap: 5px;
+}
 
-// .price > p {
-//   font-family: "JetBrains Mono", monospace;
-//   font-weight: 400;
-//   font-size: 15px;
-//   color: white;
-// }
+.price > p {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 15px;
+  color: white;
+}
 
-// .price > p.price-usd {
-//   color: var(--elem-nonactive);
-// }
+.price > p.price-usd {
+  color: var(--elem-nonactive);
+}
 
 // .gas {
 //   display: flex;

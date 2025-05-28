@@ -456,20 +456,8 @@ export class TradeComponent implements AfterViewChecked {
 
   toggleSettingsPopup(): void {
     if (this.showSettingsPopup) {
-      const settingsEl = document.querySelector('app-settings');
-      if (settingsEl) {
-        settingsEl.classList.add('closing');
-      }
-      document.body.classList.add('popup-closing');
-      setTimeout(() => {
-        this.popupService.closePopup('settings');
-        document.body.classList.remove('popup-closing');
-        if (settingsEl) {
-          settingsEl.classList.remove('closing');
-        }
-      }, 300);
+      this.popupService.closePopup('settings');
     } else {
-      document.body.classList.add('popup-opening');
       this.popupService.openPopup('settings');
     }
   }
