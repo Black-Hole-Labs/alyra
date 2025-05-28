@@ -28,32 +28,9 @@ export class AppComponent {
   private titleService = inject(Title);
   private renderer = inject(Renderer2);
   public popupService = inject(PopupService);
-  public isIntroPage = false;
 
   constructor() {
     this.setDynamicTitle();
-    this.checkCurrentRoute();
-  }
-
-  private checkCurrentRoute() {
-    this.router.events
-      .pipe(
-        filter((event) => event instanceof NavigationEnd),
-        map(() => {
-          let route = this.activatedRoute;
-          while (route.firstChild) route = route.firstChild;
-          return route;
-        }),
-        mergeMap((route) => route.data),
-      )
-      .subscribe(data => {
-        this.isIntroPage = !!data['isIntroPage'];
-        if (this.isIntroPage) {
-          this.renderer.addClass(document.documentElement, 'intro-page');
-        } else {
-          this.renderer.removeClass(document.documentElement, 'intro-page');
-        }
-      });
   }
 
   private setDynamicTitle() {
