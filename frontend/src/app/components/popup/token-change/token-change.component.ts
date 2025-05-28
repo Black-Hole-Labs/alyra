@@ -254,6 +254,10 @@ export class TokenChangePopupComponent {
       return; 
     }
     
+    if(!this.blockchainStateService.connected()){
+      this.selectedNetworkId.set(network.id);
+      await this.loadTokensForNetwork(network.id);
+    }
    
     if (this.mode === 'sell') {
       TokenChangePopupComponent.selectedSellNetworkId = network.id;
@@ -277,12 +281,14 @@ export class TokenChangePopupComponent {
       TokenChangePopupComponent.selectedBuyNetworkId = network.id;
     }
 
-    this.selectedNetworkId.set(network.id);
+    // this.selectedNetworkId.set(network.id);
+    // await this.loadTokensForNetwork(network.id);
     
-   
-    await this.loadTokensForNetwork(network.id);
-    
-   
+   if(this.blockchainStateService.connected()){
+      this.selectedNetworkId.set(network.id);
+      await this.loadTokensForNetwork(network.id);
+    }
+
     if (this.blockchainStateService.connected()) {
       this.loadDisplayedBalances();
     }

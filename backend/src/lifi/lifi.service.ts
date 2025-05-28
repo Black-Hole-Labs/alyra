@@ -48,6 +48,7 @@ export class LifiService {
         toToken,
         fromAmount,
         fromAddress,
+        integrator: 'blackhole',
       };
   
       if (toAddress) {
