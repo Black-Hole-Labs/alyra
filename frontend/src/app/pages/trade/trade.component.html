@@ -42,9 +42,14 @@
       <div class="left">
         <h6 class="sell-h6">Sell</h6>
         <div class="token" (click)="openTokenPopup()">
-          <div class="token-icon" [style.backgroundImage]="'url(' + selectedToken()?.imageUrl + ')'">
-						<div class="network-icon" [style.backgroundImage]="'url(' + sellNetwork()?.logoURI + ')'"></div>
-					</div>
+          <div *ngIf="selectedToken() as token" class="token-icon"
+              [ngStyle]="{ 'background-image': token.imageUrl ? 'url(' + token.imageUrl + ')' : 'none' }"
+              [ngClass]="{ 'has-placeholder': !token.imageUrl }">
+            <span *ngIf="!token.imageUrl" class="token-letter">
+              {{ token.symbol[0] | uppercase }}
+            </span>
+            <div class="network-icon" [style.backgroundImage]="'url(' + sellNetwork()?.logoURI + ')'"></div>
+          </div>
           <p>{{ selectedToken()?.symbol }}</p>
           <button></button>
         </div>
@@ -81,9 +86,14 @@
       <div class="left">
         <h6 class="buy-h6">Buy</h6>
         <div class="token" (click)="openTokenBuyPopup()">
-          <div class="token-icon" [style.backgroundImage]="'url(' + selectedBuyToken()?.imageUrl + ')'">
-						<div class="network-icon" [style.backgroundImage]="'url(' + buyNetwork()?.logoURI + ')'"></div>
-					</div>
+          <div *ngIf="selectedBuyToken() as token" class="token-icon"
+              [ngStyle]="{ 'background-image': token.imageUrl ? 'url(' + token.imageUrl + ')' : 'none' }"
+              [ngClass]="{ 'has-placeholder': !token.imageUrl }">
+            <span *ngIf="!token.imageUrl" class="token-letter">
+              {{ token.symbol[0] | uppercase }}
+            </span>
+            <div class="network-icon" [style.backgroundImage]="'url(' + buyNetwork()?.logoURI + ')'"></div>
+          </div>
           <p>{{ selectedBuyToken()?.symbol }}</p>
           <button></button>
         </div>
