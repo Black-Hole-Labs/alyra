@@ -5,10 +5,6 @@
 	</div>
   
 	<div class="scroll-container">
-		<div class="devider">
-			<p>Available</p>
-			<hr class="hr1" />
-		</div>
 		
 		<div class="inner-wallets">
 			@for (wallet of availableWallets; track wallet.id) {
@@ -30,12 +26,12 @@
 			}
 		</div>
 		
-		<div class="devider">
+		<div class="devider" (click)="toggleOtherWallets()">
 			<p>Other Wallets</p>
-			<hr class="hr2" />
+			<button [class.open]="isOtherWalletsVisible"></button>
 		</div>
 		
-		<div class="inner-wallets">
+		<div class="inner-wallets" [class.hidden]="!isOtherWalletsVisible">
 			@for (wallet of otherWallets; track wallet.id) {
 			<div class="wallet" (click)="handleWalletClick(wallet)">
 				<div class="name">

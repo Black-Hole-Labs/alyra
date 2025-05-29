@@ -1,6 +1,6 @@
 .network-change-from {
   width: 600px;
-  height: 786px;
+  height: 865px;
   background-color: rgba(var(--dark-bg), 0.6);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(5px);
@@ -8,6 +8,7 @@
   box-sizing: border-box;
   padding: 30px;
 	overflow: hidden;
+	z-index: 1000;
 }
 
 .header {

@@ -9,11 +9,19 @@ export interface WalletProvider {
 export interface Network {
   id: number;
   name: string;
-  rpcUrls: string;
+  rpcUrls: string[];
   logoURI?: string;
-  idHex?:string;
+  idHex?: string;
   chainType: string; // Network type (EVM, SVM)
-  explorerUrl: string;
+  explorerUrl?: string;
+  key: string;
+  nativeCurrency: INativeCurrency;
+}
+
+export interface INativeCurrency {
+  name: string;
+  symbol: string;
+  decimals: number;
 }
 
 export interface TransactionRequestEVM {
@@ -27,7 +35,7 @@ export interface TransactionRequestEVM {
 }
 
 export interface TransactionRequestSVM {
-  data: string; 
+  data: string;
 }
 
 export interface Wallets {
@@ -43,11 +51,10 @@ export interface Wallets {
 export enum ProviderType {
   EVM = 'EVM',
   SVM = 'SVM',
-  MULTICHAIN = 'multichain'
+  MULTICHAIN = 'multichain',
 }
 
-export enum NetworkId
-{
+export enum NetworkId {
   ETHEREUM_MAINNET = 1,
   SOLANA_MAINNET = 1151111081099710,
 }

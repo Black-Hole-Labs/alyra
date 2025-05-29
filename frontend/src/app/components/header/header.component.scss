@@ -70,7 +70,7 @@ button.network-open {
 nav {
   display: flex;
   align-items: center;
-  gap: 70px;
+  gap: 50px;
 }
 
 nav a {
@@ -149,8 +149,8 @@ nav a.active-link {
 }
 
 .xp {
-  padding: 16px 27px;
-  background-color: rgba(var(--dark-pink), 0.1);
+  padding: 6px 20px;
+  background: var(--gradient);
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -160,14 +160,14 @@ nav a.active-link {
 }
 
 .xp:hover {
-  background-color: rgba(var(--dark-pink), 0.2);
+	opacity: 0.5;
 }
 
 .xp p {
   font-size: 21px;
   font-family: "JetBrains Mono", monospace;
-  font-weight: 500;
-  color: var(--pink);
+  font-weight: 800;
+  color: white;
 }
 
 .network {
@@ -194,7 +194,7 @@ nav a.active-link {
   border-radius: 100%;
 }
 
-.wallet {
+.wallet, .balance {
   padding: 14px 18px;
   background-color: rgba(var(--dark-bg), 0.3);
   border-radius: 14px;
@@ -219,6 +219,13 @@ nav a.active-link {
 }
 
 .wallet p {
+  font-size: 21px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  color: white;
+}
+
+.balance p {
   font-size: 21px;
   font-family: "JetBrains Mono", monospace;
   font-weight: 500;

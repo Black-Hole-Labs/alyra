@@ -1,7 +1,7 @@
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
 	.token-change {
 		width: 450px;
-		height: 539px;
+		height: 625px;
 		border-radius: 22px;
 		padding: 20px 20px 0 20px;
 	}
@@ -13,6 +13,31 @@
 	button {
 		height: 20px;
 		width: 20px;
+	}
+
+	.network-select {
+		margin-top: 20px;
+		gap: 15px;
+	}
+	
+	.network {
+		width: 55px;
+		height: 55px;
+		border-radius: 12px;
+	}
+	
+	.network-icon {
+		width: 35px;
+		height: 35px;
+	}
+	.more {
+		width: 55px;
+		height: 55px;
+		border-radius: 12px;
+	}
+	
+	.more p {
+		font-size: 22px;
 	}
 	
 	.search {
@@ -47,10 +72,10 @@
 	}
 	
 	.list {
-		top: 166px;
+		top: 310px;
 		left: 10px;
 		width: 430px;
-		height: calc(100% - 166px);
+		height: 313px;
 		border-radius: 12px;
 	}
 	
@@ -125,7 +150,7 @@
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
 	.token-change {
 		width: 450px;
-		height: 539px;
+		height: 625px;
 		border-radius: 22px;
 		padding: 20px 20px 0 20px;
 	}
@@ -137,6 +162,31 @@
 	button {
 		height: 20px;
 		width: 20px;
+	}
+
+	.network-select {
+		margin-top: 20px;
+		gap: 15px;
+	}
+	
+	.network {
+		width: 55px;
+		height: 55px;
+		border-radius: 12px;
+	}
+	
+	.network-icon {
+		width: 35px;
+		height: 35px;
+	}
+	.more {
+		width: 55px;
+		height: 55px;
+		border-radius: 12px;
+	}
+	
+	.more p {
+		font-size: 22px;
 	}
 	
 	.search {
@@ -171,10 +221,10 @@
 	}
 	
 	.list {
-		top: 166px;
+		top: 310px;
 		left: 10px;
 		width: 430px;
-		height: calc(100% - 166px);
+		height: 313px;
 		border-radius: 12px;
 	}
 	
@@ -249,7 +299,7 @@
 @media screen and (min-width: 971px) and (max-width: 1170px) {
 	.token-change {
 		width: 330px;
-		height: 401px;
+		height: 470px;
 		border-radius: 15px;
 		padding: 15px;
 	}
@@ -261,6 +311,31 @@
 	button {
 		height: 15px;
 		width: 15px;
+	}
+
+	.network-select {
+		margin-top: 10px;
+		gap: 10px;
+	}
+	
+	.network {
+		width: 40px;
+		height: 40px;
+		border-radius: 8px;
+	}
+	
+	.network-icon {
+		width: 25px;
+		height: 25px;
+	}
+	.more {
+		width: 40px;
+		height: 40px;
+		border-radius: 8px;
+	}
+	
+	.more p {
+		font-size: 14px;
 	}
 	
 	.search {
@@ -295,13 +370,12 @@
 	}
 	
 	.list {
-		top: 117px;
+		top: 220px;
 		left: 5px;
 		width: 320px;
-		height: calc(100% - 117px);
+		height: 250px;
 		border-radius: 8px;
 	}
-	
 	.token {
 		width: 320px;
 		height: 47px;
@@ -373,9 +447,9 @@
 @media screen and (min-width: 480px) and (max-width: 970px) {
 	.token-change {
 		width: 450px;
-		height: 539px;
+		height: 625px;
 		border-radius: 22px;
-		padding: 20px;
+		padding: 20px 20px 0 20px;
 	}
 	
 	h3 {
@@ -385,6 +459,31 @@
 	button {
 		height: 20px;
 		width: 20px;
+	}
+
+	.network-select {
+		margin-top: 20px;
+		gap: 15px;
+	}
+	
+	.network {
+		width: 55px;
+		height: 55px;
+		border-radius: 12px;
+	}
+	
+	.network-icon {
+		width: 35px;
+		height: 35px;
+	}
+	.more {
+		width: 55px;
+		height: 55px;
+		border-radius: 12px;
+	}
+	
+	.more p {
+		font-size: 22px;
 	}
 	
 	.search {
@@ -419,12 +518,12 @@
 	}
 	
 	.list {
-		top: 166px;
+		top: 310px;
+		left: 10px;
 		width: 430px;
-		height: calc(100% - 166px);
+		height: 313px;
 		border-radius: 12px;
 	}
-	
 	.token {
 		width: 430px;
 		height: 65px;
@@ -456,7 +555,7 @@
 		margin-top: 0px;
 		font-size: 14px;
 	}
-	
+
 	.right {
 		gap: 8px;
 	}
@@ -464,7 +563,7 @@
 	.token-balance p{
 		font-size: 14px;
 	}
-
+	
 	.contract {
 		gap: 8px;
 	}
@@ -497,7 +596,7 @@
 @media screen and (min-width: 360px) and (max-width: 479px) {
 	.token-change {
 		width: 90vw;
-		height: 70vh;
+		height: 80vh;
 		border-radius: 16px;
 		padding: 15px;
 	}
@@ -509,6 +608,31 @@
 	button {
 		height: 20px;
 		width: 20px;
+	}
+
+	.network-select {
+		margin-top: 15px;
+		gap: 5px;
+	}
+	
+	.network {
+		width: 47px;
+		height: 47px;
+		border-radius: 8px;
+	}
+	
+	.network-icon {
+		width: 35px;
+		height: 35px;
+	}
+	.more {
+		width: 47px;
+		height: 47px;
+		border-radius: 8px;
+	}
+	
+	.more p {
+		font-size: 18px;
 	}
 	
 	.search {
@@ -543,16 +667,14 @@
 	}
 	
 	.list {
-		top: 156px;
-		left: 50%;
-		transform: translate(-50%, 0%);
+		top: 280px;
+		left: 5px;
 		width: 100%;
-		height: calc(100% - 156px);
+		height: 450px;
 		border-radius: 12px;
 	}
-	
 	.token {
-		width: 100%;
+		width: 95%;
 		height: 65px;
 		padding: 10px 15px;
 		border-radius: 12px;
