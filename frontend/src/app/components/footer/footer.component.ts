@@ -19,6 +19,8 @@ export class FooterComponent implements OnInit, OnDestroy {
   private providerSol = signal<Connection | undefined>(undefined);
   private updateInterval: any;
 
+  private isStopBlockFetching = false;
+
   constructor(
     private tokenService: TokenService,
     private blockchainStateService: BlockchainStateService,
@@ -31,6 +33,7 @@ export class FooterComponent implements OnInit, OnDestroy {
     effect(
       () => {
         const token = this.tokenService.getSelectedToken();
+        this.isStopBlockFetching = false;
         if (!token) return;
 
         const network = this.blockchainStateService.getNetworkById(token.chainId);
@@ -59,6 +62,8 @@ export class FooterComponent implements OnInit, OnDestroy {
   }
 
   private async updateBlockNumber() {
+    if (this.isStopBlockFetching) return;
+
     try {
       const token = this.tokenService.getSelectedToken();
       if (!token) return;
@@ -71,6 +76,7 @@ export class FooterComponent implements OnInit, OnDestroy {
         this.block.set(blockNumber ?? 0);
       }
     } catch (error) {
+      this.isStopBlockFetching = true;
       console.error('Error fetching block number:', error);
     }
   }
