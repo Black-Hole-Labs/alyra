@@ -47,7 +47,7 @@ export class TokenChangePopupComponent {
   ethers = ethers;
 
   networks = computed(() => {
-    const all = this.blockchainStateService.allNetworks();
+    const all = this.blockchainStateService.networks();
     const selectedId = this.selectedNetworkId();
     const first10 = all.slice(0, 10);
     const next = all[10];
