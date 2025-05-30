@@ -40,8 +40,9 @@ export class FooterComponent implements OnInit, OnDestroy {
         if (network?.rpcUrls[0] && token.chainId !== NetworkId.SOLANA_MAINNET) {
           this.providerEvm.set(new ethers.JsonRpcProvider(network.rpcUrls[0]));
           this.updateBlockNumber();
+        } else {
+          this.updateBlockNumber();
         }
-        this.updateBlockNumber();
       },
       { allowSignalWrites: true },
     );
