@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, inject, Input, Signal, computed, signal } from '@angular/core';
+import { Component, EventEmitter, Output, inject, Input, Signal, computed, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
@@ -32,6 +32,8 @@ export class TokenChangePopupComponent {
 
   selectedNetworkId = signal<number | undefined>(undefined);
   selectedNetworkTokens = signal<Token[]>([]);
+
+  constructor() {}
 
   private tokenCache = new Map<number, Token[]>();
 
@@ -68,33 +70,11 @@ export class TokenChangePopupComponent {
 
   tokenList: Signal<TokenDisplay[]> = computed(() => {
     const search = this.searchText().toLowerCase().trim();
+    const tokens = this.getBaseTokens();
+    const filteredBySearch = this.filterBySearch(tokens, search);
+    const filteredByExclude = this.filterByExcludeToken(filteredBySearch);
 
-    let tokens: Token[];
-    if (search) {
-      tokens = this.blockchainStateService.allTokens();
-    } else {
-      if (this.selectedNetworkId()) {
-        tokens = this.selectedNetworkTokens();
-      } else if (this.networkTokens?.length) {
-        tokens = this.networkTokens;
-      } else {
-        tokens = this.blockchainStateService.filteredTokens();
-      }
-    }
-
-    let filteredTokens = tokens;
-    if (search) {
-      filteredTokens = tokens.filter(
-        (token: Token) =>
-          token.symbol.toLowerCase().includes(search) || token.contractAddress.toLowerCase().includes(search),
-      );
-    }
-
-    if (this.mode === 'buy' && this.excludeToken) {
-      filteredTokens = filteredTokens.filter((token) => token.contractAddress !== this.excludeToken!.contractAddress);
-    }
-
-    return filteredTokens as TokenDisplay[];
+    return filteredByExclude as TokenDisplay[];
   });
 
   displayedTokens: Signal<TokenDisplay[]> = computed(() => {
@@ -317,5 +297,31 @@ export class TokenChangePopupComponent {
   onNetworkSelected(network: Network): void {
     this.selectNetwork(network);
     this.showNetworkChangeFrom.set(false);
+  }
+
+  private getBaseTokens(): Token[] {
+    if (this.selectedNetworkId()) {
+      return this.selectedNetworkTokens();
+    }
+
+    if (this.networkTokens?.length) {
+      return this.networkTokens;
+    }
+
+    return this.blockchainStateService.filteredTokens();
+  }
+
+  private filterBySearch(tokens: Token[], search: string): Token[] {
+    if (!search) return tokens;
+
+    return tokens.filter(
+      (token) => token.symbol.toLowerCase().includes(search) || token.contractAddress.toLowerCase().includes(search),
+    );
+  }
+
+  private filterByExcludeToken(tokens: Token[]): Token[] {
+    if (!this.excludeToken) return tokens;
+
+    return tokens.filter((token) => token.contractAddress !== this.excludeToken!.contractAddress);
   }
 }
