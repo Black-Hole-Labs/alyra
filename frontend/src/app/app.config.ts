@@ -26,7 +26,7 @@ import {
 import { WalletConnectEvmProvider } from './models/walletconnect-provider';
 
 import providers from '@public/data/providers.json';
-import networks from '@public/data/networks.json';
+import networksImport from '@public/data/networks.json';
 
 function registerProviders(
   stateService: BlockchainStateService,
@@ -103,7 +103,7 @@ async function initializeApp(injector: Injector): Promise<void> {
 
   try {
     const _providers: any[] = providers;
-    const _networks: Network[] = networks;
+    const _networks: Network[] = networksImport;
 
     registerProviders(stateService, _providers, walletManager, injector, _networks);
   } catch (error) {
@@ -111,7 +111,7 @@ async function initializeApp(injector: Injector): Promise<void> {
   }
 
   try {
-    const allNetworks: Network[] = networks;
+    const allNetworks: Network[] = networksImport;
 
     // const excludeIds = [146, 1329, 324, 250, 1135, 13371, 1088, 42220, 122, 1284, 288];
     // const visibleNetworks = allNetworks.filter(network => !excludeIds.includes(network.id));
