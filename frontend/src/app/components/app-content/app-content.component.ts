@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
 import { NetworkId, ProviderType } from '../../models/wallet-provider.interface';
 import { PopupService } from '../../services/popup.service';
 import { BlackholeMenuComponent } from '../popup/blackhole-menu/blackhole-menu.component';
-import { BlackholeNetworkComponent } from '../popup/blackhole-network/blackhole-network.component';
 import { WalletComponent } from "../popup/wallet/wallet.component";
 import { ConnectWalletComponent } from "../popup/connect-wallet/connect-wallet.component";
 import { EcosystemChangeComponent } from '../popup/ecosystem-change/ecosystem-change.component';
@@ -25,7 +24,6 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
     RouterModule,
     BlackholeMenuComponent,
     CommonModule,
-    BlackholeNetworkComponent,
     WalletComponent,
     ConnectWalletComponent,
     EcosystemChangeComponent

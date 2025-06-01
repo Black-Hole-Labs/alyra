@@ -9,10 +9,6 @@ import { FooterComponent } from './components/footer/footer.component';
 import { AppContentComponent } from './components/app-content/app-content.component';
 import { ClosePopupsDirective } from './directives/close-popups.directive';
 import { PopupService } from './services/popup.service';
-import { BlockchainStateService } from './services/blockchain-state.service';
-import { ProviderType } from './models/wallet-provider.interface';
-
-import networks from './../../public/data/networks.json';
 
 @Component({
   selector: 'app-root',

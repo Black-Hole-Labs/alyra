@@ -11,6 +11,7 @@ import { NetworkId } from '../models/wallet-provider.interface';
 export class WalletBalanceService {
   private solanaRpcUrl: string;
   private solanaConnection: Connection;
+  private balanceCache = new Map<number, Map<string, string>>();
 
   nativeSolBalance = signal<string>('0');
   nativeEthBalance = signal<string>('0');
@@ -21,7 +22,7 @@ export class WalletBalanceService {
     this.solanaConnection = new Connection(this.solanaRpcUrl, 'confirmed');
   }
 
-  async getEvmBalance(walletAddress: string, providerUrl: string, decimals: number,  tokenAddress?: string | null): Promise<string> {
+  private async getEvmBalance(walletAddress: string, providerUrl: string, decimals: number,  tokenAddress?: string | null): Promise<string> {
     // // console.log(`getEvmBalance(). Wallet: ${walletAddress}, Provider: ${providerUrl}, Token address (can be null): ${tokenAddress}`);
   
     const provider = new ethers.JsonRpcProvider(providerUrl);
@@ -41,7 +42,7 @@ export class WalletBalanceService {
   }
   
 
-  async getSolanaBalance(walletAddress: string, tokenMintAddress?: string): Promise<string> {
+  private async getSolanaBalance(walletAddress: string, tokenMintAddress?: string): Promise<string> {
     // // console.log(`getSolanaBalance(). Wallet: ${walletAddress}, Provider: ${this.solanaRpcUrl}, Token address (can be null): ${tokenMintAddress}`);
     const publicKey = new PublicKey(walletAddress);
 
@@ -103,4 +104,40 @@ export class WalletBalanceService {
         }
       }
     }
+
+    async getBalancesForNetwork(
+      networkId: number,
+      tokens: Token[]
+    ): Promise<Map<string, string>> {
+      if (this.balanceCache.has(networkId)) {
+        return new Map(this.balanceCache.get(networkId)!);
+      }
+
+      const balancesMap = new Map<string, string>();
+      for (const token of tokens) {
+        try {
+          const raw = await this.getBalanceForToken(token);
+          const num = parseFloat(raw);
+          
+          const truncated = (Math.trunc(num * 1e6) / 1e6).toString();
+          console.log(raw, num, truncated);
+          balancesMap.set(token.contractAddress, truncated);
+        } catch (err) {
+          console.error(`Error getting balance ${token.symbol}:` , err);
+          balancesMap.set(token.contractAddress, '0');
+        }
+      }
+      this.balanceCache.set(networkId, balancesMap);
+      return new Map(balancesMap);
+    }
+
+  invalidateBalanceCacheForToken(networkId: number, tokenAddress: string): void {
+    const netMap = this.balanceCache.get(networkId);
+    if (!netMap) return;
+    netMap.delete(tokenAddress)
+
+    if (netMap.size === 0) {
+      this.balanceCache.delete(networkId);
+    }
+  }
 }

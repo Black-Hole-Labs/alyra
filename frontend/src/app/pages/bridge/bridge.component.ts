@@ -174,7 +174,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
     }, { allowSignalWrites: true });
 
     effect(() => {
-        const tokens = this.blockchainStateService.filteredTokens();
+        const tokens = this.blockchainStateService.tokens();
         this.selectedToken.set(tokens.length > 0 ? tokens[0] : undefined);
       },
       { allowSignalWrites: true }
@@ -191,7 +191,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
         const networks = this.blockchainStateService.allNetworks();
         const netowrk = networks.length > 1 ? networks[1] : undefined;
         this.selectedBuyNetwork.set(netowrk);
-        const tokens = await this.blockchainStateService.fetchTokensForNetwork(netowrk!.id);
+        const tokens = await this.blockchainStateService.getTokensForNetwork(netowrk!.id);
         this.selectedBuyToken.set(tokens.length > 0 ? tokens[0] : undefined);
       },
       { allowSignalWrites: true }
@@ -201,7 +201,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
         const network = this.selectedNetwork();
         if (network) {
             if (!this.networkTokens.has(network.id)) {
-                this.blockchainStateService.fetchTokensForNetwork(network.id).then((tokens) => {
+                this.blockchainStateService.getTokensForNetwork(network.id).then((tokens) => {
                     this.networkTokens.set(network.id, tokens);
                     this.selectedToken.set(tokens.length > 0 ? tokens[0] : undefined);
                 });
@@ -218,7 +218,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
         const network = this.selectedBuyNetwork();
         if (network) {
             if (!this.networkTokens.has(network.id)) {
-                this.blockchainStateService.fetchTokensForNetwork(network.id).then((tokens) => {
+                this.blockchainStateService.getTokensForNetwork(network.id).then((tokens) => {
                     this.networkTokens.set(network.id, tokens);
                     this.selectedBuyToken.set(tokens.length > 0 ? tokens[0] : undefined);
                 });
@@ -232,7 +232,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
     );
 
     effect(() => {
-      const tokens = this.blockchainStateService.filteredTokens();
+      const tokens = this.blockchainStateService.tokens();
       const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
   
       this.selectedToken.set(newSelectedToken);

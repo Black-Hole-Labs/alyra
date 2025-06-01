@@ -7,6 +7,7 @@ import { Token } from '../../../pages/trade/trade.component';
 import { Network } from '../../../models/wallet-provider.interface';
 import { ethers } from 'ethers';
 import { NetworkChangeFromPopupComponent } from '../network-change-from/network-change-from.component';
+import { TokenService } from '../../../services/token.service';
 
 export interface TokenDisplay extends Token {
   name?: string;
@@ -23,7 +24,6 @@ export class TokenChangePopupComponent {
   @Input() mode!: 'sell' | 'buy';
   @Output() close = new EventEmitter<void>();
   @Output() tokenSelected = new EventEmitter<Token>();
-  @Input() networkTokens: Token[] | undefined;
   @Input() excludeToken: Token | undefined;
   @Input() selectedToken: Token | undefined;
   searchText = signal<string>('');
@@ -33,12 +33,11 @@ export class TokenChangePopupComponent {
   selectedNetworkId = signal<number | undefined>(undefined);
   selectedNetworkTokens = signal<Token[]>([]);
 
-  constructor() {}
+  constructor(
+        private tokenService: TokenService,
+  ) {}
 
   private tokenCache = new Map<number, Token[]>();
-
-  private static selectedSellNetworkId: number | undefined = undefined;
-  private static selectedBuyNetworkId: number | undefined = undefined;
 
   blockchainStateService = inject(BlockchainStateService);
   walletBalanceService = inject(WalletBalanceService);
@@ -83,7 +82,7 @@ export class TokenChangePopupComponent {
 
   showNetworkChangeFrom = signal<boolean>(false);
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     if (!this.mode) {
       throw new Error('Mode is required! Pass "sell" or "buy" to the mode input.');
     }
@@ -91,20 +90,19 @@ export class TokenChangePopupComponent {
     let networkToUse: number | undefined;
 
     if (this.mode === 'sell') {
-      networkToUse = TokenChangePopupComponent.selectedSellNetworkId || this.blockchainStateService.network()?.id;
+      networkToUse = this.tokenService.selectedSellNetwork()?.id || this.blockchainStateService.network()?.id;
     } else {
-      networkToUse = TokenChangePopupComponent.selectedBuyNetworkId || this.blockchainStateService.network()?.id;
+      networkToUse = this.tokenService.selectedBuyNetwork()?.id || this.blockchainStateService.network()?.id;
     }
 
-    if (networkToUse && !this.networkTokens?.length) {
+    if (networkToUse) {
       this.selectedNetworkId.set(networkToUse);
-      this.loadTokensForNetwork(networkToUse);
-    } else if (!this.networkTokens?.length) {
-      // Если сеть не определена, используем текущую сеть
+      await this.loadTokensForNetwork(networkToUse);
+    } else {
       const currentNetworkId = this.blockchainStateService.network()?.id;
       if (currentNetworkId) {
         this.selectedNetworkId.set(currentNetworkId);
-        this.loadTokensForNetwork(currentNetworkId);
+        await this.loadTokensForNetwork(currentNetworkId);
       }
     }
 
@@ -114,20 +112,23 @@ export class TokenChangePopupComponent {
   }
 
   async loadDisplayedBalances(): Promise<void> {
-    const list = this.displayedTokens();
-    const balances = new Map<string, string>();
-
-    for (const token of list) {
-      try {
-        const balance = await this.walletBalanceService.getBalanceForToken(token);
-        balances.set(token.contractAddress, this.truncateTo6Decimals(parseFloat(balance)));
-      } catch (error) {
-        console.error(`Error loading balance for token ${token.symbol}:`, error);
-        balances.set(token.contractAddress, '0');
-      }
+    const networkId = this.selectedNetworkId() || this.blockchainStateService.network()?.id;
+    if (!networkId) {
+      return;
     }
 
-    this.tokenBalances.set(balances);
+    const list = this.getBaseTokens();
+
+    try {
+      const balancesForThisNetwork = await this.walletBalanceService.getBalancesForNetwork(
+        networkId,
+        list
+      );
+      this.tokenBalances.set(balancesForThisNetwork);
+    } catch (err) {
+      console.error('Unable to get cached balances:', err);
+      this.tokenBalances.set(new Map());
+    }
   }
 
   async loadTokensForNetwork(networkId: number): Promise<void> {
@@ -137,7 +138,7 @@ export class TokenChangePopupComponent {
     }
 
     try {
-      const tokens = await this.blockchainStateService.fetchTokensForNetwork(networkId);
+      const tokens = await this.blockchainStateService.getTokensForNetwork(networkId);
       this.tokenCache.set(networkId, tokens);
       this.selectedNetworkTokens.set(tokens);
     } catch (error) {
@@ -222,17 +223,13 @@ export class TokenChangePopupComponent {
     if (this.selectedNetworkId() === network.id) {
       return;
     }
-
-    if (!this.blockchainStateService.connected()) {
-      this.selectedNetworkId.set(network.id);
-      await this.loadTokensForNetwork(network.id);
-    }
+    this.selectedNetworkId.set(network.id);
+    await this.loadTokensForNetwork(network.id);
 
     if (this.mode === 'sell') {
-      TokenChangePopupComponent.selectedSellNetworkId = network.id;
-
       if (!this.blockchainStateService.connected()) {
         this.blockchainStateService.updateNetwork(network.id);
+        return;
       }
 
       const currentProvider = this.blockchainStateService.getCurrentProvider();
@@ -242,40 +239,36 @@ export class TokenChangePopupComponent {
       }
 
       const provider = currentProvider.provider;
-      // await provider.switchNetwork(network);
+      try
+      {
+        await provider.switchNetwork(network);
+      }
+      catch(error)
+      {
+        if ((error as any).message === "User rejected the request" || (error as any).code === 4001)
+        {
+          return;
+        }
+        else
+        {
+          throw error;
+        }
+      }
+
+      this.tokenService.setSelectedSellNetwork(network);
       this.blockchainStateService.updateNetwork(network.id);
       this.blockchainStateService.updateWalletAddress(provider.address);
     } else {
-      TokenChangePopupComponent.selectedBuyNetworkId = network.id;
+      this.tokenService.setSelectedBuyNetwork(network);
     }
 
     // this.selectedNetworkId.set(network.id);
     // await this.loadTokensForNetwork(network.id);
 
     if (this.blockchainStateService.connected()) {
-      this.selectedNetworkId.set(network.id);
-      await this.loadTokensForNetwork(network.id);
-    }
-
-    if (this.blockchainStateService.connected()) {
       this.loadDisplayedBalances();
     }
 
-    if (this.blockchainStateService.connected() && this.mode === 'sell') {
-      const currentProvider = this.blockchainStateService.getCurrentProvider();
-      if (!currentProvider) {
-        console.error('No provider selected');
-        return;
-      }
-
-      try {
-        const provider = currentProvider.provider;
-        await provider.switchNetwork(network);
-        this.blockchainStateService.updateNetwork(network.id);
-      } catch (error) {
-        console.error('Failed to switch network:', error);
-      }
-    }
   }
 
   isCurrentNetwork(network: Network): boolean {
@@ -304,11 +297,7 @@ export class TokenChangePopupComponent {
       return this.selectedNetworkTokens();
     }
 
-    if (this.networkTokens?.length) {
-      return this.networkTokens;
-    }
-
-    return this.blockchainStateService.filteredTokens();
+    return this.blockchainStateService.tokens();
   }
 
   private filterBySearch(tokens: Token[], search: string): Token[] {
