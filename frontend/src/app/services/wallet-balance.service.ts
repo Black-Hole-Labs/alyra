@@ -120,7 +120,6 @@ export class WalletBalanceService {
           const num = parseFloat(raw);
           
           const truncated = (Math.trunc(num * 1e6) / 1e6).toString();
-          console.log(raw, num, truncated);
           balancesMap.set(token.contractAddress, truncated);
         } catch (err) {
           console.error(`Error getting balance ${token.symbol}:` , err);
