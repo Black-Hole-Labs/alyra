@@ -217,6 +217,32 @@ export class TradeComponent implements AfterViewChecked {
       },
       { allowSignalWrites: true },
     );
+
+    effect(() => {
+      const isConnected = this.blockchainStateService.connected();
+      const buyNetwork  = this.tokenService.selectedBuyNetwork();
+      const sellNetwork = this.tokenService.selectedSellNetwork();
+      if (isConnected && buyNetwork !== undefined && sellNetwork !== undefined)
+      {
+         if((buyNetwork?.id == NetworkId.SOLANA_MAINNET ||
+            sellNetwork?.id == NetworkId.SOLANA_MAINNET) 
+            && 
+            !(buyNetwork?.id == NetworkId.SOLANA_MAINNET &&
+            sellNetwork?.id == NetworkId.SOLANA_MAINNET))
+          {
+            this.showCustomAddress = true;
+          }
+          else
+          {
+            this.showCustomAddress = false;
+          }
+      }
+      else
+      {
+        this.showCustomAddress = false;
+      }
+    },
+    { allowSignalWrites: true });
   }
 
   ngOnInit() {
