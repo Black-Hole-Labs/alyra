@@ -4,3 +4,7 @@
 	flex-direction: column;
 	padding-top: 50px;
 }
+
+:host.documentation-page {
+  padding-top: 0;
+}

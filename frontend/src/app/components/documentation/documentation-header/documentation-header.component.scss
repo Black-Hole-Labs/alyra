@@ -1,0 +1,74 @@
+header{
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	position: relative;
+	width: 100%;
+}
+.logo-container{
+	display: flex;
+	align-items: center;
+	position: relative;
+	z-index: 1001;
+}
+h3{
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 800;
+	font-size: 24px;
+	color: white;
+	margin-left: 8px;
+	cursor: pointer;
+}
+button{
+	width: 12px;
+	height: 7px;
+	cursor: pointer;
+}
+button.closed {
+  background: url(/img/header/open-img.png);
+	width: 12px;
+	height: 7px;
+	margin-left: 15px;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+button.open {
+  background: url(/img/header/close-img.png);
+	width: 12px;
+	height: 7px;
+	margin-left: 15px;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+div.logo{
+	width: 65px;
+	height: 65px;
+	background: url(/img/header/logo.png);
+	background-size: cover;
+}
+img{
+	height: 65px;
+	width: 65px;
+}
+nav{
+	display: flex;
+	align-items: center;
+	gap: 80px;
+	position: relative;
+	z-index: 1000;
+	margin-left: auto;
+}
+nav a {
+	font-size: 20px;
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 400;
+	color: var(--elem-nonactive);
+	transition: 0.2s;
+	cursor: pointer;
+}
+nav a:hover {
+	color: white;
+}
+nav a.active-link {
+	color: white;
+}

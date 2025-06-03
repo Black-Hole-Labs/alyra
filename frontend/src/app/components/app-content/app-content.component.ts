@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
@@ -11,6 +11,7 @@ import { WalletComponent } from "../popup/wallet/wallet.component";
 import { ConnectWalletComponent } from "../popup/connect-wallet/connect-wallet.component";
 import { EcosystemChangeComponent } from '../popup/ecosystem-change/ecosystem-change.component';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
+
 @Component({
   selector: 'app-app-content',
   standalone: true,
@@ -32,6 +33,10 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
 export class AppContentComponent {
   isPopupVisible = false;
   isNetworkPopupVisible = false;
+
+  @HostBinding('class.documentation-page') get isDocumentationPage(): boolean {
+    return this.router.url.startsWith('/documentation');
+  }
 
   constructor(
     private router: Router, 

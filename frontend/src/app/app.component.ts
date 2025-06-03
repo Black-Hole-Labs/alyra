@@ -29,6 +29,10 @@ export class AppComponent {
     this.setDynamicTitle();
   }
 
+  isDocumentationPage(): boolean {
+    return this.router.url.startsWith('/documentation');
+  }
+
   private setDynamicTitle() {
     this.router.events
       .pipe(
