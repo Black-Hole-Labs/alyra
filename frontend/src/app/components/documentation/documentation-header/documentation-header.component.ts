@@ -9,7 +9,10 @@ import { PopupService } from '../../../services/popup.service';
   standalone: true,
   imports: [RouterModule, CommonModule, BlackholeMenuComponent],
   templateUrl: './documentation-header.component.html',
-  styleUrls: ['./documentation-header.component.scss'],
+  styleUrls: [
+		'./documentation-header.component.scss', 
+		'./documentation-header.component.adaptives.scss'
+	],
 })
 export class DocumentationHeaderComponent {
   constructor(public popupService: PopupService) {}

@@ -10,7 +10,10 @@ import { ClosePopupsDirective } from '../../../directives/close-popups.directive
   selector: 'app-documentation-page',
   standalone: true,
   templateUrl: './documentation-page.component.html',
-  styleUrls: ['./documentation-page.component.scss'],
+  styleUrls: [
+		'./documentation-page.component.scss',
+		'./documentation-page.component.adaptives.scss'
+	],
   imports: [
     RouterModule,
 		CommonModule,
