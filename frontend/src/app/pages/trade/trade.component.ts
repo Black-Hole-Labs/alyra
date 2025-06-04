@@ -1098,9 +1098,8 @@ export class TradeComponent implements AfterViewChecked {
     if (!addr) {
       return 'none';
     }
-    const currentNetwork = this.blockchainStateService.network();
-    const chainType = currentNetwork?.chainType || 'EVM';
-    return this.isValidWalletAddress(addr, chainType) ? 'good' : 'bad';
+
+    return this.isValidWalletAddress(addr, this.tokenService.selectedBuyNetwork()!.chainType) ? 'good' : 'bad';
   }
 
   private isValidWalletAddress(address: string, chainType: string): boolean {
