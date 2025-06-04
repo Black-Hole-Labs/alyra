@@ -109,7 +109,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     effect(
       () => {
-        this.blockchainStateService.network();
+        this.blockchainStateService.networkSell();
         this.blockchainStateService.walletAddress();
         this.loadNativeBalance();
       },
@@ -118,7 +118,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   // selectedNetwork = computed(() => {
-  //   const networks = this.blockchainStateService.network();
+  //   const networks = this.blockchainStateService.networkSell();
   //   return networks;
   // });
 
@@ -422,7 +422,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async loadNativeBalance() {
-    const network = this.blockchainStateService.network();
+    const network = this.blockchainStateService.networkSell();
     const address = this.blockchainStateService.walletAddress();
     if (!network || !address) {
       this.nativeBalance.set('0');

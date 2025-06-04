@@ -103,7 +103,7 @@ export class TradeComponent implements AfterViewChecked {
 
   allFieldsReady = computed(
     () =>
-      !!this.blockchainStateService.network() &&
+      !!this.blockchainStateService.networkSell() &&
       this.tokenService.selectedSellToken() !== undefined &&
       this.tokenService.selectedBuyToken() !== undefined &&
       this.validatedSellAmount() !== 0,
@@ -174,11 +174,11 @@ export class TradeComponent implements AfterViewChecked {
         const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
         let newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
 
-        if (this.tokenService.selectedBuyNetwork() !== undefined)
+        if (this.blockchainStateService.networkBuy() !== undefined)
         {
-          if (newSelectedBuyToken?.chainId !== this.tokenService.selectedBuyNetwork()?.id)
+          if (newSelectedBuyToken?.chainId !== this.blockchainStateService.networkBuy()?.id)
           {
-            newSelectedBuyToken = this.blockchainStateService.getTokensForNetwork(this.tokenService.selectedBuyNetwork()!.id)[1];
+            newSelectedBuyToken = this.blockchainStateService.getTokensForNetwork(this.blockchainStateService.networkBuy()!.id)[1];
           }
         }
 
@@ -220,8 +220,8 @@ export class TradeComponent implements AfterViewChecked {
 
     effect(() => {
       const isConnected = this.blockchainStateService.connected();
-      const buyNetwork  = this.tokenService.selectedBuyNetwork();
-      const sellNetwork = this.tokenService.selectedSellNetwork();
+      const buyNetwork  = this.blockchainStateService.networkBuy();
+      const sellNetwork = this.blockchainStateService.networkSell();
       if (isConnected && buyNetwork !== undefined && sellNetwork !== undefined)
       {
          if((buyNetwork?.id == NetworkId.SOLANA_MAINNET ||
@@ -444,10 +444,10 @@ export class TradeComponent implements AfterViewChecked {
 
   private swapNetworkIds(): void {
     try {
-      const tmp = this.tokenService.selectedBuyNetwork();
+      const tmp = this.blockchainStateService.networkBuy();
 
-      this.tokenService.selectedBuyNetwork.set(this.tokenService.selectedSellNetwork());
-      this.tokenService.selectedSellNetwork.set(tmp);
+      this.blockchainStateService.setNetworkBuy(this.blockchainStateService.networkSell()!);
+      this.blockchainStateService.setNetworkSell(tmp!);
     } catch (error) {
       console.warn('Error swapping network IDs:', error);
     }
@@ -525,7 +525,7 @@ export class TradeComponent implements AfterViewChecked {
 
     let txHash: string = '';
     try {
-      if (this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET) {
+      if (this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET) {
         txHash = await this.svmSwap();
       } else {
         txHash = await this.evmSwap();
@@ -575,8 +575,8 @@ export class TradeComponent implements AfterViewChecked {
           parseFloat(await this.walletBalanceService.getBalanceForToken(this.tokenService.selectedBuyToken()!)),
         ),
       );
-      this.walletBalanceService.invalidateBalanceCacheForToken(this.tokenService.selectedSellNetwork()!.id, this.selectedSellToken!.contractAddress);
-      this.walletBalanceService.invalidateBalanceCacheForToken(this.tokenService.selectedBuyNetwork()!.id, this.selectedBuyToken!.contractAddress);
+      this.walletBalanceService.invalidateBalanceCacheForToken(this.blockchainStateService.networkSell()!.id, this.selectedSellToken!.contractAddress);
+      this.walletBalanceService.invalidateBalanceCacheForToken(this.blockchainStateService.networkBuy()!.id, this.selectedBuyToken!.contractAddress);
     } catch (error) {
       // console.log("error setting balance",error);
     }
@@ -742,7 +742,7 @@ export class TradeComponent implements AfterViewChecked {
             // console.log('readableToAmount:', readableToAmount);
             this.updateBuyAmount(readableToAmount);
 
-            // if(this.blockchainStateService.network()!.id == NetworkId.SOLANA_MAINNET) // SVM
+            // if(this.blockchainStateService.networkSell()!.id == NetworkId.SOLANA_MAINNET) // SVM
             // {
             //   gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
             // }
@@ -779,7 +779,7 @@ export class TradeComponent implements AfterViewChecked {
           }
 
           if (response.transactionRequest.data) {
-            if (this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET) {
+            if (this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET) {
               this.txData.set(response.transactionRequest as TransactionRequestSVM);
               this.buttonState = 'swap';
             } else {
@@ -1099,7 +1099,7 @@ export class TradeComponent implements AfterViewChecked {
       return 'none';
     }
 
-    return this.isValidWalletAddress(addr, this.tokenService.selectedBuyNetwork()!.chainType) ? 'good' : 'bad';
+    return this.isValidWalletAddress(addr, this.blockchainStateService.networkBuy()!.chainType) ? 'good' : 'bad';
   }
 
   private isValidWalletAddress(address: string, chainType: string): boolean {
@@ -1118,27 +1118,27 @@ export class TradeComponent implements AfterViewChecked {
   private initializeNetworks(): void {
     const allNetworks = this.blockchainStateService.allNetworks();
 
-    if (this.tokenService.selectedSellNetwork() !== undefined) {
-      this.sellNetwork.set(this.tokenService.selectedSellNetwork());
+    if (this.blockchainStateService.networkSell() !== undefined) {
+      this.sellNetwork.set(this.blockchainStateService.networkSell());
     } else {
       const sellToken = this.tokenService.selectedSellToken();
       if (sellToken) {
         const tokenNetwork = allNetworks.find((n) => n.id === sellToken.chainId);
-        this.sellNetwork.set(tokenNetwork || this.blockchainStateService.network() || undefined);
+        this.sellNetwork.set(tokenNetwork || this.blockchainStateService.networkSell() || undefined);
       } else {
-        this.sellNetwork.set(this.blockchainStateService.network() || undefined);
+        this.sellNetwork.set(this.blockchainStateService.networkSell() || undefined);
       }
     }
 
-    if (this.tokenService.selectedBuyNetwork() !== undefined) {
-      this.buyNetwork.set(this.tokenService.selectedBuyNetwork());
+    if (this.blockchainStateService.networkBuy() !== undefined) {
+      this.buyNetwork.set(this.blockchainStateService.networkBuy());
     } else {
       const buyToken = this.tokenService.selectedBuyToken();
       if (buyToken) {
         const tokenNetwork = allNetworks.find((n) => n.id === buyToken.chainId);
-        this.buyNetwork.set(tokenNetwork || this.blockchainStateService.network() || undefined);
+        this.buyNetwork.set(tokenNetwork || this.blockchainStateService.networkSell() || undefined);
       } else {
-        this.buyNetwork.set(this.blockchainStateService.network() || undefined);
+        this.buyNetwork.set(this.blockchainStateService.networkSell() || undefined);
       }
     }
   }
@@ -1146,26 +1146,26 @@ export class TradeComponent implements AfterViewChecked {
   private updateNetworks(): void {
     const allNetworks = this.blockchainStateService.allNetworks();
 
-    if (this.tokenService.selectedSellNetwork() !== undefined) {
-      this.sellNetwork.set(this.tokenService.selectedSellNetwork());
+    if (this.blockchainStateService.networkSell() !== undefined) {
+      this.sellNetwork.set(this.blockchainStateService.networkSell());
     } else {
       const sellToken = this.tokenService.selectedSellToken();
       if (sellToken) {
         const tokenNetwork = allNetworks.find((n) => n.id === sellToken.chainId);
-        const networkToSet = tokenNetwork || this.blockchainStateService.network() || undefined;
+        const networkToSet = tokenNetwork || this.blockchainStateService.networkSell() || undefined;
         if (networkToSet && networkToSet.id !== this.sellNetwork()?.id) {
           this.sellNetwork.set(networkToSet);
         }
       }
     }
 
-    if (this.tokenService.selectedBuyNetwork() !== undefined) {
-      this.buyNetwork.set(this.tokenService.selectedBuyNetwork());
+    if (this.blockchainStateService.networkBuy() !== undefined) {
+      this.buyNetwork.set(this.blockchainStateService.networkBuy());
     } else {
       const buyToken = this.tokenService.selectedBuyToken();
       if (buyToken) {
         const tokenNetwork = allNetworks.find((n) => n.id === buyToken.chainId);
-        const networkToSet = tokenNetwork || this.blockchainStateService.network() || undefined;
+        const networkToSet = tokenNetwork || this.blockchainStateService.networkSell() || undefined;
         if (networkToSet && networkToSet.id !== this.buyNetwork()?.id) {
           this.buyNetwork.set(networkToSet);
         }

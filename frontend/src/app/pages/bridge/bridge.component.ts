@@ -181,7 +181,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
     );
 
     effect(() => {
-        const network = this.blockchainStateService.network();
+        const network = this.blockchainStateService.networkSell();
         this.selectedNetwork.set(network!);
       },
       { allowSignalWrites: true }
@@ -381,7 +381,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
           // console.log('readableToAmount:', readableToAmount);
           this.updateBuyAmount(readableToAmount);
           
-          // if(this.blockchainStateService.network()!.id == NetworkId.SOLANA_MAINNET) // SVM
+          // if(this.blockchainStateService.networkSell()!.id == NetworkId.SOLANA_MAINNET) // SVM
           // {
           //   gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
           // }
@@ -406,7 +406,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
         if(response.transactionRequest.data)
         {
-          if(this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET)
+          if(this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET)
           {
             this.txData.set(response.transactionRequest as TransactionRequestSVM);
           }
@@ -485,7 +485,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   async onNetworkSelected(event: Network ): Promise<void> {
     try{
       if(!this.blockchainStateService.connected()){
-        this.blockchainStateService.updateNetwork(event.id);
+        this.blockchainStateService.updateNetworkSell(event.id);
       }
 
       const currentProvider = this.blockchainStateService.getCurrentProvider();
@@ -496,7 +496,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
       
       const provider = currentProvider.provider;
       await provider.switchNetwork(event);
-      this.blockchainStateService.updateNetwork(event.id);
+      this.blockchainStateService.updateNetworkSell(event.id);
 
       this.selectedNetwork.set(event);
       requestAnimationFrame(() => {
@@ -686,7 +686,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   //?
   isBridgeButtonActive = computed(() =>
-      !!this.blockchainStateService.network() &&
+      !!this.blockchainStateService.networkSell() &&
       this.selectedToken() !== undefined &&
       this.selectedNetwork() !== undefined &&
       this.selectedBuyNetwork() !== undefined &&
@@ -787,7 +787,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   async bridge(): Promise<void> {
     let txHash: string;
-    if(this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET)
+    if(this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET)
     {
       txHash = await this.svmSwap();
     }

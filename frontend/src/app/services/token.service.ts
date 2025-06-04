@@ -8,8 +8,8 @@ import { Network } from '../models/wallet-provider.interface';
 export class TokenService {
   selectedBuyToken = signal<Token | undefined>(undefined);
   selectedSellToken = signal<Token | undefined>(undefined);
-  selectedBuyNetwork = signal<Network | undefined>(undefined);
-  selectedSellNetwork = signal<Network | undefined>(undefined);
+  // selectedBuyNetwork = signal<Network | undefined>(undefined);
+  // selectedSellNetwork = signal<Network | undefined>(undefined);
 
   public setSelectedBuyToken(token: Token | undefined) {
     this.selectedBuyToken.set(token);
@@ -19,11 +19,11 @@ export class TokenService {
     this.selectedSellToken.set(token);
   }
 
-  public setSelectedBuyNetwork(network: Network | undefined) {
-    this.selectedBuyNetwork.set(network);
-  }
+  // public setSelectedBuyNetwork(network: Network | undefined) {
+  //   this.selectedBuyNetwork.set(network);
+  // }
 
-  public setSelectedSellNetwork(network: Network | undefined) {
-    this.selectedSellNetwork.set(network);
-  }
+  // public setSelectedSellNetwork(network: Network | undefined) {
+  //   this.selectedSellNetwork.set(network);
+  // }
 }

@@ -38,12 +38,12 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
       console.error("Multichain::connect(): SVM not found!")
     }
 
-    if (this.blockchainStateService.network()!.chainType === 'EVM' && this.evmProvider) {
+    if (this.blockchainStateService.networkSell()!.chainType === 'EVM' && this.evmProvider) {
       const { address, network } = await this.evmProvider.connect(this.evmProviderInstance, true);
       this.address = address;
       this.network = network;
       this.currentNetwork = 'EVM';
-    } else if (this.blockchainStateService.network()!.chainType === 'SVM' && this.svmProvider) {
+    } else if (this.blockchainStateService.networkSell()!.chainType === 'SVM' && this.svmProvider) {
       const { address, network } = await this.svmProvider.connect(this.svmProviderInstance, true);
       this.address = address;
       this.network = network;

@@ -66,15 +66,15 @@ export class AppContentComponent {
   onEcosystemSelected(ecosystemId: string): void {
     if (ecosystemId === ProviderType.EVM)
     {
-      this.blockchainStateService.updateNetwork(NetworkId.ETHEREUM_MAINNET);
+      this.blockchainStateService.updateNetworkSell(NetworkId.ETHEREUM_MAINNET);
     }
     else if (ecosystemId === ProviderType.SVM)
     {
-      this.blockchainStateService.updateNetwork(NetworkId.SOLANA_MAINNET);
+      this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET);
     }
     
     const provider = this.blockchainStateService.getCurrentProvider();
-    provider.provider.switchNetwork(this.blockchainStateService.getCurrentNetwork());
+    provider.provider.switchNetwork(this.blockchainStateService.getCurrentNetworkSell());
     
     this.popupService.openPopup('wallet');
   }

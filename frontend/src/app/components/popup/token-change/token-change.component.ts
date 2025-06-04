@@ -41,7 +41,7 @@ export class TokenChangePopupComponent {
 
   blockchainStateService = inject(BlockchainStateService);
   walletBalanceService = inject(WalletBalanceService);
-  explorerUrl = computed(() => this.blockchainStateService.network()?.explorerUrl || 'https://etherscan.io/token/');
+  explorerUrl = computed(() => this.blockchainStateService.networkSell()?.explorerUrl || 'https://etherscan.io/token/');
   ethers = ethers;
 
   networks = computed(() => {
@@ -62,7 +62,7 @@ export class TokenChangePopupComponent {
 
     return [...first10, selected];
   });
-  currentNetwork = computed(() => this.blockchainStateService.network());
+  currentNetwork = computed(() => this.blockchainStateService.networkSell());
 
   additionalNetworksCount = computed(() => {
     const totalNetworks = this.blockchainStateService.allNetworks().length;
@@ -93,16 +93,16 @@ export class TokenChangePopupComponent {
     let networkToUse: number | undefined;
 
     if (this.mode === 'sell') {
-      networkToUse = this.tokenService.selectedSellNetwork()?.id || this.blockchainStateService.network()?.id;
+      networkToUse = this.blockchainStateService.networkSell()?.id || this.blockchainStateService.networkSell()?.id;
     } else {
-      networkToUse = this.tokenService.selectedBuyNetwork()?.id || this.blockchainStateService.network()?.id;
+      networkToUse = this.blockchainStateService.networkBuy()?.id || this.blockchainStateService.networkSell()?.id;
     }
 
     if (networkToUse) {
       this.selectedNetworkId.set(networkToUse);
       await this.loadTokensForNetwork(networkToUse);
     } else {
-      const currentNetworkId = this.blockchainStateService.network()?.id;
+      const currentNetworkId = this.blockchainStateService.networkSell()?.id;
       if (currentNetworkId) {
         this.selectedNetworkId.set(currentNetworkId);
         await this.loadTokensForNetwork(currentNetworkId);
@@ -115,7 +115,7 @@ export class TokenChangePopupComponent {
   }
 
   async loadDisplayedBalances(): Promise<void> {
-    const networkId = this.selectedNetworkId() || this.blockchainStateService.network()?.id;
+    const networkId = this.selectedNetworkId() || this.blockchainStateService.networkSell()?.id;
     if (!networkId) {
       return;
     }
@@ -196,7 +196,7 @@ export class TokenChangePopupComponent {
   }
 
   isNativeToken(token: TokenDisplay): boolean {
-    const currentNetwork = this.blockchainStateService.network();
+    const currentNetwork = this.blockchainStateService.networkSell();
     if (!currentNetwork) return false;
 
     if (currentNetwork.chainType === 'SVM') {
@@ -231,8 +231,7 @@ export class TokenChangePopupComponent {
 
     if (this.mode === 'sell') {
       if (!this.blockchainStateService.connected()) {
-        this.tokenService.setSelectedSellNetwork(network);
-        this.blockchainStateService.updateNetwork(network.id);
+        this.blockchainStateService.updateNetworkSell(network.id);
         return;
       }
 
@@ -241,6 +240,8 @@ export class TokenChangePopupComponent {
         console.error('No provider selected');
         return;
       }
+
+      this.blockchainStateService.updateNetworkSell(network.id);
 
       const provider = currentProvider.provider;
       try
@@ -259,11 +260,9 @@ export class TokenChangePopupComponent {
         }
       }
 
-      this.tokenService.setSelectedSellNetwork(network);
-      this.blockchainStateService.updateNetwork(network.id);
       this.blockchainStateService.updateWalletAddress(provider.address);
     } else {
-      this.tokenService.setSelectedBuyNetwork(network);
+      this.blockchainStateService.setNetworkBuy(network);
     }
 
     // this.selectedNetworkId.set(network.id);

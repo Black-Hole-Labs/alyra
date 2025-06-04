@@ -30,7 +30,10 @@ export class BlockchainStateService {
   private currentProviderId: string | null = null;
 
   readonly walletAddress = signal<string | null>(null);
-  readonly network = signal<Network | null>(null);
+
+  readonly networkSell = signal<Network | undefined>(undefined);
+  readonly networkBuy = signal<Network | undefined>(undefined);
+  
   readonly connected = signal<boolean>(false);
   readonly allNetworks = signal<Network[]>([]);
 
@@ -56,10 +59,10 @@ export class BlockchainStateService {
 
     effect(
       () => {
-        if (this.network()) {
-          this.setTokensForNetwork(this.network()!.id);
-          this.updateNetworkBackgroundIcons(this.network()!);
-          this.setAllTokensForNetwork(this.network()!.id);
+        if (this.networkSell()) {
+          this.setTokensForNetwork(this.networkSell()!.id);
+          this.updateNetworkBackgroundIcons(this.networkSell()!);
+          this.setAllTokensForNetwork(this.networkSell()!.id);
         }
       },
       { allowSignalWrites: true },
@@ -70,7 +73,7 @@ export class BlockchainStateService {
     const providerId = sessionStorage.getItem('currentProvider');
     const networkId = sessionStorage.getItem('networkId');
     if (!providerId) {
-      this.updateNetwork(NetworkId.ETHEREUM_MAINNET);
+      this.updateNetworkSell(NetworkId.ETHEREUM_MAINNET);
       return Promise.resolve();
     }
 
@@ -82,7 +85,7 @@ export class BlockchainStateService {
       .then(({ address }: { address: string }) => {
         this.updateWalletAddress(address);
         this.setCurrentProvider(providerId);
-        this.updateNetwork(Number(networkId!));
+        this.updateNetworkSell(Number(networkId!));
       })
       .catch(console.error);
   }
@@ -199,7 +202,7 @@ export class BlockchainStateService {
     if (force) {
       const defaultNetwork = this.networks().find((n) => n.id === NetworkId.ETHEREUM_MAINNET);
       if (defaultNetwork) {
-        this.updateNetwork(1);
+        this.updateNetworkSell(1);
       } else {
         console.warn('Default network with id 1 not found');
       }
@@ -214,20 +217,28 @@ export class BlockchainStateService {
     return this.walletAddress();
   }
 
-  updateNetwork(chainId: number): void {
+  updateNetworkSell(chainId: number): void {
     const foundNetwork = this.networks().find((n) => n.id === chainId);
-    this.network.set(foundNetwork ?? null);
+    this.networkSell.set(foundNetwork ?? undefined);
     if (foundNetwork) {
       this.updateNetworkBackgroundIcons(foundNetwork);
     }
   }
 
-  getCurrentNetwork(): Network | null {
-    return this.network();
+  getCurrentNetworkSell(): Network | undefined {
+    return this.networkSell();
   }
 
   setCustomAddress(customAddress: string) {
     this.customAddress.set(customAddress);
+  }
+
+  setNetworkSell(network: Network) {
+    this.networkSell.set(network);
+  }
+
+  setNetworkBuy(network: Network) {
+    this.networkBuy.set(network);
   }
 
   disconnect(): void {

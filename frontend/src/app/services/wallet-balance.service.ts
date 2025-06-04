@@ -66,7 +66,7 @@ export class WalletBalanceService {
   async getBalanceForToken(token: Token): Promise<string> {
       let walletAddress = this.blockchainStateService.getCurrentWalletAddress();
       
-      if(token.chainId !== this.blockchainStateService.network()?.id){
+      if(token.chainId !== this.blockchainStateService.networkSell()?.id){
         if(this.blockchainStateService.customAddress() !== ""){
           walletAddress = this.blockchainStateService.customAddress();
         }
