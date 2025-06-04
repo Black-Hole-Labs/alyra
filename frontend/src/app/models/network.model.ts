@@ -94,7 +94,7 @@ export class BackpackProvider extends MultiChainWalletProvider {
   }
 
   override async connect(): Promise<{ address: string; network: string }> {
-    this.blockchainStateService.updateNetwork(NetworkId.SOLANA_MAINNET); // Solana is default for BackPack
+    this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET); // Solana is default for BackPack
     const connection = await super.connect();
 
     return connection;
@@ -109,7 +109,7 @@ export class PhantomProvider extends MultiChainWalletProvider {
   }
 
   override async connect(): Promise<{ address: string; network: string }> {
-    this.blockchainStateService.updateNetwork(NetworkId.SOLANA_MAINNET); // Solana is default for Phantom
+    this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET); // Solana is default for Phantom
     const connection = await super.connect();
 
     return connection;

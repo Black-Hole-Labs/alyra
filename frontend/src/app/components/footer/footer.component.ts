@@ -32,7 +32,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 
     effect(
       () => {
-        const token = this.tokenService.getSelectedToken();
+        const token = this.tokenService.selectedBuyToken();
         this.isStopBlockFetching = false;
         if (!token) return;
 
@@ -40,8 +40,9 @@ export class FooterComponent implements OnInit, OnDestroy {
         if (network?.rpcUrls[0] && token.chainId !== NetworkId.SOLANA_MAINNET) {
           this.providerEvm.set(new ethers.JsonRpcProvider(network.rpcUrls[0]));
           this.updateBlockNumber();
+        } else {
+          this.updateBlockNumber();
         }
-        this.updateBlockNumber();
       },
       { allowSignalWrites: true },
     );
@@ -65,7 +66,7 @@ export class FooterComponent implements OnInit, OnDestroy {
     if (this.isStopBlockFetching) return;
 
     try {
-      const token = this.tokenService.getSelectedToken();
+      const token = this.tokenService.selectedBuyToken();
       if (!token) return;
 
       if (token.chainId === NetworkId.SOLANA_MAINNET) {

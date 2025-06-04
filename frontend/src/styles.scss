@@ -26,6 +26,10 @@ html {
   overflow: hidden;
 }
 
+html.documentation-page {
+  overflow: auto;
+}
+
 html::before,
 html::after {
   content: '';
@@ -55,6 +59,11 @@ html::after {
   right: -20%;
   animation: moveGradient 30s linear infinite;
   animation-delay: 0s;
+}
+
+html.documentation-page::before,
+html.documentation-page::after {
+  display: none;
 }
 
 @keyframes moveGradient {

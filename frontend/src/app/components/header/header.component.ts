@@ -18,7 +18,7 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
 import { NetworkId, Wallets } from '../../models/wallet-provider.interface';
 import { WalletBalanceService } from '../../services/wallet-balance.service';
 
-import providers from '@public/data/providers.json';
+// import providers from '@public/data/providers.json';
 
 @Component({
   selector: 'app-header',
@@ -109,22 +109,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     effect(
       () => {
-        const network = this.blockchainStateService.network();
-        const address = this.blockchainStateService.walletAddress();
-        if (network && address) {
-          this.loadNativeBalance();
-        } else {
-          this.nativeBalance.set('0');
-        }
+        this.blockchainStateService.networkSell();
+        this.blockchainStateService.walletAddress();
+        this.loadNativeBalance();
       },
       { allowSignalWrites: true },
     );
   }
 
-  selectedNetwork = computed(() => {
-    const networks = this.blockchainStateService.network();
-    return networks;
-  });
+  // selectedNetwork = computed(() => {
+  //   const networks = this.blockchainStateService.networkSell();
+  //   return networks;
+  // });
 
   ngOnInit() {
     this.loadGmCount();
@@ -405,8 +401,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     animate();
   }
 
-  loadProviders() {
-    this.providers = providers;
+  async loadProviders() {
+    this.providers = await this.blockchainStateService.loadProviders();
     return this.updateWalletIcon();
   }
 
@@ -426,7 +422,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async loadNativeBalance() {
-    const network = this.blockchainStateService.network();
+    const network = this.blockchainStateService.networkSell();
     const address = this.blockchainStateService.walletAddress();
     if (!network || !address) {
       this.nativeBalance.set('0');
