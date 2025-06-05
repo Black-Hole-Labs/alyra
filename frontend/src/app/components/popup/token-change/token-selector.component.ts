@@ -33,7 +33,11 @@ export class TokenChangePopupComponent {
   selectedNetworkId = signal<number | undefined>(undefined);
   selectedNetworkTokens = signal<Token[]>([]);
 
-  constructor(private tokenService: TokenService) {}
+  constructor(private tokenService: TokenService) {
+    effect(() => {
+      console.log('excludeToken', this.excludeToken);
+    });
+  }
 
   private tokenCache = new Map<number, Token[]>();
 
@@ -301,6 +305,10 @@ export class TokenChangePopupComponent {
   private filterByExcludeToken(tokens: Token[]): Token[] {
     if (!this.excludeToken) return tokens;
 
-    return tokens.filter((token) => token.contractAddress !== this.excludeToken!.contractAddress);
+    return tokens.filter((token) => {
+      const isSameAddress = token.contractAddress === this.excludeToken!.contractAddress;
+      const isSameChain = token.chainId === this.excludeToken!.chainId;
+      return !(isSameAddress && isSameChain);
+    });
   }
 }
