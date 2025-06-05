@@ -33,11 +33,7 @@ export class TokenChangePopupComponent {
   selectedNetworkId = signal<number | undefined>(undefined);
   selectedNetworkTokens = signal<Token[]>([]);
 
-  constructor(private tokenService: TokenService) {
-    effect(() => {
-      console.log('excludeToken', this.excludeToken);
-    });
-  }
+  constructor(private tokenService: TokenService) {}
 
   private tokenCache = new Map<number, Token[]>();
 
