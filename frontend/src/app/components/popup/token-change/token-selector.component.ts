@@ -14,10 +14,10 @@ export interface TokenDisplay extends Token {
 }
 
 @Component({
-  selector: 'app-token-change',
+  selector: 'app-token-selector',
   standalone: true,
-  templateUrl: './token-change.component.html',
-  styleUrls: ['./token-change.component.scss', './token-change.component.adaptives.scss'],
+  templateUrl: './token-selector.component.html',
+  styleUrls: ['./token-selector.component.scss', './token-selector.component.adaptives.scss'],
   imports: [CommonModule, FormsModule, NetworkChangeFromPopupComponent],
 })
 export class TokenChangePopupComponent {
@@ -33,9 +33,7 @@ export class TokenChangePopupComponent {
   selectedNetworkId = signal<number | undefined>(undefined);
   selectedNetworkTokens = signal<Token[]>([]);
 
-  constructor(
-        private tokenService: TokenService,
-  ) {}
+  constructor(private tokenService: TokenService) {}
 
   private tokenCache = new Map<number, Token[]>();
 
@@ -45,9 +43,8 @@ export class TokenChangePopupComponent {
   ethers = ethers;
 
   networks = computed(() => {
-    const all = this.mode === 'sell'
-      ? this.blockchainStateService.networks()
-      : this.blockchainStateService.allNetworks();
+    const all =
+      this.mode === 'sell' ? this.blockchainStateService.networks() : this.blockchainStateService.allNetworks();
 
     const selectedId = this.selectedNetworkId();
     const first10 = all.slice(0, 10);
@@ -123,10 +120,7 @@ export class TokenChangePopupComponent {
     const list = this.getBaseTokens();
 
     try {
-      const balancesForThisNetwork = await this.walletBalanceService.getBalancesForNetwork(
-        networkId,
-        list
-      );
+      const balancesForThisNetwork = await this.walletBalanceService.getBalancesForNetwork(networkId, list);
       this.tokenBalances.set(balancesForThisNetwork);
     } catch (err) {
       console.error('Unable to get cached balances:', err);
@@ -244,18 +238,12 @@ export class TokenChangePopupComponent {
       this.blockchainStateService.updateNetworkSell(network.id);
 
       const provider = currentProvider.provider;
-      try
-      {
+      try {
         await provider.switchNetwork(network);
-      }
-      catch(error)
-      {
-        if ((error as any).message === "User rejected the request" || (error as any).code === 4001)
-        {
+      } catch (error) {
+        if ((error as any).message === 'User rejected the request' || (error as any).code === 4001) {
           return;
-        }
-        else
-        {
+        } else {
           throw error;
         }
       }
@@ -271,7 +259,6 @@ export class TokenChangePopupComponent {
     if (this.blockchainStateService.connected()) {
       this.loadDisplayedBalances();
     }
-
   }
 
   isCurrentNetwork(network: Network): boolean {
