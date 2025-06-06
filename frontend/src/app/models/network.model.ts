@@ -70,6 +70,13 @@ export class MetaMaskProvider extends EvmWalletProvider {
   constructor(walletManager: WalletProviderManager, injector: Injector) {
     super(walletManager.getMetaMaskProvider(), injector);
   }
+
+  override async connect(): Promise<{ address: string; network: string }> {
+    this.blockchainStateService.updateNetworkSell(NetworkId.ETHEREUM_MAINNET);
+    const connection = await super.connect();
+
+    return connection;
+  }
 }
 
 export class RabbyWalletProvider extends EvmWalletProvider {
