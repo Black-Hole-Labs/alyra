@@ -226,6 +226,10 @@ export class TokenChangePopupComponent {
     if (this.selectedNetworkId() === network.id) {
       return;
     }
+
+    const prevNetworkId = this.selectedNetworkId();
+    const prevTokens = this.selectedNetworkTokens();
+
     this.selectedNetworkId.set(network.id);
     await this.loadTokensForNetwork(network.id);
 
@@ -248,8 +252,14 @@ export class TokenChangePopupComponent {
         await provider.switchNetwork(network);
       } catch (error) {
         if ((error as any).message === 'User rejected the request' || (error as any).code === 4001) {
+          this.selectedNetworkId.set(prevNetworkId);
+          this.selectedNetworkTokens.set(prevTokens);
+          this.blockchainStateService.updateNetworkSell(prevNetworkId!);
           return;
         } else {
+          this.selectedNetworkId.set(prevNetworkId);
+          this.selectedNetworkTokens.set(prevTokens);
+          this.blockchainStateService.updateNetworkSell(prevNetworkId!);
           throw error;
         }
       }
@@ -258,9 +268,6 @@ export class TokenChangePopupComponent {
     } else {
       this.blockchainStateService.setNetworkBuy(network);
     }
-
-    // this.selectedNetworkId.set(network.id);
-    // await this.loadTokensForNetwork(network.id);
 
     if (this.blockchainStateService.connected()) {
       this.loadDisplayedBalances();
