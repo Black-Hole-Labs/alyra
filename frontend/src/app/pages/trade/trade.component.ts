@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
+import { TokenChangePopupComponent } from '../../components/popup/token-change/token-selector.component';
 import { SettingsComponent } from '../../components/popup/settings/settings.component';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
 import { WalletBalanceService } from '../../services/wallet-balance.service';
@@ -163,11 +163,11 @@ export class TradeComponent implements AfterViewChecked {
         const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
         let newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
 
-        if (this.blockchainStateService.networkBuy() !== undefined)
-        {
-          if (newSelectedBuyToken?.chainId !== this.blockchainStateService.networkBuy()?.id)
-          {
-            newSelectedBuyToken = this.blockchainStateService.getTokensForNetwork(this.blockchainStateService.networkBuy()!.id)[1];
+        if (this.blockchainStateService.networkBuy() !== undefined) {
+          if (newSelectedBuyToken?.chainId !== this.blockchainStateService.networkBuy()?.id) {
+            newSelectedBuyToken = this.blockchainStateService.getTokensForNetwork(
+              this.blockchainStateService.networkBuy()!.id,
+            )[1];
           }
         }
 
@@ -207,32 +207,27 @@ export class TradeComponent implements AfterViewChecked {
       { allowSignalWrites: true },
     );
 
-    effect(() => {
-      const isConnected = this.blockchainStateService.connected();
-      const buyNetwork  = this.blockchainStateService.networkBuy();
-      const sellNetwork = this.blockchainStateService.networkSell();
-      if (isConnected && buyNetwork !== undefined && sellNetwork !== undefined)
-      {
-         if((buyNetwork?.id == NetworkId.SOLANA_MAINNET ||
-            sellNetwork?.id == NetworkId.SOLANA_MAINNET) 
-            && 
-            !(buyNetwork?.id == NetworkId.SOLANA_MAINNET &&
-            sellNetwork?.id == NetworkId.SOLANA_MAINNET))
-          {
+    effect(
+      () => {
+        const isConnected = this.blockchainStateService.connected();
+        const buyNetwork = this.blockchainStateService.networkBuy();
+        const sellNetwork = this.blockchainStateService.networkSell();
+        if (isConnected && buyNetwork !== undefined && sellNetwork !== undefined) {
+          if (
+            (buyNetwork?.id == NetworkId.SOLANA_MAINNET || sellNetwork?.id == NetworkId.SOLANA_MAINNET) &&
+            !(buyNetwork?.id == NetworkId.SOLANA_MAINNET && sellNetwork?.id == NetworkId.SOLANA_MAINNET)
+          ) {
             this.showCustomAddress = true;
-          }
-          else
-          {
+          } else {
             this.showCustomAddress = false;
             this.customAddress.set('');
           }
-      }
-      else
-      {
-        this.showCustomAddress = false;
-      }
-    },
-    { allowSignalWrites: true });
+        } else {
+          this.showCustomAddress = false;
+        }
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   ngOnInit() {
@@ -556,14 +551,10 @@ export class TradeComponent implements AfterViewChecked {
 
     try {
       this.balance.set(
-        Number(
-          parseFloat(await this.walletBalanceService.getBalanceForToken(this.tokenService.selectedSellToken()!)),
-        ),
+        Number(parseFloat(await this.walletBalanceService.getBalanceForToken(this.tokenService.selectedSellToken()!))),
       );
       this.balanceBuy.set(
-        Number(
-          parseFloat(await this.walletBalanceService.getBalanceForToken(this.tokenService.selectedBuyToken()!)),
-        ),
+        Number(parseFloat(await this.walletBalanceService.getBalanceForToken(this.tokenService.selectedBuyToken()!))),
       );
       this.walletBalanceService.invalidateBalanceCacheForToken(this.blockchainStateService.networkSell()!.id, this.tokenService.selectedSellToken()!.contractAddress);
       this.walletBalanceService.invalidateBalanceCacheForToken(this.blockchainStateService.networkBuy()!.id, this.tokenService.selectedBuyToken()!.contractAddress);

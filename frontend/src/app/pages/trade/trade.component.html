@@ -202,15 +202,15 @@
 
 </div>
 
-<app-token-change [mode]="'sell'" *ngIf="popupService.getCurrentPopup() === 'tokenChangeSell'"
+<app-token-selector [mode]="'sell'" *ngIf="popupService.getCurrentPopup() === 'tokenChangeSell'"
   [selectedToken]="tokenService.selectedSellToken()" (tokenSelected)="onSellTokenSelected($event)" [excludeToken]="tokenService.selectedBuyToken()"
   (close)="closeTokenPopup()">
-</app-token-change>
+</app-token-selector>
 
-<app-token-change [mode]="'buy'" *ngIf="popupService.getCurrentPopup() === 'tokenChangeBuy'"
+<app-token-selector [mode]="'buy'" *ngIf="popupService.getCurrentPopup() === 'tokenChangeBuy'"
   [selectedToken]="tokenService.selectedBuyToken()" [excludeToken]="tokenService.selectedSellToken()" (tokenSelected)="onBuyTokenSelected($event)"
   (close)="closeTokenBuyPopup()">
-</app-token-change>
+</app-token-selector>
 
 <app-success-notification *ngIf="showSuccessNotification" [selectedToken]="tokenService.selectedSellToken()"
   [selectedBuyToken]="tokenService.selectedBuyToken()" [sellAmount]="sellAmount" [buyAmount]="buyAmount()!.toString()"
