@@ -7,6 +7,8 @@ import tokensSearch from '@public/data/tokens_search.json';
 
 import providersImport from '@public/data/providers.json';
 import tokensImport from '@public/data/tokens.json';
+import { ethers } from 'ethers';
+import { Connection } from '@solana/web3.js';
 
 interface TokenData {
   chainId: number;
@@ -28,6 +30,7 @@ interface TokensData {
 export class BlockchainStateService {
   private providers: Record<string, { provider: any; type: ProviderType }> = {};
   private currentProviderId: string | null = null;
+  private rpcCache = new Map<number, string>();
 
   readonly walletAddress = signal<string | null>(null);
 
@@ -67,6 +70,42 @@ export class BlockchainStateService {
       },
       { allowSignalWrites: true },
     );
+  }
+
+  public async getWorkingRpcUrlForNetwork(id: number): Promise<string> {
+    if (this.rpcCache.has(id)) {
+      return this.rpcCache.get(id)!;
+    }
+
+    const network = this.getNetworkById(id);
+    if (!network) {
+      throw new Error(`Network with id ${id} not found!`);
+    }
+
+    const urls = network.rpcUrls || [];
+    if (!urls.length) {
+      throw new Error(`Network with id=${id} does not contain any RPCs!`);
+    }
+
+    for (const url of urls) {
+      try {
+        if (network.chainType === 'EVM') {
+          const provider = new ethers.JsonRpcProvider(url);
+          await provider.getBlockNumber();
+        } else {
+          const connection = new Connection(url, 'confirmed');
+          await connection.getVersion();
+        }
+
+        this.rpcCache.set(id, url);
+        return url;
+
+      } catch (error) {
+        console.warn(`RPC ${url} is broken for id=${id}:`, error);
+      }
+    }
+
+    throw new Error(`No working RPCs for network id=${id}!`);
   }
 
   public tryAutoConnect(): Promise<void> {
