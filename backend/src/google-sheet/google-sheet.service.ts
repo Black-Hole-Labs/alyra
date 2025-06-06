@@ -2,9 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { google } from 'googleapis';
 import * as keys from '../../google-creds.json';
 import { AddEmailDto } from './google-sheet.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class GoogleSheetService {
+  constructor(private configService: ConfigService) {}
+
   async addEmail(addEmailDto: AddEmailDto) {
     const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 
@@ -16,7 +19,7 @@ export class GoogleSheetService {
       scopes: SCOPES,
     });
     const sheets = google.sheets({ version: 'v4', auth });
-    const spreadsheetId = '1X8BR21Bqya8IFGsQpoFUnrGuM_V3_gBaxtbrfHvXETA';
+    const spreadsheetId = this.configService.get<string>('SHEETS_ID');
     const values = [[addEmailDto.email]];
     const range = 'emails!A:A';
     const resource = {
