@@ -68,13 +68,18 @@ export class TokenChangePopupComponent {
   });
 
   tokenList: Signal<TokenDisplay[]> = computed(() => {
-    const search = this.searchText().toLowerCase().trim();
+      const search = this.searchText().toLowerCase().trim();
 
-    const allTokens = this.blockchainStateService.allTokens();
-    const filteredBySearch = this.filterBySearch(allTokens, search);
-    const filteredByExclude = this.filterByExcludeToken(filteredBySearch);
+      if (!search) {
+          const tokens = this.getBaseTokens();
+          const filteredByExclude = this.filterByExcludeToken(tokens);
+          return filteredByExclude as TokenDisplay[];
+      }
 
-    return filteredByExclude as TokenDisplay[];
+      const allTokens = this.blockchainStateService.allTokens();
+      const filteredBySearch = this.filterBySearch(allTokens, search);
+      const filteredByExclude = this.filterByExcludeToken(filteredBySearch);
+      return filteredByExclude as TokenDisplay[];
   });
 
   displayedTokens: Signal<TokenDisplay[]> = computed(() => {
