@@ -30,11 +30,18 @@ h3{
 }
 
 .icon:hover {
+	cursor: pointer;
 	background-color: var(--dark-select);
+	.refresh, .settings, .custom-wallet-button{
+		opacity: 1;
+	}
 }
 
 .icon.active {
 	background-color: var(--dark-select);
+	.refresh, .settings, .custom-wallet-button{
+		opacity: 1;
+	}
 }
 
 .refresh, .settings, .custom-wallet-button {
@@ -56,10 +63,6 @@ h3{
 
 .settings {
   background-image: url(/img/trade/settings.png);
-}
-
-.refresh:hover, .settings:hover, .settings.active {
-  opacity: 1;
 }
 
 .rotate {
@@ -223,6 +226,23 @@ p {
   width: 45px;
   border-radius: 100%;
 	position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.token-icon.has-placeholder {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.token-icon .token-letter {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  user-select: none;
+  pointer-events: none;
 }
 
 .network-icon {
@@ -446,11 +466,11 @@ p {
   transition: max-height 0.3s ease, opacity 0.2s ease, margin-top 0.3s ease, padding 0.3s ease;
 }
 
-.trade-info.show {
-  max-height: 200px;
-  padding: 14px 0;
-  opacity: 1;
-}
+// .trade-info.show {
+//   max-height: 200px;
+//   padding: 14px 0;
+//   opacity: 1;
+// }
 
 // .info {
 //   display: flex;
@@ -460,20 +480,21 @@ p {
 //   margin-top: 20px;
 // }
 
-// .price {
-//   display: flex;
-// }
+.price {
+  display: flex;
+	gap: 5px;
+}
 
-// .price > p {
-//   font-family: "JetBrains Mono", monospace;
-//   font-weight: 400;
-//   font-size: 15px;
-//   color: white;
-// }
+.price > p {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 15px;
+  color: white;
+}
 
-// .price > p.price-usd {
-//   color: var(--elem-nonactive);
-// }
+.price > p.price-usd {
+  color: var(--elem-nonactive);
+}
 
 // .gas {
 //   display: flex;

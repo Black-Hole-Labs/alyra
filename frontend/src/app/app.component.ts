@@ -9,10 +9,6 @@ import { FooterComponent } from './components/footer/footer.component';
 import { AppContentComponent } from './components/app-content/app-content.component';
 import { ClosePopupsDirective } from './directives/close-popups.directive';
 import { PopupService } from './services/popup.service';
-import { BlockchainStateService } from './services/blockchain-state.service';
-import { ProviderType } from './models/wallet-provider.interface';
-
-import networks from './../../public/data/networks.json';
 
 @Component({
   selector: 'app-root',
@@ -28,32 +24,13 @@ export class AppComponent {
   private titleService = inject(Title);
   private renderer = inject(Renderer2);
   public popupService = inject(PopupService);
-  public isIntroPage = false;
 
   constructor() {
     this.setDynamicTitle();
-    this.checkCurrentRoute();
   }
 
-  private checkCurrentRoute() {
-    this.router.events
-      .pipe(
-        filter((event) => event instanceof NavigationEnd),
-        map(() => {
-          let route = this.activatedRoute;
-          while (route.firstChild) route = route.firstChild;
-          return route;
-        }),
-        mergeMap((route) => route.data),
-      )
-      .subscribe(data => {
-        this.isIntroPage = !!data['isIntroPage'];
-        if (this.isIntroPage) {
-          this.renderer.addClass(document.documentElement, 'intro-page');
-        } else {
-          this.renderer.removeClass(document.documentElement, 'intro-page');
-        }
-      });
+  isDocumentationPage(): boolean {
+    return this.router.url.startsWith('/documentation');
   }
 
   private setDynamicTitle() {

@@ -18,7 +18,7 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
 import { NetworkId, Wallets } from '../../models/wallet-provider.interface';
 import { WalletBalanceService } from '../../services/wallet-balance.service';
 
-import providers from '@public/data/providers.json';
+// import providers from '@public/data/providers.json';
 
 @Component({
   selector: 'app-header',
@@ -57,6 +57,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private animationFrames = 20;
   private animationSpeed = 20;
   private animationTimeouts: { [key: string]: number } = {};
+  private isSafari: boolean;
 
   NetworkId = NetworkId;
 
@@ -67,6 +68,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public popupService: PopupService,
     public walletBalanceService: WalletBalanceService
   ) {
+    // Определяем Safari
+    this.isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
     this.subscription = this.popupService.activePopup$.subscribe((popupType) => {
       this.showBlackholeMenu = false;
       this.showConnectWalletPopup = false;
@@ -105,22 +109,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     effect(
       () => {
-        const network = this.blockchainStateService.network();
-        const address = this.blockchainStateService.walletAddress();
-        if (network && address) {
-          this.loadNativeBalance();
-        } else {
-          this.nativeBalance.set('0');
-        }
+        this.blockchainStateService.networkSell();
+        this.blockchainStateService.walletAddress();
+        this.loadNativeBalance();
       },
       { allowSignalWrites: true },
     );
   }
 
-  selectedNetwork = computed(() => {
-    const networks = this.blockchainStateService.network();
-    return networks;
-  });
+  // selectedNetwork = computed(() => {
+  //   const networks = this.blockchainStateService.networkSell();
+  //   return networks;
+  // });
 
   ngOnInit() {
     this.loadGmCount();
@@ -306,7 +306,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.menuItems.push({ element: link, originalText });
 
       this.renderer.listen(link, 'mouseenter', () => {
-        this.animateText(link, originalText);
+        if (this.isSafari) {
+          // Для Safari просто меняем текст без анимации
+          link.textContent = originalText;
+        } else {
+          this.animateText(link, originalText);
+        }
       });
 
       this.renderer.listen(link, 'mouseleave', () => {
@@ -396,8 +401,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     animate();
   }
 
-  loadProviders() {
-    this.providers = providers;
+  async loadProviders() {
+    this.providers = await this.blockchainStateService.loadProviders();
     return this.updateWalletIcon();
   }
 
@@ -417,7 +422,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async loadNativeBalance() {
-    const network = this.blockchainStateService.network();
+    const network = this.blockchainStateService.networkSell();
     const address = this.blockchainStateService.walletAddress();
     if (!network || !address) {
       this.nativeBalance.set('0');

@@ -1,6 +1,6 @@
 .token-change {
   width: 600px;
-  height: 786px;
+  height: 865px;
   background-color: rgba(var(--dark-bg), 0.6);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(5px);
@@ -199,7 +199,7 @@ input::placeholder {
   top: 410px;
   left: 16px;
   width: 567px;
-  height: 400px;
+  height: 454px;
   border-radius: 12px;
 }
 
@@ -212,8 +212,12 @@ input::placeholder {
   overflow-x: hidden;
   margin-right: -8px;
   margin-left: 0px;
-  scrollbar-width: thin;
-  padding-bottom: 30px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
 }
 
 .token {
@@ -260,6 +264,23 @@ input::placeholder {
   background-size: cover;
   background-repeat: no-repeat;
   border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.has-placeholder {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+.token-letter {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  font-size: 18px;
+  color: white;
+  pointer-events: none;
+  user-select: none;
 }
 
 .token .image .network-bg {

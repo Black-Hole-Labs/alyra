@@ -5,6 +5,6 @@
 	padding-top: 50px;
 }
 
-:host-context(.intro-page) {
-	padding-top: 0;
+:host.documentation-page {
+  padding-top: 0;
 }

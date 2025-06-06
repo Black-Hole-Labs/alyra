@@ -23,13 +23,6 @@
     </app-blackhole-menu>
   }
 
-  @if(activePopup === 'networkPopup')
-  {
-    <app-blackhole-network
-      (close)="popupService.closeAllPopups()">
-    </app-blackhole-network>
-  }
-
   @if(popupService.getCurrentPopup() === 'ecosystemChange')
   {
     <app-ecosystem-change

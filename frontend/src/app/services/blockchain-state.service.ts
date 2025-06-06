@@ -5,9 +5,8 @@ import { BehaviorSubject } from 'rxjs';
 
 import tokensSearch from '@public/data/tokens_search.json';
 
-import networks from '@public/data/networks.json';
-import providers from '@public/data/providers.json';
-import tokens from '@public/data/tokens.json';
+import providersImport from '@public/data/providers.json';
+import tokensImport from '@public/data/tokens.json';
 
 interface TokenData {
   chainId: number;
@@ -31,11 +30,14 @@ export class BlockchainStateService {
   private currentProviderId: string | null = null;
 
   readonly walletAddress = signal<string | null>(null);
-  readonly network = signal<Network | null>(null);
+
+  readonly networkSell = signal<Network | undefined>(undefined);
+  readonly networkBuy = signal<Network | undefined>(undefined);
+  
   readonly connected = signal<boolean>(false);
   readonly allNetworks = signal<Network[]>([]);
 
-  customAddress = signal<string>("");
+  customAddress = signal<string>('');
 
   searchText = signal<string>('');
 
@@ -43,8 +45,6 @@ export class BlockchainStateService {
 
   tokens = signal<Token[]>([]);
   allTokens = signal<Token[]>([]);
-
-  filteredTokens = computed(() => [...this.tokens()]);
 
   private tokensSubject = new BehaviorSubject<boolean>(false);
   public tokensLoading$ = this.tokensSubject.asObservable();
@@ -59,10 +59,10 @@ export class BlockchainStateService {
 
     effect(
       () => {
-        if (this.network()) {
-          this.loadTokensForNetwork(this.network()!.id);
-          this.updateNetworkBackgroundIcons(this.network()!);
-          this.loadAllTokensForNetwork(this.network()!.id);
+        if (this.networkSell()) {
+          this.setTokensForNetwork(this.networkSell()!.id);
+          this.updateNetworkBackgroundIcons(this.networkSell()!);
+          this.setAllTokensForNetwork(this.networkSell()!.id);
         }
       },
       { allowSignalWrites: true },
@@ -70,23 +70,24 @@ export class BlockchainStateService {
   }
 
   public tryAutoConnect(): Promise<void> {
-      const providerId = sessionStorage.getItem('currentProvider');
-      const networkId = sessionStorage.getItem('networkId');
-      if (!providerId){
-        this.updateNetwork(NetworkId.ETHEREUM_MAINNET);
-        return Promise.resolve();
-      }
-      
-      const provider = this.getProvider(providerId);
-      if (!provider) return Promise.resolve();
+    const providerId = sessionStorage.getItem('currentProvider');
+    const networkId = sessionStorage.getItem('networkId');
+    if (!providerId) {
+      this.updateNetworkSell(NetworkId.ETHEREUM_MAINNET);
+      return Promise.resolve();
+    }
 
-      return provider.connect()
-        .then(({ address } : { address: string }) => {
-          this.updateWalletAddress(address);
-          this.setCurrentProvider(providerId);
-          this.updateNetwork(Number(networkId!))
-        })
-        .catch(console.error);
+    const provider = this.getProvider(providerId);
+    if (!provider) return Promise.resolve();
+
+    return provider
+      .connect()
+      .then(({ address }: { address: string }) => {
+        this.updateWalletAddress(address);
+        this.setCurrentProvider(providerId);
+        this.updateNetworkSell(Number(networkId!));
+      })
+      .catch(console.error);
   }
 
   setSearchText(value: string) {
@@ -122,10 +123,10 @@ export class BlockchainStateService {
   }
 
   async loadProviders(): Promise<Wallets[]> {
-    return providers;
+    return providersImport;
   }
 
-  loadAllTokensForNetwork(network: number): void {
+  setAllTokensForNetwork(network: number): void {
     const networkKey = network.toString();
     const tokensData = tokensSearch as unknown as TokensData;
     const tokensForNetwork = tokensData.tokensEVM[networkKey] || tokensData.tokensSVM[networkKey];
@@ -147,8 +148,8 @@ export class BlockchainStateService {
     }
   }
 
-  private loadTokensForNetwork(network: number): void {
-    const tokensData = tokens as unknown as TokensData;
+  private setTokensForNetwork(network: number): void {
+    const tokensData = tokensImport as unknown as TokensData;
     const networkKey = network.toString();
     const tokensForNetwork = tokensData.tokensEVM[networkKey] || tokensData.tokensSVM[networkKey];
 
@@ -169,32 +170,25 @@ export class BlockchainStateService {
     }
   }
 
-  async fetchTokensForNetwork(networkId: number): Promise<Token[]> {
-    try {
-      const response = await fetch(`/data/tokens.json`);
-      if (!response.ok) {
-        throw new Error(`Failed to load tokens for network ${networkId}`);
-      }
-      const data = await response.json();
-      const tokensForNetwork = data.tokensEVM[networkId] || data.tokensSVM[networkId];
+  public getTokensForNetwork(networkId: number): Token[] {
+    const networkKey = networkId.toString();
+    const evmList = (tokensImport as TokensData).tokensEVM[networkKey] || [];
+    const svmList = (tokensImport as TokensData).tokensSVM[networkKey] || [];
+    const tokensForNetwork = evmList.length ? evmList : svmList.length ? svmList : [];
 
-      if (tokensForNetwork) {
-        return tokensForNetwork.map((token: any) => ({
-          symbol: token.symbol,
-          name: token.name,
-          contractAddress: token.address,
-          chainId: token.chainId,
-          imageUrl: token.logoURI,
-          decimals: token.decimals,
-        }));
-      } else {
-        console.warn(`No tokens found for network ${networkId}`);
-        return [];
-      }
-    } catch (error) {
-      console.error(`Error loading tokens: ${error}`);
+    if (!tokensForNetwork.length) {
+      console.warn(`No tokens found for network ${networkId}`);
       return [];
     }
+
+    return tokensForNetwork.map((t: TokenData) => ({
+      symbol: t.symbol,
+      name: t.name,
+      contractAddress: t.address,
+      chainId: t.chainId,
+      imageUrl: t.logoURI,
+      decimals: t.decimals,
+    }));
   }
 
   public loadNetworks(type: ProviderType, force: boolean = false): void {
@@ -208,7 +202,7 @@ export class BlockchainStateService {
     if (force) {
       const defaultNetwork = this.networks().find((n) => n.id === NetworkId.ETHEREUM_MAINNET);
       if (defaultNetwork) {
-        this.updateNetwork(1);
+        this.updateNetworkSell(1);
       } else {
         console.warn('Default network with id 1 not found');
       }
@@ -223,20 +217,28 @@ export class BlockchainStateService {
     return this.walletAddress();
   }
 
-  updateNetwork(chainId: number): void {
+  updateNetworkSell(chainId: number): void {
     const foundNetwork = this.networks().find((n) => n.id === chainId);
-    this.network.set(foundNetwork ?? null);
+    this.networkSell.set(foundNetwork ?? undefined);
     if (foundNetwork) {
       this.updateNetworkBackgroundIcons(foundNetwork);
     }
   }
 
-  getCurrentNetwork(): Network | null {
-    return this.network();
+  getCurrentNetworkSell(): Network | undefined {
+    return this.networkSell();
   }
 
-  setCustomAddress(customAddress: string){
+  setCustomAddress(customAddress: string) {
     this.customAddress.set(customAddress);
+  }
+
+  setNetworkSell(network: Network) {
+    this.networkSell.set(network);
+  }
+
+  setNetworkBuy(network: Network) {
+    this.networkBuy.set(network);
   }
 
   disconnect(): void {
@@ -251,5 +253,9 @@ export class BlockchainStateService {
     const root = document.documentElement;
     root.style.setProperty('--current-network-icon-1', `url(${network.logoURI})`);
     root.style.setProperty('--current-network-icon-2', `url(${network.logoURI})`);
+  }
+
+  public getNetworkById(id: number): Network | undefined {
+    return this.networks().find((network) => network.id === id);
   }
 }

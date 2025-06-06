@@ -9,7 +9,7 @@
 	
 	
 		<nav>
-			<a routerLink="/trade" routerLinkActive="active-link">Trade</a>
+			<a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Trade</a>
 			<!-- <a routerLink="/bridge" routerLinkActive="active-link">Bridge</a> -->
 			<!-- <a routerLink="/fun" routerLinkActive="active-link">Fun</a>
 			<a routerLink="/launchpad" routerLinkActive="active-link">Launchpad</a> -->
@@ -36,9 +36,9 @@
 
 	<!-- </div>  -->
 		<!-- XP WIDGET -->
-		<div class="xp" *ngIf="blockchainStateService.connected()" routerLink="/rewards">
+		<!-- <div class="xp" *ngIf="blockchainStateService.connected()" routerLink="/rewards">
 			<p>0 XP</p>
-		</div>
+		</div> -->
 
 		<!-- NETWORK CHANGE -->
 		<!-- <div (click)="toggleNetworkPopup($event)" class="network">
@@ -52,8 +52,8 @@
 
 		<div class="balance" *ngIf="blockchainStateService.connected()">
 			<div class="wallet-icon"></div>
-			<p *ngIf="blockchainStateService.connected() && blockchainStateService.network() as net">
-				@if(blockchainStateService.network()!.id === NetworkId.ETHEREUM_MAINNET){
+			<p *ngIf="blockchainStateService.connected() && blockchainStateService.networkSell() as net">
+				@if(blockchainStateService.networkSell()!.id === NetworkId.ETHEREUM_MAINNET){
 					{{ walletBalanceService.nativeEthBalance() | number:'1.6-6' }} {{ net.nativeCurrency.symbol }}
 				}
 				@else {

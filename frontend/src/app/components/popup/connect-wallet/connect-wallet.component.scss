@@ -117,8 +117,20 @@
   margin-top: 20px;
   transition: all 0.3s ease-in-out;
   opacity: 1;
-  max-height: 500px;
+  max-height: 1000px;
   overflow: hidden;
+
+  &:first-of-type {
+    max-height: 360px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-right: 5px;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 
   &.hidden {
     opacity: 0;

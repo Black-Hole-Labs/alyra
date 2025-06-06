@@ -174,14 +174,14 @@ export class BridgeComponent implements OnInit, OnDestroy {
     }, { allowSignalWrites: true });
 
     effect(() => {
-        const tokens = this.blockchainStateService.filteredTokens();
+        const tokens = this.blockchainStateService.tokens();
         this.selectedToken.set(tokens.length > 0 ? tokens[0] : undefined);
       },
       { allowSignalWrites: true }
     );
 
     effect(() => {
-        const network = this.blockchainStateService.network();
+        const network = this.blockchainStateService.networkSell();
         this.selectedNetwork.set(network!);
       },
       { allowSignalWrites: true }
@@ -191,7 +191,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
         const networks = this.blockchainStateService.allNetworks();
         const netowrk = networks.length > 1 ? networks[1] : undefined;
         this.selectedBuyNetwork.set(netowrk);
-        const tokens = await this.blockchainStateService.fetchTokensForNetwork(netowrk!.id);
+        const tokens = await this.blockchainStateService.getTokensForNetwork(netowrk!.id);
         this.selectedBuyToken.set(tokens.length > 0 ? tokens[0] : undefined);
       },
       { allowSignalWrites: true }
@@ -201,7 +201,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
         const network = this.selectedNetwork();
         if (network) {
             if (!this.networkTokens.has(network.id)) {
-                this.blockchainStateService.fetchTokensForNetwork(network.id).then((tokens) => {
+                this.blockchainStateService.getTokensForNetwork(network.id).then((tokens) => {
                     this.networkTokens.set(network.id, tokens);
                     this.selectedToken.set(tokens.length > 0 ? tokens[0] : undefined);
                 });
@@ -218,7 +218,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
         const network = this.selectedBuyNetwork();
         if (network) {
             if (!this.networkTokens.has(network.id)) {
-                this.blockchainStateService.fetchTokensForNetwork(network.id).then((tokens) => {
+                this.blockchainStateService.getTokensForNetwork(network.id).then((tokens) => {
                     this.networkTokens.set(network.id, tokens);
                     this.selectedBuyToken.set(tokens.length > 0 ? tokens[0] : undefined);
                 });
@@ -232,7 +232,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
     );
 
     effect(() => {
-      const tokens = this.blockchainStateService.filteredTokens();
+      const tokens = this.blockchainStateService.tokens();
       const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
   
       this.selectedToken.set(newSelectedToken);
@@ -381,7 +381,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
           // console.log('readableToAmount:', readableToAmount);
           this.updateBuyAmount(readableToAmount);
           
-          // if(this.blockchainStateService.network()!.id == NetworkId.SOLANA_MAINNET) // SVM
+          // if(this.blockchainStateService.networkSell()!.id == NetworkId.SOLANA_MAINNET) // SVM
           // {
           //   gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
           // }
@@ -406,7 +406,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
         if(response.transactionRequest.data)
         {
-          if(this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET)
+          if(this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET)
           {
             this.txData.set(response.transactionRequest as TransactionRequestSVM);
           }
@@ -485,7 +485,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
   async onNetworkSelected(event: Network ): Promise<void> {
     try{
       if(!this.blockchainStateService.connected()){
-        this.blockchainStateService.updateNetwork(event.id);
+        this.blockchainStateService.updateNetworkSell(event.id);
       }
 
       const currentProvider = this.blockchainStateService.getCurrentProvider();
@@ -496,7 +496,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
       
       const provider = currentProvider.provider;
       await provider.switchNetwork(event);
-      this.blockchainStateService.updateNetwork(event.id);
+      this.blockchainStateService.updateNetworkSell(event.id);
 
       this.selectedNetwork.set(event);
       requestAnimationFrame(() => {
@@ -686,7 +686,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   //?
   isBridgeButtonActive = computed(() =>
-      !!this.blockchainStateService.network() &&
+      !!this.blockchainStateService.networkSell() &&
       this.selectedToken() !== undefined &&
       this.selectedNetwork() !== undefined &&
       this.selectedBuyNetwork() !== undefined &&
@@ -787,7 +787,7 @@ export class BridgeComponent implements OnInit, OnDestroy {
 
   async bridge(): Promise<void> {
     let txHash: string;
-    if(this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET)
+    if(this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET)
     {
       txHash = await this.svmSwap();
     }

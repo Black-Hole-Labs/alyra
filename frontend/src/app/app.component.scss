@@ -9,15 +9,6 @@
   }
 }
 
-.intro-page {
-	height: 100%;
-}
-
-:host-context(.intro-page) app-header,
-:host-context(.intro-page) app-footer {
-  display: none;
-}
-
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
 	:host {
 		padding: 30px 30px 20px 30px;
