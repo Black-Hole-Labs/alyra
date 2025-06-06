@@ -386,8 +386,6 @@ export class TradeComponent implements AfterViewChecked {
     const tempBalanceBuy = this.balanceBuy();
     const tempSellAmount = this.validatedSellAmount();
     const tempBuyAmount = this.buyAmountForInput();
-    const tempSellNetwork = this.blockchainStateService.networkSell();
-    const tempBuyNetwork = this.blockchainStateService.networkBuy();
 
     // this.selectedToken.set(tempBuyToken);
     this.tokenService.setSelectedBuyToken(tempToken);
@@ -410,15 +408,12 @@ export class TradeComponent implements AfterViewChecked {
       this.updateBuyAmount('0');
     }
 
-    this.blockchainStateService.setNetworkSell(tempBuyNetwork!);
-    this.blockchainStateService.setNetworkBuy(tempSellNetwork!);
-
     const newSellNetwork = this.blockchainStateService.networkSell();
     if (newSellNetwork) {
-      this.updateNetworkBackgroundIcons(newSellNetwork);
+      this.blockchainStateService.updateNetworkBackgroundIcons(newSellNetwork);
     }
 
-    this.swapNetworkIds();
+    this.swapNetworks();
 
     this.cdr.detectChanges();
 
@@ -427,7 +422,7 @@ export class TradeComponent implements AfterViewChecked {
     }, 100);
   }
 
-  private swapNetworkIds(): void {
+  private swapNetworks(): void {
     try {
       const tmp = this.blockchainStateService.networkBuy();
 
@@ -1197,12 +1192,5 @@ export class TradeComponent implements AfterViewChecked {
 
   private updateNetworksBasedOnTokens(): void {
     this.updateNetworks();
-  }
-
-  private updateNetworkBackgroundIcons(network: Network | undefined): void {
-    if (!network) return;
-    const root = document.documentElement;
-    root.style.setProperty('--current-network-icon-1', `url(${network.logoURI})`);
-    root.style.setProperty('--current-network-icon-2', `url(${network.logoURI})`);
   }
 }

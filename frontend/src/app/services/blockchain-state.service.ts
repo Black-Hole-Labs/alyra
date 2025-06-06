@@ -249,7 +249,7 @@ export class BlockchainStateService {
     this.connected.set(false);
   }
 
-  private updateNetworkBackgroundIcons(network: Network): void {
+  public updateNetworkBackgroundIcons(network: Network): void {
     const root = document.documentElement;
     root.style.setProperty('--current-network-icon-1', `url(${network.logoURI})`);
     root.style.setProperty('--current-network-icon-2', `url(${network.logoURI})`);
