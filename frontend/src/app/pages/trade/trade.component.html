@@ -34,15 +34,15 @@
       <div class="left">
         <h6 class="sell-h6">Sell</h6>
         <div class="token" (click)="openTokenPopup()">
-          <div *ngIf="selectedSellToken as token" class="token-icon"
+          <div *ngIf="tokenService.selectedSellToken() as token" class="token-icon"
             [ngStyle]="{ 'background-image': token.imageUrl ? 'url(' + token.imageUrl + ')' : 'none' }"
             [ngClass]="{ 'has-placeholder': !token.imageUrl }">
             <span *ngIf="!token.imageUrl" class="token-letter">
               {{ token.symbol[0] | uppercase }}
             </span>
-            <div class="network-icon" [style.backgroundImage]="'url(' + sellNetwork()?.logoURI + ')'"></div>
+            <div class="network-icon" [style.backgroundImage]="'url(' + blockchainStateService.networkSell()?.logoURI + ')'"></div>
           </div>
-          <p>{{ selectedSellToken?.symbol }}</p>
+          <p>{{ tokenService.selectedSellToken()?.symbol }}</p>
           <button></button>
         </div>
       </div>
@@ -71,22 +71,22 @@
       <div class="left">
         <h6 class="buy-h6">Buy</h6>
         <div class="token" (click)="openTokenBuyPopup()">
-          <div *ngIf="selectedBuyToken as token" class="token-icon"
+          <div *ngIf="tokenService.selectedBuyToken() as token" class="token-icon"
             [ngStyle]="{ 'background-image': token.imageUrl ? 'url(' + token.imageUrl + ')' : 'none' }"
             [ngClass]="{ 'has-placeholder': !token.imageUrl }">
             <span *ngIf="!token.imageUrl" class="token-letter">
               {{ token.symbol[0] | uppercase }}
             </span>
-            <div class="network-icon" [style.backgroundImage]="'url(' + buyNetwork()?.logoURI + ')'"></div>
+            <div class="network-icon" [style.backgroundImage]="'url(' + blockchainStateService.networkBuy()?.logoURI + ')'"></div>
           </div>
-          <p>{{ selectedBuyToken?.symbol }}</p>
+          <p>{{ tokenService.selectedBuyToken()?.symbol }}</p>
           <button></button>
         </div>
       </div>
 
       <div class="right">
         <div class="buy-amount-container">
-          @if(selectedBuyToken && validatedSellAmount() > 0 && buyAmountForInput()) {
+          @if(tokenService.selectedBuyToken() && validatedSellAmount() > 0 && buyAmountForInput()) {
           <p #buyAmountText class="buy-amount">{{ buyAmountForInput() }}</p>
           }
           @else {
@@ -125,9 +125,12 @@
     </div>
 
     <button class="main-button" *ngIf="isWalletConnected(); else connectWallet"
-      [class.inactive]="!isSwapButtonActive() || txData() === undefined || loading() === true"
-      [class.finding]="buttonState === 'finding'" [class.approve]="buttonState === 'approve'"
-      [class.wallet]="buttonState === 'wallet'" [class.insufficient]="buttonState === 'insufficient'"
+      [class.inactive]="!isSwapButtonActive() || txData() === undefined || buttonState === 'rate-limit' || loading() === true"
+      [class.finding]="buttonState === 'finding'" 
+      [class.approve]="buttonState === 'approve'"
+      [class.wallet]="buttonState === 'wallet'" 
+      [class.insufficient]="buttonState === 'insufficient'"
+      [class.wrong-address]="buttonState === 'wrong-address'"
       [class.no-available-quotes]="buttonState === 'no-available-quotes'"
       [disabled]="!isSwapButtonActive() || txData() === undefined || loading() === true || buttonState === 'insufficient' || buttonState === 'no-available-quotes'"
       (click)="isSwapButtonActive() && swap()">
@@ -136,7 +139,9 @@
       <ng-container *ngIf="buttonState === 'wallet'">Continue in your wallet...</ng-container>
       <ng-container *ngIf="buttonState === 'insufficient'">Insufficient balance</ng-container>
       <ng-container *ngIf="buttonState === 'swap'">Swap</ng-container>
+      <ng-container *ngIf="buttonState === 'wrong-address'">Wrong address</ng-container>
       <ng-container *ngIf="buttonState === 'no-available-quotes'">No available routes</ng-container>
+      <ng-container *ngIf="buttonState === 'rate-limit'">Try later</ng-container>
     </button>
 
     <ng-template #connectWallet>
@@ -150,10 +155,10 @@
         <p>Price rate:</p>
         <div class="price">
           <p>1</p>
-          <p>{{ selectedSellToken?.symbol }}</p>
+          <p>{{ tokenService.selectedSellToken()?.symbol }}</p>
           <p>=</p>
           <p id="price">{{ price() }}</p>
-          <p>{{ selectedBuyToken?.symbol }}</p>
+          <p>{{ tokenService.selectedBuyToken()?.symbol }}</p>
           <p class="price-usd">($</p>
           <p class="price-usd" id="price-usd">{{ priceUsd }}</p>
           <p class="price-usd">)</p>
@@ -197,27 +202,27 @@
 
 </div>
 
-<app-token-change [mode]="'sell'" *ngIf="popupService.getCurrentPopup() === 'tokenChangeSell'"
-  [selectedToken]="selectedSellToken" (tokenSelected)="onSellTokenSelected($event)" [excludeToken]="selectedBuyToken"
+<app-token-selector [mode]="'sell'" *ngIf="popupService.getCurrentPopup() === 'tokenChangeSell'"
+  [selectedToken]="tokenService.selectedSellToken()" (tokenSelected)="onSellTokenSelected($event)" [excludeToken]="tokenService.selectedBuyToken()"
   (close)="closeTokenPopup()">
-</app-token-change>
+</app-token-selector>
 
-<app-token-change [mode]="'buy'" *ngIf="popupService.getCurrentPopup() === 'tokenChangeBuy'"
-  [selectedToken]="selectedBuyToken" [excludeToken]="selectedSellToken" (tokenSelected)="onBuyTokenSelected($event)"
+<app-token-selector [mode]="'buy'" *ngIf="popupService.getCurrentPopup() === 'tokenChangeBuy'"
+  [selectedToken]="tokenService.selectedBuyToken()" [excludeToken]="tokenService.selectedSellToken()" (tokenSelected)="onBuyTokenSelected($event)"
   (close)="closeTokenBuyPopup()">
-</app-token-change>
+</app-token-selector>
 
-<app-success-notification *ngIf="showSuccessNotification" [selectedToken]="selectedSellToken"
-  [selectedBuyToken]="selectedBuyToken" [sellAmount]="sellAmount" [buyAmount]="buyAmount()!.toString()"
+<app-success-notification *ngIf="showSuccessNotification" [selectedToken]="tokenService.selectedSellToken()"
+  [selectedBuyToken]="tokenService.selectedBuyToken()" [sellAmount]="sellAmount" [buyAmount]="buyAmount()!.toString()"
   (close)="closeSuccessNotification()">
 </app-success-notification>
 
-<app-failed-notification *ngIf="showFailedNotification" [selectedToken]="selectedSellToken"
-  [selectedBuyToken]="selectedBuyToken" [sellAmount]="sellAmount" [buyAmount]="buyAmount()!.toString()"
+<app-failed-notification *ngIf="showFailedNotification" [selectedToken]="tokenService.selectedSellToken()"
+  [selectedBuyToken]="tokenService.selectedBuyToken()" [sellAmount]="sellAmount" [buyAmount]="buyAmount()!.toString()"
   (close)="closeFailedNotification()">
 </app-failed-notification>
 
-<app-pending-notification *ngIf="showPendingNotification" [selectedToken]="selectedSellToken"
-  [selectedBuyToken]="selectedBuyToken" [sellAmount]="sellAmount" [buyAmount]="buyAmount()!.toString()"
+<app-pending-notification *ngIf="showPendingNotification" [selectedToken]="tokenService.selectedSellToken()"
+  [selectedBuyToken]="tokenService.selectedBuyToken()" [sellAmount]="sellAmount" [buyAmount]="buyAmount()!.toString()"
   (close)="closePendingNotification()">
 </app-pending-notification>

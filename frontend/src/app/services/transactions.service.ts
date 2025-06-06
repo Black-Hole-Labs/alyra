@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
 })
 export class TransactionsService {
   private apiUrl = environment.apiUrl;
-  
+
   constructor(
     private http: HttpClient,
   ) 

@@ -345,14 +345,16 @@ p {
 }
 
 .main-button.insufficient,
-.no-available-quotes {
+.no-available-quotes,
+.wrong-address {
   background-color: var(--red);
   color: white;
   cursor: not-allowed;
 }
 
 .main-button.insufficient:hover,
-.no-available-quotes:hover {
+.no-available-quotes:hover,
+.wrong-address:hover {
   background-color: #ff6b6b;
 }
 

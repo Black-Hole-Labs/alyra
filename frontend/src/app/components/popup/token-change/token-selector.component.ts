@@ -14,10 +14,10 @@ export interface TokenDisplay extends Token {
 }
 
 @Component({
-  selector: 'app-token-change',
+  selector: 'app-token-selector',
   standalone: true,
-  templateUrl: './token-change.component.html',
-  styleUrls: ['./token-change.component.scss', './token-change.component.adaptives.scss'],
+  templateUrl: './token-selector.component.html',
+  styleUrls: ['./token-selector.component.scss', './token-selector.component.adaptives.scss'],
   imports: [CommonModule, FormsModule, NetworkChangeFromPopupComponent],
 })
 export class TokenChangePopupComponent {
@@ -33,9 +33,7 @@ export class TokenChangePopupComponent {
   selectedNetworkId = signal<number | undefined>(undefined);
   selectedNetworkTokens = signal<Token[]>([]);
 
-  constructor(
-        private tokenService: TokenService,
-  ) {}
+  constructor(private tokenService: TokenService) {}
 
   private tokenCache = new Map<number, Token[]>();
 
@@ -45,9 +43,8 @@ export class TokenChangePopupComponent {
   ethers = ethers;
 
   networks = computed(() => {
-    const all = this.mode === 'sell'
-      ? this.blockchainStateService.networks()
-      : this.blockchainStateService.allNetworks();
+    const all =
+      this.mode === 'sell' ? this.blockchainStateService.networks() : this.blockchainStateService.allNetworks();
 
     const selectedId = this.selectedNetworkId();
     const first10 = all.slice(0, 10);
@@ -71,12 +68,18 @@ export class TokenChangePopupComponent {
   });
 
   tokenList: Signal<TokenDisplay[]> = computed(() => {
-    const search = this.searchText().toLowerCase().trim();
-    const tokens = this.getBaseTokens();
-    const filteredBySearch = this.filterBySearch(tokens, search);
-    const filteredByExclude = this.filterByExcludeToken(filteredBySearch);
+      const search = this.searchText().toLowerCase().trim();
 
-    return filteredByExclude as TokenDisplay[];
+      if (!search) {
+          const tokens = this.getBaseTokens();
+          const filteredByExclude = this.filterByExcludeToken(tokens);
+          return filteredByExclude as TokenDisplay[];
+      }
+
+      const allTokens = this.blockchainStateService.allTokens();
+      const filteredBySearch = this.filterBySearch(allTokens, search);
+      const filteredByExclude = this.filterByExcludeToken(filteredBySearch);
+      return filteredByExclude as TokenDisplay[];
   });
 
   displayedTokens: Signal<TokenDisplay[]> = computed(() => {
@@ -123,10 +126,7 @@ export class TokenChangePopupComponent {
     const list = this.getBaseTokens();
 
     try {
-      const balancesForThisNetwork = await this.walletBalanceService.getBalancesForNetwork(
-        networkId,
-        list
-      );
+      const balancesForThisNetwork = await this.walletBalanceService.getBalancesForNetwork(networkId, list);
       this.tokenBalances.set(balancesForThisNetwork);
     } catch (err) {
       console.error('Unable to get cached balances:', err);
@@ -226,6 +226,10 @@ export class TokenChangePopupComponent {
     if (this.selectedNetworkId() === network.id) {
       return;
     }
+
+    const prevNetworkId = this.selectedNetworkId();
+    const prevTokens = this.selectedNetworkTokens();
+
     this.selectedNetworkId.set(network.id);
     await this.loadTokensForNetwork(network.id);
 
@@ -244,18 +248,18 @@ export class TokenChangePopupComponent {
       this.blockchainStateService.updateNetworkSell(network.id);
 
       const provider = currentProvider.provider;
-      try
-      {
+      try {
         await provider.switchNetwork(network);
-      }
-      catch(error)
-      {
-        if ((error as any).message === "User rejected the request" || (error as any).code === 4001)
-        {
+      } catch (error) {
+        if ((error as any).message === 'User rejected the request' || (error as any).code === 4001) {
+          this.selectedNetworkId.set(prevNetworkId);
+          this.selectedNetworkTokens.set(prevTokens);
+          this.blockchainStateService.updateNetworkSell(prevNetworkId!);
           return;
-        }
-        else
-        {
+        } else {
+          this.selectedNetworkId.set(prevNetworkId);
+          this.selectedNetworkTokens.set(prevTokens);
+          this.blockchainStateService.updateNetworkSell(prevNetworkId!);
           throw error;
         }
       }
@@ -265,13 +269,9 @@ export class TokenChangePopupComponent {
       this.blockchainStateService.setNetworkBuy(network);
     }
 
-    // this.selectedNetworkId.set(network.id);
-    // await this.loadTokensForNetwork(network.id);
-
     if (this.blockchainStateService.connected()) {
       this.loadDisplayedBalances();
     }
-
   }
 
   isCurrentNetwork(network: Network): boolean {
@@ -314,6 +314,10 @@ export class TokenChangePopupComponent {
   private filterByExcludeToken(tokens: Token[]): Token[] {
     if (!this.excludeToken) return tokens;
 
-    return tokens.filter((token) => token.contractAddress !== this.excludeToken!.contractAddress);
+    return tokens.filter((token) => {
+      const isSameAddress = token.contractAddress === this.excludeToken!.contractAddress;
+      const isSameChain = token.chainId === this.excludeToken!.chainId;
+      return !(isSameAddress && isSameChain);
+    });
   }
 }
