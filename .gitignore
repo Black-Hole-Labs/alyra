@@ -1,3 +1,5 @@
 .DS_Store
 .angular/
 .DS_Store
+.google-creds.json
+.env
