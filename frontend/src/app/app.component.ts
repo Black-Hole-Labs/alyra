@@ -33,6 +33,10 @@ export class AppComponent {
     return this.router.url.startsWith('/documentation');
   }
 
+  isProPage(): boolean {
+    return this.router.url.startsWith('/pro');
+  }
+
   private setDynamicTitle() {
     this.router.events
       .pipe(

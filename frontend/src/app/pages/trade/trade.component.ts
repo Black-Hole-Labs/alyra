@@ -144,6 +144,10 @@ export class TradeComponent implements AfterViewChecked {
           if (this.allFieldsReady() && !this.isProcessingInput()) {
             this.getTxData();
           }
+          // else if (this.validatedSellAmount() == 0){
+          //   console.log("Show price rate");
+          //   this.loadInitialPriceRate();
+          // }
         } catch (error) {
           // this.updateBuyAmount('0.0');
           // update gas = 0.0
@@ -386,8 +390,6 @@ export class TradeComponent implements AfterViewChecked {
     const tempBalanceBuy = this.balanceBuy();
     const tempSellAmount = this.validatedSellAmount();
     const tempBuyAmount = this.buyAmountForInput();
-    const tempSellNetwork = this.blockchainStateService.networkSell();
-    const tempBuyNetwork = this.blockchainStateService.networkBuy();
 
     // this.selectedToken.set(tempBuyToken);
     this.tokenService.setSelectedBuyToken(tempToken);
@@ -410,15 +412,12 @@ export class TradeComponent implements AfterViewChecked {
       this.updateBuyAmount('0');
     }
 
-    this.blockchainStateService.setNetworkSell(tempBuyNetwork!);
-    this.blockchainStateService.setNetworkBuy(tempSellNetwork!);
-
     const newSellNetwork = this.blockchainStateService.networkSell();
     if (newSellNetwork) {
-      this.updateNetworkBackgroundIcons(newSellNetwork);
+      this.blockchainStateService.updateNetworkBackgroundIcons(newSellNetwork);
     }
 
-    this.swapNetworkIds();
+    this.swapNetworks();
 
     this.cdr.detectChanges();
 
@@ -427,7 +426,7 @@ export class TradeComponent implements AfterViewChecked {
     }, 100);
   }
 
-  private swapNetworkIds(): void {
+  private swapNetworks(): void {
     try {
       const tmp = this.blockchainStateService.networkBuy();
 
@@ -1199,10 +1198,83 @@ export class TradeComponent implements AfterViewChecked {
     this.updateNetworks();
   }
 
-  private updateNetworkBackgroundIcons(network: Network | undefined): void {
-    if (!network) return;
-    const root = document.documentElement;
-    root.style.setProperty('--current-network-icon-1', `url(${network.logoURI})`);
-    root.style.setProperty('--current-network-icon-2', `url(${network.logoURI})`);
-  }
+  // loadInitialPriceRate() {
+  //   const fromChain = this.blockchainStateService.networkSell()!.id.toString();
+  //   const toChain = this.blockchainStateService.networkBuy()!.id.toString();
+  //   const toTokenDecimals = this.tokenService.selectedBuyToken()!.decimals;
+  //   const fromTokenDecimals = this.tokenService.selectedSellToken()!.decimals;
+  //   const fromAmount = parseUnits("1", fromTokenDecimals);
+  //   const fromToken = this.tokenService.selectedSellToken()!.contractAddress;
+  //   const toToken = this.tokenService.selectedBuyToken()!.contractAddress;
+
+  //   let fromAddress = '';
+  //   let toAddress = (this.customAddress() !== '' && this.addressStatus === 'good') ? this.customAddress() : undefined; 
+
+  //   const CONSTANT_ETH_ADDRESS = '0x1111111111111111111111111111111111111111';
+  //   const CONSTANT_SOL_ADDRESS = '11111111111111111111111111111111';
+
+  //   const fromChainType = this.blockchainStateService.networkSell()?.chainType;
+  //   const toChainType = this.blockchainStateService.networkBuy()?.chainType;
+  //   const walletConnected = !!this.blockchainStateService.walletAddress();
+
+  //   if (!walletConnected) {
+  //       if (fromChainType === 'EVM') {
+  //           fromAddress = CONSTANT_ETH_ADDRESS;
+  //       } else if (fromChainType === 'SVM') {
+  //           fromAddress = CONSTANT_SOL_ADDRESS;
+  //       }
+
+  //       if (!toAddress) {
+  //           if (toChainType === 'EVM') {
+  //               toAddress = CONSTANT_ETH_ADDRESS;
+  //           } else if (toChainType === 'SVM') {
+  //               toAddress = CONSTANT_SOL_ADDRESS;
+  //           }
+  //       }
+  //   } else {
+  //       fromAddress = this.blockchainStateService.walletAddress()!;
+
+  //       if (fromChainType !== toChainType && !(toAddress && toAddress !== '')) {
+  //           if (toChainType === 'EVM') {
+  //               toAddress = CONSTANT_ETH_ADDRESS;
+  //           } else if (toChainType === 'SVM') {
+  //               toAddress = CONSTANT_SOL_ADDRESS;
+  //           }
+  //       } else {
+  //           if (this.customAddress() !== '' && this.addressStatus === 'good') {
+  //               toAddress = this.customAddress();
+  //           } else {
+  //               toAddress = undefined;
+  //           }
+  //       }
+  //   }
+
+  //   this.transactionsService
+  //     .getQuoteBridge(fromChain, toChain, fromToken, toToken, fromAmount.toString(), fromAddress, toAddress)
+  //     .subscribe({
+  //       next: (response: any) => {
+  //         if (response.estimate) {
+  //           const toAmountNumber = Number(
+  //             this.transactionsService.parseToAmount(response.estimate.toAmount, toTokenDecimals),
+  //           );
+
+  //           const fromDecimal = parseFloat(
+  //             this.transactionsService.parseToAmount(response.estimate.fromAmount, fromTokenDecimals),
+  //           );
+
+  //           if (fromDecimal > 0) {
+  //             const ratio = toAmountNumber / fromDecimal;
+  //             this.price.set(Number(ratio.toFixed(3)));
+
+  //             const ratioUsd = Number(response.estimate.toAmountUSD) / fromDecimal;
+  //             this.priceUsd = Number(ratioUsd.toFixed(3));
+  //           }
+  //         }
+  //       },
+  //       error: (err) => {
+  //         console.error('Error loading initial price rate', err);
+  //       }
+  //   });
+  // }
+
 }
