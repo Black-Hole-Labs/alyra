@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { ThemeService } from '../../services/theme.service';
 import { StarAnimationService, Star } from '../../services/star-animation.service';
+import { EmailService } from '../../services/email.service';
 
 @Component({
   selector: 'app-form',
@@ -33,7 +34,8 @@ export class FormPageComponent implements OnInit, OnDestroy {
 
 	constructor(
 		public themeService: ThemeService,
-		private starAnimationService: StarAnimationService
+		private starAnimationService: StarAnimationService,
+		private emailService: EmailService
 	) {
 		this.stars$ = this.starAnimationService.stars;
 	}
@@ -197,13 +199,21 @@ export class FormPageComponent implements OnInit, OnDestroy {
 		this.starAnimationService.onMouseMove(event);
 	}
 
-	onApplyClick() {
-		if (this.emailControl.valid && this.emailControl.value) {
-			this.isSubmitted = true;
-			// adding email to the database here
-			console.log('Email submitted:', this.emailControl.value);
+	async onApplyClick() {
+		if (!this.emailControl.valid || !this.emailControl.value) {
+			return;
 		}
-	}
+
+		this.isSubmitted = true;
+
+		try {
+			const response = await firstValueFrom(
+				this.emailService.sendEmail(this.emailControl.value)
+			);
+		} catch (err) {
+			this.isSubmitted = false;
+		}
+  	}
 
 	get isEmailValid() {
 		return this.emailControl.valid && this.emailControl.value && this.emailControl.value.trim() !== '';
