@@ -1,6 +1,7 @@
 .form-container {
 	width: 100vw;
 	min-height: 100vh;
+	min-height: 100dvh; /* Для поддержки динамических viewport единиц */
 	position: relative;
 }
 
@@ -137,8 +138,14 @@ h1 {
 	gap: 20px;
 	position: absolute;
 	bottom: 50px;
+	bottom: max(50px, env(safe-area-inset-bottom, 0px) + 20px);
 	left: 50%;
 	transform: translateX(-50%);
+	
+	/* Для iOS Safari - используем визуальную высоту viewport */
+	@supports (height: 100dvh) {
+		bottom: max(calc(100dvh - 100vh + 20px), env(safe-area-inset-bottom, 0px) + 20px);
+	}
 }
 
 p{
