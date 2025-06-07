@@ -151,7 +151,7 @@
     </ng-template>
 
     <div class="info">
-      <div class="info-item">
+      <div class="info-item" [class.show]="this.txData() !== undefined">
         <p>Price rate:</p>
         <div class="price">
           <p>1</p>

@@ -371,6 +371,12 @@ p {
 	justify-content: space-between;
 }
 
+.info-item.show {
+  max-height: 200px;
+  padding: 14px 0;
+  opacity: 1;
+}
+
 .info p{
 	color: white;
 }
