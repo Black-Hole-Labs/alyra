@@ -43,6 +43,11 @@ export class FormPageComponent implements OnInit, OnDestroy {
 		this.starAnimationService.initializeStars();
 		this.initTitleAnimation();
 		
+		const emailSubmitted = localStorage.getItem('blackhole-email-submitted');
+		if (emailSubmitted === 'true') {
+			this.isSubmitted = true;
+		}
+		
 		(window as any).setStarAnimation = (mode: 'high' | 'medium' | 'low' | 'disabled') => {
 			this.starAnimationService.setPerformanceMode(mode);
 		};
@@ -200,6 +205,7 @@ export class FormPageComponent implements OnInit, OnDestroy {
 	onApplyClick() {
 		if (this.emailControl.valid && this.emailControl.value) {
 			this.isSubmitted = true;
+			localStorage.setItem('blackhole-email-submitted', 'true');
 			// adding email to the database here
 			console.log('Email submitted:', this.emailControl.value);
 		}
