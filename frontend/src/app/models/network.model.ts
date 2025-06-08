@@ -71,7 +71,7 @@ export class MetaMaskProvider extends EvmWalletProvider {
     super(walletManager.getMetaMaskProvider(), injector);
   }
 
-  override async connect(): Promise<{ address: string; network: string }> {
+  override async connect(): Promise<{ address: string }> {
     this.blockchainStateService.updateNetworkSell(NetworkId.ETHEREUM_MAINNET);
     const connection = await super.connect();
 
@@ -100,7 +100,7 @@ export class BackpackProvider extends MultiChainWalletProvider {
     this.svmProviderInstance = (window as any).backpack?.solana;
   }
 
-  override async connect(): Promise<{ address: string; network: string }> {
+  override async connect(): Promise<{ address: string }> {
     this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET); // Solana is default for BackPack
     const connection = await super.connect();
 
@@ -115,7 +115,7 @@ export class PhantomProvider extends MultiChainWalletProvider {
     this.svmProviderInstance = (window as any).phantom?.solana;
   }
 
-  override async connect(): Promise<{ address: string; network: string }> {
+  override async connect(): Promise<{ address: string }> {
     this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET); // Solana is default for Phantom
     const connection = await super.connect();
 
