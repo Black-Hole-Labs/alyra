@@ -367,9 +367,8 @@ export class TradeComponent implements AfterViewChecked {
   }
 
   rotateRefresh(): void {
-    if (this.isWalletConnected()) {
-      this.getTxData();
-    }
+    this.getTxData();
+    
     const refreshElement = document.querySelector('.refresh');
     if (refreshElement) {
       this.rotationCount += 1;
