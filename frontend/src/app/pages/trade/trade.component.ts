@@ -123,7 +123,6 @@ export class TradeComponent implements AfterViewChecked {
 
   private networkUpdateInterval: any;
 
-  private userSelectedTokens = false;
   private isSwapping = false;
 
   constructor(
@@ -161,7 +160,7 @@ export class TradeComponent implements AfterViewChecked {
     effect(
       () => {
         const tokens = this.blockchainStateService.tokens();
-        if (this.userSelectedTokens || this.isSwapping) {
+        if (this.isSwapping) {
           return;
         }
         const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
@@ -174,7 +173,7 @@ export class TradeComponent implements AfterViewChecked {
             )[1];
           }
         }
-
+        
         this.tokenService.setSelectedSellToken(newSelectedToken);
         this.tokenService.setSelectedBuyToken(newSelectedBuyToken);
         this.updateNetworksBasedOnTokens();
@@ -448,7 +447,6 @@ export class TradeComponent implements AfterViewChecked {
   async onSellTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.tokenService.setSelectedSellToken(token);
-    this.userSelectedTokens = true;
     this.balance.set(Number(parseFloat(await this.walletBalanceService.getBalanceForToken(token))));
   }
 
@@ -463,7 +461,6 @@ export class TradeComponent implements AfterViewChecked {
   async onBuyTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.tokenService.setSelectedBuyToken(token);
-    this.userSelectedTokens = true; // Пользователь выбрал токен
     this.balanceBuy.set(Number(parseFloat(await this.walletBalanceService.getBalanceForToken(token)).toFixed(6)));
     this.closeTokenBuyPopup();
     this.popupService.closeAllPopups();
