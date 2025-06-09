@@ -5,7 +5,6 @@ import { Injector } from '@angular/core';
 
 export class SvmWalletProvider implements WalletProvider {
   protected address: string = '';
-  protected network: string = '';
   protected provider: any;
 
   protected blockchainStateService!: BlockchainStateService;
@@ -19,7 +18,7 @@ export class SvmWalletProvider implements WalletProvider {
     return !!this.provider;
   }
 
-  async connect(_provider?: any, isMultichain?: boolean): Promise<{ address: string; network: string }>  {
+  async connect(_provider?: any, isMultichain?: boolean): Promise<{ address: string }>  {
     if (_provider) this.provider = _provider;
     if (!this.provider) throw new Error('Solana not installed');
     if (!this.provider.isConnected) {
@@ -28,25 +27,12 @@ export class SvmWalletProvider implements WalletProvider {
     const account = this.provider.publicKey?.toString();
     if (!account) throw new Error('Failed to retrieve Solana account');
     this.address = account;
-    this.network = await this.getNetwork();
 
     if(!isMultichain){
       this.blockchainStateService.loadNetworks(ProviderType.SVM);
     }
 
-    return { address: this.address, network: this.network };
-  }
-
-  async switchNetwork(selectedNetwork: any): Promise<void> {
-    if (!selectedNetwork || selectedNetwork.chainType !== 'SVM') {
-      throw new Error('Invalid network for SVM provider');
-    }
-    console.warn('Switch network functionality may not be supported.');
-    this.network = selectedNetwork.id;
-  }
-
-  async getNetwork(): Promise<string> {
-    return this.network || 'mainnet';
+    return { address: this.address };
   }
 
   getAddress(): string {

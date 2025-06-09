@@ -5,7 +5,6 @@ import { BlockchainStateService } from '../services/blockchain-state.service';
 
 export class EvmWalletProvider implements WalletProvider {
   protected address: string = '';
-  protected network: string = '';
   protected provider: any;
   public signer?: JsonRpcSigner;
 
@@ -22,12 +21,11 @@ export class EvmWalletProvider implements WalletProvider {
     return !!this.provider;
   }
 
-  async connect(_provider?: any, isMultichain?: boolean): Promise<{ address: string; network: string }> {
+  async connect(_provider?: any, isMultichain?: boolean): Promise<{ address: string }> {
     if (_provider) this.provider = _provider;
     if (!this.provider) throw new Error('Provider not installed');
     const accounts = await this.provider.request({ method: 'eth_requestAccounts' });
     this.address = accounts[0];
-    this.network = await this.getNetwork();
     const ethersProvider = new ethers.BrowserProvider(this.provider);
     this.signer = await ethersProvider.getSigner();
 
@@ -35,7 +33,7 @@ export class EvmWalletProvider implements WalletProvider {
       this.blockchainStateService.loadNetworks(ProviderType.EVM);
     }
 
-    return { address: this.address, network: this.network };
+    return { address: this.address };
   }
 
   async switchNetwork(selectedNetwork: any): Promise<void> {
@@ -44,7 +42,6 @@ export class EvmWalletProvider implements WalletProvider {
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: selectedNetwork.idHex }],
       });
-      this.network = selectedNetwork.idHex;
     } catch (error: any) {
       if (error.code === 4902) {
         await this.addNetwork(selectedNetwork);
@@ -53,7 +50,6 @@ export class EvmWalletProvider implements WalletProvider {
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: selectedNetwork.idHex }],
         });
-        this.network = selectedNetwork.idHex;
       } else {
         throw error;
       }
@@ -74,10 +70,10 @@ export class EvmWalletProvider implements WalletProvider {
     });
   }
 
-  async getNetwork(): Promise<string> {
-    const chainId = await this.provider.request({ method: 'eth_chainId' });
-    return chainId || '';
-  }
+  // async getNetwork(): Promise<string> {
+  //   const chainId = await this.provider.request({ method: 'eth_chainId' });
+  //   return chainId || '';
+  // }
 
   getAddress(): string {
     return this.address;
