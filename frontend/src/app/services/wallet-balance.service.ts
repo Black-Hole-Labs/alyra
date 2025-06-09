@@ -13,8 +13,7 @@ export class WalletBalanceService {
   private solanaConnection: Connection;
   private balanceCache = new Map<number, Map<string, string>>();
 
-  nativeSolBalance = signal<string>('0');
-  nativeEthBalance = signal<string>('0');
+  nativeBalance = signal<number>(0);
 
   constructor(private blockchainStateService: BlockchainStateService) {
     this.solanaRpcUrl = this.blockchainStateService.allNetworks().find((network: { id: number; }) => network.id === NetworkId.SOLANA_MAINNET)?.rpcUrls[0] 
@@ -85,19 +84,19 @@ export class WalletBalanceService {
         console.error('Network not found: ', token.chainId);
         return "0";
       }
-
+      
       if (token.chainId === NetworkId.SOLANA_MAINNET) { // SVM
         if (token.symbol === "SOL") {
           const solBalance = await this.getSolanaBalance(walletAddress);
-          this.nativeSolBalance.set(solBalance);
+          this.nativeBalance.set(Number(solBalance));
           return solBalance;
         } else {
           return this.getSolanaBalance(walletAddress, token.contractAddress);
         }
       } else { // EVM
-        if (token.symbol === "ETH") {
+        if (token.contractAddress === "0x0000000000000000000000000000000000000000") {
           const ethBalance = await this.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals));
-          this.nativeEthBalance.set(ethBalance);
+          this.nativeBalance.set(Number(ethBalance));
           return ethBalance;
         } else {
           return await this.getEvmBalance(walletAddress, network.rpcUrls[0], Number(token.decimals), token.contractAddress);
