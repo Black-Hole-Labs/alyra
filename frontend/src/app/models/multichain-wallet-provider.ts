@@ -10,7 +10,6 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
   protected svmProvider: SvmWalletProvider | null = null;
   protected currentNetwork: 'EVM' | 'SVM' = 'EVM'; // EVM as default
   protected address: string = '';
-  protected network: string = '';
 
   protected blockchainStateService: BlockchainStateService;
   protected injector: Injector;
@@ -24,7 +23,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
     return !!this.evmProviderInstance || !!this.svmProviderInstance;
   }
 
-  async connect(): Promise<{ address: string; network: string }> {
+  async connect(): Promise<{ address: string }> {
     if (this.evmProviderInstance) {
       this.evmProvider = new EvmWalletProvider(this.evmProviderInstance, this.injector);
     }
@@ -39,14 +38,12 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
     }
 
     if (this.blockchainStateService.networkSell()!.chainType === 'EVM' && this.evmProvider) {
-      const { address, network } = await this.evmProvider.connect(this.evmProviderInstance, true);
+      const { address } = await this.evmProvider.connect(this.evmProviderInstance, true);
       this.address = address;
-      this.network = network;
       this.currentNetwork = 'EVM';
     } else if (this.blockchainStateService.networkSell()!.chainType === 'SVM' && this.svmProvider) {
-      const { address, network } = await this.svmProvider.connect(this.svmProviderInstance, true);
+      const { address } = await this.svmProvider.connect(this.svmProviderInstance, true);
       this.address = address;
-      this.network = network;
       this.currentNetwork = 'SVM';
     } else {
       throw new Error('No provider available');
@@ -54,7 +51,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
 
     this.blockchainStateService.loadNetworks(ProviderType.MULTICHAIN);
 
-    return { address: this.address, network: this.network };
+    return { address: this.address };
   }
   async switchNetwork(selectedNetwork: any): Promise<void> 
   {
@@ -70,7 +67,6 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
         this.address = address;
       }
       await this.evmProvider.switchNetwork(selectedNetwork);
-      this.network = await this.evmProvider.getNetwork() || '';
     } 
     else if (selectedNetwork.chainType === 'SVM') 
     {
@@ -83,8 +79,6 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
         // console.log(`Connected to SVM address: `, address);
         this.address = address;
       }
-      await this.svmProvider.switchNetwork(selectedNetwork); 
-      this.network = await this.svmProvider.getNetwork() || '';
     } 
     else 
     {
@@ -92,9 +86,9 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
     }
   }
 
-  async getNetwork(): Promise<string> {
-    return this.network;
-  }
+  // async getNetwork(): Promise<string> {
+  //   return this.network;
+  // }
 
   getAddress(): string {
     return this.address;

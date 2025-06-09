@@ -274,6 +274,7 @@ export class BlockchainStateService {
 
   setNetworkSell(network: Network) {
     this.networkSell.set(network);
+    this.updateNetworkBackgroundIcons(network);
   }
 
   setNetworkBuy(network: Network) {

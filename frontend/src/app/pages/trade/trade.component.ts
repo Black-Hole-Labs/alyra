@@ -123,8 +123,6 @@ export class TradeComponent implements AfterViewChecked {
 
   private networkUpdateInterval: any;
 
-  private userSelectedTokens = false;
-  private isSwapping = false;
 
   constructor(
     private renderer: Renderer2,
@@ -161,9 +159,7 @@ export class TradeComponent implements AfterViewChecked {
     effect(
       () => {
         const tokens = this.blockchainStateService.tokens();
-        if (this.userSelectedTokens || this.isSwapping) {
-          return;
-        }
+
         const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
         let newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
 
@@ -171,10 +167,10 @@ export class TradeComponent implements AfterViewChecked {
           if (newSelectedBuyToken?.chainId !== this.blockchainStateService.networkBuy()?.id) {
             newSelectedBuyToken = this.blockchainStateService.getTokensForNetwork(
               this.blockchainStateService.networkBuy()!.id,
-            )[1];
+            )[0];
           }
         }
-
+        
         this.tokenService.setSelectedSellToken(newSelectedToken);
         this.tokenService.setSelectedBuyToken(newSelectedBuyToken);
         this.updateNetworksBasedOnTokens();
@@ -368,9 +364,8 @@ export class TradeComponent implements AfterViewChecked {
   }
 
   rotateRefresh(): void {
-    if (this.isWalletConnected()) {
-      this.getTxData();
-    }
+    this.getTxData();
+    
     const refreshElement = document.querySelector('.refresh');
     if (refreshElement) {
       this.rotationCount += 1;
@@ -378,8 +373,18 @@ export class TradeComponent implements AfterViewChecked {
     }
   }
 
-  swapTokens(): void {
-    this.isSwapping = true; // Устанавливаем флаг смены
+  async swapTokens(): Promise<void> { //
+    if(this.blockchainStateService.connected()){
+      const provider = this.blockchainStateService.getCurrentProvider().provider;
+      try{
+        await provider.switchNetwork(this.blockchainStateService.networkBuy()!);
+        this.blockchainStateService.updateWalletAddress(provider.address);
+      }
+      catch (error) {
+        this.blockchainStateService.disconnect();
+      }
+    }
+
     this.txData.update(() => undefined);
     this.buttonState = 'swap';
 
@@ -421,9 +426,6 @@ export class TradeComponent implements AfterViewChecked {
 
     this.cdr.detectChanges();
 
-    setTimeout(() => {
-      this.isSwapping = false;
-    }, 100);
   }
 
   private swapNetworks(): void {
@@ -448,7 +450,6 @@ export class TradeComponent implements AfterViewChecked {
   async onSellTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.tokenService.setSelectedSellToken(token);
-    this.userSelectedTokens = true;
     this.balance.set(Number(parseFloat(await this.walletBalanceService.getBalanceForToken(token))));
   }
 
@@ -463,7 +464,6 @@ export class TradeComponent implements AfterViewChecked {
   async onBuyTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.tokenService.setSelectedBuyToken(token);
-    this.userSelectedTokens = true; // Пользователь выбрал токен
     this.balanceBuy.set(Number(parseFloat(await this.walletBalanceService.getBalanceForToken(token)).toFixed(6)));
     this.closeTokenBuyPopup();
     this.popupService.closeAllPopups();

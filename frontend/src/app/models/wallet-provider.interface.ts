@@ -1,7 +1,7 @@
 export interface WalletProvider {
-  connect(): Promise<{ address: string; network: string }>;
-  switchNetwork(network: any): Promise<void>;
-  getNetwork(): Promise<string>;
+  connect(): Promise<{ address: string }>;
+  // switchNetwork(network: any): Promise<void>;
+  // getNetwork(): Promise<string>;
   getAddress(): string;
   isAvailable(): boolean;
 }

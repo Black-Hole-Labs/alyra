@@ -6,7 +6,6 @@ import { ethers } from 'ethers';
 export class LifiService {
 
   async getChains() {
-    /// chainTypes can be of type SVM and EVM, by default, only EVM chains will be returned
     const optionalChainTypes = "EVM"
     const result = await axios.get('https://li.quest/v1/chains', 
       {params: {chainTypes: optionalChainTypes}});
@@ -19,8 +18,6 @@ export class LifiService {
   }
 
   async getTokens() {
-    //const optionalFilter = ['ETH', 137] // Both numeric and mnemonic can be used
-    /// chainTypes can be of type SVM and EVM. By default, only EVM tokens will be returned
     const optionalChainTypes = "EVM"
     const result = await axios.get('https://li.quest/v1/tokens',
         {params: {
@@ -49,6 +46,7 @@ export class LifiService {
         fromAmount,
         fromAddress,
         integrator: 'blackhole',
+        fee: 0.00075,
       };
   
       if (toAddress) {

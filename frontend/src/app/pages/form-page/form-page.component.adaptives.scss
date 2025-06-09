@@ -143,6 +143,12 @@
 	.mail{
 		gap: 10px;
 		bottom: 10px;
+		bottom: max(40px, env(safe-area-inset-bottom, 0px) + 20px);
+		
+		/* Для iOS Safari - добавляем дополнительный отступ */
+		@supports (height: 100dvh) {
+			bottom: max(calc(100dvh - 100vh + 20px), env(safe-area-inset-bottom, 0px) + 20px);
+		}
 	}
 	p{
 		font-size: 14px;
@@ -204,6 +210,12 @@
 	.mail{
 		gap: 10px;
 		bottom: 20px;
+		bottom: max(50px, env(safe-area-inset-bottom, 0px) + 30px);
+		
+		/* Для iOS Safari - добавляем дополнительный отступ */
+		@supports (height: 100dvh) {
+			bottom: max(calc(100dvh - 100vh + 20px), env(safe-area-inset-bottom, 0px) + 20px);
+		}
 	}
 	p{
 		font-size: 14px;
@@ -275,6 +287,12 @@
 	.mail{
 		gap: 10px;
 		bottom: 20px;
+		bottom: max(60px, env(safe-area-inset-bottom, 0px) + 40px);
+		
+		/* Для iOS Safari - добавляем дополнительный отступ для самых маленьких экранов */
+		@supports (height: 100dvh) {
+			bottom: max(calc(100dvh - 100vh + 20px), env(safe-area-inset-bottom, 0px) + 20px);
+		}
 	}
 	p{
 		font-size: 14px;
