@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { firstValueFrom, Observable } from 'rxjs';
 import { ThemeService } from '../../services/theme.service';
 import { StarAnimationService, Star } from '../../services/star-animation.service';
@@ -20,10 +20,10 @@ import { EmailService } from '../../services/email.service';
 })
 export class FormPageComponent implements OnInit, OnDestroy {
 	stars$: Observable<Star[]>;
-	emailControl = new FormControl('', [Validators.required, Validators.email]);
+	emailControl = new FormControl('', [Validators.required, this.customEmailValidator]);
 	isSubmitted = false;
 	
-	// Переменные для глитч-анимации
+	// Variables for glitch animation
 	private possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 	private glitchChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 	private cyberChars = '0123456789';
@@ -73,10 +73,9 @@ export class FormPageComponent implements OnInit, OnDestroy {
 	private initTitleAnimation() {
 		const titleElement = document.querySelector('h1');
 		if (titleElement) {
-			// Запускаем анимацию сразу при загрузке страницы
 			setTimeout(() => {
 				this.animateTitle(titleElement as HTMLElement);
-			}, 500); // Небольшая задержка для лучшего эффекта
+			}, 500);
 			
 			titleElement.addEventListener('mouseenter', () => {
 				this.animateTitle(titleElement as HTMLElement);
@@ -103,22 +102,18 @@ export class FormPageComponent implements OnInit, OnDestroy {
 			let result = '';
 			const progress = frame / this.animationFrames;
 			
-			// Каждая буква подбирается по очереди
 			const currentCharIndex = Math.floor(finalText.length * progress);
 
 			for (let i = 0; i < finalText.length; i++) {
 				if (i < currentCharIndex) {
-					// Уже подобранные символы - статичные
 					result += finalText[i];
 					resolvedChars[i] = true;
 				} else if (i === currentCharIndex) {
-					// Текущий подбираемый символ
 					if (finalText[i] === ' ') {
 						result += ' ';
 						resolvedChars[i] = true;
 					} else {
-						// Добавляем высокую вероятность показать правильный символ для эффекта "подбора"
-						const showCorrect = Math.random() < 0.7; // Высокая вероятность для текущего символа
+						const showCorrect = Math.random() < 0.7;
 						
 						if (showCorrect) {
 							result += finalText[i];
@@ -137,7 +132,6 @@ export class FormPageComponent implements OnInit, OnDestroy {
 						}
 					}
 				} else {
-					// Еще не дошли до этого символа - постоянно крутим случайные символы
 					if (finalText[i] === ' ') {
 						result += ' ';
 					} else {
@@ -215,5 +209,56 @@ export class FormPageComponent implements OnInit, OnDestroy {
 
 	get isEmailValid() {
 		return this.emailControl.valid && this.emailControl.value && this.emailControl.value.trim() !== '';
+	}
+
+	private customEmailValidator(control: AbstractControl): ValidationErrors | null {
+		const email = control.value;
+		
+		if (!email) {
+			return null;
+		}
+
+		const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		
+		if (!emailRegex.test(email)) {
+			return { invalidEmail: true };
+		}
+
+		const latinOnlyRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/;
+		
+		if (!latinOnlyRegex.test(email)) {
+			return { invalidEmail: true };
+		}
+
+		const parts = email.split('@');
+		if (parts.length !== 2) {
+			return { invalidEmail: true };
+		}
+
+		const [localPart, domain] = parts;
+		
+		if (localPart.length === 0 || localPart.startsWith('.') || localPart.endsWith('.') || localPart.includes('..')) {
+			return { invalidEmail: true };
+		}
+
+		const domainParts = domain.split('.');
+		if (domainParts.length < 2) {
+			return { invalidEmail: true };
+		}
+
+		for (const part of domainParts) {
+			if (part.length === 0) {
+				return { invalidEmail: true };
+			}
+		}
+
+		const tld = domainParts[domainParts.length - 1];
+		const tldRegex = /^[a-zA-Z]{2,}$/;
+		
+		if (!tldRegex.test(tld)) {
+			return { invalidEmail: true };
+		}
+
+		return null;
 	}
 } 
