@@ -18,7 +18,7 @@ export class SvmWalletProvider implements WalletProvider {
     return !!this.provider;
   }
 
-  async connect(_provider?: any, isMultichain?: boolean): Promise<{ address: string }>  {
+  async connect(_provider?: any): Promise<{ address: string }>  {
     if (_provider) this.provider = _provider;
     if (!this.provider) throw new Error('Solana not installed');
     if (!this.provider.isConnected) {
@@ -27,10 +27,6 @@ export class SvmWalletProvider implements WalletProvider {
     const account = this.provider.publicKey?.toString();
     if (!account) throw new Error('Failed to retrieve Solana account');
     this.address = account;
-
-    if(!isMultichain){
-      this.blockchainStateService.loadNetworks(ProviderType.SVM);
-    }
 
     return { address: this.address };
   }
@@ -48,5 +44,10 @@ export class SvmWalletProvider implements WalletProvider {
     // console.log('SVM Transaction sent:', signedTx);
     await connection.confirmTransaction(signedTx, 'confirmed');
     return signedTx;
+  }
+
+  async switchNetwork(selectedNetwork: any): Promise<void> {
+    this.blockchainStateService.disconnect();
+    throw new Error("unsupported_network");
   }
 }
