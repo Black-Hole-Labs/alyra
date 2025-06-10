@@ -81,14 +81,6 @@ export class FormPageComponent implements OnInit, OnDestroy {
 			titleElement.addEventListener('mouseenter', () => {
 				this.animateTitle(titleElement as HTMLElement);
 			});
-			
-			titleElement.addEventListener('mouseleave', () => {
-				titleElement.textContent = this.originalTitle;
-				if (this.animationTimeout) {
-					clearTimeout(this.animationTimeout);
-					this.animationTimeout = null;
-				}
-			});
 		}
 	}
 
