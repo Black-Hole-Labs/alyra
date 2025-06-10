@@ -39,7 +39,7 @@ export class TokenChangePopupComponent {
 
   blockchainStateService = inject(BlockchainStateService);
   walletBalanceService = inject(WalletBalanceService);
-  explorerUrl = computed(() => this.blockchainStateService.networkSell()?.explorerUrl || 'https://etherscan.io/token/');
+  explorerUrl = computed(() => this.blockchainStateService.getNetworkById(this.displayedTokens()[0].chainId)?.explorerUrl || 'https://etherscan.io/token/');
   ethers = ethers;
 
   networks = computed(() => {
