@@ -87,10 +87,10 @@
       <div class="right">
         <div class="buy-amount-container">
           @if(tokenService.selectedBuyToken() && validatedSellAmount() > 0 && buyAmountForInput()) {
-          <p #buyAmountText class="buy-amount">{{ buyAmountForInput() }}</p>
+          <p #buyAmountText class="buy-amount" [style.fontSize.px]="inputFontSize()">{{ buyAmountForInput() }}</p>
           }
           @else {
-          <p class="buy-amount placeholder">0.0</p>
+          <p class="buy-amount placeholder" [style.fontSize.px]="inputFontSize()">0.0</p>
           }
         </div>
         <!-- <input
