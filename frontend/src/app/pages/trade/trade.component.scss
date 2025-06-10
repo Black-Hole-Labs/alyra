@@ -175,7 +175,6 @@ input {
   color: white;
 	text-align: right;
   background-color: var(--dark-bg);
-  transition: font-size 0.2s ease;
 }
 
 input::placeholder {
@@ -195,6 +194,7 @@ input::placeholder {
   font-weight: 400;
   font-size: 48px;
   color: white;
+  transition: none;
 }
 
 .buy-amount.placeholder {
