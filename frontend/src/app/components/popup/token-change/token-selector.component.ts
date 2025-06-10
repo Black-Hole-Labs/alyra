@@ -195,7 +195,7 @@ export class TokenChangePopupComponent {
   }
 
   isNativeToken(token: TokenDisplay): boolean {
-    const currentNetwork = this.blockchainStateService.networkSell();
+    const currentNetwork = this.blockchainStateService.getNetworkById(token.chainId);
     if (!currentNetwork) return false;
 
     if (currentNetwork.chainType === 'SVM') {
