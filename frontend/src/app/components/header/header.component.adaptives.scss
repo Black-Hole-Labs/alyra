@@ -78,10 +78,15 @@
 		width: 24px;
 		height: 24px;
 	}
+
+	@import '../../styles/mouse-gradient-button';
 	
 	.wallet, .balance {
-		padding: 10px 13px;
-		border-radius: 10px;
+		@include mouse-gradient-button(
+			$padding: 10px 13px,
+			$height: auto,
+			$border-radius: 10px
+		);
 		gap: 12px;
 	}
 	
@@ -177,10 +182,15 @@
 		width: 24px;
 		height: 24px;
 	}
-	
+
+	@import '../../styles/mouse-gradient-button';
+
 	.wallet, .balance {
-		padding: 10px 13px;
-		border-radius: 10px;
+		@include mouse-gradient-button(
+			$padding: 10px 13px,
+			$height: auto,
+			$border-radius: 10px
+		);
 		gap: 12px;
 	}
 	
@@ -276,10 +286,15 @@
 		width: 17px;
 		height: 17px;
 	}
-	
+
+	@import '../../styles/mouse-gradient-button';
+
 	.wallet, .balance {
-		padding: 7px 10px;
-		border-radius: 7px;
+		@include mouse-gradient-button(
+			$padding: 7px 10px,
+			$height: auto,
+			$border-radius: 7px
+		);
 		gap: 8px;
 	}
 	
@@ -379,9 +394,14 @@
 		display: none;
 	}
 	
+	@import '../../styles/mouse-gradient-button';
+
 	.wallet {
-		padding: 10px 13px;
-		border-radius: 10px;
+		@include mouse-gradient-button(
+			$padding: 10px 13px,
+			$height: auto,
+			$border-radius: 10px
+		);
 		gap: 12px;
 	}
 	
@@ -479,9 +499,14 @@
 		display: none;
 	}
 	
+	@import '../../styles/mouse-gradient-button';
+
 	.wallet {
-		padding: 10px 13px;
-		border-radius: 10px;
+		@include mouse-gradient-button(
+			$padding: 10px 13px,
+			$height: auto,
+			$border-radius: 10px
+		);
 		gap: 12px;
 	}
 	

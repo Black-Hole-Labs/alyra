@@ -1,14 +1,21 @@
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
 	.connect-wallet {
-		width: 410px;
-		min-height: 500px;
+		width: 360px;
 		max-height: 716px;
 		border-radius: 22px;
-		padding: 20px;
+		padding: 30px;
+
+		&::before {
+			border-radius: 22px;
+		}
+
+		&::after {
+			border-radius: 22px;
+		}
 	}
 	
 	.upper {
-		margin-bottom: 15px;
+		margin-bottom: 0px;
 	}
 	
 	.upper h6 {
@@ -21,31 +28,27 @@
 	}
 	
 	.scroll-container {
-		margin-bottom: 24px;
+		margin-bottom: 10px;
 	}
 	
 	.devider {
 		margin-top: 15px;
 		padding: 4px 14px;
-		border-radius: 10px;
+		border-radius: 8px;
 		gap: 10px;
 	}
 	
 	.devider p {
-		font-size: 15px;
+		font-size: 12px;
 	}
 	
 	.inner-wallets {
 		gap: 8px;
 		margin-top: 17px;
-
-		&:first-of-type {
-			max-height: 300px;
-		}
 	}
 	
 	.wallet {
-		height: 74px;
+		height: 60px;
 		border-radius: 18px;
 		padding: 8px 17px 8px 8px;
 	}
@@ -55,13 +58,13 @@
 	}
 	
 	.wallet-img {
-		width: 57px;
-		height: 57px;
-		border-radius: 13px;
+		width: 45px;
+		height: 45px;
+		border-radius: 12px;
 	}
 	
 	.name p {
-		font-size: 16px;
+		font-size: 14px;
 	}
 	
 	.status {
@@ -76,20 +79,27 @@
 	}
 
 	.disclaimer {
-		font-size: 12px;
+		font-size: 10px;
 	}
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
 	.connect-wallet {
-		width: 410px;
-		min-height: 500px;
-		max-height: 576px;
+		width: 360px;
+		max-height: 716px;
 		border-radius: 22px;
-		padding: 20px;
+		padding: 30px;
+
+		&::before {
+			border-radius: 22px;
+		}
+
+		&::after {
+			border-radius: 22px;
+		}
 	}
 	
 	.upper {
-		margin-bottom: 15px;
+		margin-bottom: 0px;
 	}
 	
 	.upper h6 {
@@ -102,31 +112,27 @@
 	}
 	
 	.scroll-container {
-		margin-bottom: 24px;
+		margin-bottom: 10px;
 	}
 	
 	.devider {
 		margin-top: 15px;
 		padding: 4px 14px;
-		border-radius: 10px;
+		border-radius: 8px;
 		gap: 10px;
 	}
 	
 	.devider p {
-		font-size: 15px;
+		font-size: 12px;
 	}
 	
 	.inner-wallets {
 		gap: 8px;
 		margin-top: 17px;
-
-		&:first-of-type {
-			max-height: 300px;
-		}
 	}
 	
 	.wallet {
-		height: 74px;
+		height: 60px;
 		border-radius: 18px;
 		padding: 8px 17px 8px 8px;
 	}
@@ -136,13 +142,13 @@
 	}
 	
 	.wallet-img {
-		width: 57px;
-		height: 57px;
-		border-radius: 13px;
+		width: 45px;
+		height: 45px;
+		border-radius: 12px;
 	}
 	
 	.name p {
-		font-size: 16px;
+		font-size: 14px;
 	}
 	
 	.status {
@@ -157,16 +163,24 @@
 	}
 
 	.disclaimer {
-		font-size: 12px;
+		font-size: 10px;
 	}
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
 	.connect-wallet {
-		width: 304px;
+		width: 280px;
 		min-height: 100px;
 		max-height: 524px;
 		border-radius: 16px;
 		padding: 15px;
+
+		&::before {
+			border-radius: 16px;
+		}
+
+		&::after {
+			border-radius: 16px;
+		}
 	}
 	
 	.upper {
@@ -189,7 +203,7 @@
 	.devider {
 		margin-top: 10px;
 		padding: 4px 10px;
-		border-radius: 8px;
+		border-radius: 6px;
 		gap: 5px;
 	}
 
@@ -199,21 +213,17 @@
 	}
 	
 	.devider p {
-		font-size: 11px;
+		font-size: 9px;
 	}
 
 	.inner-wallets {
 		gap: 5px;
 		margin-top: 12px;
-
-		&:first-of-type {
-			max-height: 250px;
-		}
 	}
 	
 	.wallet {
-		height: 54px;
-		border-radius: 16px;
+		height: 42px;
+		border-radius: 14px;
 		padding: 6px 8px 6px 6px;
 	}
 
@@ -222,13 +232,13 @@
 	}
 	
 	.wallet-img {
-		width: 42px;
-		height: 42px;
-		border-radius: 10px;
+		width: 34px;
+		height: 34px;
+		border-radius: 8px;
 	}
 	
 	.name p {
-		font-size: 12px;
+		font-size: 10px;
 	}
 	
 	.status {
@@ -243,20 +253,27 @@
 	}
 
 	.disclaimer {
-		font-size: 9px;
+		font-size: 8px;
 	}
 }
 @media screen and (min-width: 480px) and (max-width: 970px) {
 	.connect-wallet {
-		width: 410px;
-		min-height: 500px;
-		max-height: 576px;
+		width: 360px;
+		max-height: 716px;
 		border-radius: 22px;
-		padding: 20px;
+		padding: 30px;
+
+		&::before {
+			border-radius: 22px;
+		}
+
+		&::after {
+			border-radius: 22px;
+		}
 	}
 	
 	.upper {
-		margin-bottom: 15px;
+		margin-bottom: 0px;
 	}
 	
 	.upper h6 {
@@ -269,31 +286,27 @@
 	}
 	
 	.scroll-container {
-		margin-bottom: 24px;
+		margin-bottom: 10px;
 	}
 	
 	.devider {
 		margin-top: 15px;
 		padding: 4px 14px;
-		border-radius: 10px;
+		border-radius: 8px;
 		gap: 10px;
 	}
 	
 	.devider p {
-		font-size: 15px;
+		font-size: 12px;
 	}
 	
 	.inner-wallets {
 		gap: 8px;
 		margin-top: 17px;
-
-		&:first-of-type {
-			max-height: 300px;
-		}
 	}
 	
 	.wallet {
-		height: 74px;
+		height: 60px;
 		border-radius: 18px;
 		padding: 8px 17px 8px 8px;
 	}
@@ -303,13 +316,13 @@
 	}
 	
 	.wallet-img {
-		width: 57px;
-		height: 57px;
-		border-radius: 13px;
+		width: 45px;
+		height: 45px;
+		border-radius: 12px;
 	}
 	
 	.name p {
-		font-size: 16px;
+		font-size: 14px;
 	}
 	
 	.status {
@@ -324,25 +337,27 @@
 	}
 
 	.disclaimer {
-		font-size: 12px;
+		font-size: 10px;
 	}
 }
 
 @media screen and (min-width: 360px) and (max-width: 479px) {
 	.connect-wallet {
 		width: 90%;
-		min-height: 100px;
 		max-height: 70%;
 		border-radius: 16px;
 		padding: 15px 18px;
 		backdrop-filter: blur(65px);
 		-webkit-backdrop-filter: blur(65px);
-	}
+		position: fixed;
 
-	:host {
-		background-color: transparent;
-		backdrop-filter: none;
-		-webkit-backdrop-filter: none;
+		&::before {
+			border-radius: 16px;
+		}
+
+		&::after {
+			border-radius: 16px;
+		}
 	}
 	
 	.upper {
@@ -373,10 +388,6 @@
 	.inner-wallets {
 		gap: 0px;
 		margin-top: 0px;
-
-		&:first-of-type {
-			max-height: 280px;
-		}
 	}
 	
 	.wallet {

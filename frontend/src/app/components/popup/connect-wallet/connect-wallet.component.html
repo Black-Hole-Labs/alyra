@@ -1,4 +1,4 @@
-<div class="connect-wallet">
+<div class="connect-wallet" [@modalAnimation] (mousemove)="onMouseMove($event)">
 	<div class="upper">
 		<h6>Connect Wallet</h6>
 		<button (click)="closePopup()"></button>
@@ -13,7 +13,7 @@
 				<div class="wallet-img" [style.background-image]="'url(' + wallet.iconUrl + ')'"></div>
 				<p>{{wallet.name}}</p>
 				</div>
-				@if (wallet.status) {
+				@if (wallet.status && wallet.status !== 'detected' && wallet.status !== 'connect') {
 				<div class="status {{wallet.status}}">
 					@if (wallet.status === 'install' && wallet.installUrl) {
 					<a href="{{wallet.installUrl}}" target="_blank" (click)="$event.stopPropagation()">Install</a>
@@ -38,7 +38,7 @@
 				<div class="wallet-img" [style.background-image]="'url(' + wallet.iconUrl + ')'"></div>
 				<p>{{wallet.name}}</p>
 				</div>
-				@if (wallet.status) {
+				@if (wallet.status && wallet.status !== 'detected' && wallet.status !== 'connect') {
 				<div class="status {{wallet.status}}">
 					@if (wallet.status === 'install' && wallet.installUrl) {
 					<a href="{{wallet.installUrl}}" target="_blank" (click)="$event.stopPropagation()">Install</a>
@@ -53,5 +53,5 @@
 	</div>
 	
   
-	<p class="disclaimer">// By connecting your wallet, you agree to the <a href="/documentation/termsofuse" target="_blank">Terms of Use</a> and <a href="/documentation/privacypolicy" target="_blank">Privacy Policy</a> of Blackhole Labs.</p>
+	<p class="disclaimer">// By connecting your wallet, you agree to the <br><a href="/documentation/termsofuse" target="_blank">Terms of Use</a> and <a href="/documentation/privacypolicy" target="_blank">Privacy Policy</a> of Blackhole Labs.</p>
   </div>

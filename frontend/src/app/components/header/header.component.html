@@ -53,7 +53,7 @@
 			</button>
 		</div> -->
 
-		<div class="balance" *ngIf="blockchainStateService.connected()">
+		<div class="balance" *ngIf="blockchainStateService.connected()" (mousemove)="onWalletMouseMove($event)">
 			<div class="wallet-icon"></div>
 			@if(blockchainStateService.connected() && blockchainStateService.networkSell() !== undefined)
 			{
@@ -64,7 +64,7 @@
 		</div>
 
 		<!-- WALLET -->
-		<div class="wallet" (click)="openConnectWalletPopup()">
+		<div class="wallet" (click)="openConnectWalletPopup()" (mousemove)="onWalletMouseMove($event)">
 			<div class="wallet-icon" [style.background-image]="'url(' + walletIcon() + ')'"></div>
 			<p>{{ walletName().length > 20 ? walletName().slice(0, 6) + '...' + walletName().slice(-3) : walletName()}}</p>
 		</div>

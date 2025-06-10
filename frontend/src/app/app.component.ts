@@ -9,6 +9,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { AppContentComponent } from './components/app-content/app-content.component';
 import { ClosePopupsDirective } from './directives/close-popups.directive';
 import { PopupService } from './services/popup.service';
+import { ThemeService } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -24,9 +25,11 @@ export class AppComponent {
   private titleService = inject(Title);
   private renderer = inject(Renderer2);
   public popupService = inject(PopupService);
+  private themeService = inject(ThemeService);
 
   constructor() {
     this.setDynamicTitle();
+    this.handleThemeOnRouteChange();
   }
 
   isDocumentationPage(): boolean {
@@ -51,6 +54,14 @@ export class AppComponent {
       .subscribe((data) => {
         const pageTitle = data['title'] ? `Blackhole | ${data['title']}` : 'Blackhole';
         this.titleService.setTitle(pageTitle);
+      });
+  }
+
+  private handleThemeOnRouteChange() {
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.themeService.handleRouteChange(event.url);
       });
   }
 }

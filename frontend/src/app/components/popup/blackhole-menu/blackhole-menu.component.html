@@ -1,4 +1,4 @@
-<div class="popup-container blackhole-menu">
+<div class="popup-container blackhole-menu" (mousemove)="onMenuMouseMove($event)">
 	<div class="upper">
 		<h6>Menu</h6>
 		<button (click)="closePopup()"></button>
@@ -23,7 +23,7 @@
 		</div>
 	</div>
 	
-	<div class="devider devider2">
+	<div class="devider">
 		<p>Social</p>
 	</div>
 
@@ -39,7 +39,7 @@
 	</div>
 
 
-	<div class="devider devider2">
+	<div class="devider">
 		<p>Need help?</p>
 	</div>
 

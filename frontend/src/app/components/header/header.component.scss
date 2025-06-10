@@ -282,20 +282,15 @@ nav a.active-link {
   border-radius: 100%;
 }
 
-.wallet, .balance {
-  padding: 14px 18px;
-  background-color: rgba(var(--dark-bg), 0.3);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.2s ease-in-out;
-	gap: 16px;
-}
+@import '../../styles/mouse-gradient-button';
 
-.wallet:hover {
-  background-color: rgba(var(--dark-bg), 1);
+.wallet, .balance {
+  @include mouse-gradient-button(
+    $padding: 14px 18px,
+    $height: auto,
+    $border-radius: 14px
+  );
+  gap: 16px;
 }
 
 .wallet-icon {
