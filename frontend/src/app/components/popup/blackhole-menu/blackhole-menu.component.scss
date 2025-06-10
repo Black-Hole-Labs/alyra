@@ -1,12 +1,30 @@
+@import '../../../styles/mouse-gradient-button';
+
 .blackhole-menu {
-  width: 277px;
-  background-color: rgba(var(--dark-bg), 0.3);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(5px);
-  border-radius: 28px;
-  z-index: 1000;
-  padding: 25px 30px;
-  box-sizing: border-box;
+  @include mouse-gradient-button(
+    $padding: 25px 30px,
+    $height: auto,
+    $border-radius: 28px,
+    $background: rgba(var(--dark-bg), 0.3),
+    $backdrop-blur: 25px,
+    $include-responsive: false
+  );
+
+	position: fixed;
+	
+  flex-direction: column;
+  align-items: stretch;
+  
+  &:hover {
+    transform: none;
+    
+    background: radial-gradient(
+      circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+      rgba(255, 255, 255, 0.03) 0%, 
+      rgba(255, 255, 255, 0.01) 50%, 
+      transparent 100%
+    );
+  }
 }
 
 .upper {
@@ -49,11 +67,6 @@ button:hover {
   justify-content: space-between;
 }
 
-.devider2 {
-  margin-bottom: 10px;
-  margin-top: 35px;
-}
-
 p {
   font-family: "JetBrains Mono", monospace;
   font-weight: 400;
@@ -63,14 +76,12 @@ p {
 
 .socials,
 .overview {
-  margin-top: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
 .trade,
-.bridge,
+.pro,
 .quests {
   background-size: cover;
   background-repeat: no-repeat;
@@ -80,8 +91,8 @@ p {
   background-image: url(/img/header/popup-menu/trade.png);
 }
 
-.bridge {
-  background-image: url(/img/header/popup-menu/bridge.png);
+.pro {
+  background-image: url(/img/header/popup-menu/pro.png);
 }
 
 .quests {
@@ -89,6 +100,7 @@ p {
 }
 
 .menu-item {
+	margin-top: 10px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -136,4 +148,68 @@ a:hover {
 
 .contact {
   background-image: url(/img/header/popup-menu/contact.png);
+}
+
+:host-context(.light-theme) {
+  .blackhole-menu {
+    background: rgba(0, 0, 0, 0.05);
+    
+    &:hover {
+      background: radial-gradient(
+        circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+        rgba(0, 0, 0, 0.03) 0%, 
+        rgba(0, 0, 0, 0.01) 50%, 
+        transparent 100%
+      );
+    }
+
+    &::before {
+      background: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+    }
+
+    &::after {
+      background: radial-gradient(
+        circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+        rgba(0, 0, 0, 1) 0%, 
+        rgba(0, 0, 0, 0.8) 20%, 
+        rgba(0, 0, 0, 0.4) 40%, 
+        rgba(0, 0, 0, 0.2) 60%, 
+        transparent 80%
+      );
+    }
+  }
+
+  h6 {
+    color: #000000;
+  }
+
+  button {
+    filter: invert(1);
+  }
+
+  .devider {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  p {
+    color: #000000;
+  }
+
+  .menu-item {
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .menu-text {
+    color: #000000;
+  }
+
+  a:hover {
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  .social-img {
+    filter: invert(1);
+  }
 }

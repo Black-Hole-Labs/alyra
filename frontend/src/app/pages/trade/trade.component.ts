@@ -308,6 +308,11 @@ export class TradeComponent implements AfterViewChecked {
 
       this.buyAmountTextAnimated = false;
 
+      const sellInput = document.getElementById('number-input-sell') as HTMLInputElement;
+      if (sellInput) {
+        this.adjustFontSize(sellInput);
+      }
+
       setTimeout(() => this.checkAndAnimateBuyText(), 0);
     } else {
       this.buyAmount.set('0');
@@ -326,6 +331,8 @@ export class TradeComponent implements AfterViewChecked {
       this.sellAmount = '0';
       this.sellAmountForInput.set('0');
     }
+    
+    this.recalculateFontSize();
   }
 
   limitDecimals(value: string, maxDecimals: number): string {
@@ -388,7 +395,6 @@ export class TradeComponent implements AfterViewChecked {
     this.txData.update(() => undefined);
     this.buttonState = 'swap';
 
-    // Сохраняем текущие значения
     const tempToken = this.tokenService.selectedSellToken();
     const tempBuyToken = this.tokenService.selectedBuyToken();
     const tempBalance = this.balance();
@@ -996,84 +1002,97 @@ export class TradeComponent implements AfterViewChecked {
     this.checkAndAnimateBuyText();
   }
 
+  recalculateFontSize(): void {
+    const sellTextLength = this.sellAmountForInput()?.length || 0;
+    const buyTextLength = this.buyAmountForInput()?.length || 0;
+    const maxTextLength = Math.max(sellTextLength, buyTextLength);
+    this.calculateFontSizeForLength(maxTextLength);
+  }
+
   adjustFontSize(inputElement: HTMLInputElement): void {
-    const textLength = inputElement.value.length;
+    const sellTextLength = inputElement.value.length;
+    const buyTextLength = this.buyAmountForInput()?.length || 0;
+    const maxTextLength = Math.max(sellTextLength, buyTextLength);
+    this.calculateFontSizeForLength(maxTextLength);
+  }
+
+  private calculateFontSizeForLength(maxTextLength: number): void {
     const width = window.innerWidth;
 
     if (width >= 1601 && width <= 1920) {
       // 1601-1920px
-      if (textLength > 15) {
+      if (maxTextLength > 15) {
         this.inputFontSize.set(18);
-      } else if (textLength > 12) {
+      } else if (maxTextLength > 12) {
         this.inputFontSize.set(22);
-      } else if (textLength > 10) {
+      } else if (maxTextLength > 10) {
         this.inputFontSize.set(26);
-      } else if (textLength > 8) {
+      } else if (maxTextLength > 8) {
         this.inputFontSize.set(30);
       } else {
         this.inputFontSize.set(36);
       }
     } else if (width >= 1171 && width <= 1600) {
       // 1171-1600px
-      if (textLength > 15) {
+      if (maxTextLength > 15) {
         this.inputFontSize.set(18);
-      } else if (textLength > 12) {
+      } else if (maxTextLength > 12) {
         this.inputFontSize.set(22);
-      } else if (textLength > 10) {
+      } else if (maxTextLength > 10) {
         this.inputFontSize.set(26);
-      } else if (textLength > 8) {
+      } else if (maxTextLength > 8) {
         this.inputFontSize.set(30);
       } else {
         this.inputFontSize.set(36);
       }
     } else if (width >= 971 && width <= 1170) {
       // 971-1170px
-      if (textLength > 15) {
+      if (maxTextLength > 15) {
         this.inputFontSize.set(13);
-      } else if (textLength > 12) {
+      } else if (maxTextLength > 12) {
         this.inputFontSize.set(16);
-      } else if (textLength > 10) {
+      } else if (maxTextLength > 10) {
         this.inputFontSize.set(20);
-      } else if (textLength > 8) {
+      } else if (maxTextLength > 8) {
         this.inputFontSize.set(22);
       } else {
         this.inputFontSize.set(26);
       }
     } else if (width >= 480 && width <= 970) {
       // 480-970px
-      if (textLength > 15) {
+      if (maxTextLength > 15) {
         this.inputFontSize.set(18);
-      } else if (textLength > 12) {
+      } else if (maxTextLength > 12) {
         this.inputFontSize.set(22);
-      } else if (textLength > 10) {
+      } else if (maxTextLength > 10) {
         this.inputFontSize.set(26);
-      } else if (textLength > 8) {
+      } else if (maxTextLength > 8) {
         this.inputFontSize.set(30);
       } else {
         this.inputFontSize.set(36);
       }
     } else if (width >= 360 && width <= 479) {
       // 360-479px
-      if (textLength > 15) {
+      if (maxTextLength > 15) {
         this.inputFontSize.set(18);
-      } else if (textLength > 12) {
+      } else if (maxTextLength > 12) {
         this.inputFontSize.set(22);
-      } else if (textLength > 10) {
+      } else if (maxTextLength > 10) {
         this.inputFontSize.set(26);
-      } else if (textLength > 8) {
+      } else if (maxTextLength > 8) {
         this.inputFontSize.set(30);
       } else {
         this.inputFontSize.set(36);
       }
     } else {
       // default
-      if (textLength > 15) {
+      if (maxTextLength > 15) {
         this.inputFontSize.set(24);
-      } else if (textLength > 12) {
+      } else if (maxTextLength > 12) {
         this.inputFontSize.set(28);
-      } else if (textLength > 10) {
+      } else if (maxTextLength > 10) {
         this.inputFontSize.set(32);
-      } else if (textLength > 8) {
+      } else if (maxTextLength > 8) {
         this.inputFontSize.set(38);
       } else {
         this.inputFontSize.set(48);

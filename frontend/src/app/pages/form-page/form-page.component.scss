@@ -1,7 +1,7 @@
 .form-container {
 	width: 100vw;
 	min-height: 100vh;
-	min-height: 100dvh; /* Для поддержки динамических viewport единиц */
+	min-height: 100dvh;
 	position: relative;
 }
 
@@ -10,7 +10,7 @@
 	padding: 50px;
 	display: flex;
 	align-items: center;
-	justify-content: flex-end;
+	justify-content: space-between;
 	box-sizing: border-box;
 	position: relative;
 }
@@ -142,7 +142,6 @@ h1 {
 	left: 50%;
 	transform: translateX(-50%);
 	
-	/* Для iOS Safari - используем визуальную высоту viewport */
 	@supports (height: 100dvh) {
 		bottom: max(calc(100dvh - 100vh + 20px), env(safe-area-inset-bottom, 0px) + 20px);
 	}
@@ -694,6 +693,66 @@ input{
 	}
 
 	.star img {
+		filter: invert(1);
+	}
+}
+
+.menu {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+h3 {
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 800;
+	font-size: 24px;
+	color: white;
+	cursor: pointer;
+}
+
+a.logo {
+	width: 65px;
+	height: 65px;
+	background: url(/img/header/logo.png);
+	background-size: cover;
+	cursor: pointer;
+}
+
+button {
+	cursor: pointer;
+}
+
+button.closed {
+	background: url(/img/header/open-img.png);
+	width: 12px;
+	height: 7px;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+button.open {
+	background: url(/img/header/close-img.png);
+	width: 12px;
+	height: 7px;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+:host-context(.light-theme) {
+	.menu h3 {
+		color: #000000;
+	}
+
+	.menu a.logo {
+		background: url(/img/header/logo-dark.png);
+		background-size: cover;
+		filter: none;
+	}
+
+	.menu button.closed,
+	.menu button.open {
 		filter: invert(1);
 	}
 }

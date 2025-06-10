@@ -17,6 +17,7 @@ import {
 import { BlockchainStateService } from '../../services/blockchain-state.service';
 import { NetworkId, Wallets } from '../../models/wallet-provider.interface';
 import { WalletBalanceService } from '../../services/wallet-balance.service';
+import { MouseGradientService } from '../../services/mouse-gradient.service';
 
 // import providers from '@public/data/providers.json';
 
@@ -66,7 +67,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private elRef: ElementRef,
     public blockchainStateService: BlockchainStateService,
     public popupService: PopupService,
-    public walletBalanceService: WalletBalanceService
+    public walletBalanceService: WalletBalanceService,
+    private mouseGradientService: MouseGradientService
   ) {
     // Определяем Safari
     this.isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -280,6 +282,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     } else {
       this.popupService.openPopup('connectWallet');
     }
+  }
+
+  onWalletMouseMove(event: MouseEvent): void {
+    this.mouseGradientService.onMouseMove(event);
   }
 
   closeAllPopups(): void {

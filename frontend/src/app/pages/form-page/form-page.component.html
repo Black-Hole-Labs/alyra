@@ -18,6 +18,11 @@
 	</div>
 
 	<div class="header">
+		<div class="menu">
+			<a routerLink="/" class="logo"></a>
+			<h3 (click)="togglePopup($event)">Blackhole PRO</h3>
+			<button (click)="togglePopup($event)" [ngClass]="{'open': isPopupVisible, 'closed': !isPopupVisible}"></button>
+		</div>
 		<div class="links">
 			<a href="https://x.com/blackhole_labs" target="_blank" class="link"
 				(mousemove)="onMouseMove($event, $event.currentTarget)"

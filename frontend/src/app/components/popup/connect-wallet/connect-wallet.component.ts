@@ -1,8 +1,10 @@
 import { Component, Output, EventEmitter, effect, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { PopupService } from '../../../services/popup.service';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
+import { MouseGradientService } from '../../../services/mouse-gradient.service';
 import { Wallets } from '../../../models/wallet-provider.interface';
 
 @Component({
@@ -13,6 +15,41 @@ import { Wallets } from '../../../models/wallet-provider.interface';
   styleUrls: [
 		'./connect-wallet.component.scss',
 		'./connect-wallet.component.adaptives.scss'
+  ],
+  animations: [
+    trigger('popupAnimation', [
+      transition(':enter', [
+        style({ 
+          opacity: 0, 
+          transform: 'scale(0.9)',
+          backgroundColor: 'rgba(var(--black), 0)',
+          backdropFilter: 'blur(0px)'
+        }),
+        animate('150ms ease-out', style({ 
+          opacity: 1, 
+          transform: 'scale(1)',
+          backgroundColor: 'rgba(var(--black), 0.3)',
+          backdropFilter: 'blur(35px)'
+        }))
+      ]),
+      transition(':leave', [
+        animate('150ms ease-in', style({ 
+          opacity: 0, 
+          transform: 'scale(0.9)',
+          backgroundColor: 'rgba(var(--black), 0)',
+          backdropFilter: 'blur(0px)'
+        }))
+      ])
+    ]),
+    trigger('modalAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.9)' }),
+        animate('150ms ease-out', style({ opacity: 1, transform: 'scale(1)' }))
+      ]),
+      transition(':leave', [
+        animate('150ms ease-in', style({ opacity: 0, transform: 'scale(0.9)' }))
+      ])
+    ])
   ]
 })
 export class ConnectWalletComponent implements OnInit {
@@ -29,7 +66,8 @@ export class ConnectWalletComponent implements OnInit {
 
   constructor(
     private popupService: PopupService,
-    private blockchainStateService: BlockchainStateService
+    private blockchainStateService: BlockchainStateService,
+    private mouseGradientService: MouseGradientService
   ) {
     this.connected = this.blockchainStateService.connected;
 
@@ -140,5 +178,9 @@ export class ConnectWalletComponent implements OnInit {
 
   toggleOtherWallets(): void {
     this.isOtherWalletsVisible = !this.isOtherWalletsVisible;
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    this.mouseGradientService.onMouseMove(event);
   }
 }

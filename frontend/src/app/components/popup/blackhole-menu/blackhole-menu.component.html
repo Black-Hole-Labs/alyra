@@ -1,4 +1,4 @@
-<div class="popup-container blackhole-menu">
+<div class="popup-container blackhole-menu" (mousemove)="onMenuMouseMove($event)">
 	<div class="upper">
 		<h6>Menu</h6>
 		<button (click)="closePopup()"></button>
@@ -13,25 +13,17 @@
 			<div class="social-img trade"></div>
 			<p class="menu-text">Trade</p>
 		</div>
-		<!-- <a routerLink="/bridge" (click)="closePopup()">
-			<div class="social-img bridge"></div>
-			Bridge
-		</a> -->
-		<!-- <a routerLink="/fun" (click)="closePopup()">
-			<div class="social-img fun"></div>
-			Fun
-		</a>
-		<a routerLink="/launchpad" (click)="closePopup()">
-			<div class="social-img launchpad"></div>
-			Launchpad
-		</a> -->
 		<div class="menu-item" routerLink="/rewards" (click)="closePopup()">
 			<div class="social-img quests"></div>
 			<p class="menu-text">Rewards</p>
 		</div>
+		<div class="menu-item" routerLink="/pro" (click)="closePopup()">
+			<div class="social-img pro"></div>
+			<p class="menu-text">Pro</p>
+		</div>
 	</div>
 	
-	<div class="devider devider2">
+	<div class="devider">
 		<p>Social</p>
 	</div>
 
@@ -47,7 +39,7 @@
 	</div>
 
 
-	<div class="devider devider2">
+	<div class="devider">
 		<p>Need help?</p>
 	</div>
 
