@@ -2,6 +2,20 @@
 	.header {
 		padding: 30px;
 	}
+	.menu {
+		gap: 6px;
+	}
+	h3 {
+		font-size: 18px;
+	}
+	a.logo {
+		width: 48px;
+		height: 48px;
+	}
+	button.closed, button.open {
+		width: 6px;
+		height: 3px;
+	}
 	.link {
 		gap: 12px;
 		padding: 8px 16px;
@@ -63,6 +77,20 @@
 	.header {
 		padding: 20px;
 	}
+	.menu {
+		gap: 6px;
+	}
+	h3 {
+		font-size: 18px;
+	}
+	a.logo {
+		width: 48px;
+		height: 48px;
+	}
+	button.closed, button.open {
+		width: 6px;
+		height: 3px;
+	}
 	.link{
 		gap: 12px;
 		padding: 8px 16px;
@@ -123,6 +151,20 @@
 @media screen and (min-width: 971px) and (max-width: 1170px) {
 	.header {
 		padding: 10px;
+	}
+	.menu {
+		gap: 4px;
+	}
+	h3 {
+		font-size: 13px;
+	}
+	a.logo {
+		width: 35px;
+		height: 35px;
+	}
+	button.closed, button.open {
+		width: 5px;
+		height: 3px;
 	}
 	.link{
 		gap: 10px;
@@ -190,6 +232,20 @@
 @media screen and (min-width: 480px) and (max-width: 970px) {
 	.header {
 		padding: 20px;
+	}
+	.menu {
+		gap: 6px;
+	}
+	h3 {
+		font-size: 18px;
+	}
+	a.logo {
+		width: 48px;
+		height: 48px;
+	}
+	button.closed, button.open {
+		width: 6px;
+		height: 3px;
 	}
 	.link {
 		gap: 10px;
@@ -267,6 +323,20 @@
 @media screen and (min-width: 360px) and (max-width: 479px) {
 	.header {
 		padding: 20px;
+	}
+	.menu {
+		gap: 6px;
+	}
+	h3 {
+		font-size: 18px;
+	}
+	a.logo {
+		width: 48px;
+		height: 48px;
+	}
+	button.closed, button.open {
+		width: 6px;
+		height: 3px;
 	}
 	.link {
 		gap: 10px;

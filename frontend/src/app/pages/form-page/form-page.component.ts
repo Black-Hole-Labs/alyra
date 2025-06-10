@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { firstValueFrom, Observable } from 'rxjs';
 import { ThemeService } from '../../services/theme.service';
+import { RouterModule } from '@angular/router';
+import { PopupService } from '../../services/popup.service';
 import { StarAnimationService, Star } from '../../services/star-animation.service';
 import { EmailService } from '../../services/email.service';
 
@@ -11,7 +13,8 @@ import { EmailService } from '../../services/email.service';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule
   ],
   templateUrl: './form-page.component.html',
   styleUrls: ['./form-page.component.scss',
@@ -22,6 +25,7 @@ export class FormPageComponent implements OnInit, OnDestroy {
 	stars$: Observable<Star[]>;
 	emailControl = new FormControl('', [Validators.required, this.customEmailValidator]);
 	isSubmitted = false;
+	isPopupVisible = false;
 	
 	// Variables for glitch animation
 	private possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -35,9 +39,14 @@ export class FormPageComponent implements OnInit, OnDestroy {
 	constructor(
 		public themeService: ThemeService,
 		private starAnimationService: StarAnimationService,
-		private emailService: EmailService
+		private emailService: EmailService,
+		private popupService: PopupService
 	) {
 		this.stars$ = this.starAnimationService.stars;
+		
+		this.popupService.activePopup$.subscribe((popupType) => {
+			this.isPopupVisible = popupType === 'blackholeMenu';
+		});
 	}
 
 	ngOnInit() {
@@ -261,4 +270,16 @@ export class FormPageComponent implements OnInit, OnDestroy {
 
 		return null;
 	}
+
+	togglePopup(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    const currentPopup = this.popupService.getCurrentPopup();
+    if (currentPopup === 'blackholeMenu') {
+      this.popupService.closeAllPopups();
+    } else {
+      this.popupService.openPopup('blackholeMenu');
+    }
+  }
 } 
