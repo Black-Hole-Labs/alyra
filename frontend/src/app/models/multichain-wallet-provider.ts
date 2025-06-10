@@ -38,18 +38,16 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
     }
 
     if (this.blockchainStateService.networkSell()!.chainType === 'EVM' && this.evmProvider) {
-      const { address } = await this.evmProvider.connect(this.evmProviderInstance, true);
+      const { address } = await this.evmProvider.connect(this.evmProviderInstance);
       this.address = address;
       this.currentNetwork = 'EVM';
     } else if (this.blockchainStateService.networkSell()!.chainType === 'SVM' && this.svmProvider) {
-      const { address } = await this.svmProvider.connect(this.svmProviderInstance, true);
+      const { address } = await this.svmProvider.connect(this.svmProviderInstance);
       this.address = address;
       this.currentNetwork = 'SVM';
     } else {
       throw new Error('No provider available');
     }
-
-    this.blockchainStateService.loadNetworks(ProviderType.MULTICHAIN);
 
     return { address: this.address };
   }
@@ -61,7 +59,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
 
       if(this.currentNetwork !== 'EVM')
       {
-        const { address } = await this.evmProvider.connect(this.evmProviderInstance, true);
+        const { address } = await this.evmProvider.connect(this.evmProviderInstance);
         this.currentNetwork = 'EVM';
         // console.log(`Connected to EVM address: `, address);
         this.address = address;
@@ -74,7 +72,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
       
       if(this.currentNetwork != 'SVM')
       {
-        const { address } = await this.svmProvider.connect(this.svmProviderInstance, true);
+        const { address } = await this.svmProvider.connect(this.svmProviderInstance);
         this.currentNetwork = 'SVM';
         // console.log(`Connected to SVM address: `, address);
         this.address = address;

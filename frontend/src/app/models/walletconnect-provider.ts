@@ -20,7 +20,7 @@ export class WalletConnectEvmProvider extends EvmWalletProvider {
       showQrModal: true,
     });
     await this.provider.enable();
-    return super.connect(this.provider, /* suppressModal: */ true);
+    return super.connect(this.provider, /* suppressModal: */);
   }
 
   override async switchNetwork(chainId: number): Promise<void> {

@@ -21,7 +21,7 @@ export class EvmWalletProvider implements WalletProvider {
     return !!this.provider;
   }
 
-  async connect(_provider?: any, isMultichain?: boolean): Promise<{ address: string }> {
+  async connect(_provider?: any): Promise<{ address: string }> {
     if (_provider) this.provider = _provider;
     if (!this.provider) throw new Error('Provider not installed');
     const accounts = await this.provider.request({ method: 'eth_requestAccounts' });
@@ -29,29 +29,36 @@ export class EvmWalletProvider implements WalletProvider {
     const ethersProvider = new ethers.BrowserProvider(this.provider);
     this.signer = await ethersProvider.getSigner();
 
-    if(!isMultichain){
-      this.blockchainStateService.loadNetworks(ProviderType.EVM);
-    }
-
     return { address: this.address };
   }
 
   async switchNetwork(selectedNetwork: any): Promise<void> {
+    console.log("a");
     try {
       await this.provider.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: selectedNetwork.idHex }],
       });
     } catch (error: any) {
+      console.log("error.code",error);
+      console.log("error.code",error.code);
       if (error.code === 4902) {
-        await this.addNetwork(selectedNetwork);
-
+        console.log("b");
+        try{
+          await this.addNetwork(selectedNetwork);
+        }
+        catch (error: any){
+          throw error;
+        }
+        
         await this.provider.request({
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: selectedNetwork.idHex }],
         });
-      } else {
-        throw error;
+      }else {
+        console.log("c");
+        this.blockchainStateService.disconnect();
+        throw new Error("unsupported_network");
       }
     }
   }

@@ -120,7 +120,6 @@ async function initializeApp(injector: Injector): Promise<void> {
     // stateService.networks.set(visibleNetworks);
 
     stateService.allNetworks.set(allNetworks);
-    stateService.networks.set(allNetworks);
     stateService.tryAutoConnect();
   } catch (error) {
     console.error('Error loading networks:', error);

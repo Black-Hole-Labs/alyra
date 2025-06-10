@@ -43,8 +43,7 @@ export class TokenChangePopupComponent {
   ethers = ethers;
 
   networks = computed(() => {
-    const all =
-      this.mode === 'sell' ? this.blockchainStateService.networks() : this.blockchainStateService.allNetworks();
+    const all = this.blockchainStateService.allNetworks();
 
     const selectedId = this.selectedNetworkId();
     const first10 = all.slice(0, 10);
@@ -256,6 +255,8 @@ export class TokenChangePopupComponent {
           this.selectedNetworkTokens.set(prevTokens);
           this.blockchainStateService.updateNetworkSell(prevNetworkId!);
           return;
+        } else if((error as any).message === 'unsupported_network'){
+          throw error;
         } else {
           this.selectedNetworkId.set(prevNetworkId);
           this.selectedNetworkTokens.set(prevTokens);

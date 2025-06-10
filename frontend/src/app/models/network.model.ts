@@ -90,6 +90,13 @@ export class SolflareProvider extends SvmWalletProvider {
   constructor(injector: Injector) {
     super((window as any).solflare, injector);
   }
+
+  override async connect(): Promise<{ address: string }> {
+    this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET); // Solana is default for Phantom
+    const connection = await super.connect();
+
+    return connection;
+  }
 }
 
 /***************MULTICHAIN***************/
