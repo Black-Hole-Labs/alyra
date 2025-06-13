@@ -9,6 +9,12 @@
   }
 }
 
+.upper{
+	display: flex;
+	flex-direction: column;
+	overflow: visible;
+}
+
 :host-context(.form-page) {
 	padding: 0;
 }
