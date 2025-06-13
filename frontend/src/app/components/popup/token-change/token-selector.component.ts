@@ -39,7 +39,7 @@ export class TokenChangePopupComponent {
 
   blockchainStateService = inject(BlockchainStateService);
   walletBalanceService = inject(WalletBalanceService);
-  explorerUrl = computed(() => this.blockchainStateService.networkSell()?.explorerUrl || 'https://etherscan.io/token/');
+  explorerUrl = computed(() => this.blockchainStateService.getNetworkById(this.displayedTokens()[0].chainId)?.explorerUrl || 'https://etherscan.io/token/');
   ethers = ethers;
 
   networks = computed(() => {
@@ -195,7 +195,7 @@ export class TokenChangePopupComponent {
   }
 
   isNativeToken(token: TokenDisplay): boolean {
-    const currentNetwork = this.blockchainStateService.networkSell();
+    const currentNetwork = this.blockchainStateService.getNetworkById(token.chainId);
     if (!currentNetwork) return false;
 
     if (currentNetwork.chainType === 'SVM') {
@@ -250,7 +250,7 @@ export class TokenChangePopupComponent {
       try {
         await provider.switchNetwork(network);
       } catch (error) {
-        if ((error as any).message === 'User rejected the request' || (error as any).code === 4001) {
+        if ((error as any).message.includes("User rejected the request") || (error as any).code === 4001) {
           this.selectedNetworkId.set(prevNetworkId);
           this.selectedNetworkTokens.set(prevTokens);
           this.blockchainStateService.updateNetworkSell(prevNetworkId!);

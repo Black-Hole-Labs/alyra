@@ -33,30 +33,27 @@ export class EvmWalletProvider implements WalletProvider {
   }
 
   async switchNetwork(selectedNetwork: any): Promise<void> {
-    console.log("a");
+    
     try {
       await this.provider.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: selectedNetwork.idHex }],
       });
     } catch (error: any) {
-      console.log("error.code",error);
-      console.log("error.code",error.code);
-      if (error.code === 4902) {
-        console.log("b");
-        try{
-          await this.addNetwork(selectedNetwork);
-        }
-        catch (error: any){
-          throw error;
-        }
-        
+      if (error.code === 4902 || error.message.includes("Unrecognized chain ID")) {
+        await this.addNetwork(selectedNetwork);
         await this.provider.request({
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: selectedNetwork.idHex }],
         });
-      }else {
-        console.log("c");
+      }
+      else if (error.code === 4001 
+               || error.message.includes("User rejected the request")
+               || error.message.includes("The Provider is not connected to the requested chain"))
+      {
+        throw error;
+      }
+      else {
         this.blockchainStateService.disconnect();
         throw new Error("unsupported_network");
       }
@@ -64,17 +61,27 @@ export class EvmWalletProvider implements WalletProvider {
   }
 
   private async addNetwork(selectedNetwork: any): Promise<void> {
-    await this.provider.request({
-      method: 'wallet_addEthereumChain',
-      params: [
-        {
-          chainId: selectedNetwork.idHex,
-          chainName: selectedNetwork.name,
-          rpcUrls: selectedNetwork.rpcUrls,
-          nativeCurrency: selectedNetwork.nativeCurrency,
-        },
-      ],
-    });
+    try{
+      await this.provider.request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: selectedNetwork.idHex,
+            chainName: selectedNetwork.name,
+            rpcUrls: selectedNetwork.rpcUrls,
+            nativeCurrency: selectedNetwork.nativeCurrency,
+          },
+        ],
+      });
+    }
+    catch(error: any)
+    {
+      if(error.code != -32603) // metamask problem. error after successfully adding new network to the wallet. ignore it
+      {
+        throw error;
+      }
+    }
+
   }
 
   // async getNetwork(): Promise<string> {
