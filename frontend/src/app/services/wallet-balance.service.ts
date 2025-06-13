@@ -9,16 +9,18 @@ import { NetworkId } from '../models/wallet-provider.interface';
   providedIn: 'root'
 })
 export class WalletBalanceService {
-  private solanaRpcUrl: string;
-  private solanaConnection: Connection;
+  private solanaRpcUrl: string | undefined;
+  private solanaConnection: Connection | undefined;
   private balanceCache = new Map<number, Map<string, string>>();
 
   nativeBalance = signal<number>(0);
 
   constructor(private blockchainStateService: BlockchainStateService) {
-    this.solanaRpcUrl = this.blockchainStateService.allNetworks().find((network: { id: number; }) => network.id === NetworkId.SOLANA_MAINNET)?.rpcUrls[0] 
-                        || "https://solana-rpc.publicnode.com";;
+    (async () => {
+    this.solanaRpcUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(NetworkId.SOLANA_MAINNET)
+                        || "https://solana-rpc.publicnode.com";
     this.solanaConnection = new Connection(this.solanaRpcUrl, 'confirmed');
+    })();
   }
 
   private async getEvmBalance(walletAddress: string, providerUrl: string, decimals: number,  tokenAddress?: string | null): Promise<string> {
@@ -46,7 +48,7 @@ export class WalletBalanceService {
     const publicKey = new PublicKey(walletAddress);
 
     if (tokenMintAddress) {
-      const tokenAccounts = await this.solanaConnection.getParsedTokenAccountsByOwner(publicKey, {
+      const tokenAccounts = await this.solanaConnection!.getParsedTokenAccountsByOwner(publicKey, {
         mint: new PublicKey(tokenMintAddress)
       });
 
@@ -56,7 +58,7 @@ export class WalletBalanceService {
         return '0';
       }
     } else {
-      const balance = await this.solanaConnection.getBalance(publicKey);
+      const balance = await this.solanaConnection!.getBalance(publicKey);
       // console.log(`Native SOL Balance: `, (balance / LAMPORTS_PER_SOL));
       return (balance / LAMPORTS_PER_SOL).toString();
     }
