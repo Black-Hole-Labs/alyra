@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router';
 import { Connection } from '@solana/web3.js';
 import { ethers } from 'ethers';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
-import { TokenService } from '../../services/token.service';
 import { NetworkId } from '../../models/wallet-provider.interface';
 
 @Component({
@@ -22,25 +21,23 @@ export class FooterComponent implements OnInit, OnDestroy {
   private isStopBlockFetching = false;
 
   constructor(
-    private tokenService: TokenService,
     private blockchainStateService: BlockchainStateService,
   ) {
-    const rpcUrlEvm = this.blockchainStateService.getNetworkById(NetworkId.ETHEREUM_MAINNET)?.rpcUrls[0];
-    const rpcUrlSol = this.blockchainStateService.getNetworkById(NetworkId.SOLANA_MAINNET)?.rpcUrls[0];
-    this.providerEvm.set(new ethers.JsonRpcProvider(rpcUrlEvm));
-    this.providerSol.set(new Connection(rpcUrlSol!));
-
     effect(
-      () => {
-        const token = this.tokenService.selectedBuyToken();
+      async () => {
+        const chainId = this.blockchainStateService.networkSell()?.id;
         this.isStopBlockFetching = false;
-        if (!token) return;
+        if (!chainId) return;
 
-        const network = this.blockchainStateService.getNetworkById(token.chainId);
-        if (network?.rpcUrls[0] && token.chainId !== NetworkId.SOLANA_MAINNET) {
-          this.providerEvm.set(new ethers.JsonRpcProvider(network.rpcUrls[0]));
+        if (chainId === NetworkId.SOLANA_MAINNET)
+        {
           this.updateBlockNumber();
-        } else {
+        }
+
+        const rpc = await this.blockchainStateService.getWorkingRpcUrlForNetwork(chainId);
+
+        if (rpc) {
+          this.providerEvm.set(new ethers.JsonRpcProvider(rpc));
           this.updateBlockNumber();
         }
       },
@@ -48,7 +45,12 @@ export class FooterComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    const rpcUrlEvm = await this.blockchainStateService.getWorkingRpcUrlForNetwork(NetworkId.ETHEREUM_MAINNET);
+    const rpcUrlSol = await this.blockchainStateService.getWorkingRpcUrlForNetwork(NetworkId.SOLANA_MAINNET);
+    this.providerEvm.set(new ethers.JsonRpcProvider(rpcUrlEvm));
+    this.providerSol.set(new Connection(rpcUrlSol));
+
     this.updateBlockNumber();
 
     this.updateInterval = setInterval(() => {
@@ -66,11 +68,12 @@ export class FooterComponent implements OnInit, OnDestroy {
     if (this.isStopBlockFetching) return;
 
     try {
-      const token = this.tokenService.selectedBuyToken();
-      if (!token) return;
+      const chainId = this.blockchainStateService.networkSell()?.id;
+      if (!chainId) return;
 
-      if (token.chainId === NetworkId.SOLANA_MAINNET) {
+      if (chainId === NetworkId.SOLANA_MAINNET) {
         const slot = await this.providerSol()?.getSlot();
+        
         this.block.set(slot ?? 0);
       } else {
         const blockNumber = await this.providerEvm()?.getBlockNumber();

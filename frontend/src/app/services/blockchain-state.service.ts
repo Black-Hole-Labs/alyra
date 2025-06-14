@@ -111,6 +111,7 @@ export class BlockchainStateService {
     const networkId = sessionStorage.getItem('networkId');
     if (!providerId) {
       this.updateNetworkSell(NetworkId.ETHEREUM_MAINNET);
+      this.updateNetworkBuy(NetworkId.ETHEREUM_MAINNET);
       return Promise.resolve();
     }
 
@@ -123,6 +124,7 @@ export class BlockchainStateService {
         this.updateWalletAddress(address);
         this.setCurrentProvider(providerId);
         this.updateNetworkSell(Number(networkId!));
+        this.updateNetworkBuy(Number(networkId!));
       })
       .catch(console.error);
   }
@@ -242,6 +244,11 @@ export class BlockchainStateService {
     if (foundNetwork) {
       this.updateNetworkBackgroundIcons(foundNetwork);
     }
+  }
+
+  updateNetworkBuy(chainId: number): void {
+    const foundNetwork = this.allNetworks().find((n) => n.id === chainId);
+    this.networkBuy.set(foundNetwork ?? undefined);
   }
 
   getCurrentNetworkSell(): Network | undefined {
