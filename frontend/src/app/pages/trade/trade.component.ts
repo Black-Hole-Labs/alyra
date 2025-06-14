@@ -183,13 +183,13 @@ export class TradeComponent implements AfterViewChecked {
 
         let newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
 
-        if (this.blockchainStateService.networkBuy() !== undefined) {
-          if (newSelectedBuyToken?.chainId !== this.blockchainStateService.networkBuy()?.id) {
-            newSelectedBuyToken = this.blockchainStateService.getTokensForNetwork(
-              this.blockchainStateService.networkBuy()!.id,
-            )[0];
-          }
-        }
+        // if (network !== undefined) {
+        //   if (newSelectedBuyToken?.chainId !== this.tokenService.selectedSellToken()!.chainId) {
+        //     newSelectedBuyToken = this.blockchainStateService.getTokensForNetwork(
+        //       network!.id,
+        //     )[0];
+        //   }
+        // }
         
         this.tokenService.setSelectedBuyToken(newSelectedBuyToken);
         //this.updateNetworksBasedOnTokens();

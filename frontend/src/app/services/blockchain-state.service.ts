@@ -118,13 +118,14 @@ export class BlockchainStateService {
     const provider = this.getProvider(providerId);
     if (!provider) return Promise.resolve();
 
+    this.updateNetworkSell(Number(networkId!));
+    this.updateNetworkBuy(Number(networkId!));
+
     return provider
       .connect()
       .then(({ address }: { address: string }) => {
         this.updateWalletAddress(address);
         this.setCurrentProvider(providerId);
-        this.updateNetworkSell(Number(networkId!));
-        this.updateNetworkBuy(Number(networkId!));
       })
       .catch(console.error);
   }

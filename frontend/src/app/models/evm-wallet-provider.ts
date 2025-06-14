@@ -1,5 +1,5 @@
 import { ethers, JsonRpcSigner } from 'ethers';
-import { ProviderType, TransactionRequestEVM, WalletProvider } from './wallet-provider.interface';
+import { NetworkId, ProviderType, TransactionRequestEVM, WalletProvider } from './wallet-provider.interface';
 import { Injector } from '@angular/core';
 import { BlockchainStateService } from '../services/blockchain-state.service';
 
@@ -22,6 +22,11 @@ export class EvmWalletProvider implements WalletProvider {
   }
 
   async connect(_provider?: any): Promise<{ address: string }> {
+    if(this.blockchainStateService.networkSell() !== undefined && this.blockchainStateService.networkSell()?.chainType !== "EVM")
+    {
+      this.blockchainStateService.updateNetworkSell(NetworkId.ETHEREUM_MAINNET);
+    }
+    
     if (_provider) this.provider = _provider;
     if (!this.provider) throw new Error('Provider not installed');
     const accounts = await this.provider.request({ method: 'eth_requestAccounts' });
@@ -29,6 +34,7 @@ export class EvmWalletProvider implements WalletProvider {
     const ethersProvider = new ethers.BrowserProvider(this.provider);
     this.signer = await ethersProvider.getSigner();
 
+    this.switchNetwork(this.blockchainStateService.networkSell());
     return { address: this.address };
   }
 
@@ -76,6 +82,7 @@ export class EvmWalletProvider implements WalletProvider {
     }
     catch(error: any)
     {
+      console.log("error",error);
       if(error.code != -32603) // metamask problem. error after successfully adding new network to the wallet. ignore it
       {
         throw error;

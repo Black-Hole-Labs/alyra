@@ -19,6 +19,11 @@ export class SvmWalletProvider implements WalletProvider {
   }
 
   async connect(_provider?: any): Promise<{ address: string }>  {
+    if(this.blockchainStateService.networkSell() !== undefined && this.blockchainStateService.networkSell()?.chainType !== "SVM")
+    {
+      this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET);
+    }
+
     if (_provider) this.provider = _provider;
     if (!this.provider) throw new Error('Solana not installed');
     if (!this.provider.isConnected) {

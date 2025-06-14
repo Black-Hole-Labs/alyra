@@ -70,13 +70,6 @@ export class MetaMaskProvider extends EvmWalletProvider {
   constructor(walletManager: WalletProviderManager, injector: Injector) {
     super(walletManager.getMetaMaskProvider(), injector);
   }
-
-  override async connect(): Promise<{ address: string }> {
-    this.blockchainStateService.updateNetworkSell(NetworkId.ETHEREUM_MAINNET);
-    const connection = await super.connect();
-
-    return connection;
-  }
 }
 
 export class RabbyWalletProvider extends EvmWalletProvider {
@@ -90,13 +83,6 @@ export class SolflareProvider extends SvmWalletProvider {
   constructor(injector: Injector) {
     super((window as any).solflare, injector);
   }
-
-  override async connect(): Promise<{ address: string }> {
-    this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET); // Solana is default for Phantom
-    const connection = await super.connect();
-
-    return connection;
-  }
 }
 
 /***************MULTICHAIN***************/
@@ -108,8 +94,7 @@ export class BackpackProvider extends MultiChainWalletProvider {
   }
 
   override async connect(): Promise<{ address: string }> {
-    this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET); // Solana is default for BackPack
-    const connection = await super.connect();
+    const connection = await super.connect(NetworkId.SOLANA_MAINNET);
 
     return connection;
   }
@@ -123,8 +108,7 @@ export class PhantomProvider extends MultiChainWalletProvider {
   }
 
   override async connect(): Promise<{ address: string }> {
-    this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET); // Solana is default for Phantom
-    const connection = await super.connect();
+    const connection = await super.connect(NetworkId.SOLANA_MAINNET);
 
     return connection;
   }

@@ -1,7 +1,7 @@
 import { BlockchainStateService } from '../services/blockchain-state.service';
 import { EvmWalletProvider } from './evm-wallet-provider';
 import { SvmWalletProvider } from './svm-wallet-provider';
-import { ProviderType, TransactionRequestEVM, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
+import { NetworkId, ProviderType, TransactionRequestEVM, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
 import { Injector } from '@angular/core';
 export abstract class MultiChainWalletProvider implements WalletProvider {
   protected evmProviderInstance: any;
@@ -23,7 +23,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
     return !!this.evmProviderInstance || !!this.svmProviderInstance;
   }
 
-  async connect(): Promise<{ address: string }> {
+  async connect(netowrkId: NetworkId = NetworkId.ETHEREUM_MAINNET): Promise<{ address: string }> {
     if (this.evmProviderInstance) {
       this.evmProvider = new EvmWalletProvider(this.evmProviderInstance, this.injector);
     }
@@ -37,11 +37,11 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
       console.error("Multichain::connect(): SVM not found!")
     }
 
-    if (this.blockchainStateService.networkSell()!.chainType === 'EVM' && this.evmProvider) {
+    if (netowrkId === NetworkId.ETHEREUM_MAINNET && this.evmProvider) {
       const { address } = await this.evmProvider.connect(this.evmProviderInstance);
       this.address = address;
       this.currentNetwork = 'EVM';
-    } else if (this.blockchainStateService.networkSell()!.chainType === 'SVM' && this.svmProvider) {
+    } else if (netowrkId === NetworkId.SOLANA_MAINNET && this.svmProvider) {
       const { address } = await this.svmProvider.connect(this.svmProviderInstance);
       this.address = address;
       this.currentNetwork = 'SVM';
