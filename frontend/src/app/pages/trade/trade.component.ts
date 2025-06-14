@@ -165,10 +165,10 @@ export class TradeComponent implements AfterViewChecked {
         const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
         
         this.tokenService.setSelectedSellToken(newSelectedToken);
-        this.updateNetworksBasedOnTokens();
+        //this.updateNetworksBasedOnTokens();
 
-        if (this.tokenService.selectedSellToken() !== undefined && this.blockchainStateService.connected()) {
-          const balanceStr = await this.walletBalanceService.getBalanceForToken(this.tokenService.selectedSellToken()!)
+        if (newSelectedToken !== undefined && this.blockchainStateService.connected()) {
+          const balanceStr = await this.walletBalanceService.getBalanceForToken(newSelectedToken);
           this.balance.set(Number(parseFloat(balanceStr)));
         }
       },
@@ -192,10 +192,10 @@ export class TradeComponent implements AfterViewChecked {
         }
         
         this.tokenService.setSelectedBuyToken(newSelectedBuyToken);
-        this.updateNetworksBasedOnTokens();
+        //this.updateNetworksBasedOnTokens();
 
-        if (this.tokenService.selectedBuyToken() !== undefined && this.blockchainStateService.connected()) {
-          const balanceStr = await this.walletBalanceService.getBalanceForToken(this.tokenService.selectedBuyToken()!)
+        if (newSelectedBuyToken !== undefined && this.blockchainStateService.connected()) {
+          const balanceStr = await this.walletBalanceService.getBalanceForToken(newSelectedBuyToken);
           this.balanceBuy.set(Number(parseFloat(balanceStr)));
         }
       },
@@ -1169,31 +1169,32 @@ export class TradeComponent implements AfterViewChecked {
     }
   }
 
-  private updateNetworks(): void {
-    const allNetworks = this.blockchainStateService.allNetworks();
+  // private updateNetworks(): void {
+  //   console.log("updateNetworks");
+  //   const allNetworks = this.blockchainStateService.allNetworks();
 
-    if (this.blockchainStateService.networkSell() === undefined) {
-      const sellToken = this.tokenService.selectedSellToken();
-      if (sellToken) {
-        const tokenNetwork = allNetworks.find((n) => n.id === sellToken.chainId);
-        const networkToSet = tokenNetwork || this.blockchainStateService.networkSell() || undefined;
-        if (networkToSet && networkToSet.id !== this.blockchainStateService.networkSell()?.id) {
-          this.blockchainStateService.setNetworkSell(networkToSet);
-        }
-      }
-    }
+  //   if (this.blockchainStateService.networkSell() === undefined) {
+  //     const sellToken = this.tokenService.selectedSellToken();
+  //     if (sellToken) {
+  //       const tokenNetwork = allNetworks.find((n) => n.id === sellToken.chainId);
+  //       const networkToSet = tokenNetwork || this.blockchainStateService.networkSell() || undefined;
+  //       if (networkToSet && networkToSet.id !== this.blockchainStateService.networkSell()?.id) {
+  //         this.blockchainStateService.setNetworkSell(networkToSet);
+  //       }
+  //     }
+  //   }
 
-    if (this.blockchainStateService.networkBuy() === undefined) {
-      const buyToken = this.tokenService.selectedBuyToken();
-      if (buyToken) {
-        const tokenNetwork = allNetworks.find((n) => n.id === buyToken.chainId);
-        const networkToSet = tokenNetwork || this.blockchainStateService.networkSell() || undefined;
-        if (networkToSet && networkToSet.id !== this.blockchainStateService.networkBuy()?.id) {
-          this.blockchainStateService.setNetworkBuy(networkToSet);
-        }
-      }
-    }
-  }
+  //   if (this.blockchainStateService.networkBuy() === undefined) {
+  //     const buyToken = this.tokenService.selectedBuyToken();
+  //     if (buyToken) {
+  //       const tokenNetwork = allNetworks.find((n) => n.id === buyToken.chainId);
+  //       const networkToSet = tokenNetwork || this.blockchainStateService.networkSell() || undefined;
+  //       if (networkToSet && networkToSet.id !== this.blockchainStateService.networkBuy()?.id) {
+  //         this.blockchainStateService.setNetworkBuy(networkToSet);
+  //       }
+  //     }
+  //   }
+  // }
 
   // private startNetworkUpdateInterval(): void {
   //   this.networkUpdateInterval = setInterval(() => {
@@ -1208,9 +1209,9 @@ export class TradeComponent implements AfterViewChecked {
   //   }
   // }
 
-  private updateNetworksBasedOnTokens(): void {
-    this.updateNetworks();
-  }
+  // private updateNetworksBasedOnTokens(): void {
+  //   this.updateNetworks();
+  // }
 
   // loadInitialPriceRate() {
   //   const fromChain = this.blockchainStateService.networkSell()!.id.toString();
