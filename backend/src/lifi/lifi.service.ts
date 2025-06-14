@@ -46,7 +46,7 @@ export class LifiService {
         fromAmount,
         fromAddress,
         integrator: 'blackhole',
-        fee: 0.00075,
+        fee: 0.0015,
       };
   
       if (toAddress) {
