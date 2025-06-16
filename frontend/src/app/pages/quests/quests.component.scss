@@ -99,7 +99,7 @@ h1{
 
 .trading-rewards{
 	height: auto;
-	width: calc(50vw - 100px);
+	width: calc(50vw - 200px);
 	display: flex;
 	flex-direction: column;
 	padding: 30px 35px;
@@ -162,7 +162,7 @@ hr{
 	padding-left: 40px;
 	background-color: rgba(var(--dark-bg), 0.5);
 	border-radius: 14px;
-	width: calc(50vw - 100px);
+	width: calc(50vw - 200px);
 	height: 120px;
 	display: flex;
 	flex-direction: column;
@@ -203,7 +203,7 @@ hr{
 }
 
 .affiliate-rewards{
-	width: calc(50vw - 100px);
+	width: calc(50vw - 200px);
 	min-height: 520px;
 	height: auto;
 	display: flex;
