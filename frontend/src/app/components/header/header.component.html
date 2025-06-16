@@ -1,7 +1,9 @@
 <header>
 
 	<div class="left">
-		<div class="menu">
+		<div class="menu" 
+			(mouseenter)="onMenuMouseEnter()" 
+			(mouseleave)="onMenuMouseLeave()">
 			<a routerLink="/" class="logo"></a>
 			<h3 (click)="togglePopup($event)">Blackhole</h3>
 			<button (click)="togglePopup($event)" [ngClass]="{'open': isPopupVisible, 'closed': !isPopupVisible}"></button>

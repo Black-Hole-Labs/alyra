@@ -19,7 +19,9 @@
   @if(activePopup === 'blackholeMenu')
   {
     <app-blackhole-menu
-      (close)="popupService.closeAllPopups()">
+      (close)="popupService.closeAllPopups()"
+      (mouseEnter)="onPopupMouseEnter()"
+      (mouseLeave)="onPopupMouseLeave()">
     </app-blackhole-menu>
   }
 

@@ -16,6 +16,8 @@ import { MouseGradientService } from '../../../services/mouse-gradient.service';
 })
 export class BlackholeMenuComponent {
   @Output() close = new EventEmitter<void>();
+  @Output() mouseEnter = new EventEmitter<void>();
+  @Output() mouseLeave = new EventEmitter<void>();
 
   constructor(
     private popupService: PopupService,
@@ -29,5 +31,13 @@ export class BlackholeMenuComponent {
 
   onMenuMouseMove(event: MouseEvent): void {
     this.mouseGradientService.onMouseMove(event);
+  }
+
+  onPopupMouseEnter(): void {
+    this.mouseEnter.emit();
+  }
+
+  onPopupMouseLeave(): void {
+    this.mouseLeave.emit();
   }
 }
