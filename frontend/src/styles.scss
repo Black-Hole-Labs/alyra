@@ -302,8 +302,9 @@ app-token-change-buy .token-change,
 app-settings,
 app-settings-bridge {
   position: absolute;
-  top: -30px;
-  left: 200px;
+  top: 155px;
+  left: calc(50% + 320px);
+	z-index: 10;
 }
 
 .wallet-popup {
@@ -343,10 +344,9 @@ app-settings-bridge {
 
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
 
-	app-settings-bridge,
 	app-settings {
-		top: -20px;
-		left: 150px;
+		top: 108px;
+		left: calc(50% + 240px);
 	}
 
 	.wallet-popup {
@@ -378,10 +378,9 @@ app-settings-bridge {
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
 
-	app-settings-bridge,
 	app-settings {
-		top: -20px;
-		left: 150px;
+		top: 88px;
+		left: calc(50% + 240px);
 	}
 
 	.wallet-popup {
@@ -413,10 +412,9 @@ app-settings-bridge {
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
 
-	app-settings-bridge,
 	app-settings {
-		top: -15px;
-		left: 105px;
+		top: 75px;
+		left: calc(50% + 175px);
 	}
 
 	.wallet-popup {
@@ -448,13 +446,8 @@ app-settings-bridge {
 }
 @media screen and (min-width: 768px) and (max-width: 970px) {
   app-settings {
-    top: -20px;
-		left: -135px;
-		z-index: 1;
-	}
-  app-settings-bridge {
-    top: -23px;
-		left: -190px;
+    top: 200px;
+		left: calc(50% - 130px);
 		z-index: 1;
 	}
 
@@ -487,13 +480,8 @@ app-settings-bridge {
 }
 @media screen and (min-width: 480px) and (max-width: 767px) {
   app-settings {
-    top: -20px;
-    left: -135px;
-    z-index: 1;
-  }
-  app-settings-bridge {
-    top: -23px;
-    left: -65px;
+    top: 230px;
+    left: calc(50% - 130px);
     z-index: 1;
   }
 
@@ -526,14 +514,10 @@ app-settings-bridge {
 }
 
 @media screen and (min-width: 360px) and (max-width: 479px) {
-  app-settings-bridge,
   app-settings {
     position: fixed;
-    top: 0px;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-    width: max-content;
+    top: 108px;
+    left: 5%;
     z-index: 100;
   }
 

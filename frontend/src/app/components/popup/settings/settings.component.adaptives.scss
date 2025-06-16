@@ -1,9 +1,34 @@
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
+
+	@import '../../../styles/mouse-gradient-button';
 	.settings-popup {
-		width: 270px;
-		height: 186px;
-		border-radius: 22px;
-		padding: 20px;
+		@include mouse-gradient-button(
+			$padding: 20px,
+			$height: auto,
+			$border-radius: 22px,
+			$background: rgba(var(--dark-bg), 0.3),
+			$backdrop-blur: 25px,
+			$include-responsive: false
+		);
+
+		box-sizing: border-box;
+		z-index: 10;
+
+		position: fixed;
+		
+		flex-direction: column;
+		align-items: stretch;
+		
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.03) 0%, 
+				rgba(255, 255, 255, 0.01) 50%, 
+				transparent 100%
+			);
+		}
 	}
 	
 	.settings-header h3 {
@@ -42,8 +67,8 @@
 	}
 	
 	.custom {
-		width: 53px;
-		height: 24px;
+		width: 54px;
+		height: 26px;
 		border: 1px solid var(--elem-nonactive);
 		border-radius: 12px;
 	}
@@ -74,11 +99,35 @@
 	}
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
+	@import '../../../styles/mouse-gradient-button';
 	.settings-popup {
-		width: 270px;
-		height: 186px;
-		border-radius: 22px;
-		padding: 20px;
+		@include mouse-gradient-button(
+			$padding: 20px,
+			$height: auto,
+			$border-radius: 22px,
+			$background: rgba(var(--dark-bg), 0.3),
+			$backdrop-blur: 25px,
+			$include-responsive: false
+		);
+
+		box-sizing: border-box;
+		z-index: 10;
+
+		position: fixed;
+		
+		flex-direction: column;
+		align-items: stretch;
+		
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.03) 0%, 
+				rgba(255, 255, 255, 0.01) 50%, 
+				transparent 100%
+			);
+		}
 	}
 	
 	.settings-header h3 {
@@ -149,11 +198,36 @@
 	}
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
+
+	@import '../../../styles/mouse-gradient-button';
 	.settings-popup {
-		width: 200px;
-		height: 135px;
-		border-radius: 16px;
-		padding: 15px;
+		@include mouse-gradient-button(
+			$padding: 15px,
+			$height: auto,
+			$border-radius: 16px,
+			$background: rgba(var(--dark-bg), 0.3),
+			$backdrop-blur: 25px,
+			$include-responsive: false
+		);
+
+		box-sizing: border-box;
+		z-index: 10;
+
+		position: fixed;
+		
+		flex-direction: column;
+		align-items: stretch;
+		
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.03) 0%, 
+				rgba(255, 255, 255, 0.01) 50%, 
+				transparent 100%
+			);
+		}
 	}
 	
 	.settings-header h3 {
@@ -223,12 +297,30 @@
 	}
 }
 @media screen and (min-width: 480px) and (max-width: 970px) {
+	@import '../../../styles/mouse-gradient-button';
 	.settings-popup {
-		width: 270px;
-		height: 186px;
-		border-radius: 22px;
-		padding: 20px;
-		background-color: rgba(var(--dark-bg), 1);
+		@include mouse-gradient-button(
+			$padding: 20px,
+			$height: auto,
+			$border-radius: 22px,
+			$background: rgba(var(--dark-bg), 1),
+			$backdrop-blur: 25px,
+			$include-responsive: false
+		);
+		
+		box-sizing: border-box;
+		z-index: 10;
+
+		position: fixed;
+		
+		flex-direction: column;
+		align-items: stretch;
+		
+		&:hover {
+			transform: none;
+			
+			background: rgba(var(--dark-bg), 1);
+		}
 	}
 	
 	.settings-header h3 {
@@ -300,15 +392,35 @@
 }
 
 @media screen and (min-width: 360px) and (max-width: 479px) {
+
+	@import '../../../styles/mouse-gradient-button';
 	.settings-popup {
+		@include mouse-gradient-button(
+			$padding: 15px,
+			$height: auto,
+			$border-radius: 16px,
+			$background: rgba(var(--dark-bg), 1),
+			$backdrop-blur: 25px,
+			$include-responsive: false
+		);
+		
 		width: 90vw;	
-		height: 70vh;
-		border-radius: 16px;
-		padding: 15px;
-		background-color: rgba(var(--dark-bg), 0.4);
-		backdrop-filter: blur(35px);
-		-webkit-backdrop-filter: blur(19px);
+		box-sizing: border-box;
+		z-index: 10;
+
+		position: fixed;
+		
+		flex-direction: column;
+		align-items: stretch;
+		
+		&:hover {
+			transform: none;
+			
+			background: rgba(var(--dark-bg), 1);
+		}
 	}
+
+	
 	
 	.settings-header h3 {
 		font-size: 18px;
@@ -320,7 +432,6 @@
 	}
 	
 	.limit {
-		margin-top: 48px;
 		margin-left: 50%;
 		transform: translate(-50%, 0%);
 		gap: 7px;
@@ -376,13 +487,10 @@
 	}
 	
 	.main {
-		width: 92%;
+		width: 100%;
 		height: 45px;
 		border-radius: 12px;
 		font-size: 12px;
-		position: absolute;
 		bottom: 15px;
-		left: 50%;
-		transform: translate(-50%, 0%);
 	}
 }
