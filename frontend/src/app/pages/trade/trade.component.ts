@@ -30,6 +30,7 @@ import { FailedNotificationComponent } from '../../components/notification/faile
 import { PendingNotificationComponent } from '../../components/notification/pending-notification/pending-notification.component';
 import { PublicKey } from '@solana/web3.js';
 import { TokenService } from '../../services/token.service';
+import { MouseGradientService } from '../../services/mouse-gradient.service';
 
 export interface Token {
   symbol: string;
@@ -132,6 +133,7 @@ export class TradeComponent implements AfterViewChecked {
     private transactionsService: TransactionsService,
     public popupService: PopupService,
     public tokenService: TokenService,
+    private mouseGradientService: MouseGradientService,
   ) {
     this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
     this.initializeNetworks();
@@ -1291,5 +1293,9 @@ export class TradeComponent implements AfterViewChecked {
   //       }
   //   });
   // }
+
+  onTradeMouseMove(event: MouseEvent): void {
+    this.mouseGradientService.onMouseMove(event);
+  }
 
 }

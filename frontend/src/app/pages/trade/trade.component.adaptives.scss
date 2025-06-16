@@ -1,8 +1,25 @@
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
+	@import '../../styles/mouse-gradient-button';
 	.trade-window {
+		@include mouse-gradient-button(
+			$padding: 20px,
+			$border-radius: 21px,
+			$height: auto,
+			$include-responsive: false
+		);
+		align-items: stretch;
 		width: 450px;
-		border-radius: 21px;
-		padding: 20px;
+
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.001) 0%, 
+				rgba(255, 255, 255, 0.0005) 50%, 
+				transparent 100%
+			);
+		}
 	}
 
 	h3{
@@ -164,10 +181,27 @@
 	}
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
+	@import '../../styles/mouse-gradient-button';
 	.trade-window {
+		@include mouse-gradient-button(
+			$padding: 20px,
+			$border-radius: 21px,
+			$height: auto,
+			$include-responsive: false
+		);
+		align-items: stretch;
 		width: 450px;
-		border-radius: 21px;
-		padding: 20px;
+
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.001) 0%, 
+				rgba(255, 255, 255, 0.0005) 50%, 
+				transparent 100%
+			);
+		}
 	}
 
 	h3{
@@ -329,10 +363,28 @@
 	}
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
+
+	@import '../../styles/mouse-gradient-button';
 	.trade-window {
+		@include mouse-gradient-button(
+			$padding: 15px,
+			$border-radius: 16px,
+			$height: auto,
+			$include-responsive: false
+		);
+		align-items: stretch;
 		width: 330px;
-		border-radius: 16px;
-		padding: 15px;
+
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.001) 0%, 
+				rgba(255, 255, 255, 0.0005) 50%, 
+				transparent 100%
+			);
+		}
 	}
 
 	h3{
@@ -494,10 +546,27 @@
 	}
 }
 @media screen and (min-width: 480px) and (max-width: 970px) {
+	@import '../../styles/mouse-gradient-button';
 	.trade-window {
+		@include mouse-gradient-button(
+			$padding: 20px,
+			$border-radius: 21px,
+			$height: auto,
+			$include-responsive: false
+		);
+		align-items: stretch;
 		width: 450px;
-		border-radius: 21px;
-		padding: 20px;
+
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.001) 0%, 
+				rgba(255, 255, 255, 0.0005) 50%, 
+				transparent 100%
+			);
+		}
 	}
 
 	h3{
@@ -660,13 +729,32 @@
 }
 
 @media screen and (min-width: 360px) and (max-width: 479px) {
+
+	@import '../../styles/mouse-gradient-button';
 	.trade-window {
+		@include mouse-gradient-button(
+			$padding: 15px,
+			$border-radius: 16px,
+			$height: auto,
+			$include-responsive: false
+		);
+
 		position: fixed;
 		left: 50%;
 		transform: translate(-50%, 0%);
+		align-items: stretch;
 		width: 90%;
-		border-radius: 16px;
-		padding: 15px;
+
+		&:hover {
+			transform: translate(-50%, 0%);
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.00000001) 0%, 
+				rgba(255, 255, 255, 0.00000005) 50%, 
+				transparent 1%
+			);
+		}
 	}
 
 	h3{
