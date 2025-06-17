@@ -1,4 +1,7 @@
-<div class="popup-container blackhole-menu" (mousemove)="onMenuMouseMove($event)">
+<div class="popup-container blackhole-menu" 
+	(mousemove)="onMenuMouseMove($event)"
+	(mouseenter)="onPopupMouseEnter()"
+	(mouseleave)="onPopupMouseLeave()">
 	<div class="upper">
 		<h6>Menu</h6>
 		<button (click)="closePopup()"></button>

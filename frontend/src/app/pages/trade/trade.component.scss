@@ -1,9 +1,29 @@
+@import '../../styles/mouse-gradient-button';
 .trade-window {
+	@include mouse-gradient-button(
+    $padding: 30px,
+		$height: auto,
+    $border-radius: 28px,
+    $background: rgba(var(--dark-bg), 0.3),
+    $backdrop-blur: 25px,
+    $include-responsive: false
+  );
+
 	width: 600px;
-	background-color: rgba(var(--dark-bg), 0.3);
-	border-radius: 28px;
-	box-sizing: border-box;
-	padding: 30px;
+	flex-direction: column;
+	align-items: stretch;
+  box-sizing: border-box;
+  
+  &:hover {
+    transform: none;
+    
+    background: radial-gradient(
+      circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+      rgba(255, 255, 255, 0.001) 0%, 
+      rgba(255, 255, 255, 0.0005) 50%, 
+      transparent 100%
+    );
+  }
 }
 .header{
 	display: flex;
@@ -126,7 +146,7 @@ h3{
   justify-content: space-between;
   width: 540px;
   height: 157px;
-  background-color: var(--dark-select);
+  background-color: rgba(var(--dark-bg), 0.5);
   border-radius: 16px;
   padding: 15px 25px 10px 25px;
   box-sizing: border-box;
@@ -300,12 +320,13 @@ p {
   margin-top: 30px;
 	width: 540px;
   height: 62px;
-  background-color: white;
+  background-color: rgba(var(--white), 0.1);
   border-radius: 16px;
+	border: 1px solid rgba(var(--white), 0.1);
   font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 18px;
-  color: black;
+  color: rgba(var(--white), 1);
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 }
@@ -412,7 +433,7 @@ p {
   width: 100%;
 	height: 63px;
   max-height: 0;
-  background-color: var(--dark-select);
+  background-color: rgba(var(--dark-bg), 0.5);
   border-radius: 14px;
   padding: 0 20px;
   box-sizing: border-box;
@@ -437,7 +458,7 @@ p {
   font-weight: 400;
   font-size: 18px;
   color: white;
-  background-color: var(--dark-select);
+  background-color: transparent;
   outline: none;
   border: none;
   transform: none;
@@ -547,7 +568,3 @@ p {
 //   font-size: 15px;
 //   color: var(--elem-nonactive);
 // }
-
-.settings-popup {
-	z-index: 10;
-}

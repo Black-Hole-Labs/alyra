@@ -82,4 +82,12 @@ export class AppContentComponent {
   closeEcosystemPopup(): void {
     this.popupService.closePopup('ecosystemChange');
   }
+
+  onPopupMouseEnter(): void {
+    this.popupService.onPopupMouseEnter();
+  }
+
+  onPopupMouseLeave(): void {
+    this.popupService.onPopupMouseLeave();
+  }
 }

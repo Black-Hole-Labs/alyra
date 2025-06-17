@@ -18,7 +18,12 @@ export class SvmWalletProvider implements WalletProvider {
     return !!this.provider;
   }
 
-  async connect(_provider?: any, isMultichain?: boolean): Promise<{ address: string }>  {
+  async connect(_provider?: any): Promise<{ address: string }>  {
+    if(this.blockchainStateService.networkSell() !== undefined && this.blockchainStateService.networkSell()?.chainType !== "SVM")
+    {
+      this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET);
+    }
+
     if (_provider) this.provider = _provider;
     if (!this.provider) throw new Error('Solana not installed');
     if (!this.provider.isConnected) {
@@ -28,10 +33,6 @@ export class SvmWalletProvider implements WalletProvider {
     if (!account) throw new Error('Failed to retrieve Solana account');
     this.address = account;
 
-    if(!isMultichain){
-      this.blockchainStateService.loadNetworks(ProviderType.SVM);
-    }
-
     return { address: this.address };
   }
 
@@ -40,13 +41,18 @@ export class SvmWalletProvider implements WalletProvider {
   }
 
   async sendTx(txData: TransactionRequestSVM): Promise<string> {
-    const solanaRPC = this.blockchainStateService.allNetworks().find((network: { id: number; }) => network.id === NetworkId.SOLANA_MAINNET)?.rpcUrls[0] || "https://solana-rpc.publicnode.com";
-    const connection = new Connection(solanaRPC!, 'confirmed');//todo rpc error after bridge
+    const solanaRPC = await this.blockchainStateService.getWorkingRpcUrlForNetwork(NetworkId.SOLANA_MAINNET) || "https://solana-rpc.publicnode.com";
+    const connection = new Connection(solanaRPC, 'confirmed');//todo rpc error after bridge
     const decodedTx = Uint8Array.from(atob(txData.data.toString()), c => c.charCodeAt(0));
     const versionedTx = VersionedTransaction.deserialize(decodedTx);
     const signedTx = await this.provider.signAndSendTransaction(versionedTx);
     // console.log('SVM Transaction sent:', signedTx);
     await connection.confirmTransaction(signedTx, 'confirmed');
     return signedTx;
+  }
+
+  async switchNetwork(selectedNetwork: any): Promise<void> {
+    this.blockchainStateService.disconnect();
+    throw new Error("unsupported_network");
   }
 }

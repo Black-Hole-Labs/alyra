@@ -1,9 +1,14 @@
 .quests{
-	height: calc(100vh - 250px);
+	height: 100%;
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
 	opacity: 0.9;
 	filter: blur(7px);
+}
+
+header.mobile{
+	display: none;
 }
 
 header{
@@ -11,7 +16,7 @@ header{
 	justify-content: space-between;
 	align-items: center;
 	width: 100%;
-	margin-bottom: 30px;
+	margin-bottom: 20px;
 }
 
 header .left{
@@ -29,27 +34,22 @@ h1{
 }
 
 .comission-rate{
-	height: fit-content;
 	border-radius: 14px;
 	padding: 10px 20px;
 	background-color: rgba(var(--dark-pink), 0.2);
-	width: fit-content;
 }
 
 .comission-rate p{
-	width: auto;
 	font-family: "JetBrains Mono", monospace;
 	font-weight: 400;
-	font-size: 16px;
+	font-size: 18px;
 	color: var(--pink);
 }
 
 .apply{
-	height: fit-content;
 	background-color: rgba(var(--dark-bg), 0.5);
 	border-radius: 14px;
 	padding: 10px 20px;
-	width: fit-content;
 	cursor: pointer;
 	transition: all 0.3s ease;
 	&:hover{
@@ -58,7 +58,6 @@ h1{
 }
 
 .apply p{
-	width: auto;
 	font-family: "JetBrains Mono", monospace;
 	font-weight: 400;
 	font-size: 18px;
@@ -69,7 +68,6 @@ h1{
 	background-color: rgba(var(--dark-bg), 0.5);
 	border-radius: 14px;
 	padding: 10px 20px;
-	width: fit-content;
 	cursor: pointer;
 	transition: all 0.3s ease;
 	&:hover{
@@ -78,7 +76,6 @@ h1{
 }
 
 .learn p{
-	width: auto;
 	font-family: "JetBrains Mono", monospace;
 	font-weight: 400;
 	font-size: 18px;
@@ -88,24 +85,28 @@ h1{
 .bonus-container{
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
-	gap: 35px;
+	align-items: flex-start;
+	gap: 30px;
+	flex: 1;
 }
 
 .left{
 	display: flex;
 	flex-direction: column;
-	gap: 35px;
+	gap: 30px;
+	height: 100%;
 }
 
 .trading-rewards{
-	width: 800px;
+	height: auto;
+	width: calc(50vw - 200px);
 	display: flex;
 	flex-direction: column;
 	padding: 30px 35px;
 	box-sizing: border-box;
 	background-color: rgba(var(--dark-bg), 0.5);
-	border-radius: 14px;
+	border-radius: 16px;
+	flex: 1;
 }
 
 .header{
@@ -115,12 +116,11 @@ h1{
 }
 
 .header h1{
-	font-size: 32px;
-	margin-bottom: 30px;
+	font-size: 30px;
+	margin-bottom: 20px;
 }
 
 p{
-	width: 689px;
 	font-family: "JetBrains Mono", monospace;
 	font-weight: 400;
 	font-size: 18px;
@@ -128,7 +128,7 @@ p{
 }
 
 .info-container{
-	margin-top: 50px;
+	margin-top: 20px;
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -142,7 +142,7 @@ p{
 }
 
 .info h3{
-	font-size: 18px;
+	font-size: 20px;
 	color: white;
 }
 
@@ -151,7 +151,6 @@ hr{
 }
 
 .info p{
-	width: auto;
 	font-size: 18px;
 	color: var(--elem-nonactive);
 }
@@ -160,36 +159,35 @@ hr{
 	display: flex;
 	align-items: flex-start;
 	justify-content: center;
-	padding-left: 30px;
+	padding-left: 40px;
 	background-color: rgba(var(--dark-bg), 0.5);
 	border-radius: 14px;
-	width: 800px;
-	height: 136px;
+	width: calc(50vw - 200px);
+	height: 120px;
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
+	gap: 10px;
 	position: relative;
 }
 
 .referral-link h3{
-	font-size: 25px;
+	font-size: 22px;
 	color: white;
 }
 
 .referral-link p{
-	width: auto;
-	font-size: 20px;
+	font-size: 18px;
 	color: var(--elem-nonactive);
 }
 
 .share-button{
 	position: absolute;
-	right: 30px;
+	right: 40px;
 	top: 50%;
 	transform: translateY(-50%);
 	background-color: rgba(var(--white), 1);
-	border-radius: 14px;
-	padding: 10px 20px;
+	border-radius: 12px;
+	padding: 10px 25px;
 	cursor: pointer;
 	transition: all 0.3s ease;
 	&:hover{
@@ -198,7 +196,6 @@ hr{
 }
 
 .share-button p{
-	width: auto;
 	font-family: "JetBrains Mono", monospace;
 	font-weight: 400;
 	font-size: 18px;
@@ -206,14 +203,15 @@ hr{
 }
 
 .affiliate-rewards{
-	width: 800px;
-	height: 590px;
+	width: calc(50vw - 200px);
+	min-height: 520px;
+	height: auto;
 	display: flex;
 	flex-direction: column;
-	padding: 30px 35px;
+	padding: 25px 25px;
 	box-sizing: border-box;
 	background-color: rgba(var(--dark-bg), 0.5);
-	border-radius: 14px;
+	border-radius: 16px;
 }
 
 .available-rewards{
@@ -230,12 +228,12 @@ hr{
 }
 
 .available-rewards h4{
-	font-size: 22px;
+	font-size: 18px;
 	color: var(--elem-nonactive);
 }
 
 .available-rewards h2{
-	font-size: 42px;
+	font-size: 32px;
 	color: white;
 }
 
@@ -253,7 +251,6 @@ hr{
 }
 
 .available-rewards p{
-	width: auto;
 	font-size: 18px;
 	color: var(--elem-nonactive);
 }
@@ -275,7 +272,6 @@ hr{
 }
 
 .claim-button p{
-	width: auto;
 	font-family: "JetBrains Mono", monospace;
 	font-weight: 400;
 	font-size: 18px;
@@ -290,7 +286,6 @@ hr{
 }
 
 .affiliate-stats p{
-	width: auto;
 	font-size: 18px;
 	color: white;
 }
@@ -301,6 +296,8 @@ hr{
 }
 
 .soon{
+	display: none;
+
 	position: absolute;
 	display: flex;
 	align-items: center;
@@ -323,6 +320,8 @@ hr{
 }
 
 .more{
+	display: none;
+
 	position: absolute;
 	display: flex;
 	align-items: center;
@@ -344,7 +343,6 @@ hr{
 }
 
 .more p{
-	width: auto;
 	font-size: 22px;
 	color: black;
 	text-align: center;

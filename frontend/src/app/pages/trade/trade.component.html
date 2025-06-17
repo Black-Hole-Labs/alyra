@@ -1,4 +1,4 @@
-<div class="trade-window">
+<div class="trade-window" (mousemove)="onTradeMouseMove($event)">
   <div class="header">
     <h3>Trade</h3>
     <div class="icons">
@@ -14,10 +14,6 @@
         <div class="settings" [class.active]="showSettingsPopup" (click)="toggleSettingsPopup()">
         </div>
       </div>
-
-      <app-settings *ngIf="showSettingsPopup" class="settings-popup" (save)="onSlippageSave($event)">
-      </app-settings>
-
     </div>
   </div>
 
@@ -184,6 +180,9 @@
   </div>
 
 </div>
+
+<app-settings *ngIf="showSettingsPopup" class="settings-popup" (save)="onSlippageSave($event)">
+      </app-settings>
 
 <app-token-selector [mode]="'sell'" *ngIf="popupService.getCurrentPopup() === 'tokenChangeSell'"
   [selectedToken]="tokenService.selectedSellToken()" (tokenSelected)="onSellTokenSelected($event)" [excludeToken]="tokenService.selectedBuyToken()"

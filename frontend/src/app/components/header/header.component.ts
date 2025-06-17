@@ -59,6 +59,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private animationSpeed = 20;
   private animationTimeouts: { [key: string]: number } = {};
   private isSafari: boolean;
+  private menuCloseTimer: number | null = null;
+  private isMenuClickedOpen: boolean = false; 
 
   NetworkId = NetworkId;
 
@@ -138,6 +140,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.subscription.unsubscribe();
     }
 
+    // Очищаем таймер закрытия меню
+    if (this.menuCloseTimer) {
+      clearTimeout(this.menuCloseTimer);
+    }
+
     Object.values(this.animationTimeouts).forEach((timeoutId) => {
       clearTimeout(timeoutId);
     });
@@ -164,12 +171,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (event) {
       event.stopPropagation();
     }
-    const currentPopup = this.popupService.getCurrentPopup();
-    if (currentPopup === 'blackholeMenu') {
-      this.popupService.closeAllPopups();
-    } else {
-      this.popupService.openPopup('blackholeMenu');
-    }
+    
+    this.popupService.onMenuClick();
+  }
+
+  onMenuMouseEnter(): void {
+    this.popupService.onMenuMouseEnter();
+  }
+
+  onMenuMouseLeave(): void {
+    this.popupService.onMenuMouseLeave();
+  }
+
+  onPopupMouseEnter(): void {
+    this.popupService.onPopupMouseEnter();
+  }
+
+  onPopupMouseLeave(): void {
+    this.popupService.onPopupMouseLeave();
   }
 
   get isNetworkPopupVisible(): boolean {

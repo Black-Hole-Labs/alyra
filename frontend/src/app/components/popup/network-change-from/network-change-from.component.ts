@@ -27,7 +27,7 @@ export class NetworkChangeFromPopupComponent implements OnInit, OnChanges  {
 
 	ngOnInit(): void {
 		if (this.networks.length === 0) {
-			this.networks = this.blockchainStateService.networks();
+			this.networks = this.blockchainStateService.allNetworks();
 		}
 		this.filteredNetworks = [...this.networks];
 	}

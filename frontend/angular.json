@@ -57,7 +57,28 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true          
+              "sourceMap": true
+            },
+            "stage": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3MB",
+                  "maximumError": "6MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "24kB",
+                  "maximumError": "96kB"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.stage.ts"
+                }
+              ],
+              "outputHashing": "all"
             }
           },
           "defaultConfiguration": "production"

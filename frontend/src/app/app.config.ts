@@ -98,8 +98,8 @@ function registerProviders(
 }
 
 async function initializeApp(injector: Injector): Promise<void> {
-  const walletManager = new WalletProviderManager();
-  const stateService = injector.get(BlockchainStateService);
+  const walletManager  = new WalletProviderManager();
+  const stateService   = injector.get(BlockchainStateService);
 
   try {
     const _providers: any[] = providers;
@@ -120,11 +120,13 @@ async function initializeApp(injector: Injector): Promise<void> {
     // stateService.networks.set(visibleNetworks);
 
     stateService.allNetworks.set(allNetworks);
-    stateService.networks.set(allNetworks);
-    stateService.tryAutoConnect();
+    await stateService.tryAutoConnect();
   } catch (error) {
     console.error('Error loading networks:', error);
   }
+
+  await stateService.getWorkingRpcUrlForNetwork(NetworkId.ETHEREUM_MAINNET);
+  await stateService.getWorkingRpcUrlForNetwork(NetworkId.SOLANA_MAINNET);
 }
 
 export const appConfig: ApplicationConfig = {

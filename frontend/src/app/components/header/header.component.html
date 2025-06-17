@@ -1,7 +1,9 @@
 <header>
 
 	<div class="left">
-		<div class="menu">
+		<div class="menu" 
+			(mouseenter)="onMenuMouseEnter()" 
+			(mouseleave)="onMenuMouseLeave()">
 			<a routerLink="/" class="logo"></a>
 			<h3 (click)="togglePopup($event)">Blackhole</h3>
 			<button (click)="togglePopup($event)" [ngClass]="{'open': isPopupVisible, 'closed': !isPopupVisible}"></button>
@@ -14,9 +16,7 @@
 			<!-- <a routerLink="/fun" routerLinkActive="active-link">Fun</a>
 			<a routerLink="/launchpad" routerLinkActive="active-link">Launchpad</a> -->
 			<a routerLink="/rewards" routerLinkActive="active-link">Rewards</a>
-			<div class="pro-link" routerLink="/pro" routerLinkActive="active-link">
-				<p>Pro</p>
-			</div>
+			<a routerLink="/pro" routerLinkActive="active-link" class="pro-link">Pro</a>
 		</nav>
 	</div>
 
