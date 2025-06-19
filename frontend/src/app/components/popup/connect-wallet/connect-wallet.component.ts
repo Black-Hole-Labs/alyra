@@ -1,11 +1,12 @@
 import { Component, Output, EventEmitter, effect, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import { trigger, style, transition, animate } from '@angular/animations';
 import { PopupService } from '../../../services/popup.service';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 import { MouseGradientService } from '../../../services/mouse-gradient.service';
 import { Wallets } from '../../../models/wallet-provider.interface';
+import { ProvidersService } from '../../../services/providers.service';
 
 @Component({
   selector: 'app-connect-wallet',
@@ -56,7 +57,6 @@ export class ConnectWalletComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() openWallet = new EventEmitter<void>();
 
-  readonly connected: any;
   allWallets: Wallets[] = [];
   availableWallets: Wallets[] = [];
   otherWallets: Wallets[] = [];
@@ -67,18 +67,11 @@ export class ConnectWalletComponent implements OnInit {
   constructor(
     private popupService: PopupService,
     private blockchainStateService: BlockchainStateService,
-    private mouseGradientService: MouseGradientService
+    private mouseGradientService: MouseGradientService,
+    private providerService: ProvidersService
   ) {
-    this.connected = this.blockchainStateService.connected;
-
-    effect(() => {
-      if (this.connected()) {
-        // console.log('Wallet connected!:', this.blockchainStateService.walletAddress());
-      } else {
-        // console.log('Wallet disconnected');
-      }
-    }, { allowSignalWrites: true });
-  }
+    this.providerService.registerProviders();
+   }
 
   async ngOnInit(): Promise<void> {
     this.allWallets = await this.blockchainStateService.loadProviders();
