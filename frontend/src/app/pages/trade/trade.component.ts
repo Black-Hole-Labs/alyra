@@ -161,18 +161,19 @@ export class TradeComponent implements AfterViewChecked {
     effect(
       async () => {
         const network = this.blockchainStateService.networkSell();
+        //untracked(async () => {
+          const tokens = this.blockchainStateService.getTokensForNetwork(network!.id);
 
-        const tokens = this.blockchainStateService.getTokensForNetwork(network!.id);
+          const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
 
-        const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
-        
-        this.tokenService.setSelectedSellToken(newSelectedToken);
-        //this.updateNetworksBasedOnTokens();
+          this.tokenService.setSelectedSellToken(newSelectedToken);
+          //this.updateNetworksBasedOnTokens();
 
-        if (newSelectedToken !== undefined && this.blockchainStateService.connected()) {
-          const balanceStr = await this.walletBalanceService.getBalanceForToken(newSelectedToken);
-          this.balance.set(Number(parseFloat(balanceStr)));
-        }
+          if (newSelectedToken !== undefined && this.blockchainStateService.connected()) {
+            const balanceStr = await this.walletBalanceService.getBalanceForToken(newSelectedToken);
+            this.balance.set(Number(parseFloat(balanceStr)));
+          }
+        //});
       },
       { allowSignalWrites: true },
     );
@@ -180,26 +181,27 @@ export class TradeComponent implements AfterViewChecked {
     effect(
       async () => {
         const network = this.blockchainStateService.networkBuy();
+        //untracked(async () => {
+          const tokens = this.blockchainStateService.getTokensForNetwork(network!.id);
 
-        const tokens = this.blockchainStateService.getTokensForNetwork(network!.id);
+          let newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
 
-        let newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
+          // if (network !== undefined) {
+          //   if (newSelectedBuyToken?.chainId !== this.tokenService.selectedSellToken()!.chainId) {
+          //     newSelectedBuyToken = this.blockchainStateService.getTokensForNetwork(
+          //       network!.id,
+          //     )[0];
+          //   }
+          // }
+          
+          this.tokenService.setSelectedBuyToken(newSelectedBuyToken);
+          //this.updateNetworksBasedOnTokens();
 
-        // if (network !== undefined) {
-        //   if (newSelectedBuyToken?.chainId !== this.tokenService.selectedSellToken()!.chainId) {
-        //     newSelectedBuyToken = this.blockchainStateService.getTokensForNetwork(
-        //       network!.id,
-        //     )[0];
-        //   }
-        // }
-        
-        this.tokenService.setSelectedBuyToken(newSelectedBuyToken);
-        //this.updateNetworksBasedOnTokens();
-
-        if (newSelectedBuyToken !== undefined && this.blockchainStateService.connected()) {
-          const balanceStr = await this.walletBalanceService.getBalanceForToken(newSelectedBuyToken);
-          this.balanceBuy.set(Number(parseFloat(balanceStr)));
-        }
+          if (newSelectedBuyToken !== undefined && this.blockchainStateService.connected()) {
+            const balanceStr = await this.walletBalanceService.getBalanceForToken(newSelectedBuyToken);
+            this.balanceBuy.set(Number(parseFloat(balanceStr)));
+          }
+        //});
       },
       { allowSignalWrites: true },
     );
@@ -378,6 +380,13 @@ export class TradeComponent implements AfterViewChecked {
   }
 
   async swapTokens(): Promise<void> {
+    const tempToken = this.tokenService.selectedSellToken();
+    const tempBuyToken = this.tokenService.selectedBuyToken();
+    const tempBalance = this.balance();
+    const tempBalanceBuy = this.balanceBuy();
+    const tempSellAmount = this.validatedSellAmount();
+    const tempBuyAmount = this.buyAmountForInput();
+
     if(this.blockchainStateService.connected()){
       const provider = this.blockchainStateService.getCurrentProvider().provider;
       try{
@@ -392,12 +401,6 @@ export class TradeComponent implements AfterViewChecked {
     this.txData.update(() => undefined);
     this.buttonState = 'swap';
 
-    const tempToken = this.tokenService.selectedSellToken();
-    const tempBuyToken = this.tokenService.selectedBuyToken();
-    const tempBalance = this.balance();
-    const tempBalanceBuy = this.balanceBuy();
-    const tempSellAmount = this.validatedSellAmount();
-    const tempBuyAmount = this.buyAmountForInput();
 
     // this.selectedToken.set(tempBuyToken);
     this.tokenService.setSelectedBuyToken(tempToken);
@@ -425,22 +428,27 @@ export class TradeComponent implements AfterViewChecked {
       this.blockchainStateService.updateNetworkBackgroundIcons(newSellNetwork);
     }
 
-    this.swapNetworks();
+    //this.swapNetworks();
+    this.blockchainStateService.updateNetworkSell(tempBuyToken!.chainId);
+    this.blockchainStateService.updateNetworkBuy(tempToken!.chainId);
 
     this.cdr.detectChanges();
 
   }
 
-  private swapNetworks(): void {
-    try {
-      const tmp = this.blockchainStateService.networkBuy();
-
-      this.blockchainStateService.setNetworkBuy(this.blockchainStateService.networkSell()!);
-      this.blockchainStateService.setNetworkSell(tmp!);
-    } catch (error) {
-      console.warn('Error swapping network IDs:', error);
-    }
-  }
+  // private swapNetworks(): void {
+  //   try {
+  //     const tmp = this.blockchainStateService.networkBuy();
+  //     console.log("before buy:", this.blockchainStateService.networkBuy());
+  //     console.log("before sell:", this.blockchainStateService.networkSell());
+  //     this.blockchainStateService.setNetworkBuy(this.blockchainStateService.networkSell()!);
+  //     this.blockchainStateService.setNetworkSell(tmp!);
+  //     console.log("after buy:", this.blockchainStateService.networkBuy());
+  //     console.log("after sell:", this.blockchainStateService.networkSell());
+  //   } catch (error) {
+  //     console.warn('Error swapping network IDs:', error);
+  //   }
+  // }
 
   openTokenPopup(): void {
     this.popupService.openPopup('tokenChangeSell');

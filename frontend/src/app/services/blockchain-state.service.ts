@@ -1,14 +1,20 @@
-import { Injectable, signal, effect, computed } from '@angular/core';
+import { Injectable, signal, effect, computed, Injector } from '@angular/core';
 import { Network, NetworkId, ProviderType, Wallets } from '../models/wallet-provider.interface';
 import { Token } from '../pages/trade/trade.component';
 import { BehaviorSubject } from 'rxjs';
 
-import tokensSearch from '@public/data/tokens_search.json';
-
-import providersImport from '@public/data/providers.json';
-import tokensImport from '@public/data/tokens.json';
 import { ethers } from 'ethers';
 import { Connection } from '@solana/web3.js';
+
+import { BackpackProvider, CoinbaseWalletProvider, MagicEdenProvider, MetaMaskProvider, OkxWalletProvider, PhantomProvider, RabbyWalletProvider, SolflareProvider, TrustWalletProvider } from '../models/network.model';
+import { WalletConnectEvmProvider } from '../models/walletconnect-provider';
+import {
+  WalletProviderManager,
+} from '../models/network.model';
+
+import tokensSearch from '@public/data/tokens_search.json';
+import providersImport from '@public/data/providers.json';
+import tokensImport from '@public/data/tokens.json';
 
 interface TokenData {
   chainId: number;
@@ -50,7 +56,10 @@ export class BlockchainStateService {
   private tokensSubject = new BehaviorSubject<boolean>(false);
   public tokensLoading$ = this.tokensSubject.asObservable();
 
-  constructor() {
+  private static isRegisteredProviders = false;
+  walletManager: WalletProviderManager | undefined;
+
+  constructor(private injector: Injector) {
     effect(
       () => {
         this.connected.set(this.walletAddress() !== null);
@@ -68,6 +77,74 @@ export class BlockchainStateService {
       },
       { allowSignalWrites: true },
     );
+  }
+
+  registerProviders()
+  {
+    if (BlockchainStateService.isRegisteredProviders) return;
+
+    providersImport.forEach((provider) => {
+    switch (provider.id) {
+      case 'metamask':
+        this.registerProvider(
+          provider.id,
+          new MetaMaskProvider(this.walletManager!, this.injector!),
+          provider.type as ProviderType,
+        );
+        break;
+      case 'solflare':
+        this.registerProvider(provider.id, new SolflareProvider(this.injector!), provider.type as ProviderType);
+        break;
+      case 'phantom':
+        this.registerProvider(
+          provider.id,
+          new PhantomProvider(this.walletManager!, this.injector!),
+          provider.type as ProviderType,
+        );
+        break;
+      case 'magic-eden':
+        this.registerProvider(
+          provider.id,
+          new MagicEdenProvider(this.walletManager!, this.injector!),
+          provider.type as ProviderType,
+        );
+        break;
+      case 'backpack':
+        this.registerProvider(
+          provider.id,
+          new BackpackProvider(this.walletManager!, this.injector!),
+          provider.type as ProviderType,
+        );
+        break;
+      case 'trust-wallet':
+        this.registerProvider(provider.id, new TrustWalletProvider(this.injector!), provider.type as ProviderType);
+        break;
+      case 'okx-wallet':
+        this.registerProvider(provider.id, new OkxWalletProvider(this.injector!), provider.type as ProviderType);
+        break;
+      case 'coinbase-wallet':
+        this.registerProvider(provider.id, new CoinbaseWalletProvider(this.injector!), provider.type as ProviderType);
+        break;
+      case 'rabby-wallet':
+        this.registerProvider(
+          provider.id,
+          new RabbyWalletProvider(this.walletManager!, this.injector!),
+          provider.type as ProviderType,
+        );
+        break;
+      case 'walletconnect':
+        this.registerProvider(
+          provider.id,
+          new WalletConnectEvmProvider(this.injector!, this.allNetworks()),
+          provider.type as ProviderType,
+        );
+        break;
+      default:
+        console.warn(`Provider ${provider.id} is not yet implemented.`);
+    }
+  })
+    
+    BlockchainStateService.isRegisteredProviders = true;
   }
 
   public async getWorkingRpcUrlForNetwork(id: number): Promise<string> {
@@ -114,7 +191,7 @@ export class BlockchainStateService {
       this.updateNetworkBuy(NetworkId.ETHEREUM_MAINNET);
       return Promise.resolve();
     }
-
+    this.registerProviders();
     const provider = this.getProvider(providerId);
     if (!provider) return Promise.resolve();
 
