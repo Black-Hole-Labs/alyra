@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, effect, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { trigger, style, transition, animate } from '@angular/animations';
@@ -6,7 +6,6 @@ import { PopupService } from '../../../services/popup.service';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 import { MouseGradientService } from '../../../services/mouse-gradient.service';
 import { Wallets } from '../../../models/wallet-provider.interface';
-import { ProvidersService } from '../../../services/providers.service';
 
 @Component({
   selector: 'app-connect-wallet',
@@ -67,13 +66,13 @@ export class ConnectWalletComponent implements OnInit {
   constructor(
     private popupService: PopupService,
     private blockchainStateService: BlockchainStateService,
-    private mouseGradientService: MouseGradientService,
-    private providerService: ProvidersService
+    private mouseGradientService: MouseGradientService
   ) {
-    this.providerService.registerProviders();
    }
 
   async ngOnInit(): Promise<void> {
+    this.blockchainStateService.registerProviders();
+
     this.allWallets = await this.blockchainStateService.loadProviders();
     this.allProviders = this.allWallets.map(wallet => wallet.id);
 
