@@ -101,7 +101,7 @@
   transition: 0.2s ease-in-out;
 
   &:hover {
-    background-color: var(--dark-select);
+    background-color: rgba(var(--dark-select), 1);
   }
 }
 
@@ -159,7 +159,7 @@
 }
 
 .wallet:hover {
-  background-color: var(--dark-select);
+  background-color: rgba(var(--dark-select), 1);
 }
 
 .name {

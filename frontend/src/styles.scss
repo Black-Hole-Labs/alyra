@@ -8,7 +8,7 @@
 	--dark-pink: 255, 0, 221;
 	--pink: #FF00DD;
 	--btn-dark: #2F2F2F;
-	--dark-select: #1B1B1B;
+	--dark-select: 27, 27, 27;
 	--red: #FF7E7E;
 	--dark-red: 54, 24, 24;
 	--dark-red-hover: #723A3A;
@@ -23,7 +23,7 @@
 }
 
 .light-theme {
-  --dark-select: #f5f5f5;
+  --dark-select: 245, 245, 245;
   --elem-nonactive: rgba(0, 0, 0, 0.2);
   --green: #00cc00;
   
@@ -504,7 +504,7 @@ app-settings-bridge {
 	.network-change-from,
 	.network-change-to,
 	.token-change {
-		top: 138px;
+		top: 118px;
 	}
 
 	.ecosystem-change {

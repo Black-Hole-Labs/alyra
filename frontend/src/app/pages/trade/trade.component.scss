@@ -51,14 +51,14 @@ h3{
 
 .icon:hover {
 	cursor: pointer;
-	background-color: var(--dark-select);
+	background-color: rgba(var(--dark-select), 1);
 	.refresh, .settings, .custom-wallet-button{
 		opacity: 1;
 	}
 }
 
 .icon.active {
-	background-color: var(--dark-select);
+	background-color: rgba(var(--dark-select), 1);
 	.refresh, .settings, .custom-wallet-button{
 		opacity: 1;
 	}
@@ -343,17 +343,17 @@ p {
 }
 
 .main-button.inactive:hover {
-  background-color: var(--dark-select);
+  background-color: rgba(var(--dark-select), 1);
 }
 
 .main-button.finding, .main-button.wallet {
-  background-color: var(--dark-select);
+  background-color: rgba(var(--dark-select), 1);
   color: var(--elem-nonactive);
   cursor: wait;
 }
 
 .main-button.finding:hover, .main-button.wallet:hover {
-  background-color: var(--dark-select);
+  background-color: rgba(var(--dark-select), 1);
 }
 
 .main-button.approve {

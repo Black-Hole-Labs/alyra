@@ -1,15 +1,35 @@
+@import '../../../styles/mouse-gradient-button';
+
 .wallet-popup {
+  @include mouse-gradient-button(
+    $padding: 40px,
+    $height: auto,
+    $border-radius: 28px,
+    $background: rgba(var(--dark-bg), 0.1),
+    $backdrop-blur: 25px,
+    $include-responsive: false
+  );
+
 	display: flex;
-	flex-direction: column;
-	align-items: center;
+	position: fixed;
 	width: 500px;
-	background-color: rgba(var(--dark-bg), 0.3);
-	backdrop-filter: blur(25px);
-	-webkit-backdrop-filter: blur(5px);
-	border-radius: 28px;
-	z-index: 1000;
-	padding: 40px;
-	box-sizing: border-box;
+  box-sizing: border-box;
+  z-index: 10;
+	overflow: hidden;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+  
+  &:hover {
+    transform: none;
+    
+		background: radial-gradient(
+      circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+      rgba(255, 255, 255, 0.001) 0%, 
+      rgba(255, 255, 255, 0.0005) 50%, 
+      transparent 100%
+    );
+  }
 }
 
 .header {
