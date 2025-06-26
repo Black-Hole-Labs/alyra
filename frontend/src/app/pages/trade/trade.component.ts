@@ -172,6 +172,8 @@ export class TradeComponent implements AfterViewChecked {
         this.tokenService.setSelectedSellToken(newSel);
       }
 
+      // this.balance.set(0);
+
       if (newSel && this.blockchainStateService.connected()) {
         this.walletBalanceService.getBalanceForToken(newSel)
           .then(b => this.balance.set(+b));
@@ -196,6 +198,8 @@ export class TradeComponent implements AfterViewChecked {
       if (!this.isSameToken(current, newBuy)) {
         this.tokenService.setSelectedBuyToken(newBuy);
       }
+
+      // this.balanceBuy.set(0);
 
       if (newBuy && this.blockchainStateService.connected()) {
         this.walletBalanceService.getBalanceForToken(newBuy)
