@@ -7,7 +7,7 @@
 
 .header {
 	width: 100%;
-	padding: 50px;
+	padding: 40px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -342,7 +342,7 @@ input{
 	bottom: calc(100% + 10px);
 	left: 50%;
 	transform: translateX(-50%);
-	background-color: var(--dark-select);
+	background-color: rgba(var(--dark-select), 1);
 	padding: 8px 12px;
 	border-radius: 8px;
 	white-space: nowrap;
@@ -363,7 +363,7 @@ input{
 		transform: translateX(-50%) rotate(45deg);
 		width: 8px;
 		height: 8px;
-		background-color: var(--dark-select);
+		background-color: rgba(var(--dark-select), 1);
 	}
 }
 

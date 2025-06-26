@@ -159,52 +159,56 @@ export class TradeComponent implements AfterViewChecked {
     );
 
     effect(
-      async () => {
-        const network = this.blockchainStateService.networkSell();
-        //untracked(async () => {
-          const tokens = this.blockchainStateService.getTokensForNetwork(network!.id);
+      () => {
+      const network = this.blockchainStateService.networkSell();
+      const tokens  = this.blockchainStateService.getTokensForNetwork(network!.id);
+      if (!tokens?.length) return;
 
-          const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
+      const current   = this.tokenService.selectedSellToken();
+      const newSel    = tokens.find(t => this.isSameToken(t, current))
+                      ?? tokens[0];
 
-          this.tokenService.setSelectedSellToken(newSelectedToken);
-          //this.updateNetworksBasedOnTokens();
+      if (!this.isSameToken(current, newSel)) {
+        this.tokenService.setSelectedSellToken(newSel);
+      }
 
-          if (newSelectedToken !== undefined && this.blockchainStateService.connected()) {
-            const balanceStr = await this.walletBalanceService.getBalanceForToken(newSelectedToken);
-            this.balance.set(Number(parseFloat(balanceStr)));
-          }
-        //});
-      },
-      { allowSignalWrites: true },
+      // this.balance.set(0);
+
+      if (newSel && this.blockchainStateService.connected()) {
+        this.walletBalanceService.getBalanceForToken(newSel)
+          .then(b => this.balance.set(+b));
+      }
+      }, 
+      { allowSignalWrites: true }
     );
+
 
     effect(
-      async () => {
-        const network = this.blockchainStateService.networkBuy();
-        //untracked(async () => {
-          const tokens = this.blockchainStateService.getTokensForNetwork(network!.id);
+      () => {
+      const network = this.blockchainStateService.networkBuy();
+      const tokens  = this.blockchainStateService.getTokensForNetwork(network!.id);
+      if (!tokens?.length) return;
 
-          let newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
+      const sellTok  = this.tokenService.selectedSellToken();
+      const current  = this.tokenService.selectedBuyToken();
+      const newBuy   = tokens.find(t => this.isSameToken(t, current))
+                    ?? tokens.find(t => !this.isSameToken(t, sellTok))
+                    ?? tokens[0];
 
-          // if (network !== undefined) {
-          //   if (newSelectedBuyToken?.chainId !== this.tokenService.selectedSellToken()!.chainId) {
-          //     newSelectedBuyToken = this.blockchainStateService.getTokensForNetwork(
-          //       network!.id,
-          //     )[0];
-          //   }
-          // }
-          
-          this.tokenService.setSelectedBuyToken(newSelectedBuyToken);
-          //this.updateNetworksBasedOnTokens();
+      if (!this.isSameToken(current, newBuy)) {
+        this.tokenService.setSelectedBuyToken(newBuy);
+      }
 
-          if (newSelectedBuyToken !== undefined && this.blockchainStateService.connected()) {
-            const balanceStr = await this.walletBalanceService.getBalanceForToken(newSelectedBuyToken);
-            this.balanceBuy.set(Number(parseFloat(balanceStr)));
-          }
-        //});
-      },
-      { allowSignalWrites: true },
+      // this.balanceBuy.set(0);
+
+      if (newBuy && this.blockchainStateService.connected()) {
+        this.walletBalanceService.getBalanceForToken(newBuy)
+          .then(b => this.balanceBuy.set(+b));
+      }
+      }, 
+      { allowSignalWrites: true }
     );
+
 
     effect(
       () => {
@@ -380,7 +384,7 @@ export class TradeComponent implements AfterViewChecked {
   }
 
   async swapTokens(): Promise<void> {
-    const tempToken = this.tokenService.selectedSellToken();
+    const tempSellToken = this.tokenService.selectedSellToken();
     const tempBuyToken = this.tokenService.selectedBuyToken();
     const tempBalance = this.balance();
     const tempBalanceBuy = this.balanceBuy();
@@ -401,9 +405,11 @@ export class TradeComponent implements AfterViewChecked {
     this.txData.update(() => undefined);
     this.buttonState = 'swap';
 
+    this.blockchainStateService.updateNetworkSell(tempBuyToken!.chainId);
+    this.blockchainStateService.updateNetworkBuy(tempSellToken!.chainId);
 
     // this.selectedToken.set(tempBuyToken);
-    this.tokenService.setSelectedBuyToken(tempToken);
+    this.tokenService.setSelectedBuyToken(tempSellToken);
     this.tokenService.setSelectedSellToken(tempBuyToken);
 
     this.balance.set(tempBalanceBuy);
@@ -429,12 +435,15 @@ export class TradeComponent implements AfterViewChecked {
     }
 
     //this.swapNetworks();
-    this.blockchainStateService.updateNetworkSell(tempBuyToken!.chainId);
-    this.blockchainStateService.updateNetworkBuy(tempToken!.chainId);
 
     this.cdr.detectChanges();
 
   }
+
+   private isSameToken = (a?: Token, b?: Token) =>
+      !!a && !!b &&
+      a.contractAddress === b.contractAddress &&
+      a.chainId         === b.chainId;
 
   // private swapNetworks(): void {
   //   try {

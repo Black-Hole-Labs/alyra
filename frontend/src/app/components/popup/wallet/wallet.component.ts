@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PopupService } from '../../../services/popup.service';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
+import { MouseGradientService } from '../../../services/mouse-gradient.service';
 
 interface Token {
   name: string;
@@ -46,7 +47,11 @@ export class WalletComponent {
     },
   ];
 
-  constructor(private blockchainStateService: BlockchainStateService, private popupService: PopupService) {
+  constructor(
+    private blockchainStateService: BlockchainStateService, 
+    private popupService: PopupService,
+    private mouseGradientService: MouseGradientService
+  ) {
     this.walletName.set(this.blockchainStateService.getCurrentWalletAddress()!);
   }
 
@@ -87,5 +92,9 @@ export class WalletComponent {
     this.blockchainStateService.disconnect();
     this.popupService.closeAllPopups(); 
     this.disconnect.emit();
+  }
+
+  onWalletMouseMove(event: MouseEvent): void {
+    this.mouseGradientService.onMouseMove(event);
   }
 }

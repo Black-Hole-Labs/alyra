@@ -1,8 +1,37 @@
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
+
+	@import '../../../styles/mouse-gradient-button';
+
 	.wallet-popup {
+		@include mouse-gradient-button(
+			$padding: 20px,
+			$height: auto,
+			$border-radius: 22px,
+			$background: rgba(var(--dark-bg), 0.1),
+			$backdrop-blur: 25px,
+			$include-responsive: false
+		);
+
+		display: flex;
+		position: fixed;
 		width: 416px;
-		border-radius: 22px;
-		padding: 20px;
+		box-sizing: border-box;
+		z-index: 10;
+		overflow: hidden;
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: stretch;
+		
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.001) 0%, 
+				rgba(255, 255, 255, 0.0005) 50%, 
+				transparent 100%
+			);
+		}
 	}
 	
 	.left-header {
@@ -128,10 +157,38 @@
 	// }
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
+	@import '../../../styles/mouse-gradient-button';
+
 	.wallet-popup {
-		width: 386px;
-		border-radius: 22px;
-		padding: 20px;
+		@include mouse-gradient-button(
+			$padding: 20px,
+			$height: auto,
+			$border-radius: 22px,
+			$background: rgba(var(--dark-bg), 0.1),
+			$backdrop-blur: 25px,
+			$include-responsive: false
+		);
+
+		display: flex;
+		position: fixed;
+		width: 416px;
+		box-sizing: border-box;
+		z-index: 10;
+		overflow: hidden;
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: stretch;
+		
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.001) 0%, 
+				rgba(255, 255, 255, 0.0005) 50%, 
+				transparent 100%
+			);
+		}
 	}
 	
 	.left-header {
@@ -257,10 +314,38 @@
 	// }
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
+	@import '../../../styles/mouse-gradient-button';
+
 	.wallet-popup {
+		@include mouse-gradient-button(
+			$padding: 15px,
+			$height: auto,
+			$border-radius: 16px,
+			$background: rgba(var(--dark-bg), 0.1),
+			$backdrop-blur: 25px,
+			$include-responsive: false
+		);
+
+		display: flex;
+		position: fixed;
 		width: 304px;
-		border-radius: 16px;
-		padding: 15px;
+		box-sizing: border-box;
+		z-index: 10;
+		overflow: hidden;
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: stretch;
+		
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.001) 0%, 
+				rgba(255, 255, 255, 0.0005) 50%, 
+				transparent 100%
+			);
+		}
 	}
 	
 	.left-header {
@@ -386,10 +471,38 @@
 	// }
 }
 @media screen and (min-width: 480px) and (max-width: 970px) {
+	@import '../../../styles/mouse-gradient-button';
+
 	.wallet-popup {
+		@include mouse-gradient-button(
+			$padding: 20px,
+			$height: auto,
+			$border-radius: 22px,
+			$background: rgba(var(--dark-bg), 0.1),
+			$backdrop-blur: 25px,
+			$include-responsive: false
+		);
+
+		display: flex;
+		position: fixed;
 		width: 386px;
-		border-radius: 22px;
-		padding: 20px;
+		box-sizing: border-box;
+		z-index: 10;
+		overflow: hidden;
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: stretch;
+		
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.001) 0%, 
+				rgba(255, 255, 255, 0.0005) 50%, 
+				transparent 100%
+			);
+		}
 	}
 	
 	.left-header {
@@ -516,10 +629,38 @@
 }
 
 @media screen and (min-width: 360px) and (max-width: 479px) {
+	@import '../../../styles/mouse-gradient-button';
+
 	.wallet-popup {
+		@include mouse-gradient-button(
+			$padding: 15px,
+			$height: auto,
+			$border-radius: 16px,
+			$background: rgba(var(--dark-bg), 0.1),
+			$backdrop-blur: 25px,
+			$include-responsive: false
+		);
+
+		display: flex;
+		position: fixed;
 		width: 90vw;
-		border-radius: 16px;
-		padding: 15px;
+		box-sizing: border-box;
+		z-index: 10;
+		overflow: hidden;
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: stretch;
+		
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.001) 0%, 
+				rgba(255, 255, 255, 0.0005) 50%, 
+				transparent 100%
+			);
+		}
 	}
 	
 	.left-header {

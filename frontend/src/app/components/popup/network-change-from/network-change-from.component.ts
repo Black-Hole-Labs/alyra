@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Network } from '../../../models/wallet-provider.interface';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
+import { MouseGradientService } from '../../../services/mouse-gradient.service';
 
 @Component({
   selector: 'app-network-change-from',
@@ -23,7 +24,10 @@ export class NetworkChangeFromPopupComponent implements OnInit, OnChanges  {
 	searchText: string = '';
 	filteredNetworks: Network[] = [];
 
-	constructor(private blockchainStateService: BlockchainStateService) {}
+	constructor(
+		private blockchainStateService: BlockchainStateService,
+		private mouseGradientService: MouseGradientService
+	) {}
 
 	ngOnInit(): void {
 		if (this.networks.length === 0) {
@@ -53,5 +57,9 @@ export class NetworkChangeFromPopupComponent implements OnInit, OnChanges  {
 	selectNetwork(network: Network): void {
 		this.networkSelected.emit(network);
 		this.closePopup();
+	}
+
+	onNetworkChangeFromMouseMove(event: MouseEvent): void {
+		this.mouseGradientService.onMouseMove(event);
 	}
 }

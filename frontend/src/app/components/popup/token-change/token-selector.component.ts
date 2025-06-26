@@ -8,6 +8,7 @@ import { Network } from '../../../models/wallet-provider.interface';
 import { ethers } from 'ethers';
 import { NetworkChangeFromPopupComponent } from '../network-change-from/network-change-from.component';
 import { TokenService } from '../../../services/token.service';
+import { MouseGradientService } from '../../../services/mouse-gradient.service';
 
 export interface TokenDisplay extends Token {
   name?: string;
@@ -33,7 +34,10 @@ export class TokenChangePopupComponent {
   selectedNetworkId = signal<number | undefined>(undefined);
   selectedNetworkTokens = signal<Token[]>([]);
 
-  constructor(private tokenService: TokenService) {}
+  constructor(
+    private tokenService: TokenService,
+    private mouseGradientService: MouseGradientService
+  ) {}
 
   private tokenCache = new Map<number, Token[]>();
 
@@ -320,5 +324,9 @@ export class TokenChangePopupComponent {
       const isSameChain = token.chainId === this.excludeToken!.chainId;
       return !(isSameAddress && isSameChain);
     });
+  }
+
+  onTokenSelectorMouseMove(event: MouseEvent): void {
+    this.mouseGradientService.onMouseMove(event);
   }
 }
