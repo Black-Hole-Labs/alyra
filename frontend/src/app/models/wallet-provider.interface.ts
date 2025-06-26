@@ -52,6 +52,7 @@ export enum ProviderType {
   EVM = 'EVM',
   SVM = 'SVM',
   MULTICHAIN = 'multichain',
+  SUI = 'SUI'
 }
 
 export enum NetworkId {

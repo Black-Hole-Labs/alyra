@@ -40,6 +40,7 @@ export class FooterComponent implements OnInit, OnDestroy {
           this.providerEvm.set(new ethers.JsonRpcProvider(rpc));
           this.updateBlockNumber();
         }
+        // this.updateBlockNumber();
       },
       { allowSignalWrites: true },
     );
@@ -54,7 +55,7 @@ export class FooterComponent implements OnInit, OnDestroy {
     this.updateBlockNumber();
 
     this.updateInterval = setInterval(() => {
-      this.updateBlockNumber();
+      // this.updateBlockNumber();
     }, 12000);
   }
 

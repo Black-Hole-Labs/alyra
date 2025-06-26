@@ -91,6 +91,7 @@ export class BackpackProvider extends MultiChainWalletProvider {
     super(injector);
     this.evmProviderInstance = walletManager.getBackPackProvider();
     this.svmProviderInstance = (window as any).backpack?.solana;
+    this.suiProviderInstance = (window as any).backpack?.sui;
   }
 
   override async connect(): Promise<{ address: string }> {
@@ -105,6 +106,8 @@ export class PhantomProvider extends MultiChainWalletProvider {
     super(injector);
     this.evmProviderInstance = walletManager.getPhantomProvider();
     this.svmProviderInstance = (window as any).phantom?.solana;
+    this.suiProviderInstance = (window as any).phantom?.sui;
+    console.log((window as any).phantom?.sui);
   }
 
   override async connect(): Promise<{ address: string }> {

@@ -1,14 +1,17 @@
 import { BlockchainStateService } from '../services/blockchain-state.service';
 import { EvmWalletProvider } from './evm-wallet-provider';
+import { SuiWalletProvider } from './sui-wallet-provider';
 import { SvmWalletProvider } from './svm-wallet-provider';
 import { NetworkId, ProviderType, TransactionRequestEVM, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
 import { Injector } from '@angular/core';
 export abstract class MultiChainWalletProvider implements WalletProvider {
   protected evmProviderInstance: any;
   protected svmProviderInstance: any;
+  protected suiProviderInstance: any;
   protected evmProvider: EvmWalletProvider | null = null;
   protected svmProvider: SvmWalletProvider | null = null;
-  protected currentNetwork: 'EVM' | 'SVM' = 'EVM'; // EVM as default
+  protected suiProvider: SuiWalletProvider | null = null; // SUI
+  protected currentNetwork: 'EVM' | 'SVM' | 'MVM' = 'EVM'; // EVM as default
   protected address: string = '';
 
   protected blockchainStateService: BlockchainStateService;
@@ -20,7 +23,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
   }
 
   isAvailable(): boolean {
-    return !!this.evmProviderInstance || !!this.svmProviderInstance;
+    return !!this.evmProviderInstance || !!this.svmProviderInstance || !!this.suiProviderInstance;
   }
 
   async connect(netowrkId: NetworkId = NetworkId.ETHEREUM_MAINNET): Promise<{ address: string }> {
@@ -36,6 +39,13 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
     else {
       console.error("Multichain::connect(): SVM not found!")
     }
+    if (this.suiProviderInstance) {
+      this.suiProvider = new SuiWalletProvider(this.suiProviderInstance, this.injector);
+    }
+    else {
+      console.error("Multichain::connect(): MVM not found!")
+    }
+
 
     if (netowrkId === NetworkId.ETHEREUM_MAINNET && this.evmProvider) {
       const { address } = await this.evmProvider.connect(this.evmProviderInstance);
@@ -45,6 +55,10 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
       const { address } = await this.svmProvider.connect(this.svmProviderInstance);
       this.address = address;
       this.currentNetwork = 'SVM';
+    } else if (this.blockchainStateService.networkSell()!.chainType === 'MVM' && this.suiProvider) {
+      const { address } = await this.suiProvider.connect(this.suiProviderInstance, true);
+      this.address = address;
+      this.currentNetwork = 'MVM';
     } else {
       throw new Error('No provider available');
     }
@@ -77,6 +91,22 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
         // console.log(`Connected to SVM address: `, address);
         this.address = address;
       }
+      await this.svmProvider.switchNetwork(selectedNetwork); 
+      // this.network = await this.svmProvider.getNetwork() || '';
+    } 
+    else if (selectedNetwork.chainType === 'MVM') 
+    {
+      if(!this.suiProvider) throw new Error('Sui Provider not initialized');
+      
+      if(this.currentNetwork != 'MVM')
+      {
+        const { address } = await this.suiProvider.connect(this.svmProviderInstance, true);
+        this.currentNetwork = 'MVM';
+        // console.log(`Connected to Sui address: `, address);
+        this.address = address;
+      }
+      await this.suiProvider.switchNetwork(selectedNetwork); 
+      // this.network = await this.suiProvider.getNetwork() || '';
     } 
     else 
     {

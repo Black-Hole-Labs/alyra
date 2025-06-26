@@ -30,6 +30,7 @@ interface TokenData {
 interface TokensData {
   tokensEVM: Record<string, TokenData[]>;
   tokensSVM: Record<string, TokenData[]>;
+  tokensMVM: Record<string, TokenData[]>;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -246,7 +247,7 @@ export class BlockchainStateService {
   setAllTokensForNetwork(network: number): void {
     const networkKey = network.toString();
     const tokensData = tokensSearch as unknown as TokensData;
-    const tokensForNetwork = tokensData.tokensEVM[networkKey] || tokensData.tokensSVM[networkKey];
+    const tokensForNetwork = tokensData.tokensEVM[networkKey] || tokensData.tokensSVM[networkKey] || tokensData.tokensMVM[networkKey];
 
     if (tokensForNetwork) {
       this.allTokens.set(
@@ -268,7 +269,7 @@ export class BlockchainStateService {
   private setTokensForNetwork(network: number): void {
     const tokensData = tokensImport as unknown as TokensData;
     const networkKey = network.toString();
-    const tokensForNetwork = tokensData.tokensEVM[networkKey] || tokensData.tokensSVM[networkKey];
+    const tokensForNetwork = tokensData.tokensEVM[networkKey] || tokensData.tokensSVM[networkKey] || tokensData.tokensMVM[networkKey];
 
     if (tokensForNetwork) {
       this.tokens.set(
@@ -291,7 +292,8 @@ export class BlockchainStateService {
     const networkKey = networkId.toString();
     const evmList = (tokensImport as TokensData).tokensEVM[networkKey] || [];
     const svmList = (tokensImport as TokensData).tokensSVM[networkKey] || [];
-    const tokensForNetwork = evmList.length ? evmList : svmList.length ? svmList : [];
+    const mvmList = (tokensImport as TokensData).tokensMVM[networkKey] || [];
+    const tokensForNetwork = evmList.length ? evmList : svmList.length ? svmList : mvmList.length ? mvmList : [];
 
     if (!tokensForNetwork.length) {
       console.warn(`No tokens found for network ${networkId}`);
