@@ -128,6 +128,7 @@ export class ConnectWalletComponent implements OnInit {
       return;
     }
 
+    this.closePopup();
     try {
       // console.log('Attempting to connect to provider...');
       const { address } = await provider.connect();
@@ -144,8 +145,6 @@ export class ConnectWalletComponent implements OnInit {
         // console.log('Setting current provider:', providerId);
         this.blockchainStateService.setCurrentProvider(providerId);
         // console.log('Current provider set');
-        
-        this.closePopup();
         
         this.popupService.openPopup('ecosystemChange');
       } catch(e: unknown) {

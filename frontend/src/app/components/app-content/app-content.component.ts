@@ -9,7 +9,7 @@ import { PopupService } from '../../services/popup.service';
 import { BlackholeMenuComponent } from '../popup/blackhole-menu/blackhole-menu.component';
 import { WalletComponent } from "../popup/wallet/wallet.component";
 import { ConnectWalletComponent } from "../popup/connect-wallet/connect-wallet.component";
-import { EcosystemChangeComponent } from '../popup/ecosystem-change/ecosystem-change.component';
+// import { EcosystemChangeComponent } from '../popup/ecosystem-change/ecosystem-change.component';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
 
 @Component({
@@ -27,7 +27,7 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
     CommonModule,
     WalletComponent,
     ConnectWalletComponent,
-    EcosystemChangeComponent
+    // EcosystemChangeComponent
   ]
 })
 export class AppContentComponent {
