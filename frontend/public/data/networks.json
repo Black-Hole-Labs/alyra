@@ -192,7 +192,7 @@
     "name": "HyperEVM",
     "id": 999,
     "idHex": "0x3e7",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/hyperevm.svg",
+    "logoURI": "https://static.debank.com/image/hyper_token/logo_url/hyper/0b3e288cfe418e9ce69eef4c96374583.png",
     "rpcUrls": [
       "https://rpc.hyperliquid.xyz/evm",
       "https://rpc.hyperlend.finance",
@@ -263,7 +263,7 @@
     "name": "zkSync",
     "id": 324,
     "idHex": "0x144",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/zksync.svg",
+    "logoURI": "/img/networks/zksync.jpg",
     "rpcUrls": ["https://mainnet.era.zksync.io"],
     "nativeCurrency": {
       "name": "ETH",
@@ -288,6 +288,23 @@
       "decimals": 18
     },
     "explorerUrl": "https://apescan.io/token/"
+  },
+  {
+    "key": "swl",
+    "chainType": "EVM",
+    "name": "Swellchain",
+    "id": 1923,
+    "idHex": "0x783",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/swell.svg",
+    "rpcUrls": [
+      "https://swell-mainnet.alt.technology"
+    ],
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://swellchainscan.io/token/"
   },
   {
     "key": "ftm",
@@ -541,7 +558,7 @@
     "name": "Ink",
     "id": 57073,
     "idHex": "0xdef1",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chahyperins/ink.svg",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/ink.svg",
     "rpcUrls": ["https://rpc-gel.inkonchain.com"],
     "nativeCurrency": {
       "name": "Ether",
