@@ -222,6 +222,44 @@
     "explorerUrl": "https://polygonscan.com/token/"
   },
   {
+    "key": "hyp",
+    "chainType": "EVM",
+    "name": "HyperEVM",
+    "id": 999,
+    "idHex": "0x3e7",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/hyperevm.svg",
+    "rpcUrls": [
+      "https://rpc.hyperliquid.xyz/evm",
+      "https://rpc.hyperlend.finance",
+      "https://hyperliquid-json-rpc.stakely.io",
+      "https://hyperliquid.drpc.org",
+      "https://rpc.hypurrscan.io"
+    ],
+    "nativeCurrency": {
+      "name": "HYPE",
+      "symbol": "HYPE",
+      "decimals": 18
+    },
+    "explorerUrl": "https://www.hyperscan.com/token/"
+  },
+  {
+    "key": "ape",
+    "chainType": "EVM",
+    "name": "Apechain",
+    "id": 33139,
+    "idHex": "0x8173",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/apechain.svg",
+    "rpcUrls": [
+      "https://rpc.apechain.com"
+    ],
+    "nativeCurrency": {
+      "name": "ApeCoin",
+      "symbol": "APE",
+      "decimals": 18
+    },
+    "explorerUrl": "https://apescan.io/token/"
+  },
+  {
     "key": "sei",
     "chainType": "EVM",
     "name": "Sei",
@@ -233,7 +271,8 @@
       "name": "SEI",
       "symbol": "SEI",
       "decimals": 18
-    }
+    },
+    "explorerUrl": "https://seitrace.com/token/"
   },
   {
     "key": "era",
