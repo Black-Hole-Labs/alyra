@@ -231,6 +231,16 @@ export class TradeComponent implements AfterViewChecked {
       },
       { allowSignalWrites: true },
     );
+
+    effect(
+      () => {
+        if (this.validatedSellAmount() === 0) {
+          this.sellPriceUsd.set('');
+          this.buyPriceUsd.set('');
+        }
+      },
+      { allowSignalWrites: true }
+    );
   }
 
   ngOnInit() {
