@@ -333,6 +333,10 @@ export class BlockchainStateService {
     return this.networkSell();
   }
 
+  getCurrentNetworkBuy(): Network | undefined {
+    return this.networkBuy();
+  }
+
   setCustomAddress(customAddress: string) {
     this.customAddress.set(customAddress);
   }

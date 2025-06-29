@@ -239,6 +239,11 @@ export class TokenChangePopupComponent {
     if (this.mode === 'sell') {
       this.blockchainStateService.updateNetworkSell(network.id);
 
+      if (network.id != this.blockchainStateService.getCurrentNetworkBuy()?.id)
+      {
+        this.blockchainStateService.setNetworkBuy(network);
+      }
+
       if (!this.blockchainStateService.connected()) {
         return;
       }
