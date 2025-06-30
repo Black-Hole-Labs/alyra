@@ -1,8 +1,9 @@
-import { Component, Output, EventEmitter, signal } from '@angular/core';
+import { Component, Output, EventEmitter, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PopupService } from '../../../services/popup.service';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 import { MouseGradientService } from '../../../services/mouse-gradient.service';
+import { Wallets } from '../../../models/wallet-provider.interface';
 
 interface Token {
   name: string;
@@ -27,6 +28,8 @@ export class WalletComponent {
   @Output() close = new EventEmitter<void>();
   @Output() disconnect = new EventEmitter<void>();
   walletName = signal<string>('');
+  walletIcon = signal<string>('/img/wallet-icns/profile.png');
+  private providers: Wallets[] = [];
   
   tokens: Token[] = [
     {
@@ -53,6 +56,25 @@ export class WalletComponent {
     private mouseGradientService: MouseGradientService
   ) {
     this.walletName.set(this.blockchainStateService.getCurrentWalletAddress()!);
+    this.loadProviders();
+
+    effect(
+      () => {
+        const isConnected = this.blockchainStateService.connected();
+        if (!isConnected) {
+          this.walletIcon.set('/img/wallet-icns/profile.png');
+          return;
+        }
+
+        if (this.providers.length === 0) {
+          this.loadProviders();
+          this.updateWalletIcon();
+        } else {
+          this.updateWalletIcon();
+        }
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   get totalBalance(): number {
@@ -96,5 +118,24 @@ export class WalletComponent {
 
   onWalletMouseMove(event: MouseEvent): void {
     this.mouseGradientService.onMouseMove(event);
+  }
+  async loadProviders() {
+    this.providers = await this.blockchainStateService.loadProviders();
+    return this.updateWalletIcon();
+  }
+
+  updateWalletIcon(): void {
+    const providerId = this.blockchainStateService.getCurrentProviderId();
+    if (!providerId || !this.blockchainStateService.connected()) {
+      this.walletIcon.set('/img/wallet-icns/profile.png');
+      return;
+    }
+
+    const provider = this.providers.find((p) => p.id === providerId);
+    if (provider?.iconUrl) {
+      this.walletIcon.set(provider.iconUrl);
+    } else {
+      this.walletIcon.set('/img/wallet-icns/profile.png');
+    }
   }
 }

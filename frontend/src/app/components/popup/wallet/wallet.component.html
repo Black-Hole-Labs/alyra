@@ -1,24 +1,31 @@
 <div class="popup-container wallet-popup" (mousemove)="onWalletMouseMove($event)">
   <div class="header">
+		<p><span>1</span> Wallet</p>
+		<button class="close-button" (click)="closePopup()"></button>
+  </div>
 
-		<div class="left-header">
-			<div class="avatar"></div>
+	<div class="wallet">
+		<div class="left-wallet">
+			<div class="avatar" [style.background-image]="'url(' + walletIcon() + ')'"></div>
 			<div class="wallet-name">
 				<h3>{{ walletName().length > 20 ? walletName().slice(0, 6) + '...' + walletName().slice(-3) : walletName()}}</h3>
-				<!-- <div class="wallet-address">
+				<div class="wallet-address">
 					<p>0xefe..45</p>
 					<div class="copy"></div>
-				</div> -->
+				</div>
 			</div>
 		</div>
 
-		<div class="right-header">
+		<div class="right-wallet">
+			<p>EVM</p>
 			<div class="disconnect" (click)="onDisconnect()">
 				<p>Disconnect</p>
 			</div>
-			<button class="close-button" (click)="closePopup()"></button>
 		</div>
-  </div>
+	</div>
+	<div class="button-connect">
+		<p>Connect Another Wallet</p>
+	</div>
 
 	<!-- <div class="devider">
 		<p>Balance</p>
