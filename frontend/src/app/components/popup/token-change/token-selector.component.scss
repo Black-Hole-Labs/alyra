@@ -447,3 +447,12 @@ a:hover {
 	margin-left: 10px;
 }
 
+// Скрытие основного контента когда открыт попап выбора сети
+.token-change.network-selection-mode {
+  .main-content {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+  }
+}
+
