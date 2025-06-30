@@ -336,12 +336,6 @@ app-settings-bridge {
 	z-index: 100;
 }
 
-.ecosystem-change {
-  position: fixed;
-  top: 155px;
-  right: 40px;
-}
-
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
 
 	app-settings {
@@ -369,11 +363,6 @@ app-settings-bridge {
 	.network-change-to,
 	.token-change {
 		top: 108px;
-	}
-
-	.ecosystem-change {
-		top: 108px;
-		right: 30px;
 	}
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
@@ -404,11 +393,6 @@ app-settings-bridge {
 	.token-change {
 		top: 88px;
 	}
-
-	.ecosystem-change {
-		top: 88px;
-		right: 20px;
-	}
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
 
@@ -437,11 +421,6 @@ app-settings-bridge {
 	.network-change-to,
 	.token-change {
 		top: 75px;
-	}
-
-	.ecosystem-change {
-		top: 75px;
-		right: 20px;
 	}
 }
 @media screen and (min-width: 768px) and (max-width: 970px) {
@@ -472,11 +451,6 @@ app-settings-bridge {
 	.token-change {
 		top: 88px;
 	}
-
-	.ecosystem-change {
-		top: 88px;
-		right: 20px;
-	}
 }
 @media screen and (min-width: 480px) and (max-width: 767px) {
   app-settings {
@@ -506,11 +480,6 @@ app-settings-bridge {
 	.token-change {
 		top: 118px;
 	}
-
-	.ecosystem-change {
-		top: 138px;
-		right: 20px;
-	}
 }
 
 @media screen and (min-width: 360px) and (max-width: 479px) {
@@ -528,14 +497,17 @@ app-settings-bridge {
   .bridge-tx,
   .network-change-from,
   .network-change-to,
-  .token-change,
-  .ecosystem-change {
+  .token-change{
     position: fixed;
     top: 108px;
     left: 50%;
     transform: translate(-50%, 0%);
     z-index: 1;
   }
+
+	.ecosystem-change {
+		left: 45%;
+	}
   
   /* Для попапов, которые обычно используют popupFadeInSide */
   .popup-opening .connect-wallet,

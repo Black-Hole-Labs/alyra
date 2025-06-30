@@ -107,11 +107,13 @@ p {
 	padding: 8px 12px;
 	box-sizing: border-box;
 	background-color: transparent;
+	border: 1px solid rgba(var(--white), 0);
 	border-radius: 12px;
 	transition: 0.2s ease-in-out;
 	cursor: pointer;
 	&:hover {
-		background-color: rgba(var(--white), 0.1);
+		background-color: rgba(var(--dark-select), 0.5);
+		border: 1px solid rgba(var(--white), 0.2);
 	}
 }
 
