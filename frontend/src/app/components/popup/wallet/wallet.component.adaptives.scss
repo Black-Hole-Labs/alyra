@@ -33,14 +33,40 @@
 			);
 		}
 	}
+
+	.header p {
+		font-size: 14px;
+	}
 	
-	.left-header {
-		gap: 8px;
+	.header p span {
+		font-size: 14px;
+	}
+
+	.header button {
+		height: 13px;
+		width: 13px;
+	}
+
+	.left-wallet {
+		gap: 10px;
+	}
+	
+	.right-wallet {
+		gap: 10px;
+	}
+	
+	.wallet {
+		margin-top: 15px;
+	}
+
+	.wallet p {
+		font-size: 14px;
 	}
 
 	.avatar {
-		width: 50px;
-		height: 50px;
+		width: 45px;
+		height: 45px;
+		border-radius: 10px;
 	}
 
 	.wallet-name {
@@ -48,7 +74,7 @@
 	}
 
 	.wallet-name h3 {
-		font-size: 18px;
+		font-size: 16px;
 	}
 
 	.wallet-address {
@@ -63,10 +89,6 @@
 		width: 17px;
 		height: 17px;
 	}
-	
-	.right-header {
-		gap: 18px;
-	}
 
 	.disconnect {
 		padding: 5px 12px;
@@ -77,9 +99,11 @@
 		font-size: 12px;
 	}
 
-	.right-header button {
-		height: 13px;
-		width: 13px;
+	.button-connect {
+		margin-top: 20px;
+		height: 45px;
+		border-radius: 12px;
+		font-size: 16px;
 	}
 
 	//TODO!!!
@@ -190,14 +214,40 @@
 			);
 		}
 	}
+
+	.header p {
+		font-size: 14px;
+	}
 	
-	.left-header {
-		gap: 8px;
+	.header p span {
+		font-size: 14px;
+	}
+
+	.header button {
+		height: 13px;
+		width: 13px;
+	}
+
+	.left-wallet {
+		gap: 10px;
+	}
+	
+	.right-wallet {
+		gap: 10px;
+	}
+	
+	.wallet {
+		margin-top: 15px;
+	}
+
+	.wallet p {
+		font-size: 14px;
 	}
 
 	.avatar {
-		width: 50px;
-		height: 50px;
+		width: 45px;
+		height: 45px;
+		border-radius: 10px;
 	}
 
 	.wallet-name {
@@ -205,7 +255,7 @@
 	}
 
 	.wallet-name h3 {
-		font-size: 18px;
+		font-size: 16px;
 	}
 
 	.wallet-address {
@@ -220,10 +270,6 @@
 		width: 17px;
 		height: 17px;
 	}
-	
-	.right-header {
-		gap: 18px;
-	}
 
 	.disconnect {
 		padding: 5px 12px;
@@ -234,9 +280,11 @@
 		font-size: 12px;
 	}
 
-	.right-header button {
-		height: 13px;
-		width: 13px;
+	.button-connect {
+		margin-top: 20px;
+		height: 45px;
+		border-radius: 12px;
+		font-size: 16px;
 	}
 
 	//TODO!!!
@@ -348,13 +396,39 @@
 		}
 	}
 	
-	.left-header {
-		gap: 5px;
+	.header p {
+		font-size: 12px;
+	}
+	
+	.header p span {
+		font-size: 12px;
+	}
+
+	.header button {
+		height: 10px;
+		width: 10px;
+	}
+
+	.left-wallet {
+		gap: 10px;
+	}
+	
+	.right-wallet {
+		gap: 10px;
+	}
+	
+	.wallet {
+		margin-top: 15px;
+	}
+
+	.wallet p {
+		font-size: 12px;
 	}
 
 	.avatar {
 		width: 37px;
 		height: 37px;
+		border-radius: 10px;
 	}
 
 	.wallet-name {
@@ -377,10 +451,6 @@
 		width: 12px;
 		height: 12px;
 	}
-	
-	.right-header {
-		gap: 13px;
-	}
 
 	.disconnect {
 		padding: 3px 8px;
@@ -394,6 +464,13 @@
 	.right-header button {
 		height: 10px;
 		width: 10px;
+	}
+
+	.button-connect {
+		margin-top: 20px;
+		height: 35px;
+		border-radius: 10px;
+		font-size: 12px;
 	}
 
 	//TODO!!!
@@ -485,7 +562,7 @@
 
 		display: flex;
 		position: fixed;
-		width: 386px;
+		width: 416px;
 		box-sizing: border-box;
 		z-index: 10;
 		overflow: hidden;
@@ -504,14 +581,40 @@
 			);
 		}
 	}
+
+	.header p {
+		font-size: 14px;
+	}
 	
-	.left-header {
-		gap: 8px;
+	.header p span {
+		font-size: 14px;
+	}
+
+	.header button {
+		height: 13px;
+		width: 13px;
+	}
+
+	.left-wallet {
+		gap: 10px;
+	}
+	
+	.right-wallet {
+		gap: 10px;
+	}
+	
+	.wallet {
+		margin-top: 15px;
+	}
+
+	.wallet p {
+		font-size: 14px;
 	}
 
 	.avatar {
-		width: 50px;
-		height: 50px;
+		width: 45px;
+		height: 45px;
+		border-radius: 10px;
 	}
 
 	.wallet-name {
@@ -519,7 +622,7 @@
 	}
 
 	.wallet-name h3 {
-		font-size: 18px;
+		font-size: 16px;
 	}
 
 	.wallet-address {
@@ -534,10 +637,6 @@
 		width: 17px;
 		height: 17px;
 	}
-	
-	.right-header {
-		gap: 18px;
-	}
 
 	.disconnect {
 		padding: 5px 12px;
@@ -548,9 +647,11 @@
 		font-size: 12px;
 	}
 
-	.right-header button {
-		height: 13px;
-		width: 13px;
+	.button-connect {
+		margin-top: 20px;
+		height: 45px;
+		border-radius: 12px;
+		font-size: 16px;
 	}
 
 	//TODO!!!
@@ -663,13 +764,39 @@
 		}
 	}
 	
-	.left-header {
-		gap: 5px;
+	.header p {
+		font-size: 14px;
+	}
+	
+	.header p span {
+		font-size: 14px;
+	}
+
+	.header button {
+		height: 13px;
+		width: 13px;
+	}
+
+	.left-wallet {
+		gap: 10px;
+	}
+	
+	.right-wallet {
+		gap: 10px;
+	}
+	
+	.wallet {
+		margin-top: 15px;
+	}
+
+	.wallet p {
+		font-size: 14px;
 	}
 
 	.avatar {
-		width: 30px;
-		height: 30px;
+		width: 45px;
+		height: 45px;
+		border-radius: 10px;
 	}
 
 	.wallet-name {
@@ -677,7 +804,7 @@
 	}
 
 	.wallet-name h3 {
-		font-size: 18px;
+		font-size: 16px;
 	}
 
 	.wallet-address {
@@ -692,10 +819,6 @@
 		width: 17px;
 		height: 17px;
 	}
-	
-	.right-header {
-		gap: 18px;
-	}
 
 	.disconnect {
 		padding: 5px 12px;
@@ -706,9 +829,11 @@
 		font-size: 12px;
 	}
 
-	.right-header button {
-		height: 13px;
-		width: 13px;
+	.button-connect {
+		margin-top: 20px;
+		height: 45px;
+		border-radius: 12px;
+		font-size: 16px;
 	}
 
 	//TODO!!!
