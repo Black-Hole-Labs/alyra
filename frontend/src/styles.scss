@@ -2,24 +2,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Text:wght@100..900&display=swap');
 
 :root {
+	--white: 255, 255, 255;
+	--black: 0, 0, 0;
+
+	--dark-bg: 47, 47, 47;
   --elem-nonactive: #5D5D5D;
+	--dark-select: 27, 27, 27;
+	--btn-dark: #2F2F2F;
+
+	--blue: 92, 148, 252;
+	--dark-blue: 30, 0, 255;
+
 	--dark-violet: #39174F;
 	--violet: #BF57FF;
+
 	--dark-pink: 255, 0, 221;
 	--pink: #FF00DD;
-	--btn-dark: #2F2F2F;
-	--dark-select: 27, 27, 27;
+	
 	--red: #FF7E7E;
 	--dark-red: 54, 24, 24;
 	--dark-red-hover: #723A3A;
+
 	--green: #5EC46C;
 	--dark-green: 26, 36, 23;
+
 	--yellow: #FFBB00;
 	--dark-yellow: #4A3703;
-  --dark-bg: 47, 47, 47;
-	--white: 255, 255, 255;
-	--black: 0, 0, 0;
-	--gradient: linear-gradient(135deg, var(--violet) 0%, var(--pink) 100%);
+  
+	--gradient: linear-gradient(135deg, rgb(var(--blue)) 0%, rgb(var(--dark-blue)) 100%);
 }
 
 .light-theme {
