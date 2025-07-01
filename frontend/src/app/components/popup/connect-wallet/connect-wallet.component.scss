@@ -156,10 +156,12 @@
   padding: 10px 20px 10px 10px;
   cursor: pointer;
   transition: 0.2s ease-in-out;
+	border: 1px solid rgba(var(--white), 0);
 }
 
 .wallet:hover {
-  background-color: rgba(var(--dark-select), 1);
+  background-color: rgba(var(--dark-select), 0.5);
+	border: 1px solid rgba(var(--white), 0.2);
 }
 
 .name {

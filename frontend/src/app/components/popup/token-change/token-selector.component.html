@@ -1,98 +1,100 @@
-<div class="token-change" (mousemove)="onTokenSelectorMouseMove($event)">
-	<div class="header">
-		<h3>Select a token</h3>
-		<button (click)="closePopup()"></button>
-	</div>
+<div class="token-change" (mousemove)="onTokenSelectorMouseMove($event)" [class.network-selection-mode]="showNetworkChangeFrom()">
+	<div class="main-content">
+		<div class="header">
+			<h3>Select a token</h3>
+			<button (click)="closePopup()"></button>
+		</div>
 
-	<div class="network-select">
-		<div 
-			class="network" 
-			*ngFor="let network of networks(); trackBy: trackByNetwork"
-			[class.active]="isCurrentNetwork(network)"
-			(click)="selectNetwork(network)"
-			[title]="network.name">
+		<div class="network-select">
 			<div 
-				class="network-icon" 
-				[style.backgroundImage]="'url(' + network.logoURI + ')'">
+				class="network" 
+				*ngFor="let network of networks(); trackBy: trackByNetwork"
+				[class.active]="isCurrentNetwork(network)"
+				(click)="selectNetwork(network)"
+				[title]="network.name">
+				<div 
+					class="network-icon" 
+					[style.backgroundImage]="'url(' + network.logoURI + ')'">
+				</div>
+			</div>
+			<div class="more" *ngIf="additionalNetworksCount() > 0" (click)="openNetworkChangeFrom()">
+				<p>{{ additionalNetworksCount() }}+</p>
 			</div>
 		</div>
-		<div class="more" *ngIf="additionalNetworksCount() > 0" (click)="openNetworkChangeFrom()">
-			<p>{{ additionalNetworksCount() }}+</p>
+	  
+		<div class="search">
+			<input
+			type="text"
+			placeholder="Search by name or contract address"
+			(input)="updateSearchText($event)"
+			/>
+			<button class="search-button"></button>
 		</div>
-	</div>
-  
-	<div class="search">
-		<input
-		type="text"
-		placeholder="Search by name or contract address"
-		(input)="updateSearchText($event)"
-		/>
-		<button class="search-button"></button>
-	</div>
-  
-	<div class="desc">
-		<p>Token list</p>
-		<p>Contracts</p>
-	</div>
-  
-	<div class="list">
-		<div class="token-list">
-			<div
-			class="token"
-			*ngFor="let token of displayedTokens(); trackBy: trackByToken"
-			[class.selected]="isSelectedToken(token)"
-			(click)="selectToken(token)"
-			>
-			<div class="left">
-				<div class="image">
+	  
+		<div class="desc">
+			<p>Token list</p>
+			<p>Contracts</p>
+		</div>
+	  
+		<div class="list">
+			<div class="token-list">
 				<div
-				class="token-image"
-				[ngStyle]="{ 'background-image': getTokenImage(token) }"
-				[ngClass]="{ 'has-placeholder': !token.imageUrl }"
+				class="token"
+				*ngFor="let token of displayedTokens(); trackBy: trackByToken"
+				[class.selected]="isSelectedToken(token)"
+				(click)="selectToken(token)"
 				>
-				<span *ngIf="!token.imageUrl" class="token-letter">{{ token.symbol[0] | uppercase }}</span>
-				</div>
-				<div class="network-image"></div>
-				</div>
-				<div class="name">
-				<div class="symbol-container">
-					<p>{{ token.symbol }}</p>
+				<div class="left">
+					<div class="image">
 					<div
-					class="verified-icon"
-					*ngIf="isVerifiedToken(token)"
-					></div>
+					class="token-image"
+					[ngStyle]="{ 'background-image': getTokenImage(token) }"
+					[ngClass]="{ 'has-placeholder': !token.imageUrl }"
+					>
+					<span *ngIf="!token.imageUrl" class="token-letter">{{ token.symbol[0] | uppercase }}</span>
+					</div>
+					<div class="network-image"></div>
+					</div>
+					<div class="name">
+					<div class="symbol-container">
+						<p>{{ token.symbol }}</p>
+						<div
+						class="verified-icon"
+						*ngIf="isVerifiedToken(token)"
+						></div>
+					</div>
+					<h6 *ngIf="token.name">{{ token.name }}</h6>
+					</div>
 				</div>
-				<h6 *ngIf="token.name">{{ token.name }}</h6>
-				</div>
-			</div>
 
-			<div class="right">
-				<div class="token-balance">
-				<p *ngIf="blockchainStateService.connected()">
-					{{ getTokenBalance(token) }}
-				</p>
-				<p *ngIf="!blockchainStateService.connected()">–</p>
-				</div>
-				<div class="contract" *ngIf="!isNativeToken(token)">
-				<div
-					class="image-copy"
-					[class.copied]="isCopied(token.contractAddress)"
-					(click)="copyToClipboard(token.contractAddress, $event)"
-				></div>
-				<a
-					[href]="explorerUrl() + token.contractAddress"
-					target="_blank"
-					(click)="$event.stopPropagation()"
-				>
-					<p>
-					{{ token.contractAddress | slice:0:4 }}…{{ token.contractAddress | slice:-3 }}
+				<div class="right">
+					<div class="token-balance">
+					<p *ngIf="blockchainStateService.connected()">
+						{{ getTokenBalance(token) }}
 					</p>
-				</a>
+					<p *ngIf="!blockchainStateService.connected()">–</p>
+					</div>
+					<div class="contract" *ngIf="!isNativeToken(token)">
+					<div
+						class="image-copy"
+						[class.copied]="isCopied(token.contractAddress)"
+						(click)="copyToClipboard(token.contractAddress, $event)"
+					></div>
+					<a
+						[href]="explorerUrl() + token.contractAddress"
+						target="_blank"
+						(click)="$event.stopPropagation()"
+					>
+						<p>
+						{{ token.contractAddress | slice:0:4 }}…{{ token.contractAddress | slice:-3 }}
+						</p>
+					</a>
+					</div>
+				</div>
 				</div>
 			</div>
-			</div>
 		</div>
-		</div>
+	</div>
 
   </div>
   

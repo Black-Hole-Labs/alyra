@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 import { WalletBalanceService } from '../../../services/wallet-balance.service';
 import { Token } from '../../../pages/trade/trade.component';
-import { Network } from '../../../models/wallet-provider.interface';
+import { Network, ProviderType } from '../../../models/wallet-provider.interface';
 import { ethers } from 'ethers';
 import { NetworkChangeFromPopupComponent } from '../network-change-from/network-change-from.component';
 import { TokenService } from '../../../services/token.service';
@@ -237,20 +237,37 @@ export class TokenChangePopupComponent {
     await this.loadTokensForNetwork(network.id);
 
     if (this.mode === 'sell') {
+      this.blockchainStateService.updateNetworkSell(network.id);
+
+      if (network.id != this.blockchainStateService.getCurrentNetworkBuy()?.id)
+      {
+        this.blockchainStateService.setNetworkBuy(network);
+      }
+
       if (!this.blockchainStateService.connected()) {
-        this.blockchainStateService.updateNetworkSell(network.id);
         return;
       }
 
-      const currentProvider = this.blockchainStateService.getCurrentProvider();
-      if (!currentProvider) {
+      const providerId = this.blockchainStateService.getCurrentProviderId();
+
+      if (!providerId) {
         console.error('No provider selected');
         return;
       }
 
-      this.blockchainStateService.updateNetworkSell(network.id);
+      const providerType = this.blockchainStateService.getType(providerId);
 
-      const provider = currentProvider.provider;
+      if (providerType != ProviderType.MULTICHAIN && providerType != network.chainType)
+      {
+        console.warn("Selected Unsupported network for the wallet! Disconnect");
+        this.blockchainStateService.disconnect();
+        return;
+      }
+
+      const provider = this.blockchainStateService.getProvider(providerId);
+
+      // this.blockchainStateService.updateNetworkSell(network.id);
+
       try {
         await provider.switchNetwork(network);
       } catch (error) {

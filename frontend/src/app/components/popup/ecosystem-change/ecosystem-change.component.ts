@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PopupService } from '../../../services/popup.service';
+import { MouseGradientService } from '../../../services/mouse-gradient.service';
 import { ProviderType } from '../../../models/wallet-provider.interface';
 
 @Component({
@@ -33,7 +34,10 @@ export class EcosystemChangeComponent {
     }
   ];
   
-  constructor(private popupService: PopupService) {}
+  constructor(
+    private popupService: PopupService,
+    private mouseGradientService: MouseGradientService
+  ) {}
   
   closePopup(): void {
     this.popupService.closePopup('ecosystemChange');
@@ -43,5 +47,9 @@ export class EcosystemChangeComponent {
   selectEcosystem(ecosystemId: string): void {
     this.ecosystemSelected.emit(ecosystemId);
     this.closePopup();
+  }
+
+  onEcosystemChangeMouseMove(event: MouseEvent): void {
+    this.mouseGradientService.onMouseMove(event);
   }
 }
