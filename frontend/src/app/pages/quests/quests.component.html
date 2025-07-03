@@ -1,0 +1,75 @@
+<div class="soon">
+	<h6>
+		Quests will be available soon...
+	</h6>
+</div>
+<div class="container">
+
+	<div class="ecosystems">
+
+		<div class="ecosystems-header">
+			<h3>Ecosystems</h3>
+			<div class="activity" 
+				 [class.selected]="myActivityActive"
+				 (mousemove)="onActivityMouseMove($event)"
+				 (click)="toggleMyActivity()">
+				<p>My Activity</p>
+			</div>
+		</div>
+			
+		<div class="ecosystem-container">
+			<div class="ecosystem" 
+				 *ngFor="let ecosystem of ecosystems"
+				 [class.selected]="isEcosystemSelected(ecosystem)"
+				 (mousemove)="onEcosystemMouseMove($event)"
+				 (click)="toggleEcosystem(ecosystem)">
+				<div class="network-image" [style.backgroundImage]="'url(' + getEcosystemImageUrl(ecosystem) + ')'"></div>
+				<p>{{ ecosystem }}</p>
+			</div>
+		</div>
+	</div>
+	
+	<div class="quests">
+	
+		<div class="quests-header">
+			<h3>Quests</h3>
+			<div class="nav-buttons">
+				<div class="nav-button" 
+					 (mousemove)="onNavButtonMouseMove($event)"
+					 (click)="previousPage()"
+					 [class.disabled]="!canGoPrevious">
+					<div class="nav-button-icon prev"></div>
+				</div>
+				<div class="nav-button" 
+					 (mousemove)="onNavButtonMouseMove($event)"
+					 (click)="nextPage()"
+					 [class.disabled]="!canGoNext">
+					<div class="nav-button-icon next"></div>
+				</div>
+			</div>
+		</div>
+	
+		<div class="quests-container">
+					<div class="quest" 
+			 *ngFor="let quest of currentQuests; trackBy: trackByQuestId"
+			 [class.completed]="quest.status === 'Completed'"
+			 (mousemove)="onQuestMouseMove($event)"
+			 [style.--quest-bg-image]="'url(' + getQuestBackgroundImageUrl(quest) + ')'">
+				<div class="quest-header">
+					<div class="xp">
+						<p>{{ quest.xp }} XP</p>
+					</div>
+					<div class="status" *ngIf="quest.status">
+						<p>{{ quest.status }}</p>
+					</div>
+				</div>
+				<h6>{{ quest.title }}</h6>
+				<div class="quest-footer">
+					<p>{{ quest.description }}</p>
+					<p>{{ quest.progress }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

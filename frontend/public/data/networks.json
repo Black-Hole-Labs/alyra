@@ -192,7 +192,7 @@
     "name": "HyperEVM",
     "id": 999,
     "idHex": "0x3e7",
-    "logoURI": "https://static.debank.com/image/hyper_token/logo_url/hyper/0b3e288cfe418e9ce69eef4c96374583.png",
+    "logoURI": "/img/networks/hyper.png",
     "rpcUrls": [
       "https://rpc.hyperliquid.xyz/evm",
       "https://rpc.hyperlend.finance",
