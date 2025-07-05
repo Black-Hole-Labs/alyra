@@ -10,8 +10,18 @@
 			<div class="wallet-name">
 				<h3>{{ walletName().length > 20 ? walletName().slice(0, 6) + '...' + walletName().slice(-3) : walletName()}}</h3>
 				<div class="wallet-address">
-					<p>0xefe..45</p>
-					<div class="copy"></div>
+				<p>
+					{{
+					walletName().length > 20
+						? walletName().slice(0, 6) + '...' + walletName().slice(-4)
+						: walletName()
+					}}
+				</p>
+				<div
+					class="copy"
+					[class.copied]="isCopied(walletName())"
+					(click)="copyToClipboard(walletName(), $event)"
+				></div>
 				</div>
 			</div>
 		</div>
