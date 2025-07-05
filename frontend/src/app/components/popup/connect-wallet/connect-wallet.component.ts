@@ -137,6 +137,12 @@ export class ConnectWalletComponent implements OnInit {
         this.blockchainStateService.setEvmAddress(address);
       } else if (type === ProviderType.SVM) {
         this.blockchainStateService.setSvmAddress(address);
+      } else if (type === ProviderType.MULTICHAIN) {
+        if (provider.currentNetwork === ProviderType.EVM) {
+          this.blockchainStateService.setEvmAddress(address);
+        } else if (provider.currentNetwork === ProviderType.SVM) {
+          this.blockchainStateService.setSvmAddress(address);
+        }
       }
       this.blockchainStateService.setCurrentProvider(providerId);
       if (type === ProviderType.EVM) {
@@ -145,6 +151,12 @@ export class ConnectWalletComponent implements OnInit {
       } else if (type === ProviderType.SVM) {
         sessionStorage.setItem('currentSvmProvider', providerId);
         // sessionStorage.setItem('svmNetworkId', ...);
+      } else if (type === ProviderType.MULTICHAIN) {
+        if (provider.currentNetwork === ProviderType.EVM) {
+          sessionStorage.setItem('currentEvmProvider', providerId);
+        } else if (provider.currentNetwork === ProviderType.SVM) {
+          sessionStorage.setItem('currentSvmProvider', providerId);
+        }
       }
       // console.log('Successfully connected, address:', address);
 
@@ -160,7 +172,7 @@ export class ConnectWalletComponent implements OnInit {
         // this.blockchainStateService.setCurrentProvider(providerId);
         // console.log('Current provider set');
         
-        this.popupService.openPopup('ecosystemChange');
+        //this.popupService.openPopup('ecosystemChange');
       } catch(e: unknown) {
         console.error("Error in post-connection steps:", e);
       }

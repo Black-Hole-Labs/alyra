@@ -1,4 +1,5 @@
 import { BlockchainStateService } from '../services/blockchain-state.service';
+import { PopupService } from '../services/popup.service';
 import { EvmWalletProvider } from './evm-wallet-provider';
 import { SvmWalletProvider } from './svm-wallet-provider';
 import { NetworkId, ProviderType, TransactionRequestEVM, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
@@ -8,15 +9,17 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
   protected svmProviderInstance: any;
   protected evmProvider: EvmWalletProvider | null = null;
   protected svmProvider: SvmWalletProvider | null = null;
-  protected currentNetwork: 'EVM' | 'SVM' = 'EVM'; // EVM as default
+  public currentNetwork: 'EVM' | 'SVM' = 'EVM'; // EVM as default
   protected address: string = '';
 
   protected blockchainStateService: BlockchainStateService;
   protected injector: Injector;
+  private popupService: PopupService
 
   constructor(injector: Injector) {
     this.injector = injector;
     this.blockchainStateService = injector.get(BlockchainStateService);
+    this.popupService = injector.get(PopupService);
   }
 
   isAvailable(): boolean {
@@ -36,6 +39,8 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
     else {
       console.error("Multichain::connect(): SVM not found!")
     }
+
+    this.popupService.openPopup('ecosystemChange');
 
     if (netowrkId === NetworkId.ETHEREUM_MAINNET && this.evmProvider) {
       const { address } = await this.evmProvider.connect(this.evmProviderInstance);
