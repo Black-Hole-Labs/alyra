@@ -59,12 +59,22 @@ export class BlockchainStateService {
   private static isRegisteredProviders = false;
   walletManager: WalletProviderManager | undefined;
 
+  private currentProviders: Record<ProviderType, string | null> = {
+    [ProviderType.EVM]: null,
+    [ProviderType.SVM]: null,
+    [ProviderType.MULTICHAIN]: null
+  };
+  readonly evmWalletAddress = signal<string | null>(null);
+  readonly svmWalletAddress = signal<string | null>(null);
+
   constructor(private injector: Injector) {
     effect(
       () => {
-        this.connected.set(this.walletAddress() !== null);
+        this.connected.set(
+          (this.evmWalletAddress() !== null) || (this.svmWalletAddress() !== null)
+        );
       },
-      { allowSignalWrites: true },
+      { allowSignalWrites: true }
     );
 
     effect(
@@ -77,6 +87,46 @@ export class BlockchainStateService {
       },
       { allowSignalWrites: true },
     );
+  }
+
+  public setEvmAddress(address: string): void {
+    this.evmWalletAddress.set(address);
+  }
+  public setSvmAddress(address: string): void {
+    this.svmWalletAddress.set(address);
+  }
+
+  public setCurrentProvider(id: string): void {
+    const type = this.providers[id].type;
+    this.currentProviders[type] = id;
+  }
+
+  public getCurrentProviderIdByType(type: ProviderType): string | null {
+    return this.currentProviders[type] || null;
+  }
+
+  public getCurrentAddressByType(type: ProviderType): string | null {
+    return type === ProviderType.EVM
+      ? this.evmWalletAddress()
+      : this.svmWalletAddress();
+  }
+
+  public disconnectEvm(): void {
+    this.evmWalletAddress.set(null);
+    this.currentProviders[ProviderType.EVM] = null;
+  }
+  
+  public disconnectSvm(): void {
+    this.svmWalletAddress.set(null);
+    this.currentProviders[ProviderType.SVM] = null;
+  }
+
+  public disconnectAll(): void {
+    this.evmWalletAddress.set(null);
+    this.svmWalletAddress.set(null);
+    this.currentProviders[ProviderType.EVM] = null;
+    this.currentProviders[ProviderType.SVM] = null;
+    sessionStorage.clear();
   }
 
   registerProviders()
@@ -201,10 +251,13 @@ export class BlockchainStateService {
     return provider
       .connect()
       .then(({ address }: { address: string }) => {
-        this.updateWalletAddress(address);
+        const type = this.providers[providerId].type;
+        if (type === ProviderType.EVM) this.setEvmAddress(address);
+        else if (type === ProviderType.SVM) this.setSvmAddress(address);
         this.setCurrentProvider(providerId);
       })
       .catch(console.error);
+
   }
 
   setSearchText(value: string) {
@@ -218,9 +271,9 @@ export class BlockchainStateService {
     this.providers[id] = { provider, type };
   }
 
-  setCurrentProvider(id: string): void {
-    this.currentProviderId = id;
-  }
+  // setCurrentProvider(id: string): void {
+  //   this.currentProviderId = id;
+  // }
 
   getProvider(id: string): any {
     return this.providers[id].provider;

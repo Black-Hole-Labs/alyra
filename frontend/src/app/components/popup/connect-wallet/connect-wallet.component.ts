@@ -5,7 +5,7 @@ import { trigger, style, transition, animate } from '@angular/animations';
 import { PopupService } from '../../../services/popup.service';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 import { MouseGradientService } from '../../../services/mouse-gradient.service';
-import { Wallets } from '../../../models/wallet-provider.interface';
+import { ProviderType, Wallets } from '../../../models/wallet-provider.interface';
 
 @Component({
   selector: 'app-connect-wallet',
@@ -132,18 +132,32 @@ export class ConnectWalletComponent implements OnInit {
     try {
       // console.log('Attempting to connect to provider...');
       const { address } = await provider.connect();
+      const type = this.blockchainStateService.getType(providerId);
+      if (type === ProviderType.EVM) {
+        this.blockchainStateService.setEvmAddress(address);
+      } else if (type === ProviderType.SVM) {
+        this.blockchainStateService.setSvmAddress(address);
+      }
+      this.blockchainStateService.setCurrentProvider(providerId);
+      if (type === ProviderType.EVM) {
+        sessionStorage.setItem('currentEvmProvider', providerId);
+        // sessionStorage.setItem('evmNetworkId', ...);
+      } else if (type === ProviderType.SVM) {
+        sessionStorage.setItem('currentSvmProvider', providerId);
+        // sessionStorage.setItem('svmNetworkId', ...);
+      }
       // console.log('Successfully connected, address:', address);
 
-      sessionStorage.setItem('currentProvider', providerId);
+      // sessionStorage.setItem('currentProvider', providerId);
       sessionStorage.setItem('networkId', (this.blockchainStateService.networkSell()!.id).toString());
 
       try {
         // console.log('Updating wallet address...');
-        this.blockchainStateService.updateWalletAddress(address);
+        // this.blockchainStateService.updateWalletAddress(address);
         // console.log('Wallet address updated');
         
         // console.log('Setting current provider:', providerId);
-        this.blockchainStateService.setCurrentProvider(providerId);
+        // this.blockchainStateService.setCurrentProvider(providerId);
         // console.log('Current provider set');
         
         this.popupService.openPopup('ecosystemChange');

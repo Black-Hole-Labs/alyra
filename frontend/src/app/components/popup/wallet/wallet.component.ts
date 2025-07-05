@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PopupService } from '../../../services/popup.service';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 import { MouseGradientService } from '../../../services/mouse-gradient.service';
-import { Wallets } from '../../../models/wallet-provider.interface';
+import { ProviderType, Wallets } from '../../../models/wallet-provider.interface';
 
 interface Token {
   name: string;
@@ -52,7 +52,7 @@ export class WalletComponent {
   ];
 
   constructor(
-    private blockchainStateService: BlockchainStateService, 
+    public blockchainStateService: BlockchainStateService, 
     private popupService: PopupService,
     private mouseGradientService: MouseGradientService
   ) {
@@ -78,6 +78,28 @@ export class WalletComponent {
     );
   }
 
+  get walletCount(): number {
+    const evm = this.blockchainStateService.evmWalletAddress();
+    const svm = this.blockchainStateService.svmWalletAddress();
+    return (evm ? 1 : 0) + (svm ? 1 : 0);
+  }
+
+  getIconUrl(type: string): string {
+    const providerId = this.blockchainStateService.getCurrentProviderIdByType(type as ProviderType);
+    const provider = this.providers.find(p => p.id === providerId);
+    return provider?.iconUrl || '/img/wallet-icns/profile.png';
+  }
+
+  onDisconnect(type: string): void {
+    if (type === 'EVM') {
+      this.blockchainStateService.disconnectEvm();
+    } else if (type === 'SVM') {
+      this.blockchainStateService.disconnectSvm();
+    }
+    this.popupService.closeAllPopups();
+    this.disconnect.emit();
+  }
+
   copyToClipboard(address: string, event: Event): void {
     event.stopPropagation();
     navigator.clipboard
@@ -100,6 +122,10 @@ export class WalletComponent {
 
   isCopied(address: string): boolean {
     return this.copiedAddresses().has(address);
+  }
+
+  onConnectAnotherWallet(): void {
+    this.popupService.openPopup('connectWallet');
   }
 
   get totalBalance(): number {
@@ -135,11 +161,16 @@ export class WalletComponent {
     this.close.emit();
   }
 
-  onDisconnect(): void {
-    this.blockchainStateService.disconnect();
-    this.popupService.closeAllPopups(); 
-    this.disconnect.emit();
+  // onDisconnect(): void {
+  //   this.blockchainStateService.disconnect();
+  //   this.popupService.closeAllPopups(); 
+  //   this.disconnect.emit();
+  // }
+
+  formatAddress(addr: string): string {
+    return addr.length > 20 ? addr.slice(0,6) + '...' + addr.slice(-4) : addr;
   }
+
 
   onWalletMouseMove(event: MouseEvent): void {
     this.mouseGradientService.onMouseMove(event);
