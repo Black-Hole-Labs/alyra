@@ -136,6 +136,14 @@
 	opacity: 1;
 }
 
+.copy.copied {
+  background: url(/img/trade/copy-check.png);
+	background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 1;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
 .disconnect {
 	padding: 4px 9px;
 	border-radius: 10px;

@@ -30,6 +30,7 @@ export class WalletComponent {
   walletName = signal<string>('');
   walletIcon = signal<string>('/img/wallet-icns/profile.png');
   private providers: Wallets[] = [];
+  copiedAddresses = signal<Set<string>>(new Set<string>());
   
   tokens: Token[] = [
     {
@@ -75,6 +76,30 @@ export class WalletComponent {
       },
       { allowSignalWrites: true },
     );
+  }
+
+  copyToClipboard(address: string, event: Event): void {
+    event.stopPropagation();
+    navigator.clipboard
+      .writeText(address)
+      .then(() => {
+        const currentCopied = this.copiedAddresses();
+        const newCopied = new Set(currentCopied);
+        newCopied.add(address);
+        this.copiedAddresses.set(newCopied);
+
+        setTimeout(() => {
+          const currentCopied = this.copiedAddresses();
+          const newCopied = new Set(currentCopied);
+          newCopied.delete(address);
+          this.copiedAddresses.set(newCopied);
+        }, 2000);
+      })
+      .catch(() => console.error('Failed to copy to clipboard'));
+  }
+
+  isCopied(address: string): boolean {
+    return this.copiedAddresses().has(address);
   }
 
   get totalBalance(): number {
