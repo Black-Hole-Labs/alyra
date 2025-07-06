@@ -103,10 +103,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
         if (this.providers.length === 0) {
           this.loadProviders();
-          this.updateWalletIcon();
-        } else {
-          this.updateWalletIcon();
         }
+        this.updateWalletIcon();
       },
       { allowSignalWrites: true },
     );

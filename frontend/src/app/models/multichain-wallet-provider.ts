@@ -2,7 +2,7 @@ import { BlockchainStateService } from '../services/blockchain-state.service';
 import { PopupService } from '../services/popup.service';
 import { EvmWalletProvider } from './evm-wallet-provider';
 import { SvmWalletProvider } from './svm-wallet-provider';
-import { NetworkId, ProviderType, TransactionRequestEVM, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
+import { NetworkId, TransactionRequestEVM, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
 import { Injector } from '@angular/core';
 export abstract class MultiChainWalletProvider implements WalletProvider {
   protected evmProviderInstance: any;
@@ -39,8 +39,6 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
     else {
       console.error("Multichain::connect(): SVM not found!")
     }
-
-    this.popupService.openPopup('ecosystemChange');
 
     if (netowrkId === NetworkId.ETHEREUM_MAINNET && this.evmProvider) {
       const { address } = await this.evmProvider.connect(this.evmProviderInstance);

@@ -128,11 +128,21 @@ export class ConnectWalletComponent implements OnInit {
       return;
     }
 
-    this.closePopup();
+    const type = this.blockchainStateService.getType(providerId);
+
+    if (type === ProviderType.MULTICHAIN)
+    {
+      this.popupService.openPopup('ecosystemChange');
+    }
+    else
+    {
+      this.closePopup();
+    }
+    
     try {
       // console.log('Attempting to connect to provider...');
       const { address } = await provider.connect();
-      const type = this.blockchainStateService.getType(providerId);
+      
       if (type === ProviderType.EVM) {
         this.blockchainStateService.setEvmAddress(address);
       } else if (type === ProviderType.SVM) {
@@ -144,7 +154,9 @@ export class ConnectWalletComponent implements OnInit {
           this.blockchainStateService.setSvmAddress(address);
         }
       }
+
       this.blockchainStateService.setCurrentProvider(providerId);
+
       if (type === ProviderType.EVM) {
         sessionStorage.setItem('currentEvmProvider', providerId);
         // sessionStorage.setItem('evmNetworkId', ...);
