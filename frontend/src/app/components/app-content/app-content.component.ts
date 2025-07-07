@@ -73,10 +73,10 @@ export class AppContentComponent {
       this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET);
     }
     
-    const provider = this.blockchainStateService.getCurrentProvider();
-    provider.provider.switchNetwork(this.blockchainStateService.getCurrentNetworkSell());
+    // const provider = this.blockchainStateService.getCurrentProvider();
+    // provider.provider.switchNetwork(this.blockchainStateService.getCurrentNetworkSell());
     
-    this.popupService.openPopup('wallet');
+    // this.popupService.openPopup('wallet');
   }
 
   closeEcosystemPopup(): void {
