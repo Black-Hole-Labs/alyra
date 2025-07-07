@@ -257,14 +257,14 @@ export class TokenChangePopupComponent {
 
       const providerType = this.blockchainStateService.getType(providerId);
 
+      const provider = this.blockchainStateService.getProvider(providerId);
+
       if (providerType != ProviderType.MULTICHAIN && providerType != network.chainType)
       {
         console.warn("Selected Unsupported network for the wallet! Disconnect");
-        this.blockchainStateService.disconnect();
+        this.blockchainStateService.disconnect(provider.address);
         return;
       }
-
-      const provider = this.blockchainStateService.getProvider(providerId);
 
       // this.blockchainStateService.updateNetworkSell(network.id);
 

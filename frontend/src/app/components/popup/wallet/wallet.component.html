@@ -4,17 +4,17 @@
 		<button class="close-button" (click)="closePopup()"></button>
 	</div>
 
-<div class="wallet" *ngIf="blockchainStateService.evmWalletAddress()">
+<div class="wallet" *ngIf="blockchainStateService.currentProviderIds()['EVM'].address">
   <div class="left-wallet">
     <div class="avatar" [style.background-image]="'url(' + getIconUrl('EVM') + ')'"></div>
     <div class="wallet-name">
-      <h3>{{ formatAddress(blockchainStateService.evmWalletAddress()!) }}</h3>
+      <h3>{{ formatAddress(blockchainStateService.currentProviderIds()['EVM'].address!) }}</h3>
       <div class="wallet-address">
-        <p>{{ formatAddress(blockchainStateService.evmWalletAddress()!) }}</p>
+        <p>{{ formatAddress(blockchainStateService.currentProviderIds()['EVM'].address!) }}</p>
         <div
           class="copy"
-          [class.copied]="isCopied(blockchainStateService.evmWalletAddress()!)"
-          (click)="copyToClipboard(blockchainStateService.evmWalletAddress()!, $event)"
+          [class.copied]="isCopied(blockchainStateService.currentProviderIds()['EVM'].address!)"
+          (click)="copyToClipboard(blockchainStateService.currentProviderIds()['EVM'].address!, $event)"
         ></div>
       </div>
     </div>
@@ -27,17 +27,17 @@
   </div>
 </div>
 
-<div class="wallet" *ngIf="blockchainStateService.svmWalletAddress()">
+<div class="wallet" *ngIf="blockchainStateService.currentProviderIds()['SVM'].address">
   <div class="left-wallet">
     <div class="avatar" [style.background-image]="'url(' + getIconUrl('SVM') + ')'"></div>
     <div class="wallet-name">
-      <h3>{{ formatAddress(blockchainStateService.svmWalletAddress()!) }}</h3>
+      <h3>{{ formatAddress(blockchainStateService.currentProviderIds()['SVM'].address!) }}</h3>
       <div class="wallet-address">
-        <p>{{ formatAddress(blockchainStateService.svmWalletAddress()!) }}</p>
+        <p>{{ formatAddress(blockchainStateService.currentProviderIds()['SVM'].address!) }}</p>
         <div
           class="copy"
-          [class.copied]="isCopied(blockchainStateService.svmWalletAddress()!)"
-          (click)="copyToClipboard(blockchainStateService.svmWalletAddress()!, $event)"
+          [class.copied]="isCopied(blockchainStateService.currentProviderIds()['SVM'].address!)"
+          (click)="copyToClipboard(blockchainStateService.currentProviderIds()['SVM'].address!, $event)"
         ></div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PopupService } from '../../../services/popup.service';
-import { BlockchainStateService } from '../../../services/blockchain-state.service';
+import { BlockchainStateService, Ecosystem } from '../../../services/blockchain-state.service';
 import { MouseGradientService } from '../../../services/mouse-gradient.service';
 import { ProviderType, Wallets } from '../../../models/wallet-provider.interface';
 
@@ -79,13 +79,13 @@ export class WalletComponent {
   }
 
   get walletCount(): number {
-    const evm = this.blockchainStateService.evmWalletAddress();
-    const svm = this.blockchainStateService.svmWalletAddress();
+    const evm = this.blockchainStateService.currentProviderIds()[ProviderType.EVM].id;
+    const svm = this.blockchainStateService.currentProviderIds()[ProviderType.SVM].id;
     return (evm ? 1 : 0) + (svm ? 1 : 0);
   }
 
   getIconUrl(type: string): string {
-    const providerId = this.blockchainStateService.getCurrentProviderIdByType(type as ProviderType);
+    const providerId = this.blockchainStateService.getCurrentProviderIdByType(type as Ecosystem);
     const provider = this.providers.find(p => p.id === providerId);
     return provider?.iconUrl || '/img/wallet-icns/profile.png';
   }

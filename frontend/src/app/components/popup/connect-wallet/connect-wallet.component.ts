@@ -143,19 +143,19 @@ export class ConnectWalletComponent implements OnInit {
       // console.log('Attempting to connect to provider...');
       const { address } = await provider.connect();
       
-      if (type === ProviderType.EVM) {
-        this.blockchainStateService.setEvmAddress(address);
-      } else if (type === ProviderType.SVM) {
-        this.blockchainStateService.setSvmAddress(address);
-      } else if (type === ProviderType.MULTICHAIN) {
-        if (provider.currentNetwork === ProviderType.EVM) {
-          this.blockchainStateService.setEvmAddress(address);
-        } else if (provider.currentNetwork === ProviderType.SVM) {
-          this.blockchainStateService.setSvmAddress(address);
-        }
-      }
+      // if (type === ProviderType.EVM) {
+      //   this.blockchainStateService.setEvmAddress(address);
+      // } else if (type === ProviderType.SVM) {
+      //   this.blockchainStateService.setSvmAddress(address);
+      // } else if (type === ProviderType.MULTICHAIN) {
+      //   if (provider.currentNetwork === ProviderType.EVM) {
+      //     this.blockchainStateService.setEvmAddress(address);
+      //   } else if (provider.currentNetwork === ProviderType.SVM) {
+      //     this.blockchainStateService.setSvmAddress(address);
+      //   }
+      // }
 
-      this.blockchainStateService.setCurrentProvider(providerId);
+      this.blockchainStateService.setCurrentProvider(providerId, address);
 
       if (type === ProviderType.EVM) {
         sessionStorage.setItem('currentEvmProvider', providerId);
@@ -191,10 +191,6 @@ export class ConnectWalletComponent implements OnInit {
     } catch (error) {
       console.error('Connection error:', error);
     }
-  }
-
-  disconnectWallet(): void {
-    this.blockchainStateService.disconnect();
   }
 
   handleWalletClick(wallet: Wallets): void {

@@ -60,7 +60,7 @@ export class EvmWalletProvider implements WalletProvider {
         throw error;
       }
       else {
-        this.blockchainStateService.disconnect();
+        this.blockchainStateService.disconnect(this.address);
         throw new Error("unsupported_network");
       }
     }

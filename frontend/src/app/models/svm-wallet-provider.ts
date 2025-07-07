@@ -52,7 +52,7 @@ export class SvmWalletProvider implements WalletProvider {
   }
 
   async switchNetwork(selectedNetwork: any): Promise<void> {
-    this.blockchainStateService.disconnect();
+    this.blockchainStateService.disconnect(this.address);
     throw new Error("unsupported_network");
   }
 }
