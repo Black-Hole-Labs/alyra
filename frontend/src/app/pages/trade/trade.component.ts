@@ -408,7 +408,7 @@ export class TradeComponent implements AfterViewChecked {
         this.blockchainStateService.updateWalletAddress(provider.address);
       }
       catch (error) {
-        this.blockchainStateService.disconnect();
+        this.blockchainStateService.disconnect(provider.address);
       }
     }
 
@@ -692,7 +692,7 @@ export class TradeComponent implements AfterViewChecked {
 
     const fromChainType = this.blockchainStateService.networkSell()?.chainType;
     const toChainType = this.blockchainStateService.networkBuy()?.chainType;
-    const walletConnected = !!this.blockchainStateService.walletAddress();
+    const walletConnected = !!this.blockchainStateService.getCurrentWalletAddress();
 
     if (!walletConnected) {
         if (fromChainType === 'EVM') {
@@ -709,7 +709,7 @@ export class TradeComponent implements AfterViewChecked {
             }
         }
     } else {
-        fromAddress = this.blockchainStateService.walletAddress()!;
+        fromAddress = this.blockchainStateService.getCurrentWalletAddress()!;
 
         // ---- ДОБАВЬ ВОТ ЭТОТ КУСОК ----
         // Если типы сетей разные
@@ -857,7 +857,7 @@ export class TradeComponent implements AfterViewChecked {
             this.buttonState = 'wrong-address';
             return;
           }
-          if (!this.blockchainStateService.walletAddress()) {
+          if (!this.blockchainStateService.getCurrentWalletAddress()) {
             this.buttonState = 'insufficient';
           } else if (this.validatedSellAmount() > this.balance()) {
             this.buttonState = 'insufficient';

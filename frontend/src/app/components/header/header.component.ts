@@ -42,7 +42,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showConnectWalletPopup = false;
   showWalletPopup = false;
   //walletName: string = 'Connect Wallet';
-  walletName = computed(() => this.blockchainStateService.walletAddress() ?? 'Connect Wallet');
+  walletName = computed(() => this.blockchainStateService.getCurrentWalletAddress() ?? 'Connect Wallet');
   private subscription: Subscription;
   private providers: Wallets[] = [];
   walletIcon = signal<string>('/img/header/wallet.png');
@@ -103,10 +103,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
         if (this.providers.length === 0) {
           this.loadProviders();
-          this.updateWalletIcon();
-        } else {
-          this.updateWalletIcon();
         }
+        this.updateWalletIcon();
       },
       { allowSignalWrites: true },
     );
@@ -114,7 +112,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     effect(
       () => {
         this.blockchainStateService.networkSell();
-        this.blockchainStateService.walletAddress();
+        //this.blockchainStateService.walletAddress();
         this.loadNativeBalance();
       },
       { allowSignalWrites: true },
@@ -448,7 +446,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   async loadNativeBalance() {
     const network = this.blockchainStateService.networkSell();
-    const address = this.blockchainStateService.walletAddress();
+    const address = this.blockchainStateService.getCurrentWalletAddress();
     if (!network || !address) {
       this.nativeBalance.set('0');
       return;

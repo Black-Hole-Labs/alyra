@@ -5,7 +5,7 @@ import { trigger, style, transition, animate } from '@angular/animations';
 import { PopupService } from '../../../services/popup.service';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 import { MouseGradientService } from '../../../services/mouse-gradient.service';
-import { Wallets } from '../../../models/wallet-provider.interface';
+import { ProviderType, Wallets } from '../../../models/wallet-provider.interface';
 
 @Component({
   selector: 'app-connect-wallet',
@@ -128,35 +128,43 @@ export class ConnectWalletComponent implements OnInit {
       return;
     }
 
+    const type = this.blockchainStateService.getType(providerId);
+
+    if (type === ProviderType.MULTICHAIN) {
+      this.blockchainStateService.pendingProviderId = providerId;
+      this.popupService.openPopup('ecosystemChange');
+      return; 
+    }
+
     this.closePopup();
+    const { address } = await provider.connect();
+    this.popupService.openPopup('wallet');
+    
     try {
       // console.log('Attempting to connect to provider...');
-      const { address } = await provider.connect();
+
+      this.blockchainStateService.setCurrentProvider(providerId, address);
+
+      if (type === ProviderType.EVM) {
+        sessionStorage.setItem('currentEvmProvider', providerId);
+        // sessionStorage.setItem('evmNetworkId', ...);
+      } else if (type === ProviderType.SVM) {
+        sessionStorage.setItem('currentSvmProvider', providerId);
+        // sessionStorage.setItem('svmNetworkId', ...);
+      } else if (type === ProviderType.MULTICHAIN) {
+        if (provider.currentNetwork === ProviderType.EVM) {
+          sessionStorage.setItem('currentEvmProvider', providerId);
+        } else if (provider.currentNetwork === ProviderType.SVM) {
+          sessionStorage.setItem('currentSvmProvider', providerId);
+        }
+      }
       // console.log('Successfully connected, address:', address);
 
-      sessionStorage.setItem('currentProvider', providerId);
+      // sessionStorage.setItem('currentProvider', providerId);
       sessionStorage.setItem('networkId', (this.blockchainStateService.networkSell()!.id).toString());
-
-      try {
-        // console.log('Updating wallet address...');
-        this.blockchainStateService.updateWalletAddress(address);
-        // console.log('Wallet address updated');
-        
-        // console.log('Setting current provider:', providerId);
-        this.blockchainStateService.setCurrentProvider(providerId);
-        // console.log('Current provider set');
-        
-        this.popupService.openPopup('ecosystemChange');
-      } catch(e: unknown) {
-        console.error("Error in post-connection steps:", e);
-      }
     } catch (error) {
       console.error('Connection error:', error);
     }
-  }
-
-  disconnectWallet(): void {
-    this.blockchainStateService.disconnect();
   }
 
   handleWalletClick(wallet: Wallets): void {
