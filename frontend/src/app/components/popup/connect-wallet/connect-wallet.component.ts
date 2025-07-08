@@ -130,39 +130,18 @@ export class ConnectWalletComponent implements OnInit {
 
     const type = this.blockchainStateService.getType(providerId);
 
-    let address;
-
-    if (type === ProviderType.MULTICHAIN)
-    {
+    if (type === ProviderType.MULTICHAIN) {
+      this.blockchainStateService.pendingProviderId = providerId;
       this.popupService.openPopup('ecosystemChange');
-      address = await provider.connect(this.blockchainStateService.getCurrentNetworkSell()?.id);
-    }
-    else
-    {
-      this.closePopup();
-      address = await provider.connect();
+      return; 
     }
 
+    this.closePopup();
+    const { address } = await provider.connect();
     this.popupService.openPopup('wallet');
     
     try {
       // console.log('Attempting to connect to provider...');
-
-      
-
-      
-      
-      // if (type === ProviderType.EVM) {
-      //   this.blockchainStateService.setEvmAddress(address);
-      // } else if (type === ProviderType.SVM) {
-      //   this.blockchainStateService.setSvmAddress(address);
-      // } else if (type === ProviderType.MULTICHAIN) {
-      //   if (provider.currentNetwork === ProviderType.EVM) {
-      //     this.blockchainStateService.setEvmAddress(address);
-      //   } else if (provider.currentNetwork === ProviderType.SVM) {
-      //     this.blockchainStateService.setSvmAddress(address);
-      //   }
-      // }
 
       this.blockchainStateService.setCurrentProvider(providerId, address);
 

@@ -51,7 +51,7 @@ export class BlockchainStateService {
   readonly networkSell = signal<Network | undefined>(undefined);
   readonly networkBuy = signal<Network | undefined>(undefined);
   
-  readonly connected = signal<boolean>(false);
+  //readonly connected = signal<boolean>(false);
   readonly allNetworks = signal<Network[]>([]);
 
   customAddress = signal<string>('');
@@ -66,25 +66,29 @@ export class BlockchainStateService {
 
   private static isRegisteredProviders = false;
   walletManager: WalletProviderManager | undefined;
+  public pendingProviderId: string | null = null;
 
+  public currentProviderIds = signal<Record<Ecosystem, ProviderInfo>>({
+    [ProviderType.EVM]: { id: null, address: null },
+    [ProviderType.SVM]: { id: null, address: null },
+  });
 
-  public currentProviderIds: Signal<Record<Ecosystem, ProviderInfo>> = signal({
-    [ProviderType.EVM]:     { id: null, address: null },
-    [ProviderType.SVM]:     { id: null, address: null },
-    // [Ecosystem.MULTICHAIN]: { id: null, address: null },
+  public connected = computed(() => {
+    const m = this.currentProviderIds();
+    return !!m[ProviderType.EVM].address || !!m[ProviderType.SVM].address;
   });
   // readonly evmWalletAddress = signal<string | null>(null);
   // readonly svmWalletAddress = signal<string | null>(null);
 
   constructor(private injector: Injector) {
-    effect(
-      () => {
-        this.connected.set(
-          (this.currentProviderIds()[ProviderType.EVM].address !== null) || (this.currentProviderIds()[ProviderType.SVM].address !== null)
-        );
-      },
-      { allowSignalWrites: true }
-    );
+    // effect(
+    //   () => {
+    //     this.connected.set(
+    //       (this.currentProviderIds()[ProviderType.EVM].address !== null) || (this.currentProviderIds()[ProviderType.SVM].address !== null)
+    //     );
+    //   },
+    //   { allowSignalWrites: true }
+    // );
 
     effect(
       () => {
@@ -106,12 +110,16 @@ export class BlockchainStateService {
   // }
 
   public setCurrentProvider(id: string, address: string): void {
+    const raw = this.currentProviderIds();
     let type = this.providers[id].type;
     if (type === ProviderType.MULTICHAIN)
     {
       type = this.currentEcosystem() ? this.currentEcosystem() : ProviderType.EVM;
     }
-    this.currentProviderIds()[type] = {id, address};
+    this.currentProviderIds.set({
+      ...raw,
+      [type]: { id, address },
+    });
   }
 
   public getCurrentProviderIdByType(type: Ecosystem): string | null {
@@ -125,26 +133,26 @@ export class BlockchainStateService {
   // }
 
   public disconnectEvm(): void {
-    // this.evmWalletAddress.set(null);
-    this.currentProviderIds()[ProviderType.EVM].id = null;
-    this.currentProviderIds()[ProviderType.EVM].address = null;
+    const raw = this.currentProviderIds();
+    this.currentProviderIds.set({
+      ...raw,
+      [ProviderType.EVM]: { id: null, address: null },
+    });
   }
   
   public disconnectSvm(): void {
-    // this.svmWalletAddress.set(null);
-    this.currentProviderIds()[ProviderType.SVM].id = null;
-    this.currentProviderIds()[ProviderType.SVM].address = null;
+    const raw = this.currentProviderIds();
+    this.currentProviderIds.set({
+      ...raw,
+      [ProviderType.SVM]: { id: null, address: null },
+    });
   }
 
   public disconnectAll(): void {
-    // this.evmWalletAddress.set(null);
-    // this.svmWalletAddress.set(null);
-    this.currentProviderIds()[ProviderType.EVM].id = null;
-    this.currentProviderIds()[ProviderType.EVM].address = null;
-
-    this.currentProviderIds()[ProviderType.SVM].id = null;
-    this.currentProviderIds()[ProviderType.SVM].address = null;
-
+    this.currentProviderIds.set({
+      [ProviderType.EVM]: { id: null, address: null },
+      [ProviderType.SVM]: { id: null, address: null },
+    });
     sessionStorage.clear();
   }
 
