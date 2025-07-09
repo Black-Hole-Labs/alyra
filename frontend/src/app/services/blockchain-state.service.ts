@@ -43,7 +43,7 @@ export type Ecosystem = Exclude<ProviderType, ProviderType.MULTICHAIN>;
 export class BlockchainStateService {
   private providers: Record<string, { provider: any; type: ProviderType }> = {};
   // private currentProviderId: string | null = null;
-  private currentEcosystem: Signal<Ecosystem> = computed( () => this.networkSell()!.chainType as Ecosystem);
+  readonly currentEcosystem: Signal<Ecosystem> = computed( () => this.networkSell()!.chainType as Ecosystem);
   private rpcCache = new Map<number, string>();
 
   // readonly walletAddress = signal<string | null>(null);
@@ -62,18 +62,18 @@ export class BlockchainStateService {
   allTokens = signal<Token[]>([]);
 
   private tokensSubject = new BehaviorSubject<boolean>(false);
-  public tokensLoading$ = this.tokensSubject.asObservable();
+  readonly tokensLoading$ = this.tokensSubject.asObservable();
 
   private static isRegisteredProviders = false;
   walletManager: WalletProviderManager | undefined;
   public pendingProviderId: string | null = null;
 
-  public currentProviderIds = signal<Record<Ecosystem, ProviderInfo>>({
+  readonly currentProviderIds = signal<Record<Ecosystem, ProviderInfo>>({
     [ProviderType.EVM]: { id: null, address: null },
     [ProviderType.SVM]: { id: null, address: null },
   });
 
-  public connected = computed(() => {
+  readonly connected = computed(() => {
     const m = this.currentProviderIds();
     return !!m[ProviderType.EVM].address || !!m[ProviderType.SVM].address;
   });
