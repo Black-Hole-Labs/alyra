@@ -410,16 +410,18 @@ export class TradeComponent implements AfterViewChecked {
     const tempSellAmount = this.validatedSellAmount();
     const tempBuyAmount = this.buyAmountForInput();
 
-    if(this.blockchainStateService.connected()){
-      const provider = this.blockchainStateService.getCurrentProvider().provider;
-      try{
-        await provider.switchNetwork(this.blockchainStateService.networkBuy()!);
-        this.blockchainStateService.updateWalletAddress(provider.address);
-      }
-      catch (error) {
-        this.blockchainStateService.disconnect(provider.address);
-      }
-    }
+    // if(this.blockchainStateService.connected()){
+    //   const provider = this.blockchainStateService.getCurrentProvider().provider;
+    //   try{
+    //     await provider.switchNetwork(this.blockchainStateService.networkBuy()!);
+    //     this.blockchainStateService.updateWalletAddress(provider.address);
+    //   }
+    //   catch (error) {
+    //     console.log("open popup");
+    //     // this.popupService.openPopup("connectWallet");
+    //     // this.blockchainStateService.disconnect(provider.address);
+    //   }
+    // }
 
     this.txData.update(() => undefined);
     this.buttonState = 'swap';
