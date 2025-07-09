@@ -22,6 +22,7 @@ import {
   TransactionRequestEVM,
   TransactionRequestSVM,
   Network,
+  ProviderType,
 } from '../../models/wallet-provider.interface';
 import { ethers, parseUnits } from 'ethers';
 import { PopupService } from '../../services/popup.service';
@@ -221,6 +222,14 @@ export class TradeComponent implements AfterViewChecked {
             !(buyNetwork?.id == NetworkId.SOLANA_MAINNET && sellNetwork?.id == NetworkId.SOLANA_MAINNET)
           ) {
             this.showCustomAddress = true;
+            if (buyNetwork.chainType == ProviderType.EVM)
+            {
+              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.EVM].address!);
+            }
+            else
+            {
+              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.SVM].address!);
+            }
           } else {
             this.showCustomAddress = false;
             this.customAddress.set('');
@@ -401,16 +410,18 @@ export class TradeComponent implements AfterViewChecked {
     const tempSellAmount = this.validatedSellAmount();
     const tempBuyAmount = this.buyAmountForInput();
 
-    if(this.blockchainStateService.connected()){
-      const provider = this.blockchainStateService.getCurrentProvider().provider;
-      try{
-        await provider.switchNetwork(this.blockchainStateService.networkBuy()!);
-        this.blockchainStateService.updateWalletAddress(provider.address);
-      }
-      catch (error) {
-        this.blockchainStateService.disconnect();
-      }
-    }
+    // if(this.blockchainStateService.connected()){
+    //   const provider = this.blockchainStateService.getCurrentProvider().provider;
+    //   try{
+    //     await provider.switchNetwork(this.blockchainStateService.networkBuy()!);
+    //     this.blockchainStateService.updateWalletAddress(provider.address);
+    //   }
+    //   catch (error) {
+    //     console.log("open popup");
+    //     // this.popupService.openPopup("connectWallet");
+    //     // this.blockchainStateService.disconnect(provider.address);
+    //   }
+    // }
 
     this.txData.update(() => undefined);
     this.buttonState = 'swap';
@@ -692,7 +703,7 @@ export class TradeComponent implements AfterViewChecked {
 
     const fromChainType = this.blockchainStateService.networkSell()?.chainType;
     const toChainType = this.blockchainStateService.networkBuy()?.chainType;
-    const walletConnected = !!this.blockchainStateService.walletAddress();
+    const walletConnected = !!this.blockchainStateService.getCurrentWalletAddress();
 
     if (!walletConnected) {
         if (fromChainType === 'EVM') {
@@ -709,7 +720,7 @@ export class TradeComponent implements AfterViewChecked {
             }
         }
     } else {
-        fromAddress = this.blockchainStateService.walletAddress()!;
+        fromAddress = this.blockchainStateService.getCurrentWalletAddress()!;
 
         // ---- ДОБАВЬ ВОТ ЭТОТ КУСОК ----
         // Если типы сетей разные
@@ -857,7 +868,7 @@ export class TradeComponent implements AfterViewChecked {
             this.buttonState = 'wrong-address';
             return;
           }
-          if (!this.blockchainStateService.walletAddress()) {
+          if (!this.blockchainStateService.getCurrentWalletAddress()) {
             this.buttonState = 'insufficient';
           } else if (this.validatedSellAmount() > this.balance()) {
             this.buttonState = 'insufficient';

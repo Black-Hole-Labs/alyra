@@ -93,11 +93,11 @@ export class BackpackProvider extends MultiChainWalletProvider {
     this.svmProviderInstance = (window as any).backpack?.solana;
   }
 
-  override async connect(): Promise<{ address: string }> {
-    const connection = await super.connect(NetworkId.SOLANA_MAINNET);
+  // override async connect(): Promise<{ address: string }> {
+  //   const connection = await super.connect(NetworkId.SOLANA_MAINNET);
 
-    return connection;
-  }
+  //   return connection;
+  // }
 }
 
 export class PhantomProvider extends MultiChainWalletProvider {
@@ -107,11 +107,11 @@ export class PhantomProvider extends MultiChainWalletProvider {
     this.svmProviderInstance = (window as any).phantom?.solana;
   }
 
-  override async connect(): Promise<{ address: string }> {
-    const connection = await super.connect(NetworkId.SOLANA_MAINNET);
+  // override async connect(): Promise<{ address: string }> {
+  //   const connection = await super.connect(NetworkId.SOLANA_MAINNET);
 
-    return connection;
-  }
+  //   return connection;
+  // }
 }
 
 export class MagicEdenProvider extends MultiChainWalletProvider {
