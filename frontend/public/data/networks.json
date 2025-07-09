@@ -140,5 +140,20 @@
       "decimals": 18
     },
     "explorerUrl": "https://mantlescan.xyz/token/"
+  },
+  {
+    "key": "uni",
+    "chainType": "EVM",
+    "name": "Unichain",
+    "id": 130,
+    "idHex": "0x82",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/unichain.svg",
+    "rpcUrls": ["https://mainnet.unichain.org"],
+    "nativeCurrency": {
+      "name": "Ether",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://uniscan.xyz/"
   }
 ]
