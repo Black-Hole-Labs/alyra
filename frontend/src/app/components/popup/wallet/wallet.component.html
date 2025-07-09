@@ -50,9 +50,13 @@
   </div>
 </div>
 
-	<div class="button-connect" (click)="onConnectAnotherWallet()">
-		<p>Connect Another Wallet</p>
-	</div>
+  <div
+    class="button-connect"
+    *ngIf="walletCount < 2"
+    (click)="onConnectAnotherWallet()"
+  >
+    <p>Connect Another Wallet</p>
+  </div>
 
 	<!-- <div class="devider">
 		<p>Balance</p>
