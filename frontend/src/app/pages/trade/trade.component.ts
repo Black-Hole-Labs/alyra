@@ -22,6 +22,7 @@ import {
   TransactionRequestEVM,
   TransactionRequestSVM,
   Network,
+  ProviderType,
 } from '../../models/wallet-provider.interface';
 import { ethers, parseUnits } from 'ethers';
 import { PopupService } from '../../services/popup.service';
@@ -221,6 +222,14 @@ export class TradeComponent implements AfterViewChecked {
             !(buyNetwork?.id == NetworkId.SOLANA_MAINNET && sellNetwork?.id == NetworkId.SOLANA_MAINNET)
           ) {
             this.showCustomAddress = true;
+            if (buyNetwork.chainType == ProviderType.EVM)
+            {
+              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.EVM].address!);
+            }
+            else
+            {
+              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.SVM].address!);
+            }
           } else {
             this.showCustomAddress = false;
             this.customAddress.set('');
