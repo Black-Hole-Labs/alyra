@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, inject, Input, Signal, computed, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BlockchainStateService } from '../../../services/blockchain-state.service';
+import { BlockchainStateService, Ecosystem } from '../../../services/blockchain-state.service';
 import { WalletBalanceService } from '../../../services/wallet-balance.service';
 import { Token } from '../../../pages/trade/trade.component';
 import { Network, ProviderType } from '../../../models/wallet-provider.interface';
@@ -9,6 +9,7 @@ import { ethers } from 'ethers';
 import { NetworkChangeFromPopupComponent } from '../network-change-from/network-change-from.component';
 import { TokenService } from '../../../services/token.service';
 import { MouseGradientService } from '../../../services/mouse-gradient.service';
+import { PopupService } from '../../../services/popup.service';
 
 export interface TokenDisplay extends Token {
   name?: string;
@@ -36,6 +37,7 @@ export class TokenChangePopupComponent {
 
   constructor(
     private tokenService: TokenService,
+    public popupService: PopupService,
     private mouseGradientService: MouseGradientService
   ) {}
 
@@ -244,7 +246,9 @@ export class TokenChangePopupComponent {
         this.blockchainStateService.setNetworkBuy(network);
       }
 
-      if (!this.blockchainStateService.connected()) {
+      if (!this.blockchainStateService.isEcosystemConnected(network.chainType as Ecosystem)) {
+        this.blockchainStateService.setEcosystemForPopup(network.chainType as Ecosystem);
+        this.popupService.openPopup('connectWallet');
         return;
       }
 

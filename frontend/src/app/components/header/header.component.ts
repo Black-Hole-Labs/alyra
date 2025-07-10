@@ -297,6 +297,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (this.blockchainStateService.connected()) {
       this.popupService.openPopup('wallet');
     } else {
+      this.blockchainStateService.clearEcosystemForPopup();
       this.popupService.openPopup('connectWallet');
     }
   }

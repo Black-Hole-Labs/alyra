@@ -76,6 +76,15 @@ export class ConnectWalletComponent implements OnInit {
     this.allWallets = await this.blockchainStateService.loadProviders();
     this.allProviders = this.allWallets.map(wallet => wallet.id);
 
+    const ecosystem = this.blockchainStateService.getEcosystemForPopup();
+
+    if (ecosystem) {
+      this.allWallets = this.allWallets.filter(wallet => {
+        const type = this.blockchainStateService.getType(wallet.id);
+        return type === ProviderType.MULTICHAIN || type === ecosystem;
+      });
+    }
+
     this.availableWallets = [];
     this.otherWallets = [];
 

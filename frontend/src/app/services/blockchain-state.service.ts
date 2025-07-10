@@ -67,6 +67,7 @@ export class BlockchainStateService {
   private static isRegisteredProviders = false;
   walletManager: WalletProviderManager | undefined;
   public pendingProviderId: string | null = null;
+  private ecosystemForPopup = signal<Ecosystem | null>(null);
 
   readonly currentProviderIds = signal<Record<Ecosystem, ProviderInfo>>({
     [ProviderType.EVM]: { id: null, address: null },
@@ -485,5 +486,21 @@ export class BlockchainStateService {
 
   public getNetworkById(id: number): Network | undefined {
     return this.allNetworks().find((network) => network.id === id);
+  }
+
+  isEcosystemConnected(type: Ecosystem): boolean {
+    return !!this.currentProviderIds()[type]?.address;
+  }
+
+  setEcosystemForPopup(type: Ecosystem): void {
+    this.ecosystemForPopup.set(type);
+  }
+
+  getEcosystemForPopup(): Ecosystem | null {
+    return this.ecosystemForPopup();
+  }
+
+  clearEcosystemForPopup(): void {
+    this.ecosystemForPopup.set(null);
   }
 }
