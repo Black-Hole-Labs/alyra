@@ -140,5 +140,22 @@
       "decimals": 18
     },
     "explorerUrl": "https://mantlescan.xyz/token/"
+  },
+  {
+    "key": "sup",
+    "chainType": "EVM",
+    "name": "Superposition",
+    "id": 55244,
+    "idHex": "0xd7cc",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/superposition.svg",
+    "rpcUrls": [
+      "https://rpc.superposition.so"
+    ],
+    "nativeCurrency": {
+      "name": "Ether",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://explorer.superposition.so/token/"
   }
 ]
