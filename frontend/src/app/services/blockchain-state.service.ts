@@ -35,6 +35,7 @@ interface TokensData {
 type ProviderInfo = {
   id: string | null;
   address: string | null;
+  nameService: string | null;
 };
 
 export type Ecosystem = Exclude<ProviderType, ProviderType.MULTICHAIN>;
@@ -70,8 +71,8 @@ export class BlockchainStateService {
   private ecosystemForPopup = signal<Ecosystem | null>(null);
 
   readonly currentProviderIds = signal<Record<Ecosystem, ProviderInfo>>({
-    [ProviderType.EVM]: { id: null, address: null },
-    [ProviderType.SVM]: { id: null, address: null },
+    [ProviderType.EVM]: { id: null, address: null, nameService: null },
+    [ProviderType.SVM]: { id: null, address: null, nameService: null },
   });
 
   readonly connected = computed(() => {
@@ -110,7 +111,7 @@ export class BlockchainStateService {
   //   this.svmWalletAddress.set(address);
   // }
 
-  public setCurrentProvider(id: string, address: string): void {
+  public setCurrentProvider(id: string, address: string, nameService: string | null = null): void {
     const raw = this.currentProviderIds();
     let type = this.providers[id].type;
     if (type === ProviderType.MULTICHAIN)
@@ -119,7 +120,7 @@ export class BlockchainStateService {
     }
     this.currentProviderIds.set({
       ...raw,
-      [type]: { id, address },
+      [type]: { id, address, nameService },
     });
   }
 
@@ -137,7 +138,7 @@ export class BlockchainStateService {
     const raw = this.currentProviderIds();
     this.currentProviderIds.set({
       ...raw,
-      [ProviderType.EVM]: { id: null, address: null },
+      [ProviderType.EVM]: { id: null, address: null, nameService: null },
     });
   }
   
@@ -145,14 +146,14 @@ export class BlockchainStateService {
     const raw = this.currentProviderIds();
     this.currentProviderIds.set({
       ...raw,
-      [ProviderType.SVM]: { id: null, address: null },
+      [ProviderType.SVM]: { id: null, address: null, nameService: null },
     });
   }
 
   public disconnectAll(): void {
     this.currentProviderIds.set({
-      [ProviderType.EVM]: { id: null, address: null },
-      [ProviderType.SVM]: { id: null, address: null },
+      [ProviderType.EVM]: { id: null, address: null, nameService: null },
+      [ProviderType.SVM]: { id: null, address: null, nameService: null },
     });
     sessionStorage.clear();
   }
@@ -278,8 +279,8 @@ export class BlockchainStateService {
 
     return provider
       .connect()
-      .then(({ address }: { address: string }) => {
-        this.setCurrentProvider(providerId, address);
+      .then(({ address, nameService }: { address: string, nameService: string | null }) => {
+        this.setCurrentProvider(providerId, address, nameService);
       })
       .catch(console.error);
 

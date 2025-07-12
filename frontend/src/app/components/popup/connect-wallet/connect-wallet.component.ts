@@ -146,13 +146,13 @@ export class ConnectWalletComponent implements OnInit {
     }
 
     this.closePopup();
-    const { address } = await provider.connect();
+    const { address, nameService } = await provider.connect();
     this.popupService.openPopup('wallet');
     
     try {
       // console.log('Attempting to connect to provider...');
 
-      this.blockchainStateService.setCurrentProvider(providerId, address);
+      this.blockchainStateService.setCurrentProvider(providerId, address, nameService);
 
       if (type === ProviderType.EVM) {
         sessionStorage.setItem('currentEvmProvider', providerId);
