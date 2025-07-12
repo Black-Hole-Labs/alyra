@@ -125,6 +125,7 @@ export class WalletComponent {
   }
 
   onConnectAnotherWallet(): void {
+    this.blockchainStateService.clearEcosystemForPopup();
     this.popupService.openPopup('connectWallet');
   }
 

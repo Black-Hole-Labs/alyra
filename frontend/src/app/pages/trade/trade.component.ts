@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TokenChangePopupComponent } from '../../components/popup/token-change/token-selector.component';
 import { SettingsComponent } from '../../components/popup/settings/settings.component';
-import { BlockchainStateService } from '../../services/blockchain-state.service';
+import { BlockchainStateService, Ecosystem } from '../../services/blockchain-state.service';
 import { WalletBalanceService } from '../../services/wallet-balance.service';
 import { TransactionsService } from '../../services/transactions.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -456,6 +456,13 @@ export class TradeComponent implements AfterViewChecked {
     }
 
     //this.swapNetworks();
+    if (!this.blockchainStateService.isEcosystemConnected(newSellNetwork?.chainType as Ecosystem)) {
+      setTimeout(() => {
+        this.blockchainStateService.setEcosystemForPopup(newSellNetwork?.chainType as Ecosystem);
+        this.popupService.openPopup('connectWallet');
+      }, 0);
+      return;
+    }
 
     this.cdr.detectChanges();
 

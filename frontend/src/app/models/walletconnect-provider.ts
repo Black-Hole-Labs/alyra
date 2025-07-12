@@ -13,7 +13,7 @@ export class WalletConnectEvmProvider extends EvmWalletProvider {
       .map(n => n.id);
   }
 
-  override async connect(): Promise<{ address: string }> {
+  override async connect(): Promise<{ address: string, nameService: string | null }> {
     this.provider = await EthereumProvider.init({
       projectId: "07389ba7749da9fd1b3bc8761a313675",
       chains: [1, 137],

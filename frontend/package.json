@@ -19,6 +19,7 @@
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
+    "@bonfida/spl-name-service": "^3.0.12",
     "@solana/web3.js": "^1.98.0",
     "@wagmi/core": "^1.3.0",
     "@walletconnect/ethereum-provider": "^2.20.3",

@@ -76,6 +76,15 @@ export class ConnectWalletComponent implements OnInit {
     this.allWallets = await this.blockchainStateService.loadProviders();
     this.allProviders = this.allWallets.map(wallet => wallet.id);
 
+    const ecosystem = this.blockchainStateService.getEcosystemForPopup();
+
+    if (ecosystem) {
+      this.allWallets = this.allWallets.filter(wallet => {
+        const type = this.blockchainStateService.getType(wallet.id);
+        return type === ProviderType.MULTICHAIN || type === ecosystem;
+      });
+    }
+
     this.availableWallets = [];
     this.otherWallets = [];
 
@@ -137,13 +146,13 @@ export class ConnectWalletComponent implements OnInit {
     }
 
     this.closePopup();
-    const { address } = await provider.connect();
+    const { address, nameService } = await provider.connect();
     this.popupService.openPopup('wallet');
     
     try {
       // console.log('Attempting to connect to provider...');
 
-      this.blockchainStateService.setCurrentProvider(providerId, address);
+      this.blockchainStateService.setCurrentProvider(providerId, address, nameService);
 
       if (type === ProviderType.EVM) {
         sessionStorage.setItem('currentEvmProvider', providerId);

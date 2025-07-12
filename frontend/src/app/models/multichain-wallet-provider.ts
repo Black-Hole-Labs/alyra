@@ -26,7 +26,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
     return !!this.evmProviderInstance || !!this.svmProviderInstance;
   }
 
-  async connect(netowrkId: NetworkId = NetworkId.ETHEREUM_MAINNET): Promise<{ address: string }> {
+  async connect(netowrkId: NetworkId = NetworkId.ETHEREUM_MAINNET): Promise<{ address: string, nameService: string | null }> {
     if (this.evmProviderInstance) {
       this.evmProvider = new EvmWalletProvider(this.evmProviderInstance, this.injector);
     }
@@ -40,19 +40,21 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
       console.error("Multichain::connect(): SVM not found!")
     }
 
+    let nameService;
+
     if (netowrkId === NetworkId.ETHEREUM_MAINNET && this.evmProvider) {
-      const { address } = await this.evmProvider.connect(this.evmProviderInstance);
+      const { address, nameService } = await this.evmProvider.connect(this.evmProviderInstance);
       this.address = address;
       this.currentNetwork = 'EVM';
     } else if (netowrkId === NetworkId.SOLANA_MAINNET && this.svmProvider) {
-      const { address } = await this.svmProvider.connect(this.svmProviderInstance);
+      const { address, nameService } = await this.svmProvider.connect(this.svmProviderInstance);
       this.address = address;
       this.currentNetwork = 'SVM';
     } else {
       throw new Error('No provider available');
     }
 
-    return { address: this.address };
+    return { address: this.address, nameService: nameService ? nameService : null };
   }
   async switchNetwork(selectedNetwork: any): Promise<void> 
   {

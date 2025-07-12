@@ -76,11 +76,11 @@ export class AppContentComponent {
       ? NetworkId.ETHEREUM_MAINNET
       : NetworkId.SOLANA_MAINNET;
 
-    const { address } = await provider.connect(networkId);
+    const { address, nameService } = await provider.connect(networkId);
 
     this.popupService.openPopup('wallet');
 
-    this.blockchainStateService.setCurrentProvider(providerId, address);
+    this.blockchainStateService.setCurrentProvider(providerId, address, nameService);
     if (ecosystemId === ProviderType.EVM) 
     {
       sessionStorage.setItem('currentEvmProvider', providerId);
