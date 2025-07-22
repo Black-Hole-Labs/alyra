@@ -95,29 +95,6 @@ nav a.active-link {
   color: rgba(var(--white), 1);
 }
 
-.pro-link {
-  position: relative;
-}
-
-.pro-link::after {
-  content: '';
-  position: absolute;
-  top: 5px;
-  right: -10px;
-  width: 14px;
-  height: 14px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.6)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7'/%3E%3Cpath d='M7 7h10v10'/%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
-  opacity: 0.6;
-  transition: all 0.2s ease-in-out;
-}
-
-.pro-link:hover::after {
-  opacity: 1;
-  transform: translate(1px, -1px) scale(1.1);
-}
-
 @keyframes menu-item-flash {
   0% { color: rgba(var(--white), 0.25); }
   50% { color: rgba(var(--white), 1); }
