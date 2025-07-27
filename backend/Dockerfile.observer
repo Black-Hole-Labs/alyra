@@ -1,4 +1,4 @@
-# Простой Dockerfile для backend
+# Простой Dockerfile для observer
 FROM node:18-alpine
 
 # Устанавливаем рабочую директорию
@@ -13,15 +13,11 @@ RUN npm install
 # Копируем исходный код из backend
 COPY backend/ ./
 
-# Собираем backend
-RUN npm run build:backend
-
-# Открываем порт
-EXPOSE 3000
+# Собираем observer
+RUN npm run build:observer
 
 # Устанавливаем переменные окружения
 ENV NODE_ENV=production
-ENV PORT=3000
 
 # Команда запуска
-CMD ["npm", "run", "start:backend"] 
+CMD ["npm", "run", "start:observer"] 

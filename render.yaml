@@ -1,0 +1,97 @@
+services:
+
+  # Backend API (Docker)
+  - type: web
+    name: DEV-BACK-black-hole
+    runtime: docker
+    plan: free
+    dockerContext: .
+    dockerfilePath: ./backend/Dockerfile
+    envVars:
+      - key: GOOGLE_CREDS_CLIENT_EMAIL
+        sync: false
+      - key: GOOGLE_CREDS_PRIVATE_KEY
+        sync: false
+      - key: SHEETS_ID
+        sync: false
+      - key: ORIGIN
+        sync: false
+      - key: CLAIMER_SIGNER_1
+        sync: false
+      - key: CLAIMER_SIGNER_2
+        sync: false
+      - key: DB_HOST
+        fromDatabase:
+          name: DEV-black-hole-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: DEV-black-hole-db
+          property: port
+      - key: DB_USERNAME
+        fromDatabase:
+          name: DEV-black-hole-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: DEV-black-hole-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: DEV-black-hole-db
+          property: database
+
+  # Observer Service (Docker)
+  - type: web
+    name: DEV-black-hole-observer
+    runtime: docker
+    plan: free
+    dockerContext: .
+    dockerfilePath: ./backend/Dockerfile.observer
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GOOGLE_CREDS_CLIENT_EMAIL
+        sync: false
+      - key: GOOGLE_CREDS_PRIVATE_KEY
+        sync: false
+      - key: SHEETS_ID
+        sync: false
+      - key: DB_HOST
+        fromDatabase:
+          name: DEV-black-hole-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: DEV-black-hole-db
+          property: port
+      - key: DB_USERNAME
+        fromDatabase:
+          name: DEV-black-hole-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: DEV-black-hole-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: DEV-black-hole-db
+          property: database
+
+  # Frontend
+  - type: web
+    name: DEV-black-hole
+    runtime: static
+    buildCommand: npx ng build --configuration=stage
+    staticPublishPath: dist/black-hole/browser/
+    rootDir: ./frontend
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+databases:
+  - name: DEV-black-hole-db
+    databaseName: black_hole
+    user: black_hole_user
+    plan: free 
