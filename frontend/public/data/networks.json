@@ -21,6 +21,23 @@
     "explorerUrl": "https://etherscan.io/token/"
   },
   {
+    "key": "eth-sepolia",
+    "chainType": "EVM",
+    "name": "Sepolia",
+    "id": 11155111,
+    "idHex": "0x41103230303302e",
+    "logoURI": "/img/networks/eth.png",
+    "rpcUrls": [
+      "https://eth-sepolia.public.blastapi.io"
+    ],
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://etherscan.io/token/"
+  },
+  {
     "key": "sol",
     "chainType": "SVM",
     "name": "Solana",

@@ -4,7 +4,7 @@
 	flex-direction: column;
 	justify-content: center;
 	opacity: 0.9;
-	filter: blur(7px);
+	//filter: blur(7px);
 }
 
 header.mobile{
@@ -346,4 +346,292 @@ hr{
 	font-size: 22px;
 	color: black;
 	text-align: center;
+}
+
+.referral-info,
+.user-referral-info {
+	margin-top: 30px;
+	width: 100%;
+	
+	.info-card {
+		background-color: rgba(var(--dark-bg), 0.5);
+		border-radius: 16px;
+		padding: 25px;
+		width: 100%;
+		box-sizing: border-box;
+		
+		h3 {
+			font-family: "JetBrains Mono", monospace;
+			font-size: 22px;
+			color: white;
+			margin-bottom: 20px;
+		}
+		
+		p {
+			font-family: "JetBrains Mono", monospace;
+			font-size: 14px;
+			color: var(--elem-nonactive);
+			margin-bottom: 20px;
+			line-height: 1.4;
+		}
+		
+		.info-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 12px;
+			padding: 8px 0;
+			border-bottom: 1px solid rgba(var(--white), 0.1);
+			
+			&:last-child {
+				border-bottom: none;
+				margin-bottom: 0;
+			}
+			
+			span:first-child {
+				font-family: "JetBrains Mono", monospace;
+				font-size: 16px;
+				color: var(--elem-nonactive);
+				flex: 1;
+				margin-right: 15px;
+			}
+			
+			span:last-child {
+				font-family: "JetBrains Mono", monospace;
+				font-size: 16px;
+				color: white;
+				font-weight: 500;
+				text-align: right;
+				flex: 1;
+			}
+		}
+	}
+}
+
+// Адаптивные стили для мобильных устройств
+@media (max-width: 768px) {
+	.referral-info,
+	.user-referral-info {
+		margin-top: 20px;
+		width: 100%;
+		
+		.info-card {
+			margin: 0 20px;
+			padding: 20px;
+			width: calc(100% - 40px);
+			
+			h3 {
+				font-size: 18px;
+			}
+			
+			p {
+				font-size: 12px;
+			}
+			
+			.info-row {
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 5px;
+				
+				span:first-child {
+					font-size: 14px;
+					margin-right: 0;
+					margin-bottom: 5px;
+				}
+				
+				span:last-child {
+					font-size: 14px;
+					text-align: left;
+				}
+			}
+		}
+	}
+}
+
+.not-connected {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	
+	h6 {
+		font-family: "JetBrains Mono", monospace;
+		font-size: 20px;
+		color: var(--elem-nonactive);
+		text-align: center;
+	}
+}
+
+// Rewards section styles
+.rewards-section {
+	margin-top: 30px;
+	
+	.rewards-header {
+		margin-bottom: 24px;
+		
+		h2 {
+			font-size: 28px;
+			color: white;
+			margin: 0 0 8px 0;
+		}
+		
+		p {
+			font-size: 16px;
+			color: var(--elem-nonactive);
+			margin: 0;
+		}
+	}
+	
+	.rewards-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 20px;
+		
+		.reward-card {
+			background-color: rgba(var(--dark-bg), 0.5);
+			border-radius: 16px;
+			padding: 24px;
+			border: 1px solid rgba(var(--white), 0.1);
+			
+			.reward-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+				margin-bottom: 20px;
+				
+				h3 {
+					font-size: 20px;
+					color: white;
+					margin: 0;
+					font-weight: 500;
+				}
+				
+				.reward-status {
+					.status-badge {
+						padding: 6px 12px;
+						border-radius: 20px;
+						font-size: 12px;
+						font-weight: 600;
+						text-transform: uppercase;
+						letter-spacing: 0.5px;
+						
+						&.claimable {
+							background: rgba(16, 185, 129, 0.1);
+							color: #10b981;
+							border: 1px solid rgba(16, 185, 129, 0.3);
+						}
+						
+						&.claimed {
+							background: rgba(99, 102, 241, 0.1);
+							color: #6366f1;
+							border: 1px solid rgba(99, 102, 241, 0.3);
+						}
+					}
+				}
+			}
+			
+			.reward-amounts {
+				.amount-row {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					margin-bottom: 12px;
+					
+					&:last-child {
+						margin-bottom: 0;
+					}
+					
+					span:first-child {
+						color: var(--elem-nonactive);
+						font-size: 14px;
+					}
+					
+					.amount {
+						font-weight: 600;
+						color: white;
+						font-size: 16px;
+						
+						&.claimable {
+							color: #10b981;
+						}
+						
+						&.claimed {
+							color: #6366f1;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// Update available rewards section
+.available-rewards {
+	.no-rewards {
+		background-color: rgba(var(--dark-bg), 0.3);
+		border-radius: 12px;
+		padding: 10px 20px;
+		border: 1px solid rgba(var(--white), 0.1);
+		
+		p {
+			font-size: 14px;
+			color: var(--elem-nonactive);
+			margin: 0;
+			text-align: center;
+		}
+	}
+
+	.claim-button {
+		&.claiming {
+			background-color: rgba(var(--dark-bg), 0.8);
+			cursor: not-allowed;
+			
+			p {
+				color: var(--elem-nonactive);
+			}
+		}
+		
+		&.disabled {
+			pointer-events: none;
+		}
+	}
+}
+
+// Success and error messages
+.success-message,
+.error-message {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+	padding: 16px 20px;
+	border-radius: 8px;
+	color: white;
+	font-weight: 500;
+	animation: slideIn 0.3s ease;
+	
+	.message-content {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+}
+
+.success-message {
+	background: #10b981;
+}
+
+.error-message {
+	background: #ef4444;
+}
+
+@keyframes slideIn {
+	from {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
 }

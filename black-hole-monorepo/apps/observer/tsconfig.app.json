@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "outDir": "../../dist/apps/observer",
+    "baseUrl": "./",
+    "paths": {
+      "@black-hole/core-db": ["../core-db/src"],
+      "@black-hole/core-db/*": ["../core-db/src/*"],
+      "@black-hole/config": ["../../libs/config/src"],
+      "@black-hole/config/*": ["../../libs/config/src/*"],
+      "@black-hole/rewards": ["../../libs/rewards/src"],
+      "@black-hole/rewards/*": ["../../libs/rewards/src/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+} 
