@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://black-hole-sxte.onrender.com'
+  apiUrl: 'https://dev-back-black-hole.onrender.com'
 };

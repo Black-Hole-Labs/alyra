@@ -12,18 +12,13 @@ services:
         value: 3000
       - key: NODE_ENV
         value: production
-      - key: GOOGLE_CREDS_CLIENT_EMAIL
-        sync: false
-      - key: GOOGLE_CREDS_PRIVATE_KEY
+      - key: GOOGLE_CREDS_JSON
         sync: false
       - key: SHEETS_ID
         sync: false
       - key: ORIGIN
         sync: false
       - key: CLAIMER_SIGNER_1
-        sync: false
-      - key: CLAIMER_SIGNER_2
-        sync: false
       - key: DB_HOST
         fromDatabase:
           name: DEV-black-hole-db
@@ -55,9 +50,7 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: GOOGLE_CREDS_CLIENT_EMAIL
-        sync: false
-      - key: GOOGLE_CREDS_PRIVATE_KEY
+      - key: GOOGLE_CREDS_JSON
         sync: false
       - key: SHEETS_ID
         sync: false
