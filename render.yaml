@@ -8,6 +8,10 @@ services:
     dockerContext: .
     dockerfilePath: ./backend/Dockerfile
     envVars:
+      - key: PORT
+        value: 3000
+      - key: NODE_ENV
+        value: production
       - key: GOOGLE_CREDS_CLIENT_EMAIL
         sync: false
       - key: GOOGLE_CREDS_PRIVATE_KEY
