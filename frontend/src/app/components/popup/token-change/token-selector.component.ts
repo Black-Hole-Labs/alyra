@@ -1,13 +1,15 @@
 import { Component, EventEmitter, Output, inject, Input, Signal, computed, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BlockchainStateService } from '../../../services/blockchain-state.service';
+import { BlockchainStateService, Ecosystem } from '../../../services/blockchain-state.service';
 import { WalletBalanceService } from '../../../services/wallet-balance.service';
 import { Token } from '../../../pages/trade/trade.component';
-import { Network } from '../../../models/wallet-provider.interface';
+import { Network, ProviderType } from '../../../models/wallet-provider.interface';
 import { ethers } from 'ethers';
 import { NetworkChangeFromPopupComponent } from '../network-change-from/network-change-from.component';
 import { TokenService } from '../../../services/token.service';
+import { MouseGradientService } from '../../../services/mouse-gradient.service';
+import { PopupService } from '../../../services/popup.service';
 
 export interface TokenDisplay extends Token {
   name?: string;
@@ -33,7 +35,11 @@ export class TokenChangePopupComponent {
   selectedNetworkId = signal<number | undefined>(undefined);
   selectedNetworkTokens = signal<Token[]>([]);
 
-  constructor(private tokenService: TokenService) {}
+  constructor(
+    private tokenService: TokenService,
+    public popupService: PopupService,
+    private mouseGradientService: MouseGradientService
+  ) {}
 
   private tokenCache = new Map<number, Token[]>();
 
@@ -233,20 +239,39 @@ export class TokenChangePopupComponent {
     await this.loadTokensForNetwork(network.id);
 
     if (this.mode === 'sell') {
-      if (!this.blockchainStateService.connected()) {
-        this.blockchainStateService.updateNetworkSell(network.id);
+      this.blockchainStateService.updateNetworkSell(network.id);
+
+      if (network.id != this.blockchainStateService.getCurrentNetworkBuy()?.id)
+      {
+        this.blockchainStateService.setNetworkBuy(network);
+      }
+
+      if (!this.blockchainStateService.isEcosystemConnected(network.chainType as Ecosystem)) {
+        this.blockchainStateService.setEcosystemForPopup(network.chainType as Ecosystem);
+        this.popupService.openPopup('connectWallet');
         return;
       }
 
-      const currentProvider = this.blockchainStateService.getCurrentProvider();
-      if (!currentProvider) {
+      const providerId = this.blockchainStateService.getCurrentProviderId();
+
+      if (!providerId) {
         console.error('No provider selected');
         return;
       }
 
-      this.blockchainStateService.updateNetworkSell(network.id);
+      const providerType = this.blockchainStateService.getType(providerId);
 
-      const provider = currentProvider.provider;
+      const provider = this.blockchainStateService.getProvider(providerId);
+
+      if (providerType != ProviderType.MULTICHAIN && providerType != network.chainType)
+      {
+        console.warn("Selected Unsupported network for the wallet! Disconnect");
+        this.blockchainStateService.disconnect(provider.address);
+        return;
+      }
+
+      // this.blockchainStateService.updateNetworkSell(network.id);
+
       try {
         await provider.switchNetwork(network);
       } catch (error) {
@@ -320,5 +345,9 @@ export class TokenChangePopupComponent {
       const isSameChain = token.chainId === this.excludeToken!.chainId;
       return !(isSameAddress && isSameChain);
     });
+  }
+
+  onTokenSelectorMouseMove(event: MouseEvent): void {
+    this.mouseGradientService.onMouseMove(event);
   }
 }

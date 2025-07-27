@@ -1,21 +1,56 @@
+@import '../../../styles/mouse-gradient-button';
+
 .ecosystem-change {
-  width: 500px;
-  background-color: rgba(var(--dark-bg), 0.3);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(5px);
-  border-radius: 28px;
+  @include mouse-gradient-button(
+    $border-radius: 28px,
+    $padding: 40px,
+    $background: rgba(var(--dark-bg), 0.3),
+    $backdrop-blur: 25px
+  );
+  
+  width: 450px;
+  height: auto;
+  min-height: 0px;
+  max-height: 860px;
   z-index: 1000;
-  padding: 40px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+  transition: all 0.3s ease-in-out;
+
+	&:hover {
+    transform: none;
+    
+    background: radial-gradient(
+      circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+      rgba(255, 255, 255, 0.003) 0%, 
+      rgba(255, 255, 255, 0.001) 50%, 
+      transparent 100%
+    );
+  }
+}
+
+:host {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(var(--black), 0.3);
+  backdrop-filter: blur(35px);
+	-webkit-backdrop-filter: blur(35px);
+	z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .upper {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 30px;
+  margin-bottom: 17px;
 }
 
 .upper h6 {
@@ -23,6 +58,7 @@
   font-weight: 500;
   font-size: 22px;
   color: white;
+  margin: 0;
 }
 
 .upper button {
@@ -55,57 +91,49 @@
 .ecosystems {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
 .ecosystem {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+	border: 1px solid rgba(var(--white), 0);
   width: 100%;
+  height: 70px;
   border-radius: 22px;
   background-color: transparent;
   box-sizing: border-box;
-  padding: 15px;
+  padding: 10px 20px 10px 10px;
   cursor: pointer;
   transition: 0.2s ease-in-out;
 }
 
 .ecosystem:hover {
-  background-color: var(--dark-select);
+  background-color: rgba(var(--dark-select), 0.5);
+	border: 1px solid rgba(var(--white), 0.2);
 }
 
 .name {
   display: flex;
   align-items: center;
+  gap: 18px;
 }
 
 .ecosystem-img {
-  width: 70px;
-  height: 70px;
-  border-radius: 16px;
+  width: 55px;
+  height: 55px;
+  border-radius: 12px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
-.info {
-  display: flex;
-  flex-direction: column;
-}
-
-.info h4 {
+.name p {
   font-family: "JetBrains Mono", monospace;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 18px;
   color: white;
-}
-
-.info p {
-  font-family: "JetBrains Mono", monospace;
-  font-weight: 400;
-  font-size: 14px;
-  color: var(--elem-nonactive);
-  margin: 0;
 }
 
 .disclaimer {
@@ -113,6 +141,15 @@
   font-weight: 400;
   font-size: 12px;
   color: var(--elem-nonactive);
-  text-align: center;
   margin: 0;
+}
+
+.disclaimer a {
+  color: white;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.disclaimer a:hover {
+  color: var(--violet);
 }

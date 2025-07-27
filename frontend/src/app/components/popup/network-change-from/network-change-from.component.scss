@@ -1,14 +1,34 @@
+@import '../../../styles/mouse-gradient-button';
+
 .network-change-from {
-  width: 600px;
-  height: 865px;
-  background-color: rgba(var(--dark-bg), 0.6);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(5px);
-  border-radius: 28px;
+  @include mouse-gradient-button(
+    $padding: 30px 30px 0 30px,
+    $height: 865px,
+    $border-radius: 28px,
+    $background: rgba(var(--dark-bg), 0.1),
+    $backdrop-blur: 25px,
+    $include-responsive: false
+  );
+
+	position: fixed;
+	width: 600px;
   box-sizing: border-box;
-  padding: 30px;
+  z-index: 10;
 	overflow: hidden;
-	z-index: 1000;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+  
+  &:hover {
+    transform: none;
+    
+    background: radial-gradient(
+      circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+      rgba(255, 255, 255, 0.001) 0%, 
+      rgba(255, 255, 255, 0.0005) 50%, 
+      transparent 100%
+    );
+  }
 }
 
 .header {
@@ -45,7 +65,8 @@ button:hover {
   align-items: center;
   width: 540px;
   height: 60px;
-  background-color: var(--dark-select);
+  background-color: rgba(var(--dark-select), 0.7);
+	border: 1px solid rgba(var(--white), 0.1);
   border-radius: 18px;
   padding: 0 20px;
   box-sizing: border-box;
@@ -58,7 +79,7 @@ input {
   font-weight: 400;
   font-size: 18px;
   color: white;
-  background-color: var(--dark-select);
+  background-color: transparent;
   outline: none;
   border: none;
 }
@@ -74,9 +95,15 @@ input::placeholder {
   height: 24px;
   width: 24px;
   background: url(/img/trade/search-button.png);
+  opacity: 0.3;
   background-size: cover;
   background-repeat: no-repeat;
   cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.search-button:hover {
+  opacity: 1;
 }
 
 .list {
@@ -96,6 +123,9 @@ input::placeholder {
   scrollbar-width: none;
   -ms-overflow-style: none;
 	padding-bottom: 35%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .inner-list::-webkit-scrollbar {
@@ -103,9 +133,10 @@ input::placeholder {
 }
 
 .network {
-  width: 567px;
+  width: 50%;
   height: 84px;
-  background: rgba(var(--dark-bg), 0.01);
+  background-color: rgba(var(--dark-bg), 0.01);
+	border: 1px solid rgba(var(--white), 0);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -117,7 +148,8 @@ input::placeholder {
 }
 
 .network:hover {
-  background: var(--dark-select);
+  background-color: rgba(var(--dark-select), 0.5);
+	border: 1px solid rgba(var(--white), 0.2);
 }
 
 .left {

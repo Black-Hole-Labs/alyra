@@ -5,16 +5,23 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class GoogleSheetService {
-  private keys = JSON.parse(process.env.GOOGLE_CREDS_JSON!);
   constructor(private configService: ConfigService) {}
 
   async addEmail(addEmailDto: AddEmailDto) {
     const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 
+    const privateKey = this.configService.get<string>(
+      'GOOGLE_CREDS_PRIVATE_KEY',
+    );
+    const clientEmail = this.configService.get<string>(
+      'GOOGLE_CREDS_CLIENT_EMAIL',
+    );
+
+    const formattedPrivateKey = privateKey.replace(/\\n/g, '\n');
     const auth = new google.auth.GoogleAuth({
       credentials: {
-        client_email: this.keys.client_email,
-        private_key: this.keys.private_key,
+        client_email: clientEmail,
+        private_key: formattedPrivateKey,
       },
       scopes: SCOPES,
     });

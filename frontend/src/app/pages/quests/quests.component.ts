@@ -1,9 +1,7 @@
-import { Component, OnInit, OnDestroy, computed, effect, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { MouseGradientService } from '../../services/mouse-gradient.service';
 import { CommonModule } from '@angular/common';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
-import { ReferralService, ReferralInfo, ReferralStats } from '../../services/referral.service';
-import { RewardsService } from '../../services/rewards.service';
-import { ethers } from 'ethers';
 
 @Component({
   selector: 'app-quests',
@@ -15,298 +13,161 @@ import { ethers } from 'ethers';
 		'./quests.component.adaptives.scss'
 	]
 })
-export class QuestsComponent implements OnInit, OnDestroy {
-  // Сигналы для UI
-  readonly isLoading = signal<boolean>(false);
-  readonly showReferralInfo = signal<boolean>(false);
-  readonly referralLink = signal<string>('');
-  readonly copySuccess = signal<boolean>(false);
+export class QuestsComponent {
+  private mouseGradientService = inject(MouseGradientService);
+  private blockchainStateService = inject(BlockchainStateService);
 
-  // Флаги для предотвращения повторных инициализаций
-  private isInitializingReferral = false;
-  private isInitializingRewards = false;
-  private lastInitializedAddress = '';
-
-  // Computed значения
-  readonly isConnected = computed(() => this.blockchainStateService.connected());
-  readonly walletAddress = computed(() => this.blockchainStateService.walletAddress());
-  readonly networkName = computed(() => this.blockchainStateService.networkSell()?.name || 'ethereum');
-  readonly chainId = computed(() => this.blockchainStateService.networkSell()?.id || 1);
+  // Пагинация
+  currentPage = 0;
+  questsPerPage = 8; // 2 ряда по 4 квеста
   
-  readonly isReferral = computed(() => this.referralService.isReferral());
-  readonly hasJoined = computed(() => this.referralService.hasJoined());
+  // Выбранные экосистемы
+  selectedEcosystems: string[] = [];
   
-  readonly referralInfo = computed(() => this.referralService.referralInfo());
-  readonly referralStats = computed(() => this.referralService.referralStats());
+  // Состояние фильтра "My Activity"
+  myActivityActive: boolean = false;
+  
+  // Данные экосистем
+  ecosystems = [
+    'Ethereum', 'Solana', 'Base', 'HyperEVM', 
+    'Arbitrum', 'Optimism', 'Unichain', 'Abstract', 
+    'Linea', 'BSC'
+  ];
+  
+  allQuests = [
+    { id: 1, title: 'ETH Introduction', description: 'Trading Volume $5000', progress: '5000/5000', xp: 20, status: 'Completed', ecosystem: 'Ethereum', backgroundImage: '/img/quests/example.png' },
+    { id: 2, title: 'Sol Introduction', description: 'Trading Volume $5000', progress: '0/5000', xp: 20, status: null, ecosystem: 'Solana', backgroundImage: '/img/quests/example.png' },
+    { id: 3, title: 'Base Introduction', description: 'Trading Volume $5000', progress: '0/5000', xp: 20, status: null, ecosystem: 'Base', backgroundImage: '/img/quests/example.png' },
+    { id: 4, title: 'Arb Introduction', description: 'Trading Volume $5000', progress: '0/5000', xp: 20, status: null, ecosystem: 'Arbitrum', backgroundImage: '/img/quests/example.png' },
+    { id: 5, title: 'Opt Introduction', description: 'Trading Volume $5000', progress: '0/5000', xp: 20, status: null, ecosystem: 'Optimism', backgroundImage: '/img/quests/example.png' },
+    { id: 6, title: 'Trading Introduction', description: 'Trading Volume $5000', progress: '0/5000', xp: 20, status: null, ecosystem: 'ALL', backgroundImage: '/img/quests/example.png' },
+    { id: 7, title: 'Hyper Introduction', description: 'Trading Volume $5000', progress: '0/5000', xp: 20, status: null, ecosystem: 'HyperEVM', backgroundImage: '/img/quests/example.png' },
+    { id: 8, title: 'Unichain Introduction', description: 'Trading Volume $5000', progress: '0/5000', xp: 20, status: null, ecosystem: 'Unichain', backgroundImage: '/img/quests/example.png' },
+    { id: 9, title: 'Abstract Introduction', description: 'Trading Volume $5000', progress: '0/5000', xp: 20, status: null, ecosystem: 'Abstract', backgroundImage: '/img/quests/example.png' },
+    { id: 10, title: 'Linea Introduction', description: 'Trading Volume $5000', progress: '0/5000', xp: 20, status: null, ecosystem: 'Linea', backgroundImage: '/img/quests/example.png' },
+    { id: 11, title: 'BSC Introduction', description: 'Trading Volume $5000', progress: '0/5000', xp: 20, status: null, ecosystem: 'BSC', backgroundImage: '/img/quests/example.png' },
+    { id: 12, title: 'Trading 1 Introduction', description: 'Trading Volume $5000', progress: '0/5000', xp: 20, status: null, ecosystem: 'ALL', backgroundImage: '/img/quests/example.png' },
+  ];
 
-  constructor(
-    public blockchainStateService: BlockchainStateService,
-    public referralService: ReferralService,
-    public rewardsService: RewardsService
-  ) {
-    // Эффект для инициализации реферальной системы при подключении кошелька
-    effect(() => {
-      const address = this.walletAddress();
-      const isConnected = this.isConnected();
-      
-      if (isConnected && address && address !== this.lastInitializedAddress) {
-        this.lastInitializedAddress = address;
-        this.initializeReferralSystem(address);
-        this.initializeRewards(address);
-      } else if (!isConnected) {
-        this.referralService.clearReferralData();
-        this.rewardsService.rewards.set([]);
-        this.lastInitializedAddress = '';
-      }
-    }, { allowSignalWrites: true });
-
-    // Эффект для обновления реферальной ссылки
-    effect(() => {
-      const info = this.referralInfo();
-      if (info) {
-        this.referralLink.set(this.referralService.getReferralLink());
-      }
-    }, { allowSignalWrites: true });
-  }
-
-  ngOnInit() {
-    // Проверяем реферальный код в URL при загрузке страницы
-    this.referralService.setReferralCodeFromUrl();
-  }
-
-  ngOnDestroy() {
-    // Очистка при уничтожении компонента
-  }
-
-  // Инициализация реферальной системы
-  private async initializeReferralSystem(address: string): Promise<void> {
-    if (this.isInitializingReferral) {
-      console.log('[QuestsComponent] Referral system initialization already in progress, skipping...');
-      return;
+  get filteredQuests() {
+    let filtered = this.allQuests;
+    
+    // Фильтрация по "My Activity" (только завершенные квесты)
+    if (this.myActivityActive) {
+      filtered = filtered.filter(quest => quest.status === 'Completed');
     }
     
-    this.isInitializingReferral = true;
-    this.isLoading.set(true);
-    try {
-      const chainId = this.chainId();
-      const referralCodeFromUrl = this.referralService.getReferralCodeFromUrl();
-      const referralCodeFromStorage = this.referralService.getReferralCodeFromStorage();
-      const existingReferralCode = referralCodeFromUrl || referralCodeFromStorage;
+    // Фильтрация по выбранным экосистемам
+    if (this.selectedEcosystems.length > 0) {
+      filtered = filtered.filter(quest => 
+        quest.ecosystem === 'ALL' || this.selectedEcosystems.includes(quest.ecosystem)
+      );
+    }
+    
+    return filtered;
+  }
 
-      // Пробуем получить referralInfo из сервиса или с бэка
-      let info = this.referralService.referralInfo();
-      if (!info) {
-        info = await this.referralService.getReferralInfo(address, chainId);
-      }
-      const isReferral = !!info;
-      const isOwnCode = info && existingReferralCode && info.referrerCode === existingReferralCode;
+  get totalPages(): number {
+    return Math.ceil(this.filteredQuests.length / this.questsPerPage);
+  }
 
-      if (referralCodeFromUrl && !isOwnCode) {
-        // Присоединяемся к чужому рефералу
-        await this.referralService.joinReferral(address, chainId);
-        this.showSuccessMessage('Successfully joined referral program!');
-        // После присоединения пробуем получить/создать свой код
-        let ownInfo = await this.referralService.getReferralInfo(address, chainId);
-        if (!ownInfo) {
-          ownInfo = await this.referralService.registerReferral(address, chainId);
-        }
-        if (ownInfo) {
-          console.log('[QuestsComponent] Getting stats for code:', ownInfo.referrerCode);
-          await this.referralService.getReferralStatsByCode(ownInfo.referrerCode);
-        }
-        this.showReferralInfo.set(true);
-      } else if (existingReferralCode) {
-        if (!isReferral) {
-          // Только если адрес еще не зарегистрирован — регистрируем
-          info = await this.referralService.registerReferralWithCode(existingReferralCode, address, chainId);
-        }
-        if (info) {
-          console.log('[QuestsComponent] Getting stats for code (existingReferralCode):', info.referrerCode);
-          await this.referralService.getReferralStatsByCode(info.referrerCode);
-        }
-        this.showReferralInfo.set(true);
-      } else {
-        if (!isReferral) {
-          // Только если адрес еще не зарегистрирован — регистрируем
-          info = await this.referralService.registerReferral(address, chainId);
-        }
-        if (info) {
-          console.log('[QuestsComponent] Getting stats for code (new registration):', info.referrerCode);
-          await this.referralService.getReferralStatsByCode(info.referrerCode);
-        }
-        this.showReferralInfo.set(true);
-      }
-    } catch (error) {
-      console.error('Error initializing referral system:', error);
-      this.showErrorMessage('Failed to initialize referral system');
-    } finally {
-      this.isLoading.set(false);
-      this.isInitializingReferral = false;
+  get currentQuests() {
+    const start = this.currentPage * this.questsPerPage;
+    const end = start + this.questsPerPage;
+    return this.filteredQuests.slice(start, end);
+  }
+
+  get canGoNext(): boolean {
+    return this.currentPage < this.totalPages - 1;
+  }
+
+  get canGoPrevious(): boolean {
+    return this.currentPage > 0;
+  }
+
+  nextPage(): void {
+    if (this.canGoNext) {
+      this.currentPage++;
     }
   }
 
-  // Копирование реферальной ссылки
-  async copyReferralLink(): Promise<void> {
-    try {
-      const success = await this.referralService.copyReferralLink();
-      if (success) {
-        this.copySuccess.set(true);
-        setTimeout(() => this.copySuccess.set(false), 2000);
-        this.showSuccessMessage('Referral link copied to clipboard!');
-      }
-    } catch (error) {
-      console.error('Error copying referral link:', error);
-      this.showErrorMessage('Failed to copy referral link');
+  previousPage(): void {
+    if (this.canGoPrevious) {
+      this.currentPage--;
     }
   }
 
-  // Получение статистики реферала
-  async refreshReferralStats(): Promise<void> {
-    const info = this.referralInfo();
-    if (!info) return;
+  onEcosystemMouseMove(event: MouseEvent): void {
+    this.mouseGradientService.onMouseMove(event);
+  }
 
-    try {
-      console.log('[QuestsComponent] Refreshing stats for code:', info.referrerCode);
-      await this.referralService.forceGetReferralStatsByCode(info.referrerCode);
-    } catch (error) {
-      console.error('Error refreshing referral stats:', error);
+  onActivityMouseMove(event: MouseEvent): void {
+    this.mouseGradientService.onMouseMove(event);
+  }
+
+  onQuestMouseMove(event: MouseEvent): void {
+    this.mouseGradientService.onMouseMove(event);
+  }
+
+  onNavButtonMouseMove(event: MouseEvent): void {
+    this.mouseGradientService.onMouseMove(event);
+  }
+
+  trackByQuestId(index: number, quest: any): number {
+    return quest.id;
+  }
+
+  // Выбор экосистемы
+  toggleEcosystem(ecosystem: string): void {
+    const index = this.selectedEcosystems.indexOf(ecosystem);
+    if (index > -1) {
+      this.selectedEcosystems.splice(index, 1);
+    } else {
+      this.selectedEcosystems.push(ecosystem);
     }
+    
+    // Сбрасываем пагинацию при изменении фильтра
+    this.currentPage = 0;
   }
 
-  // Форматирование адреса для отображения
-  formatAddress(address: string): string {
-    if (!address) return '';
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  // Переключение фильтра "My Activity"
+  toggleMyActivity(): void {
+    this.myActivityActive = !this.myActivityActive;
+    
+    // Сбрасываем пагинацию при изменении фильтра
+    this.currentPage = 0;
   }
 
-  // Форматирование суммы
-  formatAmount(amount: number): string {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(amount);
+  isEcosystemSelected(ecosystem: string): boolean {
+    return this.selectedEcosystems.includes(ecosystem);
   }
 
-  // Форматирование суммы ревардов
-  formatRewardAmount(amount: number, decimals: number = 18): string {
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 6
-    }).format(amount / Math.pow(10, decimals));
+  getEcosystemImageUrl(ecosystem: string): string {
+    const allNetworks = this.blockchainStateService.allNetworks();
+    const network = allNetworks.find(n => n.name === ecosystem);
+    return network?.logoURI || '/img/ecosystem/evm.png';
   }
 
-  // Показ сообщения об успехе
-  private showSuccessMessage(message: string): void {
-    // Здесь можно добавить toast уведомление
-    console.log('Success:', message);
-  }
-
-  // Показ сообщения об ошибке
-  private showErrorMessage(message: string): void {
-    // Здесь можно добавить toast уведомление
-    console.error('Error:', message);
-  }
-
-  // Получение реферального кода для отображения
-  getDisplayReferralCode(): string {
-    const info = this.referralInfo();
-    return info?.referrerCode || 'Not available';
-  }
-
-  // Получение общего объема торговли
-  getTotalVolume(): string {
-    const stats = this.referralStats();
-    return stats ? this.formatAmount(stats.totalVolume) : '$0.00';
-  }
-
-  // Получение общего количества рефералов
-  getTotalReferrals(): number {
-    const stats = this.referralStats();
-    return stats?.totalReferrals || 0;
-  }
-
-  // Получение общей комиссии
-  getTotalCommissions(): string {
-    const stats = this.referralStats();
-    return stats ? this.formatAmount(stats.totalCommissions) : '$0.00';
-  }
-
-  // Получение ожидающей комиссии
-  getPendingCommissions(): string {
-    const stats = this.referralStats();
-    return stats ? this.formatAmount(stats.pendingCommissions) : '$0.00';
-  }
-
-  // Инициализация ревардов
-  private async initializeRewards(address: string): Promise<void> {
-    if (this.isInitializingRewards) {
-      console.log('[QuestsComponent] Rewards initialization already in progress, skipping...');
-      return;
+  getQuestEcosystemImageUrl(quest: any): string {
+    if (quest.ecosystem === 'ALL') {
+      return '/img/ecosystem/evm.png'; // Дефолтное изображение для ALL
     }
+    return this.getEcosystemImageUrl(quest.ecosystem);
+  }
 
-    this.isInitializingRewards = true;
-    try {
-      // Загружаем реварды пользователя
-      await this.rewardsService.loadRewards(address);
-    } catch (error) {
-      console.error('Error initializing rewards:', error);
-    } finally {
-      this.isInitializingRewards = false;
+  getQuestBackgroundImageUrl(quest: any): string {
+    return quest.backgroundImage || '/img/quests/example.png';
+  }
+
+  getQuestBackgroundStyle(quest: any): string {
+    const imageUrl = this.getQuestBackgroundImageUrl(quest);
+    const baseGradient = 'linear-gradient(to top, rgba(var(--black), 0.95) 10%, rgba(var(--black), 0.5) 80%, transparent 100%)';
+    
+    if (quest.status === 'Completed') {
+      const saturationGradient = 'linear-gradient(to bottom, rgb(128, 128, 128), rgb(128, 128, 128))';
+      return `${baseGradient}, ${saturationGradient}, url(${imageUrl})`;
     }
+    
+    return `${baseGradient}, url(${imageUrl})`;
   }
-
-  // Computed значения для ревардов
-  readonly claimableRewards = computed(() => this.rewardsService.getClaimableRewards());
-  readonly totalClaimableAmount = computed(() => this.rewardsService.getClaimableAmount());
-  readonly hasClaimableRewards = computed(() => this.rewardsService.getClaimableRewards().length > 0);
-
-  // Сигналы для UI ревардов
-  readonly isClaimingRewards = signal<boolean>(false);
-  readonly showRewardSuccess = signal<boolean>(false);
-  readonly showRewardError = signal<boolean>(false);
-  readonly rewardErrorMessage = signal<string>('');
-
-  // Клейм всех доступных ревардов
-  async claimAllRewards(): Promise<void> {
-    this.isClaimingRewards.set(true);
-    try {
-      const address = this.walletAddress();
-      if (!address) {
-        this.showRewardErrorMessage('Wallet not connected');
-        return;
-      }
-      
-      const provider = this.blockchainStateService.getCurrentProvider().provider;
-      const transactionHashes = await this.rewardsService.claimAllRewards(address, provider);
-      
-      if (transactionHashes.length > 0) {
-        this.showRewardSuccessMessage();
-        console.log('Successfully claimed rewards! Transaction hashes:', transactionHashes);
-        // Принудительно обновляем реварды после успешного клейма
-        await this.rewardsService.forceLoadRewards(address);
-      } else {
-        this.showRewardErrorMessage('No rewards were claimed');
-      }
-    } catch (error) {
-      console.error('Error claiming rewards:', error);
-      this.showRewardErrorMessage('Failed to claim rewards: ' + (error as Error).message);
-    } finally {
-      this.isClaimingRewards.set(false);
-    }
-  }
-
-  // Показ сообщения об успехе клейма
-  private showRewardSuccessMessage(): void {
-    this.showRewardSuccess.set(true);
-    setTimeout(() => this.showRewardSuccess.set(false), 3000);
-  }
-
-  // Показ сообщения об ошибке клейма
-  private showRewardErrorMessage(message: string): void {
-    this.rewardErrorMessage.set(message);
-    this.showRewardError.set(true);
-    setTimeout(() => this.showRewardError.set(false), 5000);
-  }
-}
+} 

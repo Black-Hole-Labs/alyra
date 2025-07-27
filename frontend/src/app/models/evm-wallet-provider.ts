@@ -21,7 +21,7 @@ export class EvmWalletProvider implements WalletProvider {
     return !!this.provider;
   }
 
-  async connect(_provider?: any): Promise<{ address: string }> {
+  async connect(_provider?: any): Promise<{ address: string, nameService: string | null }> {
     if(this.blockchainStateService.networkSell() !== undefined && this.blockchainStateService.networkSell()?.chainType !== "EVM")
     {
       this.blockchainStateService.updateNetworkSell(NetworkId.ETHEREUM_MAINNET);
@@ -35,7 +35,19 @@ export class EvmWalletProvider implements WalletProvider {
     this.signer = await ethersProvider.getSigner();
 
     this.switchNetwork(this.blockchainStateService.networkSell());
-    return { address: this.address };
+
+    let ens: string | null;
+    try
+    {
+      ens = await ethersProvider.lookupAddress(this.address);
+    }
+    catch(e)
+    {
+      // it can probably throw
+      ens = null;
+    }
+
+    return { address: this.address, nameService: ens ? ens : null };
   }
 
   async switchNetwork(selectedNetwork: any): Promise<void> {
@@ -60,8 +72,8 @@ export class EvmWalletProvider implements WalletProvider {
         throw error;
       }
       else {
-        this.blockchainStateService.disconnect();
-        throw new Error("unsupported_network");
+        //this.blockchainStateService.disconnect(this.address);
+        throw new Error("unsupported_network"); //TODO
       }
     }
   }

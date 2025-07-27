@@ -62,21 +62,46 @@ export class AppContentComponent {
     this.isPopupVisible = false;
     this.isNetworkPopupVisible = false;
   }
+  // TODO
+  async onEcosystemSelected(ecosystemId: string): Promise<void> {
 
-  onEcosystemSelected(ecosystemId: string): void {
-    if (ecosystemId === ProviderType.EVM)
-    {
-      this.blockchainStateService.updateNetworkSell(NetworkId.ETHEREUM_MAINNET);
+    const providerId = this.blockchainStateService.pendingProviderId;
+    if (!providerId) {
+      console.error('No pending multichain provider');
+      return;
     }
-    else if (ecosystemId === ProviderType.SVM)
-    {
-      this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET);
-    }
-    
-    const provider = this.blockchainStateService.getCurrentProvider();
-    provider.provider.switchNetwork(this.blockchainStateService.getCurrentNetworkSell());
-    
+    const provider = this.blockchainStateService.getProvider(providerId);
+
+    const networkId = ecosystemId === ProviderType.EVM
+      ? NetworkId.ETHEREUM_MAINNET
+      : NetworkId.SOLANA_MAINNET;
+
+    const { address, nameService } = await provider.connect(networkId);
+
     this.popupService.openPopup('wallet');
+
+    this.blockchainStateService.setCurrentProvider(providerId, address, nameService);
+    if (ecosystemId === ProviderType.EVM) 
+    {
+      sessionStorage.setItem('currentEvmProvider', providerId);
+    } 
+    else 
+    {
+      sessionStorage.setItem('currentSvmProvider', providerId);
+    }
+    sessionStorage.setItem('networkId', networkId.toString());
+
+    this.blockchainStateService.pendingProviderId = null;
+
+    // if (ecosystemId === ProviderType.EVM)
+    // {
+    //   this.blockchainStateService.updateNetworkSell(NetworkId.ETHEREUM_MAINNET);
+    // }
+    // else if (ecosystemId === ProviderType.SVM)
+    // {
+    //   this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET);
+    // }
+
   }
 
   closeEcosystemPopup(): void {

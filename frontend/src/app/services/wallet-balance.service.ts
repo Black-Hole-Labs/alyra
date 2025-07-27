@@ -66,15 +66,20 @@ export class WalletBalanceService {
 
   async getBalanceForToken(token: Token): Promise<string> {
       let walletAddress = this.blockchainStateService.getCurrentWalletAddress();
-      
-      if(token.chainId !== this.blockchainStateService.networkSell()?.id){
-        if(this.blockchainStateService.customAddress() !== ""){
-          walletAddress = this.blockchainStateService.customAddress();
-        }
-        else{
-          return "0";
-        }
+
+      if (this.blockchainStateService.getNetworkById(token.chainId)?.chainType !== this.blockchainStateService.networkSell()?.chainType)
+      {
+        return "0";
       }
+      
+      // if(token.chainId !== this.blockchainStateService.networkSell()?.id){
+      if(this.blockchainStateService.customAddress() !== ""){
+        walletAddress = this.blockchainStateService.customAddress();
+      }
+      //   else{
+      //     return "0";
+      //   }
+      // }
       
       if (!walletAddress) {
         console.error(`Failed to get wallet address`);

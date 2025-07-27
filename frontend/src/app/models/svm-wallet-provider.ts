@@ -1,7 +1,8 @@
-import { Connection, VersionedTransaction } from '@solana/web3.js';
-import { NetworkId, ProviderType, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
+import { clusterApiUrl, Connection, VersionedTransaction } from '@solana/web3.js';
+import { NetworkId, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
 import { BlockchainStateService } from '../services/blockchain-state.service';
 import { Injector } from '@angular/core';
+import { reverseLookup } from '@bonfida/spl-name-service';
 
 export class SvmWalletProvider implements WalletProvider {
   protected address: string = '';
@@ -18,7 +19,7 @@ export class SvmWalletProvider implements WalletProvider {
     return !!this.provider;
   }
 
-  async connect(_provider?: any): Promise<{ address: string }>  {
+  async connect(_provider?: any): Promise<{ address: string, nameService: string | null }>  {
     if(this.blockchainStateService.networkSell() !== undefined && this.blockchainStateService.networkSell()?.chainType !== "SVM")
     {
       this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET);
@@ -33,7 +34,26 @@ export class SvmWalletProvider implements WalletProvider {
     if (!account) throw new Error('Failed to retrieve Solana account');
     this.address = account;
 
-    return { address: this.address };
+    const rpcUrl =
+      (await this.blockchainStateService.getWorkingRpcUrlForNetwork(
+        NetworkId.SOLANA_MAINNET
+      )) || clusterApiUrl('mainnet-beta');
+    const connection = new Connection(rpcUrl, 'confirmed');
+
+    let sns: string | null;
+    try {
+      // returns the base name (without .sol)
+      const base = await reverseLookup(
+        connection,
+        this.provider.publicKey
+      );
+      sns = base ? `${base}.sol` : null;
+    } catch (e) {
+      // it can probably throw
+      sns = null;
+    }
+
+    return { address: this.address, nameService: sns };
   }
 
   getAddress(): string {
@@ -52,7 +72,7 @@ export class SvmWalletProvider implements WalletProvider {
   }
 
   async switchNetwork(selectedNetwork: any): Promise<void> {
-    this.blockchainStateService.disconnect();
-    throw new Error("unsupported_network");
+    //this.blockchainStateService.disconnect(this.address);
+    throw new Error("unsupported_network"); //TODO
   }
 }

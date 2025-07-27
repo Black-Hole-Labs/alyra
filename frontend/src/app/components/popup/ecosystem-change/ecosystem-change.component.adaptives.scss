@@ -1,231 +1,309 @@
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
 	.ecosystem-change {
-		width: 416px;
+		width: 360px;
+		max-height: 716px;
 		border-radius: 22px;
-		padding: 20px;
+		padding: 30px;
+
+		&::before {
+			border-radius: 22px;
+		}
+
+		&::after {
+			border-radius: 22px;
+		}
 	}
+	
 	.upper {
-		margin-bottom: 15px;
+		margin-bottom: 10px;
 	}
+	
 	.upper h6 {
 		font-size: 20px;
 	}
+	
 	.upper button {
 		height: 13px;
 		width: 13px;
 	}
+	
 	.scroll-container {
-		margin-bottom: 14px;
+		margin-bottom: 10px;
 	}
+	
 	.ecosystems {
 		gap: 8px;
 	}
+	
 	.ecosystem {
-		border-radius: 18px;
-		padding: 15px;
+		height: 60px;
+		border-radius: 12px;
+		padding: 8px 17px 8px 8px;
 	}
+
 	.name {
 		gap: 16px;
 	}
+	
 	.ecosystem-img {
-		width: 57px;
-		height: 57px;
-		min-width: 57px;
-		min-height: 57px;
-		border-radius: 13px;
+		width: 45px;
+		height: 45px;
+		border-radius: 12px;
 	}
-	.info h4 {
-		font-size: 16px;
+	
+	.name p {
+		font-size: 14px;
 	}
-	.info p {
-		font-size: 12px;
-	}
+
 	.disclaimer {
-		font-size: 9px;
+		font-size: 10px;
 	}
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
 	.ecosystem-change {
-		width: 386px;
+		width: 360px;
+		max-height: 716px;
 		border-radius: 22px;
-		padding: 20px;
+		padding: 30px;
+
+		&::before {
+			border-radius: 22px;
+		}
+
+		&::after {
+			border-radius: 22px;
+		}
 	}
+	
 	.upper {
-		margin-bottom: 15px;
+		margin-bottom: 10px;
 	}
+	
 	.upper h6 {
 		font-size: 20px;
 	}
+	
 	.upper button {
 		height: 13px;
 		width: 13px;
 	}
+	
 	.scroll-container {
-		margin-bottom: 14px;
+		margin-bottom: 10px;
 	}
+	
 	.ecosystems {
 		gap: 8px;
 	}
+	
 	.ecosystem {
-		border-radius: 18px;
-		padding: 15px;
+		height: 60px;
+		border-radius: 12px;
+		padding: 8px 17px 8px 8px;
 	}
+
 	.name {
 		gap: 16px;
 	}
+	
 	.ecosystem-img {
-		width: 57px;
-		height: 57px;
-		min-width: 57px;
-		min-height: 57px;
-		border-radius: 13px;
+		width: 45px;
+		height: 45px;
+		border-radius: 12px;
 	}
-	.info h4 {
-		font-size: 16px;
+	
+	.name p {
+		font-size: 14px;
 	}
-	.info p {
-		font-size: 12px;
-	}
+
 	.disclaimer {
-		font-size: 9px;
+		font-size: 10px;
 	}
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
 	.ecosystem-change {
-		width: 304px;
+		width: 280px;
+		min-height: 100px;
+		max-height: 524px;
 		border-radius: 16px;
 		padding: 15px;
+
+		&::before {
+			border-radius: 16px;
+		}
+
+		&::after {
+			border-radius: 16px;
+		}
 	}
+	
 	.upper {
-		margin-bottom: 0px;
+		margin-bottom: 10px;
 	}
+	
 	.upper h6 {
 		font-size: 13px;
 	}
+	
 	.upper button {
 		height: 10px;
 		width: 10px;
 	}
+	
 	.scroll-container {
 		margin-bottom: 10px;
 	}
+
 	.ecosystems {
 		gap: 5px;
 	}
+	
 	.ecosystem {
-		border-radius: 16px;
-		padding: 8px;
+		height: 50px;
+		border-radius: 10px;
+		padding: 6px 8px 6px 6px;
 	}
+
 	.name {
 		gap: 11px;
 	}
+	
 	.ecosystem-img {
-		width: 42px;
-		height: 42px;
-		min-width: 42px;
-		min-height: 42px;
-		border-radius: 10px;
+		width: 34px;
+		height: 34px;
+		border-radius: 8px;
 	}
-	.info h4 {
+	
+	.name p {
 		font-size: 10px;
 	}
-	.info p {
-		font-size: 8px;
-	}
+
 	.disclaimer {
-		font-size: 7px;
+		font-size: 8px;
 	}
 }
 @media screen and (min-width: 480px) and (max-width: 970px) {
 	.ecosystem-change {
-		width: 386px;
+		width: 360px;
+		max-height: 716px;
 		border-radius: 22px;
-		padding: 20px;
+		padding: 30px;
+
+		&::before {
+			border-radius: 22px;
+		}
+
+		&::after {
+			border-radius: 22px;
+		}
 	}
+	
 	.upper {
-		margin-bottom: 15px;
+		margin-bottom: 10px;
 	}
+	
 	.upper h6 {
 		font-size: 20px;
 	}
+	
 	.upper button {
 		height: 13px;
 		width: 13px;
 	}
+	
 	.scroll-container {
-		margin-bottom: 14px;
+		margin-bottom: 10px;
 	}
+	
 	.ecosystems {
 		gap: 8px;
 	}
+	
 	.ecosystem {
-		border-radius: 18px;
-		padding: 15px;
+		height: 60px;
+		border-radius: 12px;
+		padding: 8px 17px 8px 8px;
 	}
+
 	.name {
 		gap: 16px;
 	}
+	
 	.ecosystem-img {
-		width: 57px;
-		height: 57px;
-		min-width: 57px;
-		min-height: 57px;
-		border-radius: 13px;
+		width: 45px;
+		height: 45px;
+		border-radius: 12px;
 	}
-	.info h4 {
-		font-size: 16px;
+	
+	.name p {
+		font-size: 14px;
 	}
-	.info p {
-		font-size: 12px;
-	}
+
 	.disclaimer {
-		font-size: 9px;
+		font-size: 10px;
 	}
 }
 
 @media screen and (min-width: 360px) and (max-width: 479px) {
 	.ecosystem-change {
 		width: 90%;
-		border-radius: 22px;
+		max-height: 70%;
+		border-radius: 16px;
 		padding: 15px 18px;
+		backdrop-filter: blur(65px);
+		-webkit-backdrop-filter: blur(65px);
+
+		&::before {
+			border-radius: 16px;
+		}
+
+		&::after {
+			border-radius: 16px;
+		}
 	}
+	
 	.upper {
 		margin-bottom: 10px;
 	}
+	
 	.upper h6 {
 		font-size: 18px;
 	}
+	
 	.upper button {
 		height: 13px;
 		width: 13px;
 	}
+	
 	.scroll-container {
 		margin-bottom: 10px;
 	}
+	
 	.ecosystems {
-		gap: 5px;
+		gap: 0px;
 	}
+	
 	.ecosystem {
-		border-radius: 16px;
-		padding: 8px;
+		height: 74px;
+		border-radius: 12px;
+		padding: 8px 17px 8px 8px;
 	}
+
 	.name {
-		gap: 11px;
+		gap: 16px;
 	}
+	
 	.ecosystem-img {
 		width: 45px;
 		height: 45px;
-		min-width: 45px;
-		min-height: 45px;
 		border-radius: 13px;
 	}
-	.info h4 {
+	
+	.name p {
 		font-size: 14px;
 	}
-	.info p {
-		font-size: 10px;
-	}
+
 	.disclaimer {
-		font-size: 10px;
+		font-size: 11px;
 	}
 }

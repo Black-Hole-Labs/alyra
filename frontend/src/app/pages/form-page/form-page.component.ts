@@ -207,12 +207,18 @@ export class FormPageComponent implements OnInit, OnDestroy {
 		this.isSubmitted = true;
 
 		try {
-			const response = await firstValueFrom(
-				this.emailService.sendEmail(this.emailControl.value)
-			);
+			const response = await firstValueFrom(this.emailService.sendEmail(this.emailControl.value));
 			localStorage.setItem('blackhole-email-submitted', 'true');
-		} catch (err) {
-			this.isSubmitted = false;
+		} catch (err: any) {
+			if (err.status == 201)
+			{
+				localStorage.setItem('blackhole-email-submitted', 'true');
+			}
+			else
+			{
+				this.isSubmitted = false;
+				throw err;
+			}
 		}
   	}
 

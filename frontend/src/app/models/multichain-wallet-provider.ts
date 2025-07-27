@@ -1,29 +1,32 @@
 import { BlockchainStateService } from '../services/blockchain-state.service';
+import { PopupService } from '../services/popup.service';
 import { EvmWalletProvider } from './evm-wallet-provider';
 import { SvmWalletProvider } from './svm-wallet-provider';
-import { NetworkId, ProviderType, TransactionRequestEVM, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
+import { NetworkId, TransactionRequestEVM, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
 import { Injector } from '@angular/core';
 export abstract class MultiChainWalletProvider implements WalletProvider {
   protected evmProviderInstance: any;
   protected svmProviderInstance: any;
   protected evmProvider: EvmWalletProvider | null = null;
   protected svmProvider: SvmWalletProvider | null = null;
-  protected currentNetwork: 'EVM' | 'SVM' = 'EVM'; // EVM as default
+  public currentNetwork: 'EVM' | 'SVM' = 'EVM'; // EVM as default
   protected address: string = '';
 
   protected blockchainStateService: BlockchainStateService;
   protected injector: Injector;
+  private popupService: PopupService
 
   constructor(injector: Injector) {
     this.injector = injector;
     this.blockchainStateService = injector.get(BlockchainStateService);
+    this.popupService = injector.get(PopupService);
   }
 
   isAvailable(): boolean {
     return !!this.evmProviderInstance || !!this.svmProviderInstance;
   }
 
-  async connect(netowrkId: NetworkId = NetworkId.ETHEREUM_MAINNET): Promise<{ address: string }> {
+  async connect(netowrkId: NetworkId = NetworkId.ETHEREUM_MAINNET): Promise<{ address: string, nameService: string | null }> {
     if (this.evmProviderInstance) {
       this.evmProvider = new EvmWalletProvider(this.evmProviderInstance, this.injector);
     }
@@ -37,19 +40,21 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
       console.error("Multichain::connect(): SVM not found!")
     }
 
+    let nameService;
+
     if (netowrkId === NetworkId.ETHEREUM_MAINNET && this.evmProvider) {
-      const { address } = await this.evmProvider.connect(this.evmProviderInstance);
+      const { address, nameService } = await this.evmProvider.connect(this.evmProviderInstance);
       this.address = address;
       this.currentNetwork = 'EVM';
     } else if (netowrkId === NetworkId.SOLANA_MAINNET && this.svmProvider) {
-      const { address } = await this.svmProvider.connect(this.svmProviderInstance);
+      const { address, nameService } = await this.svmProvider.connect(this.svmProviderInstance);
       this.address = address;
       this.currentNetwork = 'SVM';
     } else {
       throw new Error('No provider available');
     }
 
-    return { address: this.address };
+    return { address: this.address, nameService: nameService ? nameService : null };
   }
   async switchNetwork(selectedNetwork: any): Promise<void> 
   {
