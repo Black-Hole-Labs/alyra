@@ -37,7 +37,7 @@ import { ObserverStateRepository } from './repositories/observer-state.repositor
           TokenEntity,
           ObserverStateEntity,
         ],
-        synchronize: true, // Временно включить для создания всех таблиц
+        synchronize: configService.get('NODE_ENV') !== 'production', // Временно включить для создания всех таблиц
         logging: configService.get('NODE_ENV') === 'development',
         ssl: configService.get('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false,
         namingStrategy: new SnakeNamingStrategy(),

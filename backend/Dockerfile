@@ -36,6 +36,11 @@ RUN npm ci --only=production --silent && \
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 
+# Копируем необходимые конфигурационные файлы
+COPY --from=builder /app/nest-cli.json ./
+COPY --from=builder /app/tsconfig.json ./
+COPY --from=builder /app/apps/backend/tsconfig.app.json ./
+
 # Создаем пользователя для безопасности
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nestjs -u 1001
