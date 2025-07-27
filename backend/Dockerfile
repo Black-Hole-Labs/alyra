@@ -36,10 +36,11 @@ RUN npm ci --only=production --silent && \
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 
-# Копируем необходимые конфигурационные файлы
+# Копируем всю структуру папок для правильной работы NestJS
 COPY --from=builder /app/nest-cli.json ./
 COPY --from=builder /app/tsconfig.json ./
-COPY --from=builder /app/apps/backend/tsconfig.app.json ./
+COPY --from=builder /app/apps ./apps
+COPY --from=builder /app/libs ./libs
 
 # Создаем пользователя для безопасности
 RUN addgroup -g 1001 -S nodejs && \
@@ -59,4 +60,4 @@ ENV NODE_OPTIONS="--max-old-space-size=256"
 
 # Используем dumb-init для правильного завершения процессов
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["npm", "run", "start:backend"] 
+CMD ["node", "dist/apps/backend/main.js"] 
