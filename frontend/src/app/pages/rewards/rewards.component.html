@@ -120,23 +120,19 @@
 				Share your unique affiliate link with your community and enjoy 40% of their trading fees.
 			</p>
 
-			<div class="available-rewards" *ngFor="let reward of claimableRewards()">
+			<div class="available-rewards">
 				<div class="left">
 					<h4>Available rewards:</h4>
-					<h2>{{(reward.availableAmount !== undefined ? reward.availableAmount : reward.amount)}}$</h2>
+					<h2>{{totalClaimableAmount()}}$</h2>
 				</div>
 				<div class="right">
-					<p>Updates in <span>24:00:00</span></p>
+					<!-- <p>Updates in <span>24:00:00</span></p> -->
 					<div class="claim-button" 
-						*ngIf="(reward.availableAmount !== undefined ? reward.availableAmount : reward.amount) > 0" 
-						(click)="claimAllRewards()"
+						(click)="totalClaimableAmount() > 0 ? claimAllRewards() : null"
 						[class.claiming]="isClaimingRewards()"
-						[class.disabled]="isClaimingRewards()">
+						[class.disabled]="isClaimingRewards() || totalClaimableAmount() <= 0">
 						<p *ngIf="!isClaimingRewards()">Claim Rewards</p>
 						<p *ngIf="isClaimingRewards()">Claiming...</p>
-					</div>
-					<div class="no-rewards" *ngIf="(reward.availableAmount !== undefined ? reward.availableAmount : reward.amount) <= 0">
-						<p>No rewards available</p>
 					</div>
 				</div>
 			</div>

@@ -3,20 +3,17 @@
 		Quests will be available soon...
 	</h6>
 </div>
-<a href="https://blackholelabs.gitbook.io/docs/trading-tournament-soon/affiliate-system" target="_blank">
-	<div class="more">
-		<p>Learn more</p>
-	</div>
-</a>
-<div class="quests">
-	<header class="pc">
-		<div class="left">
-			<h1>Rewards</h1>
-			<div class="comission-rate">
-				<p>40% Comission Rate</p>
-			</div>
-			<div class="apply">
-				<p>Apply to increase rebate</p>
+<div class="container">
+
+	<div class="ecosystems">
+
+		<div class="ecosystems-header">
+			<h3>Ecosystems</h3>
+			<div class="activity" 
+				 [class.selected]="myActivityActive"
+				 (mousemove)="onActivityMouseMove($event)"
+				 (click)="toggleMyActivity()">
+				<p>My Activity</p>
 			</div>
 		</div>
 			
@@ -30,97 +27,49 @@
 				<p>{{ ecosystem }}</p>
 			</div>
 		</div>
-
-		<div class="comission-rate">
-			<p>40% Comission Rate</p>
-		</div>
-		<div class="apply">
-			<p>Apply to increase rebate</p>
-		</div>
-	</header>
-
-	<div class="bonus-container">
-		<div class="left">
-			<div class="trading-rewards">
-				<div class="header">
-					<div class="trading-image"></div>
-					<h1>Trading Rewards</h1>
+	</div>
+	
+	<div class="quests">
+	
+		<div class="quests-header">
+			<h3>Quests</h3>
+			<div class="nav-buttons">
+				<div class="nav-button" 
+					 (mousemove)="onNavButtonMouseMove($event)"
+					 (click)="previousPage()"
+					 [class.disabled]="!canGoPrevious">
+					<div class="nav-button-icon prev"></div>
 				</div>
-				<p>
-					Invite users to Blackhole and earn! <br>
-					Share your affiliate link and receive 40% of their trading points for every trade.
-				</p>
-		
-				<div class="info-container">
-					<div class="info">
-						<h3>Trading Volume:</h3>
-						<h3>$23,000,000</h3>
-					</div>
-					<hr>
-					<div class="info">
-						<h3>Your score:</h3>
-						<h3>26,482 XP</h3>
-					</div>
-					<div class="info">
-						<p>Trading score:</p>
-						<p>23,000 XP</p>
-					</div>
-					<div class="info">
-						<p>Referred score:</p>
-						<p>3,482 XP</p>
-					</div>
-				</div>
-			</div>
-		
-			<div class="referral-link">
-				<h3>Your referral link:</h3>
-				<p>blackhole?r=6Vs7jZ</p>
-				<div class="share-button">
-					<p>Share</p>
+				<div class="nav-button" 
+					 (mousemove)="onNavButtonMouseMove($event)"
+					 (click)="nextPage()"
+					 [class.disabled]="!canGoNext">
+					<div class="nav-button-icon next"></div>
 				</div>
 			</div>
 		</div>
-
-		<div class="affiliate-rewards">
-			<div class="header">
-				<div class="affiliate-image"></div>
-				<h1>Affiliate Rewards</h1>
-			</div>
-
-			<p>
-				Refer users to Blackhole and earn rewards!<br>
-				Share your unique affiliate link with your community and enjoy 40% of their trading fees.
-			</p>
-
-			<div class="available-rewards">
-				<div class="left">
-					<h4>Available rewards:</h4>
-					<h2>3,482.1$</h2>
-				</div>
-				<div class="right">
-					<p>Updates in <span>24:00:00</span></p>
-					<div class="claim-button">
-						<p>Claim Rewards</p>
+	
+		<div class="quests-container">
+					<div class="quest" 
+			 *ngFor="let quest of currentQuests; trackBy: trackByQuestId"
+			 [class.completed]="quest.status === 'Completed'"
+			 (mousemove)="onQuestMouseMove($event)"
+			 [style.--quest-bg-image]="'url(' + getQuestBackgroundImageUrl(quest) + ')'">
+				<div class="quest-header">
+					<div class="xp">
+						<p>{{ quest.xp }} XP</p>
+					</div>
+					<div class="status" *ngIf="quest.status">
+						<p>{{ quest.status }}</p>
 					</div>
 				</div>
-			</div>
-
-			<div class="affiliate-stats">
-				<div class="stat">
-					<p>Total Referral Fees Earned</p>
-					<p>$3,482.1</p>
-				</div>
-				<hr>
-				<div class="stat">
-					<p>Total Volume Referred</p>
-					<p>$23,214,000</p>
-				</div>
-				<hr>
-				<div class="stat">
-					<p>Total Users Referred</p>
-					<p>15</p>
+				<h6>{{ quest.title }}</h6>
+				<div class="quest-footer">
+					<p>{{ quest.description }}</p>
+					<p>{{ quest.progress }}</p>
 				</div>
 			</div>
 		</div>
 	</div>
+
 </div>
