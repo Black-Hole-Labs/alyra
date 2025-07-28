@@ -25,7 +25,7 @@
     "chainType": "EVM",
     "name": "Sepolia",
     "id": 11155111,
-    "idHex": "0x41103230303302e",
+    "idHex": "0xaa36a7",
     "logoURI": "/img/networks/eth.png",
     "rpcUrls": [
       "https://eth-sepolia.public.blastapi.io"

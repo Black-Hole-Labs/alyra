@@ -264,4 +264,9 @@ export class RewardsService {
       return null;
     }
   }
+
+  // Получение списка ревард пулов
+  async getRewardPools(): Promise<RewardPool[]> {
+    return rewardPools;
+  }
 } 

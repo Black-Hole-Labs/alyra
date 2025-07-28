@@ -3,12 +3,22 @@ import { CommonModule } from '@angular/common';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
 import { ReferralService, ReferralInfo, ReferralStats } from '../../services/referral.service';
 import { RewardsService } from '../../services/rewards.service';
+import { TransactionsService } from '../../services/transactions.service';
+import { ProviderType } from '../../models/wallet-provider.interface';
 import { ethers } from 'ethers';
+import { RewardSuccessNotificationComponent } from '../../components/notification/reward-success-notification/reward-success-notification.component';
+import { RewardFailedNotificationComponent } from '../../components/notification/reward-failed-notification/reward-failed-notification.component';
+import { RewardPendingNotificationComponent } from '../../components/notification/reward-pending-notification/reward-pending-notification.component';
 
 @Component({
   selector: 'app-quests',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    RewardSuccessNotificationComponent,
+    RewardFailedNotificationComponent,
+    RewardPendingNotificationComponent
+  ],
   templateUrl: './rewards.component.html',
   styleUrls: [
     './rewards.component.scss',
@@ -42,7 +52,8 @@ export class RewardsComponent implements OnInit, OnDestroy {
   constructor(
     public blockchainStateService: BlockchainStateService,
     public referralService: ReferralService,
-    public rewardsService: RewardsService
+    public rewardsService: RewardsService,
+    private transactionsService: TransactionsService
   ) {
     // Эффект для инициализации реферальной системы при подключении кошелька
     effect(() => {
@@ -266,7 +277,9 @@ export class RewardsComponent implements OnInit, OnDestroy {
   readonly isClaimingRewards = signal<boolean>(false);
   readonly showRewardSuccess = signal<boolean>(false);
   readonly showRewardError = signal<boolean>(false);
+  readonly showRewardPending = signal<boolean>(false);
   readonly rewardErrorMessage = signal<string>('');
+  readonly rewardTransactionHash = signal<string>('');
 
   // Клейм всех доступных ревардов
   async claimAllRewards(): Promise<void> {
@@ -274,39 +287,157 @@ export class RewardsComponent implements OnInit, OnDestroy {
     try {
       const address = this.walletAddress();
       if (!address) {
-        this.showRewardErrorMessage('Wallet not connected');
+        this.rewardErrorMessage.set('Wallet not connected');
+        this.showRewardError.set(true);
         return;
+      }
+
+      // Получаем информацию о ревард пулах для определения нужной сети
+      const rewardPools = await this.rewardsService.getRewardPools();
+      if (rewardPools.length === 0) {
+        this.rewardErrorMessage.set('No reward pools available');
+        this.showRewardError.set(true);
+        return;
+      }
+
+             // Берем первый ревард пул (предполагаем, что все реварды в одной сети)
+       const rewardPool = rewardPools[0];
+       const requiredChainId = Number(rewardPool.rewardToken.chainId);
+       const currentChainId = this.blockchainStateService.networkSell()?.id;
+
+       // Проверяем, нужно ли переключить сеть
+              if (!currentChainId || currentChainId !== requiredChainId) {
+         console.log(`Switching network from ${currentChainId || 'undefined'} to ${requiredChainId} for reward claim`);
+        
+        // Получаем информацию о нужной сети
+        const targetNetwork = this.blockchainStateService.allNetworks().find(n => n.id === requiredChainId);
+        if (!targetNetwork) {
+          this.rewardErrorMessage.set(`Network with chainId ${requiredChainId} not found`);
+          this.showRewardError.set(true);
+          return;
+        }
+
+        // Проверяем, подключен ли кошелек к нужной экосистеме
+        if (!this.blockchainStateService.isEcosystemConnected(targetNetwork.chainType as any)) {
+          this.rewardErrorMessage.set(`Wallet not connected to ${targetNetwork.chainType} ecosystem`);
+          this.showRewardError.set(true);
+          return;
+        }
+
+        // Получаем провайдер
+        const providerId = this.blockchainStateService.getCurrentProviderId();
+        if (!providerId) {
+          this.rewardErrorMessage.set('No provider selected');
+          this.showRewardError.set(true);
+          return;
+        }
+
+        const providerType = this.blockchainStateService.getType(providerId);
+        const provider = this.blockchainStateService.getProvider(providerId);
+
+        // Проверяем совместимость провайдера с сетью
+        if (providerType !== ProviderType.MULTICHAIN && providerType !== targetNetwork.chainType) {
+          this.rewardErrorMessage.set(`Selected wallet doesn't support ${targetNetwork.chainType} networks`);
+          this.showRewardError.set(true);
+          return;
+        }
+
+        try {
+          // Обновляем сеть в состоянии
+          this.blockchainStateService.updateNetworkSell(requiredChainId);
+          // Переключаем сеть в кошельке
+          await provider.switchNetwork(targetNetwork);
+          
+          // Обновляем адрес кошелька
+          this.blockchainStateService.updateWalletAddress(provider.address);
+          
+          console.log(`Successfully switched to network ${targetNetwork.name} (${requiredChainId})`);
+        } catch (error) {
+          console.error('Error switching network:', error);
+          if ((error as any).message.includes("User rejected the request") || (error as any).code === 4001) {
+            this.rewardErrorMessage.set('Network switch was rejected by user');
+          } else if ((error as any).message === 'unsupported_network') {
+            this.rewardErrorMessage.set(`Network ${targetNetwork.name} is not supported by your wallet`);
+          } else {
+            this.rewardErrorMessage.set(`Failed to switch network: ${(error as Error).message}`);
+          }
+          this.showRewardError.set(true);
+          return;
+        }
       }
       
       const provider = this.blockchainStateService.getCurrentProvider().provider;
       const transactionHashes = await this.rewardsService.claimAllRewards(address, provider);
       
       if (transactionHashes.length > 0) {
-        this.showRewardSuccessMessage();
-        console.log('Successfully claimed rewards! Transaction hashes:', transactionHashes);
-        // Принудительно обновляем реварды после успешного клейма
-        await this.rewardsService.forceLoadRewards(address);
+        // Показываем pending уведомление для первой транзакции
+        this.rewardTransactionHash.set(transactionHashes[0]);
+        this.showRewardPending.set(true);
+        
+        // Пулим статус транзакции
+        await this.pollTransactionStatus(transactionHashes[0]);
+        
+        // Принудительно обновляем реварды после завершения
+        // await this.rewardsService.forceLoadRewards(address);
       } else {
-        this.showRewardErrorMessage('No rewards were claimed');
+        this.rewardErrorMessage.set('No rewards were claimed');
+        this.showRewardError.set(true);
       }
     } catch (error) {
       console.error('Error claiming rewards:', error);
-      this.showRewardErrorMessage('Failed to claim rewards: ' + (error as Error).message);
+      this.rewardErrorMessage.set('Failed to claim rewards: ' + (error as Error).message);
+      this.showRewardError.set(true);
     } finally {
       this.isClaimingRewards.set(false);
     }
   }
 
-  // Показ сообщения об успехе клейма
-  private showRewardSuccessMessage(): void {
-    this.showRewardSuccess.set(true);
-    setTimeout(() => this.showRewardSuccess.set(false), 3000);
+  private async pollTransactionStatus(txHash: string): Promise<void> {
+    try {
+      // Получаем текущую сеть для определения RPC URL
+      const currentNetwork = this.blockchainStateService.networkSell();
+      if (!currentNetwork) {
+        throw new Error('No current network found');
+      }
+      
+      // Получаем рабочий RPC URL для сети
+      const rpcUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(currentNetwork.id);
+      
+      // Используем TransactionsService для пулинга
+      const result = await this.transactionsService.pollTransactionReceipt(txHash, rpcUrl);
+      
+      if (result.success) {
+        // Транзакция успешна
+        this.showRewardPending.set(false);
+        this.showRewardSuccess.set(true);
+        console.log('Transaction successful:', txHash);
+      } else {
+        // Транзакция провалилась или таймаут
+        this.showRewardPending.set(false);
+        this.showRewardError.set(true);
+        this.rewardErrorMessage.set(result.error || 'Transaction failed');
+        console.log('Transaction failed:', txHash, result.error);
+      }
+    } catch (error) {
+      console.error('Error polling transaction status:', error);
+      this.showRewardPending.set(false);
+      this.showRewardError.set(true);
+      this.rewardErrorMessage.set('Error checking transaction status');
+    }
   }
 
-  // Показ сообщения об ошибке клейма
-  private showRewardErrorMessage(message: string): void {
-    this.rewardErrorMessage.set(message);
-    this.showRewardError.set(true);
-    setTimeout(() => this.showRewardError.set(false), 5000);
+
+
+  // Закрытие уведомлений
+  closeRewardSuccessNotification(): void {
+    this.showRewardSuccess.set(false);
+  }
+
+  closeRewardErrorNotification(): void {
+    this.showRewardError.set(false);
+  }
+
+  closeRewardPendingNotification(): void {
+    this.showRewardPending.set(false);
   }
 }

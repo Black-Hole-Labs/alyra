@@ -19,21 +19,30 @@
 	<h6>Connect your wallet to access the referral program</h6>
 </div>
 
-<!-- Success message for rewards -->
-<div *ngIf="showRewardSuccess()" class="success-message">
-	<div class="message-content">
-		<span class="success-icon">✓</span>
-		<p>Rewards claimed successfully!</p>
-	</div>
-</div>
+<!-- Success notification for rewards -->
+<app-reward-success-notification 
+  *ngIf="showRewardSuccess()" 
+  [amount]="totalClaimableAmount().toString()"
+  [transactionHash]="rewardTransactionHash()"
+  (close)="closeRewardSuccessNotification()">
+</app-reward-success-notification>
 
-<!-- Error message for rewards -->
-<div *ngIf="showRewardError()" class="error-message">
-	<div class="message-content">
-		<span class="error-icon">✗</span>
-		<p>{{ rewardErrorMessage() }}</p>
-	</div>
-</div>
+<!-- Error notification for rewards -->
+<app-reward-failed-notification 
+  *ngIf="showRewardError()" 
+  [amount]="totalClaimableAmount().toString()"
+  [message]="rewardErrorMessage()"
+  [transactionHash]="rewardTransactionHash()"
+  (close)="closeRewardErrorNotification()">
+</app-reward-failed-notification>
+
+<!-- Pending notification for rewards -->
+<app-reward-pending-notification 
+  *ngIf="showRewardPending()" 
+  [amount]="totalClaimableAmount().toString()"
+  [transactionHash]="rewardTransactionHash()"
+  (close)="closeRewardPendingNotification()">
+</app-reward-pending-notification>
 
 <!-- Main content when connected -->
 <div *ngIf="isConnected() && !isLoading()" class="quests">
