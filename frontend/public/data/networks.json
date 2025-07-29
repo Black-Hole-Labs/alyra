@@ -121,25 +121,21 @@
     "explorerUrl": "https://polygonscan.com/token/"
   },
   {
-    "key": "mnt",
+    "key": "lna",
     "chainType": "EVM",
-    "name": "Mantle",
-    "id": 5000,
-    "idHex": "0x1388",
-    "logoURI": "/img/networks/mantle.png",
+    "name": "Linea",
+    "id": 59144,
+    "idHex": "0xe708",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/linea.svg",
     "rpcUrls": [
-      "https://rpc.mantle.xyz",
-      "https://mantle-rpc.publicnode.com",
-      "https://mantle.drpc.org",
-      "https://mantle.public-rpc.com",
-      "https://rpc.ankr.com/mantle"
+      "https://rpc.linea.build"
     ],
     "nativeCurrency": {
-      "name": "Mantle",
-      "symbol": "MNT",
+      "name": "ETH",
+      "symbol": "ETH",
       "decimals": 18
     },
-    "explorerUrl": "https://mantlescan.xyz/token/"
+    "explorerUrl": "https://lineascan.build/token/"
   },
   {
     "key": "opt",
