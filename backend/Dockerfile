@@ -42,6 +42,9 @@ COPY --from=builder /app/tsconfig.json ./
 COPY --from=builder /app/apps ./apps
 COPY --from=builder /app/libs ./libs
 
+# Копируем TypeScript файлы миграций (они нужны для работы в продакшене)
+COPY --from=builder /app/apps/core-db/src/migrations ./apps/core-db/src/migrations
+
 # Создаем пользователя для безопасности
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nestjs -u 1001

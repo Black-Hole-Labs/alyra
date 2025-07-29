@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { join } from 'path';
 import { UserEntity } from './entities/user.entity';
 import { UserReferralEntity } from './entities/user-referral.entity';
 import { RewardPoolEntity } from './entities/reward-pool.entity';
@@ -13,10 +14,8 @@ import { TransactionStateEntity } from './entities/transaction-state.entity';
 // Загружаем переменные окружения
 config({ path: '.env' });
 
-// Определяем путь к миграциям в зависимости от окружения
-const migrationsPath = process.env.NODE_ENV === 'production' 
-  ? 'dist/apps/core-db/src/migrations/*.js'  // Скомпилированные JS файлы в продакшене
-  : 'apps/core-db/src/migrations/*.ts';      // TypeScript файлы в разработке
+// Используем абсолютный путь к миграциям
+const migrationsPath = join(__dirname, 'migrations', '*.ts');
 
 export const MigrationDataSource = new DataSource({
   type: 'postgres',

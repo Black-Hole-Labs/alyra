@@ -25,9 +25,11 @@ export class MigrationService {
       
       // Инициализируем DataSource для миграций
       await MigrationDataSource.initialize();
+      this.logger.log('MigrationDataSource initialized successfully');
       
       // Проверяем, есть ли непроведенные миграции
       const pendingMigrations = await MigrationDataSource.showMigrations();
+      this.logger.log(`showMigrations() returned: ${pendingMigrations}`);
       
       if (pendingMigrations) {
         this.logger.log('Found pending migrations, running them...');
@@ -52,6 +54,16 @@ export class MigrationService {
         }
       } else {
         this.logger.log('No pending migrations found');
+        
+        // Дополнительная диагностика
+        try {
+          const executedMigrations = await MigrationDataSource.query(
+            'SELECT * FROM migrations ORDER BY timestamp DESC LIMIT 5'
+          );
+          this.logger.log(`Last 5 executed migrations: ${JSON.stringify(executedMigrations)}`);
+        } catch (error) {
+          this.logger.warn('Could not query migrations table:', error.message);
+        }
       }
       
       // Закрываем DataSource для миграций

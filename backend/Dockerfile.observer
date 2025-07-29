@@ -16,6 +16,9 @@ COPY backend/ ./
 # Собираем observer
 RUN npm run build:observer
 
+# Копируем TypeScript файлы миграций (они нужны для работы в продакшене)
+COPY backend/apps/core-db/src/migrations ./apps/core-db/src/migrations
+
 # Устанавливаем переменные окружения
 ENV NODE_ENV=production
 
