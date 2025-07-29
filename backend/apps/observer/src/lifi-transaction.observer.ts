@@ -2,8 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TransactionEntity, ObserverStateEntity } from '@black-hole/core-db';
-import { CHAIN_ID_TO_NETWORK, LifiTransfer, LifiResponse, formatTokenAmount } from '@black-hole/config';
+import { TransactionEntity, TransactionStateRepository } from '@black-hole/core-db';
+import { CHAIN_ID_TO_NETWORK, LifiTransfer, LifiResponse, LifiTransactionData, formatTokenAmount } from '@black-hole/config';
 
 @Injectable()
 export class LifiTransactionObserver {
@@ -15,8 +15,7 @@ export class LifiTransactionObserver {
   constructor(
     @InjectRepository(TransactionEntity)
     private readonly transactionRepository: Repository<TransactionEntity>,
-    @InjectRepository(ObserverStateEntity)
-    private readonly observerStateRepository: Repository<ObserverStateEntity>,
+    private readonly transactionStateRepository: TransactionStateRepository,
   ) {}
 
   @Cron(CronExpression.EVERY_MINUTE)
@@ -43,36 +42,41 @@ export class LifiTransactionObserver {
     url.searchParams.append('status', 'DONE');
     url.searchParams.append('limit', '100'); // Максимальный размер страницы
     
-    // Получаем последний обработанный курсор
-    const lastCursor = await this.getLastProcessedCursor();
+    // Получаем или создаем состояние пагинации
+    const paginationState = await this.transactionStateRepository.getOrCreate(
+      this.LIFI_LAST_CURSOR_KEY,
+      '', // Пустое значение по умолчанию
+      'Last processed LI.FI pagination cursor (next parameter)'
+    );
     
     // Проверяем, есть ли данные в БД
     const hasExistingData = await this.hasExistingTransactions();
     
-    if (lastCursor) {
-      // Если есть курсор, продолжаем с него
-      url.searchParams.append('cursor', lastCursor);
-      this.logger.log(`Fetching transfers with cursor: ${lastCursor}`);
+    if (paginationState.value) {
+      // Если есть курсор пагинации, продолжаем с него
+      url.searchParams.append('next', paginationState.value);
+      this.logger.log(`Fetching transfers with pagination cursor: ${paginationState.value}`);
     } else if (!hasExistingData) {
       // Если БД пустая, получаем данные за последние 720 дней
       const fromTimestamp = Math.floor((Date.now() - 720 * 24 * 60 * 60 * 1000) / 1000); // 720 дней назад
       url.searchParams.append('fromTimestamp', fromTimestamp.toString());
       this.logger.log(`Database is empty, fetching transfers from ${fromTimestamp} (${new Date(fromTimestamp * 1000).toISOString()})`);
     } else {
-      this.logger.log('No cursor found, but database has data. Starting from latest available data.');
+      this.logger.log('No pagination cursor found, but database has data. Starting from latest available data.');
     }
     
     const allTransfers: LifiTransfer[] = [];
-    let currentCursor = lastCursor;
+    let currentPaginationCursor = paginationState.value;
     let requestCount = 0;
     const maxRequests = 50; // Защита от бесконечного цикла
+    let lastNextCursor: string | undefined; // Сохраняем последний next курсор из ответа
     
     while (requestCount < maxRequests) {
-      if (currentCursor) {
-        url.searchParams.set('cursor', currentCursor);
+      if (currentPaginationCursor) {
+        url.searchParams.set('next', currentPaginationCursor);
       }
       
-      this.logger.log(`Request ${requestCount + 1}: Fetching transfers...`);
+      this.logger.log(`Request ${requestCount + 1}: Fetching transfers with URL: ${url.toString()}`);
 
       const response = await fetch(url.toString());
       
@@ -84,6 +88,7 @@ export class LifiTransactionObserver {
       const transfers = data.data || [];
       
       this.logger.log(`Fetched ${transfers.length} transfers in request ${requestCount + 1}`);
+      this.logger.log(`Response hasNext: ${data.hasNext}, next cursor: ${data.next || 'none'}`);
       
       if (transfers.length === 0) {
         this.logger.log('No more transfers found');
@@ -96,14 +101,20 @@ export class LifiTransactionObserver {
       
       this.logger.log(`Added ${successfulTransfers.length} successful transfers (filtered from ${transfers.length} total)`);
       
-      // Проверяем, есть ли следующая страница
+      // Проверяем пагинацию согласно документации API
       if (!data.hasNext || !data.next) {
-        this.logger.log('No more pages available');
+        this.logger.log('No more pages available (hasNext: false or no next cursor)');
+        // Сохраняем текущий курсор перед выходом
+        if (currentPaginationCursor) {
+          lastNextCursor = currentPaginationCursor;
+        }
         break;
       }
       
-      currentCursor = data.next;
-      this.logger.log(`Next cursor: ${currentCursor}`);
+      // Сохраняем next курсор из ответа API для следующего запроса
+      currentPaginationCursor = data.next;
+      lastNextCursor = data.next; // Сохраняем для обновления состояния
+      this.logger.log(`Next pagination cursor from API response: ${currentPaginationCursor}`);
       
       requestCount++;
       
@@ -116,6 +127,13 @@ export class LifiTransactionObserver {
     }
 
     this.logger.log(`Total transfers fetched: ${allTransfers.length} in ${requestCount} requests`);
+    this.logger.log(`Final pagination cursor for next run: ${lastNextCursor || 'none'}`);
+    
+    // Обновляем состояние пагинации с последним полученным курсором
+    if (lastNextCursor) {
+      await this.updateLastProcessedCursor(lastNextCursor);
+    }
+    
     return allTransfers;
   }
 
@@ -129,75 +147,52 @@ export class LifiTransactionObserver {
     }
   }
 
-  private async getLastProcessedCursor(): Promise<string | null> {
-    try {
-      const state = await this.observerStateRepository.findOne({
-        where: { key: this.LIFI_LAST_CURSOR_KEY }
-      });
-      
-      if (state && state.value) {
-        return state.value;
-      }
-    } catch (error) {
-      this.logger.warn('Error getting last processed cursor:', error);
-    }
-    
-    return null;
-  }
-
   private async updateLastProcessedCursor(cursor: string): Promise<void> {
     try {
-      await this.observerStateRepository.upsert(
-        {
-          key: this.LIFI_LAST_CURSOR_KEY,
-          value: cursor,
-          description: 'Last processed LI.FI transaction cursor'
-        },
-        ['key']
-      );
+      await this.transactionStateRepository.updateByKey(this.LIFI_LAST_CURSOR_KEY, {
+        value: cursor
+      });
+      this.logger.log(`Updated pagination cursor to: ${cursor}`);
     } catch (error) {
-      this.logger.error('Error updating last processed cursor:', error);
+      this.logger.error('Error updating pagination cursor:', error);
     }
   }
 
-  private async processTransfers(transfers: LifiTransfer[]) {
-    let lastCursor: string | null = null;
-    
+  private async processTransfers(transfers: LifiTransfer[]): Promise<void> {
+    if (transfers.length === 0) {
+      this.logger.log('No transfers to process');
+      return;
+    }
+
+    this.logger.log(`Processing ${transfers.length} transfers...`);
+
     for (const transfer of transfers) {
-      try {
-        // Обрабатываем отправляющую транзакцию
-        await this.processTransferTransaction(
-          transfer.sending,
-          transfer.fromAddress,
-          'send',
-          transfer.id
-        );
-
-        // Обрабатываем получающую транзакцию
-        await this.processTransferTransaction(
-          transfer.receiving,
-          transfer.toAddress,
-          'receive',
-          transfer.id
-        );
-
-        // Сохраняем курсор последней обработанной транзакции
-        lastCursor = transfer.id;
-        
-      } catch (error) {
-        this.logger.error(`Error processing transfer ${transfer.id}:`, error);
-      }
+      this.logger.debug(`Processing transfer: ${transfer.transactionId}`);
+      
+      // Обрабатываем sending транзакцию
+      await this.processTransferTransaction(
+        transfer.sending,
+        transfer.fromAddress,
+        'send',
+        transfer.transactionId
+      );
+      
+      // Обрабатываем receiving транзакцию
+      // await this.processTransferTransaction(
+      //   transfer.receiving,
+      //   transfer.toAddress,
+      //   'receive',
+      //   transfer.transactionId
+      // );
+      
+      this.logger.debug(`Processed transfer: ${transfer.transactionId}`);
     }
-
-    // Обновляем последний обработанный курсор
-    if (lastCursor) {
-      await this.updateLastProcessedCursor(lastCursor);
-      this.logger.log(`Updated last processed cursor to: ${lastCursor}`);
-    }
+    
+    this.logger.log(`Successfully processed ${transfers.length} transfers`);
   }
 
   private async processTransferTransaction(
-    txData: LifiTransfer['sending'] | LifiTransfer['receiving'],
+    txData: LifiTransactionData,
     walletAddress: string,
     transactionType: 'send' | 'receive',
     transactionId: string

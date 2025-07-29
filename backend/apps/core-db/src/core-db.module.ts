@@ -6,15 +6,19 @@ import { UserEntity } from './entities/user.entity';
 import { UserReferralEntity } from './entities/user-referral.entity';
 import { RewardPoolEntity } from './entities/reward-pool.entity';
 import { RewardEntity } from './entities/reward.entity';
+import { RewardStateEntity } from './entities/reward-state.entity';
 import { TransactionEntity } from './entities/transaction.entity';
 import { TokenEntity } from './entities/token.entity';
-import { ObserverStateEntity } from './entities/observer-state.entity';
+import { TransactionStateEntity } from './entities/transaction-state.entity';
 import { UserRepository } from './repositories/user.repository';
 import { UserReferralRepository } from './repositories/user-referral.repository';
 import { RewardPoolRepository } from './repositories/reward-pool.repository';
 import { RewardRepository } from './repositories/reward.repository';
+import { RewardStateRepository } from './repositories/reward-state.repository';
 import { TransactionRepository } from './repositories/transaction.repository';
-import { ObserverStateRepository } from './repositories/observer-state.repository';
+import { TransactionStateRepository } from './repositories/transaction-state.repository';
+import { MigrationService } from './migration.service';
+import { MigrationHook } from './migration.hook';
 
 @Module({
   imports: [
@@ -33,9 +37,10 @@ import { ObserverStateRepository } from './repositories/observer-state.repositor
           UserReferralEntity,
           RewardPoolEntity,
           RewardEntity,
+          RewardStateEntity,
           TransactionEntity,
           TokenEntity,
-          ObserverStateEntity,
+          TransactionStateEntity,
         ],
         synchronize: configService.get('NODE_ENV') !== 'production', // Временно включить для создания всех таблиц
         logging: configService.get('NODE_ENV') === 'development',
@@ -49,9 +54,10 @@ import { ObserverStateRepository } from './repositories/observer-state.repositor
       UserReferralEntity,
       RewardPoolEntity,
       RewardEntity,
+      RewardStateEntity,
       TransactionEntity,
       TokenEntity,
-      ObserverStateEntity,
+      TransactionStateEntity,
     ]),
   ],
   providers: [
@@ -59,8 +65,11 @@ import { ObserverStateRepository } from './repositories/observer-state.repositor
     UserReferralRepository,
     RewardPoolRepository,
     RewardRepository,
+    RewardStateRepository,
     TransactionRepository,
-    ObserverStateRepository,
+    TransactionStateRepository,
+    MigrationService,
+    MigrationHook,
   ],
   exports: [
     TypeOrmModule.forFeature([
@@ -68,16 +77,20 @@ import { ObserverStateRepository } from './repositories/observer-state.repositor
       UserReferralEntity,
       RewardPoolEntity,
       RewardEntity,
+      RewardStateEntity,
       TransactionEntity,
       TokenEntity,
-      ObserverStateEntity,
+      TransactionStateEntity,
     ]),
     UserRepository,
     UserReferralRepository,
     RewardPoolRepository,
     RewardRepository,
+    RewardStateRepository,
     TransactionRepository,
-    ObserverStateRepository,
+    TransactionStateRepository,
+    MigrationService,
+    MigrationHook,
   ],
 })
 export class CoreDbModule {} 

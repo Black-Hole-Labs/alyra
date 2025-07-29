@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
-export interface IObserverState {
+export interface ITransactionState {
   id: number;
   key: string;
   value: string;
@@ -9,9 +9,9 @@ export interface IObserverState {
   updatedAt: Date;
 }
 
-@Entity('observer_states')
+@Entity('transaction_states')
 @Index(['key'], { unique: true })
-export class ObserverStateEntity implements IObserverState {
+export class TransactionStateEntity implements ITransactionState {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -29,4 +29,4 @@ export class ObserverStateEntity implements IObserverState {
 
   @UpdateDateColumn()
   updatedAt: Date;
-} 
+}

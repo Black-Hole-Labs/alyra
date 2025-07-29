@@ -1,35 +1,59 @@
 // Интерфейсы для LI.FI API v2
+export interface LifiToken {
+  address: string;
+  chainId: number;
+  symbol: string;
+  decimals: number;
+  name: string;
+  coinKey: string;
+  logoURI: string;
+  priceUSD: string;
+}
+
+export interface LifiGasToken {
+  address: string;
+  chainId: number;
+  symbol: string;
+  decimals: number;
+  name: string;
+  coinKey: string;
+  logoURI: string;
+  priceUSD: string;
+}
+
+export interface LifiTransactionData {
+  txHash: string;
+  txLink: string;
+  token: LifiToken;
+  chainId: number;
+  gasPrice: string;
+  gasUsed: string;
+  gasToken: LifiGasToken;
+  gasAmount: string;
+  gasAmountUSD: string;
+  amountUSD: string;
+  value: string;
+  amount: string;
+  timestamp: number;
+  includedSteps?: any[];
+}
+
 export interface LifiTransfer {
-  id: string;
+  transactionId: string; // Это правильное поле для ID транзакции
   status: string;
-  sending: {
-    txHash: string;
-    amount: string;
-    amountUSD: string;
-    token: {
-      address: string;
-      chainId: number;
-      symbol: string;
-      decimals: number;
-    };
-    chainId: number;
-    timestamp: number;
-  };
-  receiving: {
-    txHash: string;
-    amount: string;
-    amountUSD: string;
-    token: {
-      address: string;
-      chainId: number;
-      symbol: string;
-      decimals: number;
-    };
-    chainId: number;
-    timestamp: number;
-  };
+  substatus: string;
+  substatusMessage: string;
+  sending: LifiTransactionData;
+  receiving: LifiTransactionData;
+  lifiExplorerLink: string;
   fromAddress: string;
   toAddress: string;
+  bridgeExplorerLink: string;
+  tool: string;
+  metadata: {
+    integrator: string;
+  };
+  feeCosts: any[];
 }
 
 export interface LifiResponse {

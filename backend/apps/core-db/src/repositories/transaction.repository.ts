@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, MoreThan } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TransactionEntity } from '../entities/transaction.entity';
 
@@ -49,6 +49,18 @@ export class TransactionRepository {
           $gte: startTimestamp,
           $lte: endTimestamp,
         } as any,
+      },
+      order: {
+        timestamp: 'ASC',
+      },
+    });
+  }
+
+  async findByAddressAfterTimestamp(address: string, timestamp: number): Promise<TransactionEntity[]> {
+    return this.repository.find({
+      where: {
+        address: address,
+        timestamp: MoreThan(timestamp), // Только транзакции после указанного timestamp
       },
       order: {
         timestamp: 'ASC',
