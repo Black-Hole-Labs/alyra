@@ -1,0 +1,23 @@
+{
+  "canisters": {
+    "frontend": {
+      "type": "assets",
+      "source": ["frontend-dist/browser"],
+      "build": ""
+    }
+  },
+  "dfx": "0.17.0",
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:4943",
+      "type": "ephemeral"
+    },
+    "ic": {
+      "type": "persistent",
+      "providers": [
+        "https://ic0.app"
+      ]
+    }
+  },
+  "version": 1
+}

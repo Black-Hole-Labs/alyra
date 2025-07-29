@@ -1,0 +1,164 @@
+[
+  {
+    "key": "eth",
+    "chainType": "EVM",
+    "name": "Ethereum",
+    "id": 1,
+    "idHex": "0x1",
+    "logoURI": "/img/networks/eth.png",
+    "rpcUrls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://eth.drpc.org",
+      "https://eth.public-rpc.com",
+      "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+      "https://rpc.ankr.com/eth"
+    ],
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://etherscan.io/token/"
+  },
+  {
+    "key": "sol",
+    "chainType": "SVM",
+    "name": "Solana",
+    "id": 1151111081099710,
+    "idHex": "0x41103230303302e",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/solana.svg",
+    "rpcUrls": [
+      "https://solana-rpc.publicnode.com",
+      "https://api.mainnet-beta.solana.com",
+      "https://frosty-nameless-sunset.solana-mainnet.quiknode.pro/74791b866a6fa352e6b6a8026df34dc0b4f4475f/"
+    ],
+    "nativeCurrency": {
+      "name": "SOL",
+      "symbol": "SOL",
+      "decimals": 9
+    },
+    "explorerUrl": "https://solscan.io/token/"
+  },
+  {
+    "key": "bas",
+    "chainType": "EVM",
+    "name": "Base",
+    "id": 8453,
+    "idHex": "0x2105",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/base.svg",
+    "rpcUrls": [
+      "https://mainnet.base.org",
+      "https://base-rpc.publicnode.com",
+      "https://base.drpc.org",
+      "https://rpc.ankr.com/base"
+    ],
+    "nativeCurrency": {
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://basescan.org/token/"
+  },
+  {
+    "key": "arb",
+    "chainType": "EVM",
+    "name": "Arbitrum",
+    "id": 42161,
+    "idHex": "0xa4b1",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/arbitrum.svg",
+    "rpcUrls": [
+      "https://arb1.arbitrum.io/rpc",
+      "https://arbitrum-one-rpc.publicnode.com",
+      "https://arbitrum.drpc.org",
+      "https://rpc.ankr.com/arbitrum"
+    ],
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://arbiscan.io/token/"
+  },
+  {
+    "key": "bsc",
+    "chainType": "EVM",
+    "name": "BSC",
+    "id": 56,
+    "idHex": "0x38",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/bsc.svg",
+    "rpcUrls": [
+      "https://bsc-dataseed.binance.org",
+      "https://bsc-dataseed.bnbchain.org",
+      "https://bsc-rpc.publicnode.com",
+      "https://bsc-dataseed1.defibit.io",
+      "https://bsc-dataseed1.ninicoin.io"
+    ],
+    "nativeCurrency": {
+      "name": "BNB",
+      "symbol": "BNB",
+      "decimals": 18
+    },
+    "explorerUrl": "https://bscscan.com/token/"
+  },
+  {
+    "key": "pol",
+    "chainType": "EVM",
+    "name": "Polygon",
+    "id": 137,
+    "idHex": "0x89",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/polygon.svg",
+    "rpcUrls": [
+      "https://polygon-bor-rpc.publicnode.com",
+      "https://polygon.drpc.org",
+      "https://polygon-rpc.com",
+      "https://rpc.ankr.com/polygon"
+    ],
+    "nativeCurrency": {
+      "name": "Polygon Ecosystem Token",
+      "symbol": "POL",
+      "decimals": 18
+    },
+    "explorerUrl": "https://polygonscan.com/token/"
+  },
+  {
+    "key": "mnt",
+    "chainType": "EVM",
+    "name": "Mantle",
+    "id": 5000,
+    "idHex": "0x1388",
+    "logoURI": "/img/networks/mantle.png",
+    "rpcUrls": [
+      "https://rpc.mantle.xyz",
+      "https://mantle-rpc.publicnode.com",
+      "https://mantle.drpc.org",
+      "https://mantle.public-rpc.com",
+      "https://rpc.ankr.com/mantle"
+    ],
+    "nativeCurrency": {
+      "name": "Mantle",
+      "symbol": "MNT",
+      "decimals": 18
+    },
+    "explorerUrl": "https://mantlescan.xyz/token/"
+  },
+  {
+    "key": "opt",
+    "chainType": "EVM",
+    "name": "Optimism",
+    "id": 10,
+    "idHex": "0xa",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/optimism.svg",
+    "rpcUrls": [
+      "https://mainnet.optimism.io/",
+      "https://optimism-rpc.publicnode.com",
+      "https://optimism.drpc.org",
+      "https://rpc.ankr.com/optimism"
+    ],
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://optimistic.etherscan.io/token/"
+  }
+]
