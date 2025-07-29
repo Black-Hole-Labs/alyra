@@ -49,20 +49,15 @@ export class LifiTransactionObserver {
       'Last processed LI.FI pagination cursor (next parameter)'
     );
     
-    // Проверяем, есть ли данные в БД
-    const hasExistingData = await this.hasExistingTransactions();
-    
     if (paginationState.value) {
       // Если есть курсор пагинации, продолжаем с него
       url.searchParams.append('next', paginationState.value);
       this.logger.log(`Fetching transfers with pagination cursor: ${paginationState.value}`);
-    } else if (!hasExistingData) {
-      // Если БД пустая, получаем данные за последние 720 дней
+    } else {
+      // Если курсор пустой, получаем данные за последние 720 дней
       const fromTimestamp = Math.floor((Date.now() - 720 * 24 * 60 * 60 * 1000) / 1000); // 720 дней назад
       url.searchParams.append('fromTimestamp', fromTimestamp.toString());
-      this.logger.log(`Database is empty, fetching transfers from ${fromTimestamp} (${new Date(fromTimestamp * 1000).toISOString()})`);
-    } else {
-      this.logger.log('No pagination cursor found, but database has data. Starting from latest available data.');
+      this.logger.log(`No pagination cursor found, fetching transfers from ${fromTimestamp} (${new Date(fromTimestamp * 1000).toISOString()})`);
     }
     
     const allTransfers: LifiTransfer[] = [];
@@ -135,16 +130,6 @@ export class LifiTransactionObserver {
     }
     
     return allTransfers;
-  }
-
-  private async hasExistingTransactions(): Promise<boolean> {
-    try {
-      const count = await this.transactionRepository.count();
-      return count > 0;
-    } catch (error) {
-      this.logger.warn('Error checking existing transactions:', error);
-      return false;
-    }
   }
 
   private async updateLastProcessedCursor(cursor: string): Promise<void> {
