@@ -6,6 +6,7 @@ export interface IUser {
   referralCode: string;
   address: string;
   chainId: number;
+  rewardPercentage: number;
   createdAt: Date;
 }
 
@@ -24,6 +25,9 @@ export class UserEntity implements IUser {
 
   @Column({ type: 'bigint' })
   chainId: number;
+
+  @Column({ type: 'decimal', precision: 5, scale: 4, default: 0.4000 })
+  rewardPercentage: number;
 
   @CreateDateColumn()
   createdAt: Date;

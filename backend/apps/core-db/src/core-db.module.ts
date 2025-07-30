@@ -42,7 +42,7 @@ import { MigrationHook } from './migration.hook';
           TokenEntity,
           TransactionStateEntity,
         ],
-        synchronize: configService.get('NODE_ENV') !== 'production', // Временно включить для создания всех таблиц
+        synchronize: true,
         logging: configService.get('NODE_ENV') === 'development',
         ssl: configService.get('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false,
         namingStrategy: new SnakeNamingStrategy(),

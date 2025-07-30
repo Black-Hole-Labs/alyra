@@ -91,8 +91,10 @@ export class ReferralRewardDistributor {
             
             // Сначала получаем комиссию Blackhole (0.15% от суммы транзакции)
             const blackholeFee = amountUSD * BLACKHOLE_FEE_PERCENTAGE;
-            // Затем от этой комиссии берем 40% для ревардов
-            const referralRewardAmount = blackholeFee * REWARD_FEE_PERCENTAGE;
+            // Получаем процент награды из БД или используем дефолтный
+            const rewardPercentage = userReferrals[0]?.user?.rewardPercentage || REWARD_FEE_PERCENTAGE;
+            // Затем от этой комиссии берем процент для ревардов
+            const referralRewardAmount = blackholeFee * rewardPercentage;
 
             // Создаем награду для реферала
             await this.rewardRepository.save({
@@ -101,7 +103,7 @@ export class ReferralRewardDistributor {
               address: referrerAddress, // Address of the referrer
             });
             
-            this.logger.log(`Referral reward created: $${referralRewardAmount.toFixed(2)} USD for referrer ${referrerAddress} from transaction ${transaction.id} (transaction: $${amountUSD.toFixed(2)} USD, Blackhole fee: $${blackholeFee.toFixed(2)} USD)`);
+            this.logger.log(`Referral reward created: $${referralRewardAmount.toFixed(2)} USD for referrer ${referrerAddress} from transaction ${transaction.id} (transaction: $${amountUSD.toFixed(2)} USD, Blackhole fee: $${blackholeFee.toFixed(2)} USD, reward percentage: ${(rewardPercentage * 100).toFixed(1)}%)`);
 
             // Обновляем максимальный timestamp
             maxTimestamp = Math.max(maxTimestamp, transaction.timestamp);

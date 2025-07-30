@@ -63,7 +63,8 @@ export class UserRepository implements IUserRepository {
         'user.id',
         'user.referralCode',
         'user.address',
-        'user.chainId'
+        'user.chainId',
+        'user.rewardPercentage'
         // убраны SUM(tx.amount), SUM(comm.amount) и т.д.
       ])
       .where('user.id = :id', { id })
@@ -81,6 +82,7 @@ export class UserRepository implements IUserRepository {
       totalVolumeReferred: 0,
       totalCommissions: 0, // комиссии считаются отдельно
       pendingCommissions: 0, // комиссии считаются отдельно
+      rewardPercentage: parseFloat(result.user_rewardPercentage) || 0.4, // используем значение из БД или дефолтный
     };
   }
 

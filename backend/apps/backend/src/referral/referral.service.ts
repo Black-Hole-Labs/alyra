@@ -37,11 +37,12 @@ export class ReferralService {
     // Генерируем уникальный реферальный код
     const referralCode = await this.userRepository.generateUniqueCode();
 
-    // Создаем реферала
+    // Создаем реферала с дефолтным процентом награды
     const user = await this.userRepository.create({
       referralCode,
       address: referrerAddress,
       chainId,
+      rewardPercentage: 0.4, // 40% по умолчанию
     });
 
     // Возвращаем в формате, ожидаемом фронтендом
@@ -81,11 +82,12 @@ export class ReferralService {
       };
     }
 
-    // Создаем новую запись с тем же реферальным кодом
+    // Создаем новую запись с тем же реферальным кодом и дефолтным процентом
     const user = await this.userRepository.create({
       referralCode: referrerCode,
       address: referrerAddress,
       chainId,
+      rewardPercentage: 0.4, // 40% по умолчанию
     });
 
     return {
@@ -169,7 +171,7 @@ export class ReferralService {
   /**
    * Получение статистики реферала по коду (все сети)
    */
-  async getReferralStatsByCode(code: string, rewardPercent = 0.1): Promise<IReferralStats> {
+  async getReferralStatsByCode(code: string): Promise<IReferralStats> {
     const users = await this.userRepository.findAllByCode(code);
     if (users.length === 0) {
       throw new NotFoundException('Referral not found');
@@ -197,12 +199,16 @@ export class ReferralService {
     let totalVolumeReferred = 0;
     let totalCommissions = 0;
     let pendingCommissions = 0; // если нужна логика pending — добавьте здесь
+    
+    // Используем процент из БД для первого пользователя (все пользователи с одним кодом имеют одинаковый процент)
+    const rewardPercentage = users[0]?.rewardPercentage || 0.4;
+    
     for (const address of referralAddresses) {
       const txs = await this.transactionRepository.findByAddress(address);
       const sumForAddress = txs.reduce((sum, tx) => sum + Number(tx.amountUSD), 0);
-      const commissionForAddress = sumForAddress * rewardPercent;
+      const commissionForAddress = sumForAddress * rewardPercentage;
       // DEBUG: логируем по каждому адресу
-      console.log(`[getReferralStatsByCode] address: ${address}, tx count: ${txs.length}, sum: ${sumForAddress}, commission: ${commissionForAddress}`);
+      console.log(`[getReferralStatsByCode] address: ${address}, tx count: ${txs.length}, sum: ${sumForAddress}, commission: ${commissionForAddress}, reward percentage: ${(rewardPercentage * 100).toFixed(1)}%`);
       totalVolumeReferred += sumForAddress;
       totalCommissions += commissionForAddress;
       // pendingCommissions += ... // если нужно
@@ -222,6 +228,7 @@ export class ReferralService {
       totalReferrals: referralAddresses.length,
       totalCommissions,
       pendingCommissions,
+      rewardPercentage: rewardPercentage, // Добавляем информацию о проценте награды
     };
   }
 } 

@@ -8,6 +8,7 @@ export interface IReferralStats {
   totalVolumeReferred: number;
   totalCommissions: number;
   pendingCommissions: number;
+  rewardPercentage: number;
 }
 
 export interface IReferralEarnings {
