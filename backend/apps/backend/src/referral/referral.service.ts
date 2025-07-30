@@ -185,23 +185,31 @@ export class ReferralService {
     // DEBUG: логируем адреса рефералов
     console.log('[getReferralStatsByCode] referralAddresses:', referralAddresses);
 
-    // Считаем статистику по транзакциям всех рефералов
     let totalVolume = 0;
+    for (const user of users) {
+      const txs = await this.transactionRepository.findByAddress(user.address);
+      const volumeForAddress = txs.reduce((sum, tx) => sum + Number(tx.amountUSD || 0), 0);
+      console.log(`[getReferralStatsByCode] user address: ${user.address}, tx count: ${txs.length}, volume: ${volumeForAddress}`);
+      totalVolume += volumeForAddress;
+    }
+
+    // Считаем статистику по транзакциям всех рефералов
+    let totalVolumeReferred = 0;
     let totalCommissions = 0;
     let pendingCommissions = 0; // если нужна логика pending — добавьте здесь
     for (const address of referralAddresses) {
       const txs = await this.transactionRepository.findByAddress(address);
-      const sumForAddress = txs.reduce((sum, tx) => sum + Number(tx.amount), 0);
+      const sumForAddress = txs.reduce((sum, tx) => sum + Number(tx.amountUSD), 0);
       const commissionForAddress = sumForAddress * rewardPercent;
       // DEBUG: логируем по каждому адресу
       console.log(`[getReferralStatsByCode] address: ${address}, tx count: ${txs.length}, sum: ${sumForAddress}, commission: ${commissionForAddress}`);
-      totalVolume += sumForAddress;
+      totalVolumeReferred += sumForAddress;
       totalCommissions += commissionForAddress;
       // pendingCommissions += ... // если нужно
     }
 
     // DEBUG: финальные значения
-    console.log('[getReferralStatsByCode] totalVolume:', totalVolume);
+    console.log('[getReferralStatsByCode] totalVolumeReferred:', totalVolumeReferred);
     console.log('[getReferralStatsByCode] totalCommissions:', totalCommissions);
 
     return {
@@ -210,6 +218,7 @@ export class ReferralService {
       referrerAddress: users[0].address,
       chainId: users[0].chainId,
       totalVolume,
+      totalVolumeReferred,
       totalReferrals: referralAddresses.length,
       totalCommissions,
       pendingCommissions,

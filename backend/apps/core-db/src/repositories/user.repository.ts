@@ -78,6 +78,7 @@ export class UserRepository implements IUserRepository {
       chainId: result.user_chainId,
       totalReferrals: parseInt(totalReferralsResult?.totalReferrals || '0'),
       totalVolume: 0, // транзакции считаются отдельно
+      totalVolumeReferred: 0,
       totalCommissions: 0, // комиссии считаются отдельно
       pendingCommissions: 0, // комиссии считаются отдельно
     };

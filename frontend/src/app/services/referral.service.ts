@@ -21,6 +21,7 @@ export interface UserReferralInfo {
 export interface ReferralStats {
   id: number;
   totalVolume: number;
+  totalVolumeReferred: number;
   totalReferrals: number;
   totalCommissions: number;
   pendingCommissions: number;

@@ -5,6 +5,7 @@ export interface IReferralStats {
   chainId: number;
   totalVolume: number;
   totalReferrals: number;
+  totalVolumeReferred: number;
   totalCommissions: number;
   pendingCommissions: number;
 }

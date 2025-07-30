@@ -232,22 +232,25 @@ export class RewardsComponent implements OnInit, OnDestroy {
     return stats ? this.formatAmount(stats.totalVolume) : '$0.00';
   }
 
+  getTotalVolumeReferred(): string {
+    const stats = this.referralStats();
+    return stats ? this.formatAmount(stats.totalVolumeReferred) : '$0.00';
+  }
+
   // Получение общего количества рефералов
   getTotalReferrals(): number {
     const stats = this.referralStats();
     return stats?.totalReferrals || 0;
   }
 
-  // Получение общей комиссии
+  // Получение общей комиссии (уже склеймленные награды)
   getTotalCommissions(): string {
-    const stats = this.referralStats();
-    return stats ? this.formatAmount(stats.totalCommissions) : '$0.00';
+    return this.formatAmount(this.totalClaimedAmount());
   }
 
-  // Получение ожидающей комиссии
+  // Получение ожидающей комиссии (всегда 0, так как убираем логику pending)
   getPendingCommissions(): string {
-    const stats = this.referralStats();
-    return stats ? this.formatAmount(stats.pendingCommissions) : '$0.00';
+    return '$0.00';
   }
 
   // Инициализация ревардов
@@ -272,6 +275,9 @@ export class RewardsComponent implements OnInit, OnDestroy {
   readonly claimableRewards = computed(() => this.rewardsService.getClaimableRewards());
   readonly totalClaimableAmount = computed(() => this.rewardsService.getClaimableAmount());
   readonly hasClaimableRewards = computed(() => this.rewardsService.getClaimableRewards().length > 0);
+  
+  // Computed значение для уже склеймленных наград
+  readonly totalClaimedAmount = computed(() => this.rewardsService.getClaimedRewards());
 
   // Сигналы для UI ревардов
   readonly isClaimingRewards = signal<boolean>(false);

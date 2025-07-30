@@ -208,6 +208,12 @@ export class RewardsService {
     return this.rewards().filter(reward => (reward.availableAmount || 0) > 0);
   }
 
+  getClaimedRewards(): number {
+    const rewards = this.rewards();
+    const total = rewards.reduce((sum, r) => sum + (r.claimedAmount || 0), 0);
+    return total;
+  }
+
   getClaimableAmount(): number {
     const claimableRewards = this.getClaimableRewards();
     const total = claimableRewards.reduce((sum, r) => sum + (r.availableAmount || 0), 0);
