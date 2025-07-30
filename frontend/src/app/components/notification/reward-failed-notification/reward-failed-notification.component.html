@@ -3,7 +3,7 @@
     <div class="failed-icon"></div>
     <div class="info">
       <h3>Reward Claim Failed</h3>
-      <p>Failed to claim <strong>{{ amount }}$</strong> in rewards.</p>
+      <p>Failed to claim <strong>{{ amount | number:'1.0-6' }}$</strong> in rewards.</p>
       <div *ngIf="message" class="error-message">
         <p>{{ message }}</p>
       </div>

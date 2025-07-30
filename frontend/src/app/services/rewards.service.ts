@@ -150,7 +150,6 @@ export class RewardsService {
             
             return { ...reward, claimedAmount: 0, availableAmount: reward.amount };
           } catch (error) {
-            console.error(`Error getting claimed amount for reward ${reward.id}:`, error);
             return { ...reward, claimedAmount: 0, availableAmount: reward.amount };
           }
         })
@@ -159,7 +158,6 @@ export class RewardsService {
       this.rewards.set(rewardsWithClaimed);
       return rewardsWithClaimed;
     } catch (error) {
-      console.error('[loadRewards] Error loading rewards:', error);
       this.rewards.set([]);
       return [];
     } finally {
@@ -177,12 +175,9 @@ export class RewardsService {
   // Получение claim-транзакций для клейма
   async getClaimTransaction(walletAddress: string): Promise<ClaimTransaction[]> {
     try {
-      console.log('[getClaimTransaction] walletAddress:', walletAddress);
       const transactions = await this.http.get<ClaimTransaction[]>(`${this.API_BASE_URL}/rewards/claim/${walletAddress}`).toPromise();
-      console.log('[getClaimTransaction] claim transactions from backend:', transactions);
       return transactions || [];
     } catch (error) {
-      console.error('[getClaimTransaction] Error getting claim transaction:', error);
       return [];
     }
   }
@@ -210,11 +205,13 @@ export class RewardsService {
 
   // Группировка и вычисление claimableAmount для UI (пример)
   getClaimableRewards(): Reward[] {
-    return this.rewards().filter(reward => (reward.availableAmount || reward.amount) > 0);
+    return this.rewards().filter(reward => (reward.availableAmount || 0) > 0);
   }
 
   getClaimableAmount(): number {
-    return this.getClaimableRewards().reduce((sum, r) => sum + (r.availableAmount || r.amount), 0);
+    const claimableRewards = this.getClaimableRewards();
+    const total = claimableRewards.reduce((sum, r) => sum + (r.availableAmount || 0), 0);
+    return total;
   }
 
   // Получение уже склеймленного количества из контракта (в wei)
@@ -239,7 +236,6 @@ export class RewardsService {
       );
 
       const claimedAmount = await claimerContract['claimed_'](userAddress, assetAddress);
-      console.log('[getClaimedAmount] claimedAmount (wei):', claimedAmount.toString());
       return claimedAmount;
     } catch (error) {
       console.error('Error reading claimed amount from contract:', error);

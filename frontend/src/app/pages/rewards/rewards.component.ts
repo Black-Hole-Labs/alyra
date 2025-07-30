@@ -300,13 +300,15 @@ export class RewardsComponent implements OnInit, OnDestroy {
         return;
       }
 
-             // Берем первый ревард пул (предполагаем, что все реварды в одной сети)
+        // Берем первый ревард пул (предполагаем, что все реварды в одной сети)
        const rewardPool = rewardPools[0];
        const requiredChainId = Number(rewardPool.rewardToken.chainId);
        const currentChainId = this.blockchainStateService.networkSell()?.id;
 
+
        // Проверяем, нужно ли переключить сеть
-              if (!currentChainId || currentChainId !== requiredChainId) {
+      if (!currentChainId || currentChainId !== requiredChainId) {
+        
          console.log(`Switching network from ${currentChainId || 'undefined'} to ${requiredChainId} for reward claim`);
         
         // Получаем информацию о нужной сети
@@ -378,7 +380,7 @@ export class RewardsComponent implements OnInit, OnDestroy {
         await this.pollTransactionStatus(transactionHashes[0]);
         
         // Принудительно обновляем реварды после завершения
-        // await this.rewardsService.forceLoadRewards(address);
+        await this.rewardsService.forceLoadRewards(address);
       } else {
         this.rewardErrorMessage.set('No rewards were claimed');
         this.showRewardError.set(true);

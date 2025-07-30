@@ -30,7 +30,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 })
 export class RewardPendingNotificationComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
-  @Input() amount: string = '0';
+  @Input() amount: number = 0;
   @Input() transactionHash: string = '';
   isVisible = true;
 

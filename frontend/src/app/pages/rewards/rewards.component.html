@@ -22,7 +22,7 @@
 <!-- Success notification for rewards -->
 <app-reward-success-notification 
   *ngIf="showRewardSuccess()" 
-  [amount]="totalClaimableAmount().toString()"
+  [amount]="totalClaimableAmount()"
   [transactionHash]="rewardTransactionHash()"
   (close)="closeRewardSuccessNotification()">
 </app-reward-success-notification>
@@ -30,7 +30,7 @@
 <!-- Error notification for rewards -->
 <app-reward-failed-notification 
   *ngIf="showRewardError()" 
-  [amount]="totalClaimableAmount().toString()"
+  [amount]="totalClaimableAmount()"
   [message]="rewardErrorMessage()"
   [transactionHash]="rewardTransactionHash()"
   (close)="closeRewardErrorNotification()">
@@ -39,7 +39,7 @@
 <!-- Pending notification for rewards -->
 <app-reward-pending-notification 
   *ngIf="showRewardPending()" 
-  [amount]="totalClaimableAmount().toString()"
+  [amount]="totalClaimableAmount()"
   [transactionHash]="rewardTransactionHash()"
   (close)="closeRewardPendingNotification()">
 </app-reward-pending-notification>
@@ -132,7 +132,7 @@
 			<div class="available-rewards">
 				<div class="left">
 					<h4>Available rewards:</h4>
-					<h2>{{totalClaimableAmount()}}$</h2>
+					<h2>{{totalClaimableAmount() | number:'1.0-6'}}$</h2>
 				</div>
 				<div class="right">
 					<!-- <p>Updates in <span>24:00:00</span></p> -->

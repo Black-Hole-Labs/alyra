@@ -3,7 +3,7 @@
     <div class="success-icon"></div>
     <div class="info">
       <h3>Rewards Claimed Successfully!</h3>
-      <p>You have successfully claimed <strong>{{ amount }}$</strong> in rewards!</p>
+      <p>You have successfully claimed <strong>{{ amount | number:'1.0-6' }}$</strong> in rewards!</p>
       <div *ngIf="transactionHash" class="transaction-info">
         <p>Transaction Hash:</p>
         <a [href]="'https://etherscan.io/tx/' + transactionHash" target="_blank" class="tx-link">
