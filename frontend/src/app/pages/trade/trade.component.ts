@@ -234,7 +234,26 @@ export class TradeComponent implements AfterViewChecked {
             {
               this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.SVM].address!);
             }
-          } else {
+          }
+          else if (
+            (buyNetwork?.id == NetworkId.SUI_MAINNET || sellNetwork?.id == NetworkId.SUI_MAINNET) &&
+            !(buyNetwork?.id == NetworkId.SUI_MAINNET && sellNetwork?.id == NetworkId.SUI_MAINNET)
+          ) {
+              this.showCustomAddress = true;
+              if (buyNetwork.chainType == ProviderType.EVM)
+              {
+                this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.EVM].address!);
+              }
+              else if (buyNetwork.chainType == ProviderType.MVM) 
+              {
+                this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.MVM].address!);
+              }
+              else
+              {
+                this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.SVM].address!);
+              }
+          }
+          else {
             this.showCustomAddress = false;
             this.customAddress.set('');
           }
