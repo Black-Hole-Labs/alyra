@@ -4,6 +4,7 @@ import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Token } from '../pages/trade/trade.component';
 import { BlockchainStateService } from './blockchain-state.service';
 import { NetworkId } from '../models/wallet-provider.interface';
+import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class WalletBalanceService {
   private solanaRpcUrl: string | undefined;
   private solanaConnection: Connection | undefined;
   private balanceCache = new Map<number, Map<string, string>>();
+  private suiClient?: SuiClient;
 
   nativeBalance = signal<number>(0);
 
@@ -20,7 +22,28 @@ export class WalletBalanceService {
     this.solanaRpcUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(NetworkId.SOLANA_MAINNET)
                         || "https://solana-rpc.publicnode.com";
     this.solanaConnection = new Connection(this.solanaRpcUrl, 'confirmed');
+
+    const suiUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(NetworkId.SUI_MAINNET)
+                    || getFullnodeUrl('mainnet');
+    this.suiClient = new SuiClient({ url: suiUrl });
     })();
+  }
+
+  private async getSuiBalance(owner: string, coinType?: string): Promise<string> {
+    if (!this.suiClient) throw new Error('SUI client not initialized');
+
+    if (!coinType || coinType === '0x2::sui::SUI') {
+      const bal = await this.suiClient.getBalance({ owner });
+      return (Number(bal.totalBalance) / 10 ** 9).toString();
+    }
+
+    const bal = await this.suiClient.getBalance({ owner, coinType });
+    if (!bal || !bal.totalBalance) return '0';
+
+    const metadata = await this.suiClient.getCoinMetadata({ coinType });
+    const decimals = metadata?.decimals ?? 0;
+
+    return (Number(bal.totalBalance) / 10 ** decimals).toString();
   }
 
   private async getEvmBalance(walletAddress: string, providerUrl: string, decimals: number,  tokenAddress?: string | null): Promise<string> {
@@ -91,6 +114,17 @@ export class WalletBalanceService {
         console.error('Network not found: ', token.chainId);
         return "0";
       }
+
+    if (token.chainId === NetworkId.SUI_MAINNET) {
+      if (token.symbol === 'SUI') {
+        const bal = await this.getSuiBalance(walletAddress);
+        this.nativeBalance.set(Number(bal));
+        return bal;
+      } else {
+        return await this.getSuiBalance(walletAddress, token.contractAddress);
+      }
+    }
+
       
       if (token.chainId === NetworkId.SOLANA_MAINNET) { // SVM
         if (token.symbol === "SOL") {

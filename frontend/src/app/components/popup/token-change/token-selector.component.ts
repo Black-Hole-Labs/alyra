@@ -208,6 +208,10 @@ export class TokenChangePopupComponent {
       return token.symbol === 'SOL';
     }
 
+    if (currentNetwork.chainType === 'MVM') {
+      return token.symbol === 'SUI';
+    }
+
     return token.contractAddress === ethers.ZeroAddress;
   }
 

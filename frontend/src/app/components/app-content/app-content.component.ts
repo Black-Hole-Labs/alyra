@@ -73,8 +73,10 @@ export class AppContentComponent {
     const provider = this.blockchainStateService.getProvider(providerId);
 
     const networkId = ecosystemId === ProviderType.EVM
-      ? NetworkId.ETHEREUM_MAINNET
-      : NetworkId.SOLANA_MAINNET;
+    ? NetworkId.ETHEREUM_MAINNET
+    : ecosystemId === ProviderType.SVM
+      ? NetworkId.SOLANA_MAINNET
+      : NetworkId.SUI_MAINNET;
 
     const { address, nameService } = await provider.connect(networkId);
 

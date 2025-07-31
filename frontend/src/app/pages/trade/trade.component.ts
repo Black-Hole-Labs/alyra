@@ -21,7 +21,7 @@ import {
   NetworkId,
   TransactionRequestEVM,
   TransactionRequestSVM,
-  Network,
+  TransactionRequestMVM,
   ProviderType,
 } from '../../models/wallet-provider.interface';
 import { ethers, parseUnits } from 'ethers';
@@ -77,7 +77,7 @@ export class TradeComponent implements AfterViewChecked {
   gasPriceUSD: number | undefined;
 
   //showConnectWalletPopup: boolean = false;
-  txData = signal<TransactionRequestEVM | TransactionRequestSVM | undefined>(undefined);
+  txData = signal<TransactionRequestEVM | TransactionRequestSVM | TransactionRequestMVM | undefined>(undefined);
 
   walletTimer: any = null;
   findingRoutesTimer: any = null;
@@ -162,7 +162,7 @@ export class TradeComponent implements AfterViewChecked {
     effect(
       () => {
       const network = this.blockchainStateService.networkSell();
-      const tokens  = this.blockchainStateService.getTokensForNetwork(network!.id);
+      const tokens  = this.blockchainStateService.getAllTokensForNetwork(network!.id);
       if (!tokens?.length) return;
 
       const current   = this.tokenService.selectedSellToken();
@@ -187,7 +187,7 @@ export class TradeComponent implements AfterViewChecked {
     effect(
       () => {
       const network = this.blockchainStateService.networkBuy();
-      const tokens  = this.blockchainStateService.getTokensForNetwork(network!.id);
+      const tokens  = this.blockchainStateService.getAllTokensForNetwork(network!.id);
       if (!tokens?.length) return;
 
       const sellTok  = this.tokenService.selectedSellToken();
@@ -225,6 +225,10 @@ export class TradeComponent implements AfterViewChecked {
             if (buyNetwork.chainType == ProviderType.EVM)
             {
               this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.EVM].address!);
+            }
+            else if (buyNetwork.chainType == ProviderType.MVM) 
+            {
+              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.MVM].address!);
             }
             else
             {
@@ -559,7 +563,11 @@ export class TradeComponent implements AfterViewChecked {
     try {
       if (this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET) {
         txHash = await this.svmSwap();
-      } else {
+      }
+      else if (this.blockchainStateService.networkSell()?.id === NetworkId.SUI_MAINNET){
+        txHash = await this.suiSwap();
+      }
+      else {
         txHash = await this.evmSwap();
       }
     } catch (error: any) {
@@ -610,6 +618,19 @@ export class TradeComponent implements AfterViewChecked {
     }
 
     this.loading.set(false);
+  }
+
+  async suiSwap(): Promise<string> {
+    const txReq = this.txData();
+    if (!txReq?.data) throw new Error('Missing SUI transaction data');
+
+    const provider = this.blockchainStateService.getCurrentProvider().provider;
+    const txBytes = await provider.sendTx(txReq);
+
+    this.showPendingNotification = true;
+    this.buttonState = 'swap';
+
+    return txBytes;
   }
 
   async svmSwap(): Promise<string> {
@@ -707,6 +728,7 @@ export class TradeComponent implements AfterViewChecked {
 
     const CONSTANT_ETH_ADDRESS = '0x1111111111111111111111111111111111111111';
     const CONSTANT_SOL_ADDRESS = '11111111111111111111111111111111';
+    const CONSTANT_SUI_ADDRESS = '0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI';
 
     const fromChainType = this.blockchainStateService.networkSell()?.chainType;
     const toChainType = this.blockchainStateService.networkBuy()?.chainType;
@@ -717,6 +739,8 @@ export class TradeComponent implements AfterViewChecked {
             fromAddress = CONSTANT_ETH_ADDRESS;
         } else if (fromChainType === 'SVM') {
             fromAddress = CONSTANT_SOL_ADDRESS;
+        } else if (fromChainType === 'MVM') {
+          fromAddress = CONSTANT_SUI_ADDRESS;
         }
 
         if (!toAddress) {
@@ -724,6 +748,8 @@ export class TradeComponent implements AfterViewChecked {
                 toAddress = CONSTANT_ETH_ADDRESS;
             } else if (toChainType === 'SVM') {
                 toAddress = CONSTANT_SOL_ADDRESS;
+            } else if (fromChainType === 'MVM') {
+                fromAddress = CONSTANT_SUI_ADDRESS;
             }
         }
     } else {
@@ -737,6 +763,8 @@ export class TradeComponent implements AfterViewChecked {
                 toAddress = CONSTANT_ETH_ADDRESS;
             } else if (toChainType === 'SVM') {
                 toAddress = CONSTANT_SOL_ADDRESS;
+            } else if (toChainType === 'MVM') {
+                toAddress = CONSTANT_SUI_ADDRESS;
             }
         } else {
             // как раньше - если кастомный введён и валиден, подставляем его
@@ -834,7 +862,12 @@ export class TradeComponent implements AfterViewChecked {
             if (this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET) {
               this.txData.set(response.transactionRequest as TransactionRequestSVM);
               this.buttonState = 'swap';
-            } else {
+            } 
+            else if (this.blockchainStateService.networkSell()?.id === NetworkId.SUI_MAINNET) {
+              this.txData.set(response.transactionRequest as TransactionRequestMVM);
+              this.buttonState = 'swap';
+            }
+            else {
               this.txData.set(response.transactionRequest as TransactionRequestEVM);
               this.buttonState = 'swap';
               if (fromToken !== ethers.ZeroAddress) {
@@ -1186,7 +1219,8 @@ export class TradeComponent implements AfterViewChecked {
   private isValidWalletAddress(address: string, chainType: string): boolean {
     if (chainType === 'EVM') {
       return /^0x[a-fA-F0-9]{40}$/.test(address);
-    } else {
+    } 
+    else if (chainType === 'SVM') {
       try {
         new PublicKey(address);
         return true;
@@ -1194,6 +1228,10 @@ export class TradeComponent implements AfterViewChecked {
         return false;
       }
     }
+    else if (chainType === 'MVM') {
+      return /^0x[a-fA-F0-9]{64}$/.test(address);
+    }
+    return false;
   }
 
   private initializeNetworks(): void {
