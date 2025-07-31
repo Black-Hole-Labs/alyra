@@ -54,9 +54,32 @@
   </div>
 </div>
 
+<div class="wallet" *ngIf="blockchainStateService.currentProviderIds()['MVM'].address">
+  <div class="left-wallet">
+    <div class="avatar" [style.background-image]="'url(' + getIconUrl('MVM') + ')'"></div>
+    <div class="wallet-name">
+      <h3>{{ formatAddress(blockchainStateService.currentProviderIds()['MVM'].address!) }}</h3>
+      <div class="wallet-address">
+        <p>{{ formatAddress(blockchainStateService.currentProviderIds()['MVM'].address!) }}</p>
+        <div
+          class="copy"
+          [class.copied]="isCopied(blockchainStateService.currentProviderIds()['MVM'].address!)"
+          (click)="copyToClipboard(blockchainStateService.currentProviderIds()['MVM'].address!, $event)"
+        ></div>
+      </div>
+    </div>
+  </div>
+  <div class="right-wallet">
+    <p>SUI</p>
+    <div class="disconnect" (click)="onDisconnect('MVM')">
+      <p>Disconnect</p>
+    </div>
+  </div>
+</div>
+
   <div
     class="button-connect"
-    *ngIf="walletCount < 2"
+    *ngIf="walletCount < 3"
     (click)="onConnectAnotherWallet()"
   >
     <p>Connect Another Wallet</p>

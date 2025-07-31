@@ -2,14 +2,17 @@ import { BlockchainStateService } from '../services/blockchain-state.service';
 import { PopupService } from '../services/popup.service';
 import { EvmWalletProvider } from './evm-wallet-provider';
 import { SvmWalletProvider } from './svm-wallet-provider';
-import { NetworkId, TransactionRequestEVM, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
+import { SuiWalletProvider } from './sui-wallet-provider';
+import { NetworkId, TransactionRequestEVM, TransactionRequestSVM, TransactionRequestMVM, WalletProvider } from './wallet-provider.interface';
 import { Injector } from '@angular/core';
 export abstract class MultiChainWalletProvider implements WalletProvider {
   protected evmProviderInstance: any;
   protected svmProviderInstance: any;
+  protected mvmProviderInstance: any;
   protected evmProvider: EvmWalletProvider | null = null;
   protected svmProvider: SvmWalletProvider | null = null;
-  public currentNetwork: 'EVM' | 'SVM' = 'EVM'; // EVM as default
+  protected mvmProvider: SuiWalletProvider | null = null;
+  public currentNetwork: 'EVM' | 'SVM' | 'MVM' = 'EVM'; // EVM as default
   protected address: string = '';
 
   protected blockchainStateService: BlockchainStateService;
@@ -23,7 +26,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
   }
 
   isAvailable(): boolean {
-    return !!this.evmProviderInstance || !!this.svmProviderInstance;
+    return !!this.evmProviderInstance || !!this.svmProviderInstance || !!this.mvmProviderInstance;
   }
 
   async connect(netowrkId: NetworkId = NetworkId.ETHEREUM_MAINNET): Promise<{ address: string, nameService: string | null }> {
@@ -39,10 +42,17 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
     else {
       console.error("Multichain::connect(): SVM not found!")
     }
+    if (this.mvmProviderInstance) {
+      console.log(this.mvmProviderInstance);
+      this.mvmProvider = new SuiWalletProvider('MyDApp', this.mvmProviderInstance, this.injector);
+    }
+    else {
+      console.error("Multichain::connect(): MVM not found!")
+    }
 
     let nameService;
 
-    if (netowrkId === NetworkId.ETHEREUM_MAINNET && this.evmProvider) {
+    if (netowrkId === NetworkId.ETHEREUM_MAINNET && this.evmProvider && this.mvmProvider) {
       const { address, nameService } = await this.evmProvider.connect(this.evmProviderInstance);
       this.address = address;
       this.currentNetwork = 'EVM';
@@ -50,7 +60,12 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
       const { address, nameService } = await this.svmProvider.connect(this.svmProviderInstance);
       this.address = address;
       this.currentNetwork = 'SVM';
-    } else {
+    } else if (netowrkId === NetworkId.SUI_MAINNET && this.mvmProvider) {
+      const { address } = await this.mvmProvider.connect();
+      this.address = address;
+      this.currentNetwork = 'MVM';
+    } 
+    else {
       throw new Error('No provider available');
     }
 
@@ -82,7 +97,19 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
         // console.log(`Connected to SVM address: `, address);
         this.address = address;
       }
-    } 
+    }
+    else if (selectedNetwork.chainType === 'MVM') 
+    {
+      if(!this.mvmProvider) throw new Error('MVM Provider not initialized');
+      
+      if(this.currentNetwork != 'MVM')
+      {
+        const { address } = await this.mvmProvider.connect(this.mvmProviderInstance);
+        this.currentNetwork = 'MVM';
+        console.log(`Connected to MVM address: `, address);
+        this.address = address;
+      }
+    }  
     else 
     {
       throw new Error('Unsupported network type');
@@ -97,13 +124,16 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
     return this.address;
   }
 
-  async sendTx(txData: TransactionRequestEVM | TransactionRequestSVM, isErc20From: boolean = false): Promise<string> {
+  async sendTx(txData: TransactionRequestEVM | TransactionRequestSVM | TransactionRequestMVM, isErc20From: boolean = false): Promise<string> {
     if (this.currentNetwork === 'EVM') {
       if (!this.evmProvider) throw new Error('EVM provider not initialized');
       return await this.evmProvider.sendTx(txData as TransactionRequestEVM, isErc20From);
     } else if (this.currentNetwork === 'SVM') {
       if (!this.svmProvider) throw new Error('SVM provider not initialized');
       return await this.svmProvider.sendTx(txData as TransactionRequestSVM);
+    } else if (this.currentNetwork === 'MVM') {
+      if (!this.mvmProvider) throw new Error('MVM provider not initialized');
+      return await this.mvmProvider.sendTx(txData as TransactionRequestMVM);
     } else {
       throw new Error('Invalid network');
     }

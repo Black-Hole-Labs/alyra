@@ -190,5 +190,22 @@
       "decimals": 18
     },
     "explorerUrl": "https://seitrace.com/token/"
+  },
+  {
+    "key": "sui",
+    "chainType": "MVM",
+    "name": "Sui",
+    "id": 9270000000000000,
+    "idHex": "9270000000000000",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/sui.svg",
+    "rpcUrls": [
+      "https://fullnode.mainnet.sui.io:443"
+    ],
+    "nativeCurrency": {
+      "name": "Sui",
+      "symbol": "SUI",
+      "decimals": 9
+    },
+    "explorerUrl": "https://www.suiscan.xyz/mainnet/coin/"
   }
 ]

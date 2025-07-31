@@ -26,6 +26,7 @@ async function initializeApp(injector: Injector): Promise<void> {
 
   await stateService.getWorkingRpcUrlForNetwork(NetworkId.ETHEREUM_MAINNET);
   await stateService.getWorkingRpcUrlForNetwork(NetworkId.SOLANA_MAINNET);
+  await stateService.getWorkingRpcUrlForNetwork(NetworkId.SUI_MAINNET);
 
   try {
     // const allNetworks: Network[] = networksImport;

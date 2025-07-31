@@ -38,6 +38,11 @@ export interface TransactionRequestSVM {
   data: string;
 }
 
+export interface TransactionRequestMVM {
+  data: string; // base64 tx
+}
+
+
 export interface Wallets {
   id: string;
   name: string;
@@ -52,9 +57,11 @@ export enum ProviderType {
   EVM = 'EVM',
   SVM = 'SVM',
   MULTICHAIN = 'multichain',
+  MVM = 'MVM'
 }
 
 export enum NetworkId {
   ETHEREUM_MAINNET = 1,
   SOLANA_MAINNET = 1151111081099710,
+  SUI_MAINNET = 9270000000000000,
 }

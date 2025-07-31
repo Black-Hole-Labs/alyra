@@ -15,6 +15,7 @@ import {
 import tokensSearch from '@public/data/tokens_search.json';
 import providersImport from '@public/data/providers.json';
 import tokensImport from '@public/data/tokens.json';
+import { SuiClient } from '@mysten/sui/client';
 
 interface TokenData {
   chainId: number;
@@ -30,6 +31,7 @@ interface TokenData {
 interface TokensData {
   tokensEVM: Record<string, TokenData[]>;
   tokensSVM: Record<string, TokenData[]>;
+  tokensMVM: Record<string, TokenData[]>;
 }
 
 type ProviderInfo = {
@@ -73,11 +75,12 @@ export class BlockchainStateService {
   readonly currentProviderIds = signal<Record<Ecosystem, ProviderInfo>>({
     [ProviderType.EVM]: { id: null, address: null, nameService: null },
     [ProviderType.SVM]: { id: null, address: null, nameService: null },
+    [ProviderType.MVM]: { id: null, address: null, nameService: null },
   });
 
   readonly connected = computed(() => {
     const m = this.currentProviderIds();
-    return !!m[ProviderType.EVM].address || !!m[ProviderType.SVM].address;
+    return !!m[ProviderType.EVM].address || !!m[ProviderType.SVM].address || !!m[ProviderType.MVM].address;
   });
   // readonly evmWalletAddress = signal<string | null>(null);
   // readonly svmWalletAddress = signal<string | null>(null);
@@ -150,10 +153,19 @@ export class BlockchainStateService {
     });
   }
 
+    public disconnectMvm(): void {
+    const raw = this.currentProviderIds();
+    this.currentProviderIds.set({
+      ...raw,
+      [ProviderType.MVM]: { id: null, address: null, nameService: null },
+    });
+  }
+
   public disconnectAll(): void {
     this.currentProviderIds.set({
       [ProviderType.EVM]: { id: null, address: null, nameService: null },
       [ProviderType.SVM]: { id: null, address: null, nameService: null },
+      [ProviderType.MVM]: { id: null, address: null, nameService: null },
     });
     sessionStorage.clear();
   }
@@ -246,10 +258,13 @@ export class BlockchainStateService {
         if (network.chainType === 'EVM') {
           const provider = new ethers.JsonRpcProvider(url);
           await provider.getBlockNumber();
-        } else {
+        } else if (network.chainType === 'SVM') {
           const connection = new Connection(url, 'confirmed');
           await connection.getVersion();
-        }
+        } else if (network.chainType === ProviderType.MVM || network.chainType === 'SUI') {
+        const sui = new SuiClient({ url });
+        await sui.getRpcApiVersion();
+      }
 
         this.rpcCache.set(id, url);
         return url;
@@ -315,9 +330,14 @@ export class BlockchainStateService {
       const id = this.currentProviderIds()[ProviderType.EVM].id;
       return id ? this.providers[id] : null;
     }
-    else
+    else if (this.currentEcosystem() === ProviderType.SVM)
     {
       const id = this.currentProviderIds()[ProviderType.SVM].id;
+      return id ? this.providers[id] : null;
+    }
+    else if (this.currentEcosystem() === ProviderType.MVM)
+    {
+      const id = this.currentProviderIds()[ProviderType.MVM].id;
       return id ? this.providers[id] : null;
     }
   }
@@ -328,9 +348,13 @@ export class BlockchainStateService {
     {
       return this.currentProviderIds()[ProviderType.EVM].id;
     }
-    else
+    else if (this.currentEcosystem() === ProviderType.SVM)
     {
       return this.currentProviderIds()[ProviderType.SVM].id;
+    }
+    else
+    {
+      return this.currentProviderIds()[ProviderType.MVM].id;
     }
   }
 
@@ -341,7 +365,7 @@ export class BlockchainStateService {
   setAllTokensForNetwork(network: number): void {
     const networkKey = network.toString();
     const tokensData = tokensSearch as unknown as TokensData;
-    const tokensForNetwork = tokensData.tokensEVM[networkKey] || tokensData.tokensSVM[networkKey];
+    const tokensForNetwork = tokensData.tokensEVM[networkKey] || tokensData.tokensSVM[networkKey] || tokensData.tokensMVM[networkKey];
 
     if (tokensForNetwork) {
       this.allTokens.set(
@@ -363,7 +387,7 @@ export class BlockchainStateService {
   private setTokensForNetwork(network: number): void {
     const tokensData = tokensImport as unknown as TokensData;
     const networkKey = network.toString();
-    const tokensForNetwork = tokensData.tokensEVM[networkKey] || tokensData.tokensSVM[networkKey];
+    const tokensForNetwork = tokensData.tokensEVM[networkKey] || tokensData.tokensSVM[networkKey] || tokensData.tokensMVM[networkKey];
 
     if (tokensForNetwork) {
       this.tokens.set(
@@ -386,7 +410,30 @@ export class BlockchainStateService {
     const networkKey = networkId.toString();
     const evmList = (tokensImport as TokensData).tokensEVM[networkKey] || [];
     const svmList = (tokensImport as TokensData).tokensSVM[networkKey] || [];
-    const tokensForNetwork = evmList.length ? evmList : svmList.length ? svmList : [];
+    const mvmList = (tokensImport as TokensData).tokensMVM[networkKey] || [];
+    const tokensForNetwork = evmList.length ? evmList : svmList.length ? svmList : mvmList.length ? mvmList : [];
+
+    if (!tokensForNetwork.length) {
+      console.warn(`No tokens found for network ${networkId}`);
+      return [];
+    }
+
+    return tokensForNetwork.map((t: TokenData) => ({
+      symbol: t.symbol,
+      name: t.name,
+      contractAddress: t.address,
+      chainId: t.chainId,
+      imageUrl: t.logoURI,
+      decimals: t.decimals,
+    }));
+  }
+
+    public getAllTokensForNetwork(networkId: number): Token[] {
+    const networkKey = networkId.toString();
+    const evmList = (tokensSearch as TokensData).tokensEVM[networkKey] || [];
+    const svmList = (tokensSearch as TokensData).tokensSVM[networkKey] || [];
+    const mvmList = (tokensSearch as TokensData).tokensMVM[networkKey] || [];
+    const tokensForNetwork = evmList.length ? evmList : svmList.length ? svmList : mvmList.length ? mvmList : [];
 
     if (!tokensForNetwork.length) {
       console.warn(`No tokens found for network ${networkId}`);
@@ -408,9 +455,13 @@ export class BlockchainStateService {
     {
       this.currentProviderIds()[ProviderType.EVM].address = address;
     }
-    else
+    else if (this.currentEcosystem() === ProviderType.SVM)
     {
       this.currentProviderIds()[ProviderType.SVM].address = address;
+    }
+    else if (this.currentEcosystem() === ProviderType.MVM)
+    {
+      this.currentProviderIds()[ProviderType.MVM].address = address;
     }
 
     // this.walletAddress.set(address);
@@ -421,9 +472,13 @@ export class BlockchainStateService {
     {
       return this.currentProviderIds()[ProviderType.EVM].address;
     }
-    else
+    else if (this.currentEcosystem() === ProviderType.SVM)
     {
       return this.currentProviderIds()[ProviderType.SVM].address;
+    }
+    else
+    {
+      return this.currentProviderIds()[ProviderType.MVM].address;
     }
     // return this.walletAddress();
   }
@@ -469,10 +524,15 @@ export class BlockchainStateService {
       this.currentProviderIds()[ProviderType.EVM].address = null;
       this.currentProviderIds()[ProviderType.EVM].id = null;
     }
-    else
+    else if (this.currentProviderIds()[ProviderType.SVM].address === address)
     {
       this.currentProviderIds()[ProviderType.SVM].address = null;
       this.currentProviderIds()[ProviderType.SVM].id = null;
+    }
+    else if (this.currentProviderIds()[ProviderType.MVM].address === address)
+    {
+      this.currentProviderIds()[ProviderType.MVM].address = null;
+      this.currentProviderIds()[ProviderType.MVM].id = null;
     }
     sessionStorage.clear();
     //this.network.set(null);
