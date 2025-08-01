@@ -52,23 +52,22 @@ export class TokenChangePopupComponent {
     const all = this.blockchainStateService.allNetworks();
 
     const selectedId = this.selectedNetworkId();
-    const first10 = all.slice(0, 10);
-    const next = all[10];
-    if (!selectedId) return all.slice(0, 11);
+    const first6 = all.slice(0, 6);
+    if (!selectedId) return first6;
     const selected = all.find((n) => n.id === selectedId);
-    if (!selected) return all.slice(0, 11);
+    if (!selected) return first6;
 
-    if (all.slice(0, 11).some((n) => n.id === selectedId)) {
-      return all.slice(0, 11);
+    if (all.slice(0, 6).some((n) => n.id === selectedId)) {
+      return first6;
     }
 
-    return [...first10, selected];
+    return [...first6.slice(0, 5), selected];
   });
   currentNetwork = computed(() => this.blockchainStateService.networkSell());
 
   additionalNetworksCount = computed(() => {
     const totalNetworks = this.blockchainStateService.allNetworks().length;
-    const displayedNetworks = 11;
+    const displayedNetworks = 6;
     return Math.max(0, totalNetworks - displayedNetworks);
   });
 
