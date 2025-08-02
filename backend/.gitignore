@@ -3,6 +3,19 @@
 /node_modules
 /build
 
+# Monorepo structure
+apps/*/dist
+apps/*/node_modules
+apps/*/build
+apps/*/coverage
+apps/*/.env*
+
+libs/*/dist
+libs/*/node_modules
+libs/*/build
+libs/*/coverage
+libs/*/.env*
+
 # Logs
 logs
 *.log

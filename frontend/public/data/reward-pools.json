@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "claimerAddress": "0x9235b2ff4398FE15c049f38E9BE841ac97Df1fB3",
+    "rewardToken": {
+      "symbol": "test",
+      "name": "tUSDT",
+      "address": "0x4971F79495BD093b6c51383c2558b0eb2D917E21",
+      "decimals": 6,
+      "chainId": 11155111
+    }
+  }
+] 

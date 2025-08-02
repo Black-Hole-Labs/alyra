@@ -1,0 +1,16 @@
+<div class="notification" [@slideInOut]="isVisible ? '*' : 'void'">
+  <div class="content">
+    <div class="success-icon"></div>
+    <div class="info">
+      <h3>Rewards Claimed Successfully!</h3>
+      <p>You have successfully claimed <strong>{{ amount | number:'1.0-6' }}$</strong> in rewards!</p>
+      <div *ngIf="transactionHash" class="transaction-info">
+        <p>Transaction Hash:</p>
+        <a [href]="'https://etherscan.io/tx/' + transactionHash" target="_blank" class="tx-link">
+          {{ transactionHash.substring(0, 10) }}...{{ transactionHash.substring(transactionHash.length - 8) }}
+        </a>
+      </div>
+    </div>
+  </div>
+  <button class="close-button" (click)="startClosing()">×</button>
+</div> 

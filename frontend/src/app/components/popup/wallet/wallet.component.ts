@@ -81,7 +81,8 @@ export class WalletComponent {
   get walletCount(): number {
     const evm = this.blockchainStateService.currentProviderIds()[ProviderType.EVM].id;
     const svm = this.blockchainStateService.currentProviderIds()[ProviderType.SVM].id;
-    return (evm ? 1 : 0) + (svm ? 1 : 0);
+    const mvm = this.blockchainStateService.currentProviderIds()[ProviderType.MVM].id;
+    return (evm ? 1 : 0) + (svm ? 1 : 0) + (mvm ? 1 : 0);
   }
 
   getIconUrl(type: string): string {
@@ -95,6 +96,8 @@ export class WalletComponent {
       this.blockchainStateService.disconnectEvm();
     } else if (type === 'SVM') {
       this.blockchainStateService.disconnectSvm();
+    } else if (type === 'MVM') {
+      this.blockchainStateService.disconnectMvm();
     }
     this.popupService.closeAllPopups();
     this.disconnect.emit();

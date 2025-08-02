@@ -18,7 +18,7 @@
   {
     "id": "backpack",
     "name": "Backpack",
-    "type": "SVM",
+    "type": "multichain",
     "cssClass": "backpack",
     "installUrl": "https://backpack.app/",
     "iconUrl": "/img/wallet-icns/Backpack.png"

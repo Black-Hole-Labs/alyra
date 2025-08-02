@@ -31,6 +31,12 @@ export class EcosystemChangeComponent {
       name: 'Solana',
       description: 'Solana blockchain ecosystem',
       iconUrl: '/img/ecosystem/sol.png'
+    },
+    {
+      id: ProviderType.MVM,
+      name: 'Sui',
+      description: 'Sui blockchain ecosystem',
+      iconUrl: 'https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/sui.svg'
     }
   ];
   

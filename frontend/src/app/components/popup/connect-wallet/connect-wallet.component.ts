@@ -160,11 +160,16 @@ export class ConnectWalletComponent implements OnInit {
       } else if (type === ProviderType.SVM) {
         sessionStorage.setItem('currentSvmProvider', providerId);
         // sessionStorage.setItem('svmNetworkId', ...);
+      } else if (type === ProviderType.MVM) {
+        sessionStorage.setItem('currentMvmProvider', providerId);
+        // sessionStorage.setItem('svmNetworkId', ...);
       } else if (type === ProviderType.MULTICHAIN) {
         if (provider.currentNetwork === ProviderType.EVM) {
           sessionStorage.setItem('currentEvmProvider', providerId);
         } else if (provider.currentNetwork === ProviderType.SVM) {
           sessionStorage.setItem('currentSvmProvider', providerId);
+        } else if (provider.currentNetwork === ProviderType.MVM) {
+          sessionStorage.setItem('currentMvmProvider', providerId);
         }
       }
       // console.log('Successfully connected, address:', address);

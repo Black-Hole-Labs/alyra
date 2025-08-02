@@ -100,7 +100,7 @@
   
 <app-network-change-from
 	*ngIf="showNetworkChangeFrom()"
-	[networks]="blockchainStateService.allNetworks().slice(11)"
+	[networks]="blockchainStateService.allNetworks().slice(6)"
 	(close)="showNetworkChangeFrom.set(false)"
 	(networkSelected)="onNetworkSelected($event)">
 </app-network-change-from>

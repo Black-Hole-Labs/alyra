@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { interval, lastValueFrom, Observable, switchMap, takeWhile } from 'rxjs';
+
+import { ethers } from 'ethers';
+
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -191,5 +194,57 @@ export class TransactionsService {
     const gasCostUSD = gasCostInToken * parseFloat(token.priceUSD);
   
     return gasCostUSD.toFixed(2);
+  }
+
+  /**
+   * Пуллинг статуса транзакции через receipt
+   * @param txHash - хеш транзакции
+   * @param rpcUrl - RPC URL для сети
+   * @param maxAttempts - максимальное количество попыток (по умолчанию 60)
+   * @param delayMs - задержка между попытками в миллисекундах (по умолчанию 5000)
+   * @returns Promise с результатом: { success: boolean, receipt?: any, error?: string }
+   */
+  async pollTransactionReceipt(
+    txHash: string, 
+    rpcUrl: string, 
+    maxAttempts: number = 60, 
+    delayMs: number = 5000
+  ): Promise<{ success: boolean; receipt?: any; error?: string }> {
+    try {
+      let receipt = null;
+      let attempts = 0;
+      
+      const ethersProvider = new ethers.JsonRpcProvider(rpcUrl);
+      
+      do {
+        await this.delay(delayMs);
+        attempts++;
+        
+        try {
+          receipt = await ethersProvider.getTransactionReceipt(txHash);
+          console.log(`Attempt ${attempts}: Receipt received:`, receipt ? 'Yes' : 'No');
+          if (receipt) {
+            console.log(`Attempt ${attempts}: Receipt status:`, receipt.status);
+          }
+        } catch (error) {
+          console.log(`Attempt ${attempts}: Transaction not yet mined, retrying... Error:`, error);
+        }
+      } while (!receipt && attempts < maxAttempts);
+      
+      if (receipt) {
+        console.log('Final receipt:', receipt);
+        const status = receipt.status;
+        if (status === 1) {
+          return { success: true, receipt };
+        } else {
+          return { success: false, receipt, error: 'Transaction failed' };
+        }
+      } else {
+        return { success: false, error: 'Transaction timeout - please check your wallet' };
+      }
+    } catch (error) {
+      console.error('Error polling transaction status:', error);
+      return { success: false, error: 'Error checking transaction status' };
+    }
   }
 }

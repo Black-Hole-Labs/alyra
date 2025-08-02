@@ -21,6 +21,23 @@
     "explorerUrl": "https://etherscan.io/token/"
   },
   {
+    "key": "eth-sepolia",
+    "chainType": "EVM",
+    "name": "Sepolia",
+    "id": 11155111,
+    "idHex": "0xaa36a7",
+    "logoURI": "/img/networks/eth.png",
+    "rpcUrls": [
+      "https://eth-sepolia.public.blastapi.io"
+    ],
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://etherscan.io/token/"
+  },
+  {
     "key": "sol",
     "chainType": "SVM",
     "name": "Solana",
@@ -155,6 +172,56 @@
       "symbol": "ETH",
       "decimals": 18
     },
-    "explorerUrl": "https://optimistic.etherscan.io/token/"
+    "explorerUrl": "https://mantlescan.xyz/token/"
+  },
+  {
+    "key": "mam",
+    "chainType": "EVM",
+    "name": "Metis",
+    "id": 1088,
+    "idHex": "0x440",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/metis.svg",
+    "rpcUrls": [
+      "https://andromeda.metis.io",
+      "https://metis.drpc.org"
+    ],
+    "nativeCurrency": {
+      "name": "METIS",
+      "symbol": "METIS",
+      "decimals": 18
+    },
+    "explorerUrl": "https://andromeda-explorer.metis.io/token/"
+  },
+  {
+    "key": "sei",
+    "chainType": "EVM",
+    "name": "Sei",
+    "id": 1329,
+    "idHex": "0x531",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/sei.svg",
+    "rpcUrls": ["https://evm-rpc.sei-apis.com"],
+    "nativeCurrency": {
+      "name": "SEI",
+      "symbol": "SEI",
+      "decimals": 18
+    },
+    "explorerUrl": "https://seitrace.com/token/"
+  },
+  {
+    "key": "sui",
+    "chainType": "MVM",
+    "name": "Sui",
+    "id": 9270000000000000,
+    "idHex": "9270000000000000",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/sui.svg",
+    "rpcUrls": [
+      "https://fullnode.mainnet.sui.io:443"
+    ],
+    "nativeCurrency": {
+      "name": "Sui",
+      "symbol": "SUI",
+      "decimals": 9
+    },
+    "explorerUrl": "https://www.suiscan.xyz/mainnet/coin/"
   }
 ]
