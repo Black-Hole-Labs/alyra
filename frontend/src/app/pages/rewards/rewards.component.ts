@@ -38,7 +38,7 @@ export class RewardsComponent implements OnInit, OnDestroy {
   private lastInitializedAddress = '';
 
   // Computed значения
-  readonly isConnected = computed(() => this.blockchainStateService.connected());
+  readonly isConnected = signal<boolean>(false);//computed(() => this.blockchainStateService.connected());
   readonly walletAddress = computed(() => this.blockchainStateService.getCurrentWalletAddress());
   readonly networkName = computed(() => this.blockchainStateService.networkSell()?.name || 'ethereum');
   readonly chainId = computed(() => this.blockchainStateService.networkSell()?.id || 1);

@@ -7,8 +7,8 @@ import { GoogleSheetModule } from './google-sheet/google-sheet.module';
 import { LifiTenderlyModule } from './lifi-tenderly/lifi-tenderly.module';
 import { LifiTenderlyService } from './lifi-tenderly/lifi-tenderly.service';
 import { LifiModule } from './lifi/lifi.module';
-import { ReferralModule } from './referral/referral.module';
-import { RewardsModule } from './rewards/rewards.module';
+// import { ReferralModule } from './referral/referral.module';
+// import { RewardsModule } from './rewards/rewards.module';
 
 @Module({
   imports: [
@@ -22,8 +22,8 @@ import { RewardsModule } from './rewards/rewards.module';
     LifiModule,
     LifiTenderlyModule,
     GoogleSheetModule,
-    ReferralModule,
-    RewardsModule,
+    // ReferralModule,
+    // RewardsModule,
   ],
   controllers: [AppController],
   providers: [AppService, LifiTenderlyService],

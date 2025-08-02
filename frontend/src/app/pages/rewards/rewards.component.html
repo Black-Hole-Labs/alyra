@@ -1,4 +1,4 @@
-<!-- <div class="soon">
+<div class="soon">
 	<h6>
 		Affiliate Program will be available soon...
 	</h6>
@@ -7,19 +7,133 @@
 	<div class="more">
 		<p>Learn more</p>
 	</div>
-</a> -->
+</a>
+<div class="rewards">
+	<header class="pc">
+		<div class="left">
+			<h1>Rewards</h1>
+			<div class="comission-rate">
+				<p>40% Comission Rate</p>
+			</div>
+			<div class="apply">
+				<p>Apply to increase rebate</p>
+			</div>
+		</div>
+		<div class="learn">
+			<p>Learn more</p>
+		</div>
+	</header>
+	<header class="mobile">
+		<div class="top">
+			<h1>Rewards</h1>
+			<div class="learn">
+				<p>Learn more</p>
+			</div>
+		</div>
 
-<!-- Loading state -->
-<div *ngIf="isLoading()" class="loading">
+		<div class="comission-rate">
+			<p>40% Comission Rate</p>
+		</div>
+		<div class="apply">
+			<p>Apply to increase rebate</p>
+		</div>
+	</header>
+
+	<div class="bonus-container">
+		<div class="left">
+			<div class="trading-rewards">
+				<div class="header">
+					<div class="trading-image"></div>
+					<h1>Trading Rewards</h1>
+				</div>
+				<p>
+					Invite users to Blackhole and earn! <br>
+					Share your affiliate link and receive 40% of their trading points for every trade.
+				</p>
+		
+				<div class="info-container">
+					<div class="info">
+						<h3>Trading Volume:</h3>
+						<h3>$23,000,000</h3>
+					</div>
+					<hr>
+					<div class="info">
+						<h3>Your score:</h3>
+						<h3>26,482 XP</h3>
+					</div>
+					<div class="info">
+						<p>Trading score:</p>
+						<p>23,000 XP</p>
+					</div>
+					<div class="info">
+						<p>Referred score:</p>
+						<p>3,482 XP</p>
+					</div>
+				</div>
+			</div>
+		
+			<div class="referral-link">
+				<h3>Your referral link:</h3>
+				<p>blackhole?r=6Vs7jZ</p>
+				<div class="share-button">
+					<p>Share</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="affiliate-rewards">
+			<div class="header">
+				<div class="affiliate-image"></div>
+				<h1>Affiliate Rewards</h1>
+			</div>
+
+			<p>
+				Refer users to Blackhole and earn rewards!<br>
+				Share your unique affiliate link with your community and enjoy 40% of their trading fees.
+			</p>
+
+			<div class="available-rewards">
+				<div class="left">
+					<h4>Available rewards:</h4>
+					<h2>3,482.1$</h2>
+				</div>
+				<div class="right">
+					<p>Updates in <span>24:00:00</span></p>
+					<div class="claim-button">
+						<p>Claim Rewards</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="affiliate-stats">
+				<div class="stat">
+					<p>Total Referral Fees Earned</p>
+					<p>$3,482.1</p>
+				</div>
+				<hr>
+				<div class="stat">
+					<p>Total Volume Referred</p>
+					<p>$23,214,000</p>
+				</div>
+				<hr>
+				<div class="stat">
+					<p>Total Users Referred</p>
+					<p>15</p>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<!-- <div *ngIf="isLoading()" class="loading">
 	<p>Loading referral information...</p>
 </div>
 
-<!-- Not connected state -->
 <div *ngIf="!isConnected()" class="not-connected">
 	<h6>Connect your wallet to access the referral program</h6>
-</div>
+</div> 
 
-<!-- Success notification for rewards -->
 <app-reward-success-notification 
   *ngIf="showRewardSuccess()" 
   [amount]="totalClaimableAmount()"
@@ -27,7 +141,6 @@
   (close)="closeRewardSuccessNotification()">
 </app-reward-success-notification>
 
-<!-- Error notification for rewards -->
 <app-reward-failed-notification 
   *ngIf="showRewardError()" 
   [amount]="totalClaimableAmount()"
@@ -36,7 +149,6 @@
   (close)="closeRewardErrorNotification()">
 </app-reward-failed-notification>
 
-<!-- Pending notification for rewards -->
 <app-reward-pending-notification 
   *ngIf="showRewardPending()" 
   [amount]="totalClaimableAmount()"
@@ -44,7 +156,8 @@
   (close)="closeRewardPendingNotification()">
 </app-reward-pending-notification>
 
-<!-- Main content when connected -->
+-->
+
 <div *ngIf="isConnected() && !isLoading()" class="quests">
 	<header class="pc">
 		<div class="left">
