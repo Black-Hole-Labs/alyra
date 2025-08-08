@@ -338,35 +338,7 @@ hr{
 
 .soon h6{
 	font-size: 22px;
+	font-weight: 400;
 	color: white;
-	text-align: center;
-}
-
-.more{
-	display: none;
-
-	position: absolute;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	top: 55%;
-	left: 50%;
-	transform: translateX(-50%);
-	cursor: pointer;
-	transition: all 0.3s ease;
-	border-radius: 8px;
-	backdrop-filter: blur(10px);
-	-webkit-backdrop-filter: blur(10px);
-	background-color: white;
-	padding: 4px 16px;
-	z-index: 100;
-	&:hover{
-		background-color: rgba(var(--white), 0.6);
-	}
-}
-
-.more p{
-	font-size: 22px;
-	color: black;
 	text-align: center;
 }

@@ -162,19 +162,17 @@ nav a.active-link {
   background-repeat: no-repeat;
 }
 
-.wallet p {
+p {
   font-size: 21px;
   font-family: "JetBrains Mono", monospace;
   font-weight: 500;
-  color: white;
+  color: rgba(var(--white), 1);
 }
 
-.balance p {
-  font-size: 21px;
-  font-family: "JetBrains Mono", monospace;
-  font-weight: 500;
-  color: white;
+.wallet .separator {
+	color: rgba(var(--white), 0.2);
 }
+
 
 @keyframes fadeInOut {
   0% { opacity: 0; }
