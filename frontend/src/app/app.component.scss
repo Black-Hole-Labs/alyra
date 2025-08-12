@@ -4,6 +4,7 @@
 	flex-direction: column;
 	justify-content: space-between;
 	padding: 40px 40px 20px 40px;
+	box-sizing: border-box;
 	@supports (-webkit-touch-callout: none) {
     height: -webkit-fill-available;
   }

@@ -4,72 +4,83 @@
 	</h6>
 </div>
 <div class="container">
-
-	<div class="ecosystems">
-
-		<div class="ecosystems-header">
-			<h3>Ecosystems</h3>
-			<div class="activity" 
-				 [class.selected]="myActivityActive"
-				 (mousemove)="onActivityMouseMove($event)"
-				 (click)="toggleMyActivity()">
-				<p>My Activity</p>
+	<header>
+		<div class="nav-item" 
+			 [class.active]="isTabActive('available')"
+			 (click)="setActiveTab('available')">
+			<p>Available</p>
+			<div class="count">
+				<p>{{ availableQuests().length }}</p>
 			</div>
 		</div>
-			
-		<div class="ecosystem-container">
-			<div class="ecosystem" 
-				 *ngFor="let ecosystem of ecosystems"
-				 [class.selected]="isEcosystemSelected(ecosystem)"
-				 (mousemove)="onEcosystemMouseMove($event)"
-				 (click)="toggleEcosystem(ecosystem)">
-				<div class="network-image" [style.backgroundImage]="'url(' + getEcosystemImageUrl(ecosystem) + ')'"></div>
-				<p>{{ ecosystem }}</p>
+		<div class="nav-item" 
+			 [class.active]="isTabActive('ended')"
+			 (click)="setActiveTab('ended')">
+			<p>Ended</p>
+			<div class="count">
+				<p>{{ endedQuests().length }}</p>
 			</div>
 		</div>
-	</div>
-	
+	</header>
+
 	<div class="quests">
-	
-		<div class="quests-header">
-			<h3>Quests</h3>
-			<div class="nav-buttons">
-				<div class="nav-button" 
-					 (mousemove)="onNavButtonMouseMove($event)"
-					 (click)="previousPage()"
-					 [class.disabled]="!canGoPrevious">
-					<div class="nav-button-icon prev"></div>
+		<div class="quest-list">
+			@for (quest of getCurrentQuests(); track quest.id) {
+				<div class="quest">
+					<div class="image" [style.background-image]="'url(' + getRankConfig(quest.rank).backgroundImage + ')'">
+						<p [style.color]="getRankConfig(quest.rank).color">+{{ quest.xp }} XP</p>
+						<div class="quest-rank" [style.background-color]="getRankConfig(quest.rank).bgColor">
+							<p>{{ getRankConfig(quest.rank).name }}</p>
+						</div>
+					</div>
+					<div class="info">
+						<div class="upper">
+							<div class="title">
+								<h3>{{ quest.title }}</h3>
+								<p>{{ quest.description }}</p>
+							</div>
+													<div class="activity">
+							<p>{{ activeTab === 'ended' ? 'Ended' : 'Ends in ' + getTimeUntilEnd(quest) }}</p>
+							<div class="button" [class.ended]="activeTab === 'ended'">
+								<p>{{ activeTab === 'ended' ? 'Expired' : 'Start Trading' }}</p>
+							</div>
+						</div>
+						</div>
+						<div class="progress-bar">
+							<div class="bar">
+								<div class="progress-fill" [style.width.%]="quest.progress || 0"></div>
+							</div>
+							<p>{{ quest.progress || 0 }}%</p>
+						</div>
+					</div>
 				</div>
-				<div class="nav-button" 
-					 (mousemove)="onNavButtonMouseMove($event)"
-					 (click)="nextPage()"
-					 [class.disabled]="!canGoNext">
-					<div class="nav-button-icon next"></div>
+			}
+			@empty {
+				<div class="empty-state">
+					<p>No ended quests</p>
+				</div>
+			}
+		</div>
+		<div class="my-activity">
+			<div class="header">
+				<h3>My Activity</h3>
+				<div class="count">
+					<p>{{ completedQuests().length }}</p>
 				</div>
 			</div>
-		</div>
-	
-		<div class="quests-container">
-					<div class="quest" 
-			 *ngFor="let quest of currentQuests; trackBy: trackByQuestId"
-			 [class.completed]="quest.status === 'Completed'"
-			 (mousemove)="onQuestMouseMove($event)"
-			 [style.--quest-bg-image]="'url(' + getQuestBackgroundImageUrl(quest) + ')'">
-				<div class="quest-header">
-					<div class="xp">
-						<p>{{ quest.xp }} XP</p>
+			<div class="activity-list">
+				@for (quest of completedQuests(); track quest.id) {
+					<div class="activity">
+						<p>{{ quest.title }}</p>
+						<p class="xp" [style.color]="getRankConfig(quest.rank).color">+{{ quest.xp }} XP</p>
 					</div>
-					<div class="status" *ngIf="quest.status">
-						<p>{{ quest.status }}</p>
+				}
+				@empty {
+					<div class="empty-activity">
+						<p>No completed quests yet</p>
 					</div>
-				</div>
-				<h6>{{ quest.title }}</h6>
-				<div class="quest-footer">
-					<p>{{ quest.description }}</p>
-					<p>{{ quest.progress }}</p>
-				</div>
+				}
 			</div>
 		</div>
 	</div>
-
 </div>

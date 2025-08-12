@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { interval, lastValueFrom, Observable, switchMap, takeWhile } from 'rxjs';
+
 import { ethers } from 'ethers';
 
 import { environment } from '../../environments/environment';

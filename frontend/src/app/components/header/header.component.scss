@@ -116,51 +116,15 @@ nav a.active-link {
   }
 }
 
-.gm {
-  position: relative;
-  overflow: visible;
-  padding: 13px;
-  background-color: var(--dark-violet);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.gm:hover {
-  background-color: #581A7F;
-}
-
-.gm p {
-  font-size: 21px;
-  font-family: "JetBrains Mono", monospace;
-  font-weight: 500;
-  color: var(--violet);
-}
-
-.fire-img {
-  width: 34px;
-  height: 34px;
-  background: url(/img/header/ufo.png);
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
 .xp {
   padding: 6px 20px;
   background: var(--gradient);
-  border-radius: 14px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: 0.2s ease-in-out;
-}
-
-.xp:hover {
-	opacity: 0.5;
 }
 
 .xp p {
@@ -170,39 +134,24 @@ nav a.active-link {
   color: white;
 }
 
-.network {
-  padding: 13px;
-  background-color: rgba(var(--dark-bg), 0.3);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: 0.2s ease-in-out;
-}
-
-.network:hover {
-  background-color: rgba(var(--dark-bg), 1);
-}
-
-.network-icon {
-  width: 34px;
-  height: 34px;
-  background-size: cover;
-  background-repeat: no-repeat;
-  border-radius: 100%;
-}
 
 @import '../../styles/mouse-gradient-button';
 
-.wallet, .balance {
+.wallet {
   @include mouse-gradient-button(
     $padding: 14px 18px,
     $height: auto,
     $border-radius: 14px
   );
   gap: 16px;
+
+  &.connected {
+    @include mouse-gradient-button(
+      $padding: 10px 20px 10px 10px,
+      $height: auto,
+      $border-radius: 14px
+    );
+  }
 }
 
 .wallet-icon {
@@ -213,58 +162,17 @@ nav a.active-link {
   background-repeat: no-repeat;
 }
 
-.wallet p {
+p {
   font-size: 21px;
   font-family: "JetBrains Mono", monospace;
   font-weight: 500;
-  color: white;
+  color: rgba(var(--white), 1);
 }
 
-.balance p {
-  font-size: 21px;
-  font-family: "JetBrains Mono", monospace;
-  font-weight: 500;
-  color: white;
+.wallet .separator {
+	color: rgba(var(--white), 0.2);
 }
 
-.fireworks-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  overflow: visible;
-}
-
-.spark {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 20px;
-  height: 20px;
-  background-image: url('/img/animation/ufo.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  transform: translate(-50%, -50%);
-  animation: move ease-out forwards;
-  z-index: 1001;
-}
-
-.gm-popup {
-  position: absolute;
-  top: 105px;
-  right: 490px;
-  background-color: transparent;
-  color: white;
-  padding: 10px 15px;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 14px;
-  text-align: center;
-  z-index: 1000;
-  opacity: 0;
-  animation: fadeInOut 5s ease-in-out;
-}
 
 @keyframes fadeInOut {
   0% { opacity: 0; }
