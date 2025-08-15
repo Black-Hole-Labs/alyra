@@ -670,7 +670,7 @@ export class TradeComponent implements AfterViewChecked {
 
   async evmSwap(): Promise<string> {
     const provider = this.blockchainStateService.getCurrentProvider().provider;
-    await provider.switchNetwork(this.blockchainStateService.networkBuy()!);
+    await provider.switchNetwork(this.blockchainStateService.networkSell()!);
     const signer = await provider.signer;
 
     const fromToken = this.tokenService.selectedSellToken()!.contractAddress;
