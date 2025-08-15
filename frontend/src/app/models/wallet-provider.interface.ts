@@ -28,10 +28,10 @@ export interface TransactionRequestEVM {
   value: string; // in hex
   to: string; // address receiver
   data: string; // trx data(payload)
-  chainId: number;
-  gasPrice: string; // in hex
-  gasLimit: string; // in hex
-  from: string; // address sender
+  chainId?: number;
+  gasPrice?: string; // in hex
+  gasLimit?: string; // in hex
+  from?: string; // address sender
 }
 
 export interface TransactionRequestSVM {
