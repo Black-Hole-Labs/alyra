@@ -21,23 +21,6 @@
     "explorerUrl": "https://etherscan.io/token/"
   },
   {
-    "key": "eth-sepolia",
-    "chainType": "EVM",
-    "name": "Sepolia",
-    "id": 11155111,
-    "idHex": "0xaa36a7",
-    "logoURI": "/img/networks/eth.png",
-    "rpcUrls": [
-      "https://eth-sepolia.public.blastapi.io"
-    ],
-    "nativeCurrency": {
-      "name": "ETH",
-      "symbol": "ETH",
-      "decimals": 18
-    },
-    "explorerUrl": "https://etherscan.io/token/"
-  },
-  {
     "key": "sol",
     "chainType": "SVM",
     "name": "Solana",
@@ -55,6 +38,23 @@
       "decimals": 9
     },
     "explorerUrl": "https://solscan.io/token/"
+  },
+  {
+    "key": "sui",
+    "chainType": "MVM",
+    "name": "Sui",
+    "id": 9270000000000000,
+    "idHex": "9270000000000000",
+    "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/20947.png",
+    "rpcUrls": [
+      "https://fullnode.mainnet.sui.io:443"
+    ],
+    "nativeCurrency": {
+      "name": "Sui",
+      "symbol": "SUI",
+      "decimals": 9
+    },
+    "explorerUrl": "https://www.suiscan.xyz/mainnet/coin/"
   },
   {
     "key": "bas",
@@ -97,6 +97,26 @@
     "explorerUrl": "https://arbiscan.io/token/"
   },
   {
+    "key": "opt",
+    "chainType": "EVM",
+    "name": "Optimism",
+    "id": 10,
+    "idHex": "0xa",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/optimism.svg",
+    "rpcUrls": [
+      "https://mainnet.optimism.io/",
+      "https://optimism-rpc.publicnode.com",
+      "https://optimism.drpc.org",
+      "https://rpc.ankr.com/optimism"
+    ],
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://mantlescan.xyz/token/"
+  },
+  {
     "key": "bsc",
     "chainType": "EVM",
     "name": "BSC",
@@ -116,6 +136,65 @@
       "decimals": 18
     },
     "explorerUrl": "https://bscscan.com/token/"
+  },
+  {
+    "key": "ava",
+    "chainType": "EVM",
+    "name": "Avalanche",
+    "id": 43114,
+    "idHex": "0xa86a",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/avalanche.svg",
+    "rpcUrls": [
+      "https://api.avax.network/ext/bc/C/rpc",
+      "https://avalanche-c-chain-rpc.publicnode.com",
+      "https://avalanche.drpc.org",
+      "https://avalanche.public-rpc.com",
+      "https://rpc.ankr.com/avalanche"
+    ],
+    "nativeCurrency": {
+      "name": "AVAX",
+      "symbol": "AVAX",
+      "decimals": 18
+    },
+    "explorerUrl": "https://snowtrace.io/token/"
+  },
+  {
+    "key": "hyp",
+    "chainType": "EVM",
+    "name": "HyperEVM",
+    "id": 999,
+    "idHex": "0x3e7",
+    "logoURI": "/img/networks/hyper.png",
+    "rpcUrls": [
+      "https://rpc.hyperliquid.xyz/evm",
+      "https://rpc.hyperlend.finance",
+      "https://hyperliquid-json-rpc.stakely.io",
+      "https://hyperliquid.drpc.org",
+      "https://rpc.hypurrscan.io"
+    ],
+    "nativeCurrency": {
+      "name": "HYPE",
+      "symbol": "HYPE",
+      "decimals": 18
+    },
+    "explorerUrl": "https://www.hyperscan.com/token/"
+  },
+  {
+    "key": "lna",
+    "chainType": "EVM",
+    "name": "Linea",
+    "id": 59144,
+    "idHex": "0xe708",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/linea.svg",
+    "rpcUrls": [
+      "https://rpc.linea.build"
+    ],
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://lineascan.build/token/"
   },
   {
     "key": "pol",
@@ -138,41 +217,152 @@
     "explorerUrl": "https://polygonscan.com/token/"
   },
   {
-    "key": "lna",
+    "key": "uni",
     "chainType": "EVM",
-    "name": "Linea",
-    "id": 59144,
-    "idHex": "0xe708",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/linea.svg",
+    "name": "Unichain",
+    "id": 130,
+    "idHex": "0x82",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/unichain.svg",
+    "rpcUrls": ["https://mainnet.unichain.org"],
+    "nativeCurrency": {
+      "name": "Ether",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://uniscan.xyz/token/"
+  },
+  {
+    "key": "soe",
+    "chainType": "EVM",
+    "name": "Soneium",
+    "id": 1868,
+    "idHex": "0x74c",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/soneium.svg",
+    "rpcUrls": ["https://rpc.soneium.org/"],
+      "nativeCurrency": {
+        "name": "Ether",
+        "symbol": "ETH",
+        "decimals": 18
+      },
+    "explorerUrl": "https://soneium.blockscout.com/token/"
+  },
+  {
+    "key": "abs",
+    "chainType": "EVM",
+    "name": "Abstract",
+    "id": 2741,
+    "idHex": "0xab5",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/abstract.svg",
     "rpcUrls": [
-      "https://rpc.linea.build"
+      "https://rpc.fsd.adfasd32442ds.com"
+    ],
+    "nativeCurrency": {
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://abscan.org/token/"
+  },
+  {
+    "key": "ber",
+    "chainType": "EVM",
+    "name": "Berachain",
+    "id": 80094,
+    "idHex": "0x138de",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/bera.svg",
+    "rpcUrls": ["https://rpc.berachain.com"],
+    "nativeCurrency": {
+      "name": "Bera",
+      "symbol": "BERA",
+      "decimals": 18
+    },
+    "explorerUrl": "https://berascan.com/token/"
+  },
+  {
+    "key": "scl",
+    "chainType": "EVM",
+    "name": "Scroll",
+    "id": 534352,
+    "idHex": "0x82750",
+    "logoURI": "/img/networks/scroll.png",
+    "rpcUrls": [
+      "https://rpc.scroll.io",
+      "https://scroll.drpc.org",
+      "https://scroll-mainnet.public.blastapi.io",
+      "https://1rpc.io/scroll"
     ],
     "nativeCurrency": {
       "name": "ETH",
       "symbol": "ETH",
       "decimals": 18
     },
-    "explorerUrl": "https://lineascan.build/token/"
+    "explorerUrl": "https://scrollscan.com/token/"
   },
   {
-    "key": "opt",
+    "key": "cel",
     "chainType": "EVM",
-    "name": "Optimism",
-    "id": 10,
-    "idHex": "0xa",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/optimism.svg",
+    "name": "Celo",
+    "id": 42220,
+    "idHex": "0xa4ec",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/celo.svg",
+    "rpcUrls": ["https://forno.celo.org", "https://celo.drpc.org", "https://rpc.ankr.com/celo"],
+    "nativeCurrency": {
+      "name": "CELO",
+      "symbol": "CELO",
+      "decimals": 18
+    },
+    "explorerUrl": "https://celoscan.io/token/"
+  },
+  {
+    "key": "sei",
+    "chainType": "EVM",
+    "name": "Sei",
+    "id": 1329,
+    "idHex": "0x531",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/sei.svg",
+    "rpcUrls": ["https://evm-rpc.sei-apis.com"],
+    "nativeCurrency": {
+      "name": "SEI",
+      "symbol": "SEI",
+      "decimals": 18
+    },
+    "explorerUrl": "https://seitrace.com/token/"
+  },
+  {
+    "key": "mnt",
+    "chainType": "EVM",
+    "name": "Mantle",
+    "id": 5000,
+    "idHex": "0x1388",
+    "logoURI": "/img/networks/mantle.png",
     "rpcUrls": [
-      "https://mainnet.optimism.io/",
-      "https://optimism-rpc.publicnode.com",
-      "https://optimism.drpc.org",
-      "https://rpc.ankr.com/optimism"
+      "https://rpc.mantle.xyz",
+      "https://mantle-rpc.publicnode.com",
+      "https://mantle.drpc.org",
+      "https://mantle.public-rpc.com",
+      "https://rpc.ankr.com/mantle"
     ],
     "nativeCurrency": {
-      "name": "ETH",
-      "symbol": "ETH",
+      "name": "Mantle",
+      "symbol": "MNT",
       "decimals": 18
     },
     "explorerUrl": "https://mantlescan.xyz/token/"
+  },
+  {
+    "key": "era",
+    "chainType": "EVM",
+    "name": "zkSync",
+    "id": 324,
+    "idHex": "0x144",
+    "logoURI": "/img/networks/zksync.jpg",
+    "rpcUrls": ["https://mainnet.era.zksync.io"],
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://explorer.zksync.io/token/"
   },
   {
     "key": "mam",
@@ -193,35 +383,53 @@
     "explorerUrl": "https://andromeda-explorer.metis.io/token/"
   },
   {
-    "key": "sei",
+    "key": "wcc",
     "chainType": "EVM",
-    "name": "Sei",
-    "id": 1329,
-    "idHex": "0x531",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/sei.svg",
-    "rpcUrls": ["https://evm-rpc.sei-apis.com"],
+    "name": "World Chain",
+    "id": 480,
+    "idHex": "0x1e0",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/world.svg",
+    "rpcUrls": ["https://worldchain-mainnet.g.alchemy.com/public", "https://worldchain-mainnet.gateway.tenderly.co"],
     "nativeCurrency": {
-      "name": "SEI",
-      "symbol": "SEI",
+      "name": "Ethereum",
+      "symbol": "ETH",
       "decimals": 18
     },
-    "explorerUrl": "https://seitrace.com/token/"
+    "explorerUrl": "https://worldscan.io/token/"
   },
   {
-    "key": "sui",
-    "chainType": "MVM",
-    "name": "Sui",
-    "id": 9270000000000000,
-    "idHex": "9270000000000000",
-    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/sui.svg",
+    "key": "bls",
+    "chainType": "EVM",
+    "name": "Blast",
+    "id": 81457,
+    "idHex": "0x13e31",
+    "logoURI": "/img/networks/blast.png",
     "rpcUrls": [
-      "https://fullnode.mainnet.sui.io:443"
+      "https://rpc.blast.io",
+      "https://blast-rpc.publicnode.com",
+      "https://blast.drpc.org",
+      "https://rpc.ankr.com/blast"
     ],
     "nativeCurrency": {
-      "name": "Sui",
-      "symbol": "SUI",
-      "decimals": 9
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "decimals": 18
     },
-    "explorerUrl": "https://www.suiscan.xyz/mainnet/coin/"
+    "explorerUrl": "https://blastscan.io/token/"
+  },
+  {
+    "key": "lsk",
+    "chainType": "EVM",
+    "name": "Lisk",
+    "id": 1135,
+    "idHex": "0x46f",
+    "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/lisk.svg",
+    "rpcUrls": ["https://rpc.api.lisk.com", "https://lisk.drpc.org"],
+    "nativeCurrency": {
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "explorerUrl": "https://blockscout.lisk.com/token/"
   }
 ]

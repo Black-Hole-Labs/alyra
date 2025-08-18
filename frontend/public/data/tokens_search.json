@@ -60152,7 +60152,7 @@
         "symbol": "ETH",
         "name": "ETH",
         "decimals": 18,
-        "priceUSD": "2423.62",
+        "priceUSD": "4343.67",
         "coinKey": "ETH",
         "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
       },
@@ -60162,7 +60162,7 @@
         "symbol": "WETH",
         "name": "WETH",
         "decimals": 18,
-        "priceUSD": "2423.62",
+        "priceUSD": "4343.67",
         "coinKey": "WETH",
         "logoURI": "https://static.debank.com/image/eth_token/logo_url/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/61844453e63cf81301f845d7864236f6.png"
       },
@@ -60172,7 +60172,7 @@
         "symbol": "USDC.e",
         "name": "Bridged USDC (Soneium)",
         "decimals": 6,
-        "priceUSD": "0.9999000099990001",
+        "priceUSD": "0.9995002498750625",
         "coinKey": "USDCe",
         "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
       },
@@ -60182,9 +60182,19 @@
         "symbol": "USDT",
         "name": "Bridged USDT (Soneium)",
         "decimals": 6,
-        "priceUSD": "1.00006",
+        "priceUSD": "1.00052",
         "coinKey": "USDT",
         "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"
+      },
+      {
+        "chainId": 1868,
+        "address": "0x0555E30da8f98308EdB960aa94C0Db47230d2B9c",
+        "symbol": "WBTC",
+        "name": "WBTC",
+        "decimals": 8,
+        "priceUSD": "116471.98478714532",
+        "coinKey": "WBTC",
+        "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png"
       },
       {
         "chainId": 1868,
@@ -60192,7 +60202,7 @@
         "symbol": "ASTR",
         "name": "Astar Token",
         "decimals": 18,
-        "priceUSD": "0.03192",
+        "priceUSD": "0.02412",
         "coinKey": "ASTR",
         "logoURI": "https://static.debank.com/image/chain/logo_url/aze/6def6ac081a37e94ed0106da2cefeaf4.png"
       },
@@ -60202,8 +60212,18 @@
         "symbol": "pufETH",
         "name": "pufETH",
         "decimals": 18,
-        "priceUSD": "2534.7806888860355",
+        "priceUSD": "4564.521168201715",
         "coinKey": "pufETH"
+      },
+      {
+        "chainId": 1868,
+        "address": "0x1217BfE6c773EEC6cc4A38b5Dc45B92292B6E189",
+        "symbol": "OpenUSDT",
+        "name": "Super USDT",
+        "decimals": 6,
+        "priceUSD": "1.00054244370341",
+        "coinKey": "OpenUSDT",
+        "logoURI": "https://static.debank.com/image/celo_token/logo_url/0x1217bfe6c773eec6cc4a38b5dc45b92292b6e189/57033d27afe3975bf4d498799a8bc396.png"
       },
       {
         "chainId": 1868,
@@ -60211,7 +60231,7 @@
         "symbol": "nrETH",
         "name": "Neemo ReStaked Ether",
         "decimals": 18,
-        "priceUSD": "2587.3055515597425",
+        "priceUSD": "4655.39287017893",
         "coinKey": "nrETH",
         "logoURI": "https://static.debank.com/image/soneium_token/logo_url/0x2fc9a87b1ef46dcddf4801c36d752e0d5f243e4b/fe282321e0d63db2fd54e93bab447658.png"
       },
@@ -60221,7 +60241,7 @@
         "symbol": "SolvBTC",
         "name": "Solv BTC",
         "decimals": 18,
-        "priceUSD": "103879.18791382098",
+        "priceUSD": "116250.8648036401",
         "coinKey": "SolvBTC",
         "logoURI": "https://static.debank.com/image/bob_token/logo_url/0x59889b7021243db5b1e065385f918316cd90d46c/31a6cb7216c2b772a41a8913cc36f2c0.png"
       },
@@ -60231,7 +60251,7 @@
         "symbol": "vASTR",
         "name": "Bifrost Voucher ASTR",
         "decimals": 18,
-        "priceUSD": "0.03964172106285964",
+        "priceUSD": "0.03063174872163525",
         "coinKey": "vASTR",
         "logoURI": "https://static.debank.com/image/soneium_token/logo_url/0x60336f9296c79da4294a19153ec87f8e52158e5f/7cf0592a55d7b2b692fc4b64b20c43fe.png"
       },
@@ -60241,7 +60261,7 @@
         "symbol": "wstASTR",
         "name": "Warpped stASTR",
         "decimals": 18,
-        "priceUSD": "0.03209291887280019",
+        "priceUSD": "0.02504452200579046",
         "logoURI": "https://img.sonex.so/wstASTR-logo.png"
       },
       {
@@ -60250,7 +60270,7 @@
         "symbol": "SolvBTC.BBN",
         "name": "SolvBTC.BBN",
         "decimals": 18,
-        "priceUSD": "103523.49",
+        "priceUSD": "115983.34",
         "logoURI": "https://img.sonex.so/solvBTCBBN-logo.png"
       },
       {
@@ -60259,7 +60279,7 @@
         "symbol": "nsASTR",
         "name": "Neemo Staked Astar",
         "decimals": 18,
-        "priceUSD": "0.0348158667363029",
+        "priceUSD": "0.026811829185230472",
         "logoURI": "https://img.sonex.so/nsASTR-logo.png"
       },
       {
@@ -60268,7 +60288,7 @@
         "symbol": "xnASTR",
         "name": "Algem xnASTR",
         "decimals": 18,
-        "priceUSD": "0.03216388502785046",
+        "priceUSD": "0.02661044432082109",
         "logoURI": "https://img.sonex.so/xnASTR-logo.png"
       },
       {
@@ -60277,9 +60297,55 @@
         "symbol": "wstETH",
         "name": "Wrapped liquid staked Ether 2.0",
         "decimals": 18,
-        "priceUSD": "2407.1091273480483",
+        "priceUSD": "5247.267987726208",
         "coinKey": "wstETH",
         "logoURI": "https://static.debank.com/image/eth_token/logo_url/0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0/d0405a0d11669d4e75286d8dd808e19b.png"
+      },
+      {
+        "chainId": 1868,
+        "address": "0x102d758f688a4C1C5a80b116bD945d4455460282",
+        "symbol": "USD₮0 (Bridged)",
+        "name": "USD₮0",
+        "decimals": 6,
+        "priceUSD": "1.00052",
+        "coinKey": "USD₮0 (Bridged)"
+      },
+      {
+        "chainId": 1868,
+        "address": "0x0Ce031AEd457C870D74914eCAA7971dd3176cDAF",
+        "symbol": "stETH",
+        "name": "Liquid staked Ether 2.0",
+        "decimals": 18,
+        "priceUSD": "4335.923825126123",
+        "coinKey": "stETH",
+        "logoURI": "https://static.debank.com/image/eth_token/logo_url/0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0/7e931af8cb34b6f5671ca2eb1b847849.png"
+      },
+      {
+        "chainId": 1868,
+        "address": "0x1bD45Cc20CE61BE344A64218E6Ade01E72b08f39",
+        "symbol": "aSoneWETH",
+        "name": "Aave Soneium WETH",
+        "decimals": 18,
+        "priceUSD": "4346.69",
+        "coinKey": "aSoneWETH"
+      },
+      {
+        "chainId": 1868,
+        "address": "0xb2C9E934A55B58D20496A5019F8722a96d8A44d8",
+        "symbol": "aSoneUSDCe",
+        "name": "Aave Soneium USDCe",
+        "decimals": 6,
+        "priceUSD": "0.9995002498750625",
+        "coinKey": "aSoneUSDCe"
+      },
+      {
+        "chainId": 1868,
+        "address": "0xBAB0366ADdA6d2845c6BB5db4339A824350d24F7",
+        "symbol": "aSoneUSDT",
+        "name": "Aave Soneium USDT",
+        "decimals": 6,
+        "priceUSD": "1.00052",
+        "coinKey": "aSoneUSDT"
       }
     ],
     "1923": [
