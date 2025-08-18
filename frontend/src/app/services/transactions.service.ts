@@ -11,6 +11,7 @@ import { environment } from '../../environments/environment';
 })
 export class TransactionsService {
   private apiUrl = environment.apiUrl;
+  private apiBack = environment.apiBack;
 
   constructor(
     private http: HttpClient,
@@ -116,7 +117,7 @@ export class TransactionsService {
       tradeType
     };
 
-    return this.http.get<any>(`${this.apiUrl}/v1/quotes`, { params });
+    return this.http.get<any>(`${this.apiBack}/v1/quotes`, { params });
   }
 
   public async pollStatus(
