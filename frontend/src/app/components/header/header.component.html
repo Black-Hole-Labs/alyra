@@ -12,9 +12,6 @@
 	
 		<nav>
 			<a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Trade</a>
-			<!-- <a routerLink="/bridge" routerLinkActive="active-link">Bridge</a> -->
-			<!-- <a routerLink="/fun" routerLinkActive="active-link">Fun</a>
-			<a routerLink="/launchpad" routerLinkActive="active-link">Launchpad</a> -->
 			<a routerLink="/rewards" routerLinkActive="active-link">Rewards</a>
 			<a routerLink="/quests" routerLinkActive="active-link">Quests</a>
 		</nav>
@@ -22,51 +19,21 @@
 
 	<div class="right">
 
-		<!-- GM STRAK WIDGET -->
-		<!-- <div class="gm" (click)="incrementGmCount()">
-			<p *ngIf="gmCount !== null">{{ gmCount }}</p>
-			<div class="fire-img"></div>
-			<div class="fireworks-container"></div>
-		</div> -->
-
-		<!-- Мини-попап -->
-		<div class="gm-popup" *ngIf="showPopup">
-			{{ popupMessage }}
-		</div>
-
-
-							<!-- dev -->
-
-	<!-- </div>  -->
-		<!-- XP WIDGET -->
-		<!-- <div class="xp" *ngIf="blockchainStateService.connected()" routerLink="/rewards">
-			<p>0 XP</p>
-		</div> -->
-
-		<!-- NETWORK CHANGE -->
-		<!-- <div (click)="toggleNetworkPopup($event)" class="network">
-			<div class="network-icon" 
-				[style.background-image]="'url(' + selectedNetwork()?.logoURI + ')'">
+		<div class="wallet" [ngClass]="{'connected': blockchainStateService.connected()}" (click)="openConnectWalletPopup()" (mousemove)="onWalletMouseMove($event)">
+			<div class="xp" *ngIf="blockchainStateService.connected()" routerLink="/rewards">
+				<p>0 XP</p>
 			</div>
-			<button (click)="toggleNetworkPopup($event)" 
-				[ngClass]="{'network-open': isNetworkPopupVisible, 'network-closed': !isNetworkPopupVisible}">
-			</button>
-		</div> -->
 
-		<div class="balance" *ngIf="blockchainStateService.connected()" (mousemove)="onWalletMouseMove($event)">
-			<div class="wallet-icon"></div>
+			<div class="wallet-icon" [style.background-image]="'url(' + walletIcon() + ')'"></div>
+			<p>{{ walletName().length > 20 ? walletName().slice(0, 6) + '...' + walletName().slice(-3) : walletName()}}</p>
+			
 			@if(blockchainStateService.connected() && blockchainStateService.networkSell() !== undefined)
 			{
-				<p>
+				<p class="separator">|</p>
+				<p class="balance">
 					{{ walletBalanceService.nativeBalance() | number:'1.6-6' }} {{ blockchainStateService.networkSell()!.nativeCurrency.symbol }}
 				</p>
 			}
-		</div>
-
-		<!-- WALLET -->
-		<div class="wallet" (click)="openConnectWalletPopup()" (mousemove)="onWalletMouseMove($event)">
-			<div class="wallet-icon" [style.background-image]="'url(' + walletIcon() + ')'"></div>
-			<p>{{ walletName().length > 20 ? walletName().slice(0, 6) + '...' + walletName().slice(-3) : walletName()}}</p>
 		</div>
 
 	</div>

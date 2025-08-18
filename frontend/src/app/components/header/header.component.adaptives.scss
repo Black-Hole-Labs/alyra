@@ -48,33 +48,32 @@
 
 	.xp {
 		padding: 6px 20px;
-		border-radius: 10px;
+		border-radius: 6px;
 	}
 
 	.xp p {
 		font-size: 15px;
 	}
-	
-	.network {
-		padding: 10px;
-		border-radius: 10px;
-		gap: 6px;
-	}
-
-	.network-icon {
-		width: 24px;
-		height: 24px;
-	}
 
 	@import '../../styles/mouse-gradient-button';
 	
-	.wallet, .balance {
+	.wallet {
 		@include mouse-gradient-button(
 			$padding: 10px 13px,
 			$height: auto,
-			$border-radius: 10px
+			$border-radius: 10px,
+			$include-responsive: false
 		);
 		gap: 12px;
+
+		&.connected {
+			@include mouse-gradient-button(
+				$padding: 7px 16px 7px 7px,
+				$height: auto,
+				$border-radius: 10px,
+				$include-responsive: false
+			);
+		}
 	}
 	
 	.wallet-icon {
@@ -83,9 +82,6 @@
 	}
 	
 	.wallet p {
-		font-size: 15px;
-	}
-	.balance p {
 		font-size: 15px;
 	}
 }
@@ -140,33 +136,32 @@
 
 	.xp {
 		padding: 6px 20px;
-		border-radius: 10px;
+		border-radius: 6px;
 	}
 
 	.xp p {
 		font-size: 15px;
 	}
-	
-	.network {
-		padding: 10px;
-		border-radius: 10px;
-		gap: 6px;
-	}
-
-	.network-icon {
-		width: 24px;
-		height: 24px;
-	}
 
 	@import '../../styles/mouse-gradient-button';
 
-	.wallet, .balance {
+	.wallet {
 		@include mouse-gradient-button(
 			$padding: 10px 13px,
 			$height: auto,
-			$border-radius: 10px
+			$border-radius: 10px,
+			$include-responsive: false
 		);
 		gap: 12px;
+
+		&.connected {
+			@include mouse-gradient-button(
+				$padding: 7px 16px 7px 7px,
+				$height: auto,
+				$border-radius: 10px,
+				$include-responsive: false
+			);
+		}
 	}
 	
 	.wallet-icon {
@@ -175,9 +170,6 @@
 	}
 	
 	.wallet p {
-		font-size: 15px;
-	}
-	.balance p {
 		font-size: 15px;
 	}
 }
@@ -231,33 +223,32 @@
 
 	.xp {
 		padding: 2px 10px;
-		border-radius: 7px;
+		border-radius: 4px;
 	}
 
 	.xp p {
 		font-size: 11px;
 	}
-	
-	.network {
-		padding: 7px;
-		border-radius: 7px;
-		gap: 4px;
-	}
-
-	.network-icon {
-		width: 17px;
-		height: 17px;
-	}
 
 	@import '../../styles/mouse-gradient-button';
 
-	.wallet, .balance {
+	.wallet {
 		@include mouse-gradient-button(
 			$padding: 7px 10px,
 			$height: auto,
-			$border-radius: 7px
+			$border-radius: 7px,
+			$include-responsive: false
 		);
 		gap: 8px;
+
+		&.connected {
+			@include mouse-gradient-button(
+				$padding: 5px 10px 5px 5px,
+				$height: auto,
+				$border-radius: 7px,
+				$include-responsive: false
+			);
+		}
 	}
 	
 	.wallet-icon {
@@ -266,10 +257,6 @@
 	}
 	
 	.wallet p {
-		font-size: 11px;
-	}
-
-	.balance p {
 		font-size: 11px;
 	}
 }
@@ -329,30 +316,24 @@
 		font-size: 15px;
 	}
 	
-	.network {
-		padding: 10px;
-		border-radius: 10px;
-		gap: 6px;
-	}
-
-	.network-icon {
-		width: 24px;
-		height: 24px;
-	}
-
-	.balance {
-		display: none;
-	}
-	
 	@import '../../styles/mouse-gradient-button';
 
 	.wallet {
 		@include mouse-gradient-button(
 			$padding: 10px 13px,
 			$height: auto,
-			$border-radius: 10px
+			$border-radius: 10px,
+			$include-responsive: false
 		);
 		gap: 12px;
+	}
+
+	.balance {
+		display: none;
+	}
+
+	.separator {
+		display: none;
 	}
 	
 	.wallet-icon {
@@ -361,9 +342,6 @@
 	}
 	
 	.wallet p {
-		font-size: 15px;
-	}
-	.balance p {
 		font-size: 15px;
 	}
 }
@@ -414,26 +392,18 @@
 
 
 	.xp {
-		padding: 2px 8px;
-		border-radius: 7px;
+		display: none;
 	}
 
 	.xp p {
 		font-size: 14px;
 	}
 
-	.network {
-		padding: 10px;
-		border-radius: 10px;
-		gap: 6px;
-	}
-
-	.network-icon {
-		width: 24px;
-		height: 24px;
-	}
-
 	.balance {
+		display: none;
+	}
+
+	.separator {
 		display: none;
 	}
 	
@@ -443,7 +413,8 @@
 		@include mouse-gradient-button(
 			$padding: 10px 13px,
 			$height: auto,
-			$border-radius: 10px
+			$border-radius: 10px,
+			$include-responsive: false
 		);
 		gap: 12px;
 	}

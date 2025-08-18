@@ -95,6 +95,30 @@ export class TransactionsService {
     return this.http.get<{ quote: any }>(`${this.apiUrl}/lifi/quote-bridge`, { params });
   }
 
+  getV1(
+    originChainId: string | number,
+    destinationChainId: string | number,
+    originCurrency: string,
+    destinationCurrency: string,
+    amount: string,
+    senderAddress: string,
+    receiverAddress?: string,
+    tradeType: 'EXACT_INPUT' | 'EXACT_OUTPUT' = 'EXACT_INPUT'
+  ): Observable<any> {
+    const params: any = {
+      senderAddress,
+      receiverAddress: receiverAddress ?? senderAddress,
+      originChainId: Number(originChainId),
+      destinationChainId: Number(destinationChainId),
+      amount,
+      originCurrency,
+      destinationCurrency,
+      tradeType
+    };
+
+    return this.http.get<any>(`${this.apiUrl}/v1/quotes`, { params });
+  }
+
   public async pollStatus(
     txHash: string,
     onInitialLinks?: (sending: string, receiving: string) => void
