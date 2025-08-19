@@ -618,7 +618,27 @@ export class TradeComponent implements AfterViewChecked {
       return;
     }
 
-    const finalStatus = await this.transactionsService.pollStatus(txHash);
+    // const finalStatus = await this.transactionsService.pollStatus(txHash);
+
+    let finalStatus: any;
+    
+    try {
+      if (this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET) {
+        const rpcUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(this.blockchainStateService.networkSell()!.id);
+        const receiptResult = await this.transactionsService.pollTransactionReceiptSvm(txHash, rpcUrl, 60, 5000);
+
+        if (receiptResult.success) {
+          finalStatus = { status: 'DONE', receipt: receiptResult.transaction };
+        } else {
+          finalStatus = { status: 'FAILED', error: receiptResult.error || receiptResult.status || 'Unknown' };
+        }
+      } else {
+        finalStatus = await this.transactionsService.pollStatus(txHash);
+      }
+    } catch (err) {
+      console.warn('Error while polling transaction status:', err);
+      finalStatus = { status: 'FAILED', error: err };
+    }
 
     this.showPendingNotification = false;
     if (finalStatus.status === 'DONE') {
