@@ -208,8 +208,8 @@ export class QuestsComponent {
         endTime: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000) // 60 дней
       },
       {
-        title: 'BlackHole Master',
-        description: 'Become the ultimate BlackHole user',
+        title: 'Alyra Master',
+        description: 'Become the ultimate Alyra user',
         rank: QuestRank.LEGENDARY,
         xp: 2000,
         endTime: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90 дней
@@ -254,7 +254,7 @@ export class QuestsComponent {
       },
       {
         title: 'Early Adopter',
-        description: 'Join BlackHole in beta phase',
+        description: 'Join Alyra in beta phase',
         rank: QuestRank.RARE,
         xp: 100,
         endTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) // неделю назад
