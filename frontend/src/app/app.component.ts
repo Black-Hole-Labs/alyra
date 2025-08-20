@@ -51,8 +51,9 @@ export class AppComponent {
         }),
         mergeMap((route) => route.data),
       )
-      .subscribe((data) => {
-        const pageTitle = data['title'] ? `Alyra | ${data['title']}` : 'Alyra';
+      .subscribe((/*data*/) => {
+        // const pageTitle = data['title'] ? `Alyra | ${data['title']}` : 'Alyra';
+        const pageTitle = "Alyra | Swap anything, across any chain.";
         this.titleService.setTitle(pageTitle);
       });
   }
