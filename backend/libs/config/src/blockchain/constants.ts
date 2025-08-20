@@ -75,7 +75,7 @@ export const STAKING_CONTACT_V2_ABI = [
   'function totalSupply() external view returns (uint256)',
 ];
 
-// Комиссии для LI.FI и реферальной системы
+// Fees
 export const BLACKHOLE_FEE_PERCENTAGE = 0.0015; // 0.15%
 export const LIFI_FEE_PERCENTAGE = 0.0025; // 0.25%
-export const REWARD_FEE_PERCENTAGE = 0.4; // 40% от комиссии Blackhole 
+export const REWARD_FEE_PERCENTAGE = 0.4; // 40% from Alyra's fee

@@ -52,7 +52,7 @@ export class AppComponent {
         mergeMap((route) => route.data),
       )
       .subscribe((data) => {
-        const pageTitle = data['title'] ? `Blackhole | ${data['title']}` : 'Blackhole';
+        const pageTitle = data['title'] ? `Alyra | ${data['title']}` : 'Alyra';
         this.titleService.setTitle(pageTitle);
       });
   }
