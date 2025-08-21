@@ -43,7 +43,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
       console.error("Multichain::connect(): SVM not found!")
     }
     if (this.mvmProviderInstance) {
-      console.log(this.mvmProviderInstance);
+      //console.log(this.mvmProviderInstance);
       this.mvmProvider = new SuiWalletProvider('MyDApp', this.mvmProviderInstance, this.injector);
     }
     else {
