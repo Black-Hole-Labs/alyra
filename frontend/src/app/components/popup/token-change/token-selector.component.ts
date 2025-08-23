@@ -79,8 +79,8 @@ export class TokenChangePopupComponent {
           const filteredByExclude = this.filterByExcludeToken(tokens);
           return filteredByExclude as TokenDisplay[];
       }
-
-      const allTokens = this.blockchainStateService.allTokens();
+      const networkId = this.selectedNetworkId();
+      const allTokens = this.blockchainStateService.getAllTokensForNetwork(networkId!);
       const filteredBySearch = this.filterBySearch(allTokens, search);
       const filteredByExclude = this.filterByExcludeToken(filteredBySearch);
       return filteredByExclude as TokenDisplay[];
