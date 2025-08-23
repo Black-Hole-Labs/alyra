@@ -52,7 +52,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
 
     let nameService;
 
-    if (netowrkId === NetworkId.ETHEREUM_MAINNET && this.evmProvider && this.mvmProvider) {
+    if (netowrkId === NetworkId.ETHEREUM_MAINNET && this.evmProvider) {
       const { address, nameService } = await this.evmProvider.connect(this.evmProviderInstance);
       this.address = address;
       this.currentNetwork = 'EVM';
