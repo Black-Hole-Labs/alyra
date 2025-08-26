@@ -10,11 +10,11 @@ export class SuiWalletProvider implements WalletProvider {
   protected provider: any;
   private wallet: Wallet | null = null;
   protected blockchainStateService!: BlockchainStateService;
+  protected appName: string = 'MyDApp';
 
-  constructor(private appName: string, provider: any, injector: Injector) {
+  constructor(provider: any, injector: Injector) {
     this.blockchainStateService = injector.get(BlockchainStateService);
     this.provider = provider;
-    registerSlushWallet(this.appName);
   }
 
   isAvailable(): boolean {
@@ -27,23 +27,55 @@ export class SuiWalletProvider implements WalletProvider {
       this.blockchainStateService.updateNetworkSell(NetworkId.SUI_MAINNET);
     }
     if (_provider) this.provider = _provider;
-    if (!this.provider) {
-      throw new Error('SUI wallet not installed');
+
+    if (String(this.provider).toLowerCase().includes('slush')) {
+      registerSlushWallet(this.appName);
+    }
+    
+    const walletsList = getWallets().get();
+    const wanted = (this.provider && typeof this.provider === 'string')
+      ? this.provider
+      : (this.provider && (this.provider as any).name) || 'slush';
+    const wantedLower = String(wanted).toLowerCase();
+
+    let found: any = walletsList.find((w: any) => {
+      if ((this.provider as any)?.isPhantom) {
+        return Array.isArray(w.chains) && w.chains.includes('sui:mainnet');
+      }
+      const name = (w.name || w.id || w.constructor?.name || w.client?.name || '').toString().toLowerCase();
+      const supportsSui = Array.isArray(w.chains) && w.chains.includes('sui:mainnet');
+      return supportsSui && name.includes(wantedLower);
+    });
+
+    if (!found) {
+      throw new Error(`No SUI wallet named ${wanted}`);
     }
 
-    console.log(this.provider);
+    this.wallet = found as Wallet;
 
-    const wallets = getWallets()
-      .get()
-      .filter(w => w.name === this.provider.name && w.chains.includes('sui:mainnet') || this.provider.isPhantom && w.chains.includes('sui:mainnet'));
+    const existingAccounts = (this.wallet as any).accounts;
+    if (Array.isArray(existingAccounts) && existingAccounts.length > 0) {
+      this.address = existingAccounts[0].address;
+      return { address: this.address, nameService: null };
+    }
 
-    if (wallets.length === 0) throw new Error(`No SUI wallet named ${this.provider}`);
+    const connectFE = (this.wallet.features && this.wallet.features['standard:connect']) as any;
 
-    this.wallet = wallets[0];
+    if (!connectFE || typeof connectFE.connect !== 'function') {
+      if (typeof (this.wallet as any).connect === 'function') {
+        await (this.wallet as any).connect({ chains: ['sui:mainnet'] });
+        const accountsAfter = (this.wallet as any).accounts;
+        if (!accountsAfter || !accountsAfter.length) throw new Error('No accounts after connect');
+        this.address = accountsAfter[0].address;
+        return { address: this.address, nameService: null };
+      }
+      throw new Error('Wallet does not expose standard:connect feature');
+    }
 
-    const connectFE = this.wallet.features['standard:connect'] as any;
-    const { accounts } = await connectFE.connect({ chains: ['sui:mainnet'] });
-    if (!accounts?.length) throw new Error('No accounts');
+    const res = await connectFE.connect({ chains: ['sui:mainnet'] });
+    const accounts = res?.accounts || (this.wallet as any).accounts;
+    if (!accounts || !accounts.length) throw new Error('No accounts returned by wallet.connect()');
+    
     this.address = accounts[0].address;
 
     return { address: this.address, nameService: null };

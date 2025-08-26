@@ -44,7 +44,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
     }
     if (this.mvmProviderInstance) {
       //console.log(this.mvmProviderInstance);
-      this.mvmProvider = new SuiWalletProvider('MyDApp', this.mvmProviderInstance, this.injector);
+      this.mvmProvider = new SuiWalletProvider(this.mvmProviderInstance, this.injector);
     }
     else {
       console.error("Multichain::connect(): MVM not found!")

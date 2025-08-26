@@ -72,6 +72,14 @@
     "iconUrl": "/img/wallet-icns/MagicEden.png"
   },
   {
+    "id": "slush",
+    "name": "Slush",
+    "type": "MVM",
+    "cssClass": "slush",
+    "installUrl": "https://slush.app/download",
+    "iconUrl": "/img/wallet-icns/Slush.png"
+  },
+  {
     "id": "walletconnect",
     "name": "WalletConnect",
     "type": "EVM",
