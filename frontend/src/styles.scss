@@ -86,11 +86,11 @@ html::before,
 html::after {
   content: '';
   position: fixed;
-  width: 60vmax;
+  width: 30vmax;
   height: 60vmax;
   border-radius: 50%;
-  opacity: 0.15;
-  filter: blur(60px);
+  opacity: 1;
+  filter: blur(120px);
   z-index: -1;
   background-size: cover;
   background-position: center;
@@ -98,16 +98,16 @@ html::after {
 }
 
 html::before {
-  background-image: var(--current-network-icon-1);
-  top: -20%;
+	background-color: #E97A50;
+  top: 10%;
   left: -20%;
   animation: moveGradient 35s linear infinite;
   animation-delay: -5s;
 }
 
 html::after {
-  background-image: var(--current-network-icon-2);
-  bottom: -20%;
+	background-color: #1C41FC;
+  bottom: -10%;
   right: -20%;
   animation: moveGradient 30s linear infinite;
   animation-delay: 0s;
