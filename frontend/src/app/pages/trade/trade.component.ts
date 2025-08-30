@@ -623,17 +623,32 @@ export class TradeComponent implements AfterViewChecked {
     let finalStatus: any;
     
     try {
-      if (this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET) {
+      const sellNetworkId = this.blockchainStateService.networkSell()?.id;
+      if (sellNetworkId === NetworkId.SOLANA_MAINNET) {
         const rpcUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(this.blockchainStateService.networkSell()!.id);
         const receiptResult = await this.transactionsService.pollTransactionReceiptSvm(txHash, rpcUrl, 60, 5000);
 
         if (receiptResult.success) {
           finalStatus = { status: 'DONE', receipt: receiptResult.transaction };
-        } else {
+        } 
+        else {
           finalStatus = { status: 'FAILED', error: receiptResult.error || receiptResult.status || 'Unknown' };
         }
-      } else {
+      }
+      else if (sellNetworkId === NetworkId.SUI_MAINNET) {
         finalStatus = await this.transactionsService.pollStatus(txHash);
+      }
+      else { // EVM
+        const rpcUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(this.blockchainStateService.networkSell()!.id);
+        const evmResult = await this.transactionsService.pollTransactionReceipt(txHash, rpcUrl);
+
+        if (evmResult.success) {
+          finalStatus = { status: 'DONE', receipt: evmResult.receipt };
+        } 
+        else {
+          finalStatus = { status: 'FAILED', error: evmResult.error || evmResult.receipt || 'Unknown' };
+        }
+
       }
     } catch (err) {
       console.warn('Error while polling transaction status:', err);
@@ -733,7 +748,7 @@ export class TradeComponent implements AfterViewChecked {
 
     // console.log("a");
 
-    await approveTx.wait();
+      await approveTx.wait();
 
     // console.log("Approve успешно выполнен:", approveTx.hash);
 
