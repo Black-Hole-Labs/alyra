@@ -820,10 +820,7 @@ export class TradeComponent implements AfterViewChecked {
     } else {
         fromAddress = this.blockchainStateService.getCurrentWalletAddress()!;
 
-        // ---- ДОБАВЬ ВОТ ЭТОТ КУСОК ----
-        // Если типы сетей разные
         if (fromChainType !== toChainType && !(toAddress && toAddress !== '')) {
-            // всегда используем константный адрес в toAddress
             if (toChainType === 'EVM') {
                 toAddress = CONSTANT_ETH_ADDRESS;
             } else if (toChainType === 'SVM') {
@@ -832,7 +829,6 @@ export class TradeComponent implements AfterViewChecked {
                 toAddress = CONSTANT_SUI_ADDRESS;
             }
         } else {
-            // как раньше - если кастомный введён и валиден, подставляем его
             if (this.customAddress() !== '' && this.addressStatus === 'good') {
                 toAddress = this.customAddress();
             } else {
