@@ -870,29 +870,141 @@ export class TradeComponent implements AfterViewChecked {
       !(this.customAddress() !== '' && this.addressStatus === 'good')
     );
 
-    // this.transactionsService
-    //   .getQuoteBridge(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress, slippageValue)
-    //   .subscribe({
-    this.transactionsService
-      .getV1(
-        fromChain,
-        toChain,
-        fromToken,
-        toToken,
-        adjustedFromAmount,
-        fromAddress,
-        toAddress,
-        'EXACT_INPUT'
-      )
+    if ([10, 56, 137, 42161, 1151111081099710].includes(this.blockchainStateService.networkSell()!.id)) // blackHole API for supportted chains
+    {
+      this.transactionsService
+        .getV1(
+          fromChain,
+          toChain,
+          fromToken,
+          toToken,
+          adjustedFromAmount,
+          fromAddress,
+          toAddress,
+          'EXACT_INPUT'
+        )
+        .subscribe({
+          next: (response: any) => {
+            // console.log('Quote received:', response);
+            if (response && response.calldata) {
+              // this.updateSellPriceUsd(response.estimate.fromAmountUSD);
+              // this.updateBuyPriceUsd(response.estimate.toAmountUSD);
+
+              const toAmountNumber = Number(
+                this.transactionsService.parseToAmount(response.outputAmount, toTokenDecimals),
+              );
+              const readableToAmount = toAmountNumber.toFixed(toTokenDecimals).replace(/\.?0+$/, '');
+              // console.log('readableToAmount:', readableToAmount);
+              this.updateBuyAmount(readableToAmount);
+
+              // const gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
+              // this.gasPriceUSD = Number(gasPriceUSD);
+              const totalFeesAmount = Number(response.fees?.total?.amount || '0');
+              const totalFeesDecimals = Number(response.fees?.total?.decimals ?? 18);
+              const gasTokenAmount = totalFeesAmount / Math.pow(10, totalFeesDecimals);
+              this.gasPriceUSD = gasTokenAmount;
+
+              // console.log('gasPriceUSD:', this.gasPriceUSD);
+
+              const fromDecimal = parseFloat(
+                this.transactionsService.parseToAmount(response.inputAmount, fromTokenDecimals),
+              );
+              const toDecimal = parseFloat(
+                this.transactionsService.parseToAmount(response.outputAmount, toTokenDecimals),
+              );
+
+              if (fromDecimal > 0) {
+                const ratio = toDecimal / fromDecimal;
+                this.price.set(Number(ratio.toFixed(3)));
+
+                // const ratioUsd = Number(response.estimate.toAmountUSD) / fromDecimal;
+                // this.priceUsd = Number(ratioUsd.toFixed(3));
+              }
+            } else {
+              console.error('Missing calldata in response.');
+            }
+
+            if (response?.calldata) {
+              if (this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET)
+              {
+                this.txData.set(response.calldata.data as TransactionRequestSVM);
+                this.buttonState = 'swap';
+              }
+              else
+              {
+                const valueHex = ethers.toBeHex(BigInt(response.calldata.value || '0'));
+                const txRequest: TransactionRequestEVM = {
+                  value: valueHex,
+                  to: response.calldata.to,
+                  data: response.calldata.data,
+                  // chainId: Number(fromChain),
+                  // gasPrice: '0x0',
+                  // gasLimit: '0x0',
+                  from: fromAddress,
+                };
+                this.txData.set(txRequest);
+                this.buttonState = 'swap';
+                if (fromToken !== ethers.ZeroAddress) {
+                  this.buttonState = 'approve';
+                }
+              }
+            }
+          },
+          error: (error: HttpErrorResponse) => {
+            if (
+              error.error.message === 'No available quotes for the requested transfer' ||
+              error.error.statusCode === 422
+            )
+            {
+              this.buttonState = 'no-available-quotes';
+            }
+            else if(error.error.message.includes("Invalid toAddress") || error.error.message.includes("Invalid fromAddress"))
+            {
+              this.buttonState = 'wrong-address';
+            }
+            else if(error.error.statusCode === 429 || error.error.message.includes("Rate limit exceeded")){
+              this.buttonState = 'rate-limit';
+            }
+            else if (error.status === 404)
+            {
+              console.error('Custom error message:', error || 'Unknown error');
+              console.error('Custom error message:', error.error?.message || 'Unknown error');
+            }
+            else
+            {
+              console.error('Unexpected error:', error);
+            }
+          },
+          complete: () => {
+            // console.log('Quote request completed');
+            if (mustHaveCustomAddress) {
+              this.buttonState = 'wrong-address';
+              return;
+            }
+            if (!this.blockchainStateService.getCurrentWalletAddress()) {
+              this.buttonState = 'insufficient';
+            } else if (this.validatedSellAmount() > this.balance()) {
+              this.buttonState = 'insufficient';
+              return;
+            }
+          },
+        });
+
+    }
+    else // other - LI.FI
+    {
+      this.transactionsService
+      .getQuoteBridge(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress, slippageValue)
       .subscribe({
         next: (response: any) => {
           // console.log('Quote received:', response);
-          if (response && response.calldata) {
-            // this.updateSellPriceUsd(response.estimate.fromAmountUSD);
-            // this.updateBuyPriceUsd(response.estimate.toAmountUSD);
+          if (response.estimate && response.transactionRequest) {
+            // console.log(`fromUSD: ${response.estimate.fromAmountUSD}; toUSD: ${response.estimate.toAmountUSD}`);
+            this.updateSellPriceUsd(response.estimate.fromAmountUSD);
+            this.updateBuyPriceUsd(response.estimate.toAmountUSD);
 
             const toAmountNumber = Number(
-              this.transactionsService.parseToAmount(response.outputAmount, toTokenDecimals),
+              this.transactionsService.parseToAmount(response.estimate.toAmount, toTokenDecimals),
             );
             const readableToAmount = toAmountNumber.toFixed(toTokenDecimals).replace(/\.?0+$/, '');
             // console.log('readableToAmount:', readableToAmount);
@@ -910,67 +1022,46 @@ export class TradeComponent implements AfterViewChecked {
             //   gasPriceUSD = this.transactionsService.parseGasPriceUSD(gasPriceHex, gasLimitHex, gasToken);
             // }
 
-            // const gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
-            // this.gasPriceUSD = Number(gasPriceUSD);
-            const totalFeesAmount = Number(response.fees?.total?.amount || '0');
-            const totalFeesDecimals = Number(response.fees?.total?.decimals ?? 18);
-            const gasTokenAmount = totalFeesAmount / Math.pow(10, totalFeesDecimals);
-            this.gasPriceUSD = gasTokenAmount;
+            const gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
+
+            this.gasPriceUSD = Number(gasPriceUSD);
 
             // console.log('gasPriceUSD:', this.gasPriceUSD);
 
             const fromDecimal = parseFloat(
-              this.transactionsService.parseToAmount(response.inputAmount, fromTokenDecimals),
+              this.transactionsService.parseToAmount(response.estimate.fromAmount, fromTokenDecimals),
             );
             const toDecimal = parseFloat(
-              this.transactionsService.parseToAmount(response.outputAmount, toTokenDecimals),
+              this.transactionsService.parseToAmount(response.estimate.toAmount, toTokenDecimals),
             );
 
             if (fromDecimal > 0) {
               const ratio = toDecimal / fromDecimal;
               this.price.set(Number(ratio.toFixed(3)));
 
-              // const ratioUsd = Number(response.estimate.toAmountUSD) / fromDecimal;
-              // this.priceUsd = Number(ratioUsd.toFixed(3));
+              const ratioUsd = Number(response.estimate.toAmountUSD) / fromDecimal;
+              this.priceUsd = Number(ratioUsd.toFixed(3));
             }
           } else {
-            console.error('Missing calldata in response.');
+            console.error('Missing estimate or transactionRequest in response.');
           }
 
-          // if (response.transactionRequest.data) {
-          //   if (this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET) {
-          //     this.txData.set(response.transactionRequest as TransactionRequestSVM);
-          //     this.buttonState = 'swap';
-          //   } 
-          //   else if (this.blockchainStateService.networkSell()?.id === NetworkId.SUI_MAINNET) {
-          //     this.txData.set(response.transactionRequest as TransactionRequestMVM);
-          //     this.buttonState = 'swap';
-          //   }
-          //   else {
-          //     this.txData.set(response.transactionRequest as TransactionRequestEVM);
-          //     this.buttonState = 'swap';
-          //     if (fromToken !== ethers.ZeroAddress) {
-          //       // console.log("this.buttonState = 'approve'");
-          //       this.buttonState = 'approve';
-          //     }
-          //   }
-          // }
-
-          if (response?.calldata) {
-            const valueHex = ethers.toBeHex(BigInt(response.calldata.value || '0'));
-            const txRequest: TransactionRequestEVM = {
-              value: valueHex,
-              to: response.calldata.to,
-              data: response.calldata.data,
-              // chainId: Number(fromChain),
-              // gasPrice: '0x0',
-              // gasLimit: '0x0',
-              from: fromAddress,
-            };
-            this.txData.set(txRequest);
-            this.buttonState = 'swap';
-            if (fromToken !== ethers.ZeroAddress) {
-              this.buttonState = 'approve';
+          if (response.transactionRequest.data) {
+            if (this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET) {
+              this.txData.set(response.transactionRequest as TransactionRequestSVM);
+              this.buttonState = 'swap';
+            } 
+            else if (this.blockchainStateService.networkSell()?.id === NetworkId.SUI_MAINNET) {
+              this.txData.set(response.transactionRequest as TransactionRequestMVM);
+              this.buttonState = 'swap';
+            }
+            else {
+              this.txData.set(response.transactionRequest as TransactionRequestEVM);
+              this.buttonState = 'swap';
+              if (fromToken !== ethers.ZeroAddress) {
+                // console.log("this.buttonState = 'approve'");
+                this.buttonState = 'approve';
+              }
             }
           }
         },
@@ -1013,6 +1104,7 @@ export class TradeComponent implements AfterViewChecked {
           }
         },
       });
+    }
   }
 
   isSwapButtonActive(): boolean {
