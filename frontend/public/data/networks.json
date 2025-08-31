@@ -114,7 +114,7 @@
       "symbol": "ETH",
       "decimals": 18
     },
-    "explorerUrl": "https://mantlescan.xyz/token/"
+    "explorerUrl": "https://optimistic.etherscan.io/token/"
   },
   {
     "key": "bsc",
