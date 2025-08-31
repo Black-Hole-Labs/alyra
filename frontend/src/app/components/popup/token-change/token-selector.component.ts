@@ -65,11 +65,13 @@ export class TokenChangePopupComponent {
   });
   currentNetwork = computed(() => this.blockchainStateService.networkSell());
 
-  additionalNetworksCount = computed(() => {
-    const totalNetworks = this.blockchainStateService.allNetworks().length;
-    const displayedNetworks = 6;
-    return Math.max(0, totalNetworks - displayedNetworks);
+  additionalNetworks = computed(() => {
+    const allNetworks = this.blockchainStateService.allNetworks();
+    const displayedIds = new Set(this.networks().map((n) => n.id));
+    return allNetworks.filter((n) => !displayedIds.has(n.id));
   });
+
+  additionalNetworksCount = computed(() => this.additionalNetworks().length);
 
   tokenList: Signal<TokenDisplay[]> = computed(() => {
       const search = this.searchText().toLowerCase().trim();
@@ -79,8 +81,8 @@ export class TokenChangePopupComponent {
           const filteredByExclude = this.filterByExcludeToken(tokens);
           return filteredByExclude as TokenDisplay[];
       }
-
-      const allTokens = this.blockchainStateService.allTokens();
+      const networkId = this.selectedNetworkId();
+      const allTokens = this.blockchainStateService.getAllTokensForNetwork(networkId!);
       const filteredBySearch = this.filterBySearch(allTokens, search);
       const filteredByExclude = this.filterByExcludeToken(filteredBySearch);
       return filteredByExclude as TokenDisplay[];
