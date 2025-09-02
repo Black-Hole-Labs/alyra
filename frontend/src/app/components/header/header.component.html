@@ -1,19 +1,19 @@
 <header>
 
 	<div class="left">
-		<div class="menu" 
-			(mouseenter)="onMenuMouseEnter()" 
+		<div class="menu"
+			(mouseenter)="onMenuMouseEnter()"
 			(mouseleave)="onMenuMouseLeave()">
 			<a routerLink="/" class="logo"></a>
 			<h3 (click)="togglePopup($event)">Alyra</h3>
 			<button (click)="togglePopup($event)" [ngClass]="{'open': isPopupVisible, 'closed': !isPopupVisible}"></button>
 		</div>
-	
-	
+
+
 		<nav>
-			<a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Trade</a>
-			<a routerLink="/rewards" routerLinkActive="active-link">Rewards</a>
-			<a routerLink="/quests" routerLinkActive="active-link">Quests</a>
+			<a appTextScramble routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Trade</a>
+			<a appTextScramble routerLink="/rewards" routerLinkActive="active-link">Rewards</a>
+			<a appTextScramble routerLink="/quests" routerLinkActive="active-link">Quests</a>
 		</nav>
 	</div>
 
@@ -26,7 +26,7 @@
 
 			<div class="wallet-icon" [style.background-image]="'url(' + walletIcon() + ')'"></div>
 			<p>{{ walletName().length > 20 ? walletName().slice(0, 6) + '...' + walletName().slice(-3) : walletName()}}</p>
-			
+
 			@if(blockchainStateService.connected() && blockchainStateService.networkSell() !== undefined)
 			{
 				<p class="separator">|</p>

@@ -18,13 +18,14 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
 import { NetworkId, Wallets } from '../../models/wallet-provider.interface';
 import { WalletBalanceService } from '../../services/wallet-balance.service';
 import { MouseGradientService } from '../../services/mouse-gradient.service';
+import { TextScrambleDirective } from './text-scramble.directive';
 
 // import providers from '@public/data/providers.json';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, TextScrambleDirective],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss', './header.component.adaptives.scss'],
 })
@@ -52,15 +53,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @Output() toggleNetwork = new EventEmitter<void>();
 
   private menuItems: { element: HTMLElement; originalText: string }[] = [];
-  private possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}:"<>?|';
-  private glitchChars = '!@#$%^&*()_+{}:"<>?|\\';
-  private cyberChars = '01010101110010101010101110101010';
-  private animationFrames = 20;
-  private animationSpeed = 20;
+
   private animationTimeouts: { [key: string]: number } = {};
-  private isSafari: boolean;
   private menuCloseTimer: number | null = null;
-  private isMenuClickedOpen: boolean = false; 
+  private isMenuClickedOpen: boolean = false;
 
   NetworkId = NetworkId;
 
@@ -70,11 +66,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public blockchainStateService: BlockchainStateService,
     public popupService: PopupService,
     public walletBalanceService: WalletBalanceService,
-    private mouseGradientService: MouseGradientService
+    private mouseGradientService: MouseGradientService,
   ) {
-    // Определяем Safari
-    this.isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
     this.subscription = this.popupService.activePopup$.subscribe((popupType) => {
       this.showBlackholeMenu = false;
       this.showConnectWalletPopup = false;
@@ -127,10 +120,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadGmCount();
     this.loadProviders();
-
-    setTimeout(() => {
-      this.initTextAnimation();
-    }, 0);
   }
 
   ngOnDestroy() {
@@ -169,7 +158,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (event) {
       event.stopPropagation();
     }
-    
+
     this.popupService.onMenuClick();
   }
 
@@ -320,109 +309,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   openSettings(): void {
     this.popupService.openPopup('settings');
-  }
-
-  private initTextAnimation(): void {
-    const menuLinks = this.elRef.nativeElement.querySelectorAll('nav a');
-
-    menuLinks.forEach((link: HTMLElement) => {
-      const originalText = link.textContent || '';
-      this.menuItems.push({ element: link, originalText });
-
-      this.renderer.listen(link, 'mouseenter', () => {
-        if (this.isSafari) {
-          // Для Safari просто меняем текст без анимации
-          link.textContent = originalText;
-        } else {
-          this.animateText(link, originalText);
-        }
-      });
-
-      this.renderer.listen(link, 'mouseleave', () => {
-        link.textContent = originalText;
-      });
-    });
-  }
-
-  private animateText(element: HTMLElement, finalText: string): void {
-    const elementId = element.getAttribute('data-animation-id') || Math.random().toString(36).substring(2, 9);
-    element.setAttribute('data-animation-id', elementId);
-
-    if (this.animationTimeouts[elementId]) {
-      clearTimeout(this.animationTimeouts[elementId]);
-    }
-
-    let frame = 0;
-    const totalFrames = this.animationFrames;
-
-    const glitchStates = Array(finalText.length).fill(false);
-    const resolvedChars = Array(finalText.length).fill(false);
-
-    const animate = () => {
-      if (frame >= totalFrames) {
-        element.textContent = finalText;
-        delete this.animationTimeouts[elementId];
-        return;
-      }
-
-      let result = '';
-      const progress = frame / totalFrames;
-
-      const resolvedCount = Math.floor(finalText.length * Math.pow(progress, 0.8));
-
-      for (let i = 0; i < resolvedCount; i++) {
-        if (!resolvedChars[i]) {
-          resolvedChars[i] = true;
-        }
-      }
-
-      if (frame % 3 === 0) {
-        for (let i = 0; i < finalText.length; i++) {
-          if (Math.random() < 0.1) {
-            glitchStates[i] = !glitchStates[i];
-          }
-        }
-      }
-
-      for (let i = 0; i < finalText.length; i++) {
-        if (resolvedChars[i]) {
-          if (glitchStates[i] && frame < totalFrames * 0.9 && finalText[i] !== ' ') {
-            if (Math.random() < 0.3) {
-              const cyberIndex = Math.floor(Math.random() * this.cyberChars.length);
-              result += this.cyberChars[cyberIndex];
-            } else {
-              const glitchIndex = Math.floor(Math.random() * this.glitchChars.length);
-              result += this.glitchChars[glitchIndex];
-            }
-          } else {
-            result += finalText[i];
-          }
-        } else {
-          if (finalText[i] === ' ') {
-            result += ' ';
-          } else {
-            const rand = Math.random();
-            if (rand < 0.2) {
-              const glitchIndex = Math.floor(Math.random() * this.glitchChars.length);
-              result += this.glitchChars[glitchIndex];
-            } else if (rand < 0.4) {
-              const cyberIndex = Math.floor(Math.random() * this.cyberChars.length);
-              result += this.cyberChars[cyberIndex];
-            } else {
-              const randomIndex = Math.floor(Math.random() * this.possibleChars.length);
-              result += this.possibleChars[randomIndex];
-            }
-          }
-        }
-      }
-
-      element.textContent = result;
-      frame++;
-
-      this.animationTimeouts[elementId] = window.setTimeout(animate, this.animationSpeed);
-    };
-
-    animate();
   }
 
   async loadProviders() {
