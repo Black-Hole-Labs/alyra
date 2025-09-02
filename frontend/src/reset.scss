@@ -27,7 +27,7 @@ a{
 }
 
 h1, h2, h3, h4, h5, h6, p, textarea, a, input, label{
-	font-family: "JetBrains Mono", monospace;
+  font-family: "Lexend", sans-serif;
 }
 
 button {
@@ -71,7 +71,7 @@ input[type="search"]::placeholder:-ms-input-placeholder {
 }
 
 /* Убирает стрелки-кнопки справа в инпуте */
-input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0; /* Убирает стрелки в Chrome, Safari и Edge */

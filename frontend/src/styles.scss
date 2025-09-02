@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Text:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
 :root {
 	--white: 255, 255, 255;
@@ -18,7 +19,7 @@
 
 	--dark-pink: 255, 0, 221;
 	--pink: #FF00DD;
-	
+
 	--red: #FF7E7E;
 	--dark-red: 54, 24, 24;
 	--dark-red-hover: #723A3A;
@@ -28,7 +29,7 @@
 
 	--yellow: #FFBB00;
 	--dark-yellow: #4A3703;
-  
+
 	--gradient: linear-gradient(135deg, rgb(var(--blue)) 0%, rgb(var(--dark-blue)) 100%);
 
 	--quest-uncommon: 120, 255, 174;
@@ -40,7 +41,7 @@
   --dark-select: 245, 245, 245;
   --elem-nonactive: rgba(0, 0, 0, 0.2);
   --green: #00cc00;
-  
+
   background-color: #ffffff;
   color: #000000;
 
@@ -54,7 +55,7 @@
 
   .link, .button, .input-container {
     background: rgba(0, 0, 0, 0.05);
-    
+
     &::before {
       background: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
     }
@@ -133,111 +134,111 @@ html.documentation-page::after {
 }
 
 @keyframes popupFadeIn {
-  from { 
-    opacity: 0; 
+  from {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
-  to { 
-    opacity: 1; 
+  to {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
 }
 
 @keyframes popupFadeOut {
-  from { 
-    opacity: 1; 
+  from {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
-  to { 
-    opacity: 0; 
+  to {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
 }
 
 @keyframes popupFadeInSide {
-  from { 
-    opacity: 0; 
+  from {
+    opacity: 0;
     transform: translateY(-20px) scale(0.95);
   }
-  to { 
-    opacity: 1; 
+  to {
+    opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
 
 @keyframes popupFadeOutSide {
-  from { 
-    opacity: 1; 
+  from {
+    opacity: 1;
     transform: translateY(0) scale(1);
   }
-  to { 
-    opacity: 0; 
+  to {
+    opacity: 0;
     transform: translateY(-20px) scale(0.95);
   }
 }
 
 @keyframes popupFadeInCenter {
-  from { 
-    opacity: 0; 
+  from {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
-  to { 
-    opacity: 1; 
+  to {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
 }
 
 @keyframes popupFadeOutCenter {
-  from { 
-    opacity: 1; 
+  from {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
-  to { 
-    opacity: 0; 
+  to {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
 }
 
 @keyframes popupFadeInMobile {
-  from { 
-    opacity: 0; 
+  from {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
-  to { 
-    opacity: 1; 
+  to {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
 }
 
 @keyframes popupFadeOutMobile {
-  from { 
-    opacity: 1; 
+  from {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
-  to { 
-    opacity: 0; 
+  to {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
 }
 
 @keyframes popupFadeInMobileSide {
-  from { 
-    opacity: 0; 
+  from {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
-  to { 
-    opacity: 1; 
+  to {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
 }
 
 @keyframes popupFadeOutMobileSide {
-  from { 
-    opacity: 1; 
+  from {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
-  to { 
-    opacity: 0; 
+  to {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
 }
@@ -522,7 +523,7 @@ app-settings-bridge {
 	.ecosystem-change {
 		left: 45%;
 	}
-  
+
   /* Для попапов, которые обычно используют popupFadeInSide */
   .popup-opening .connect-wallet,
   .popup-opening .wallet-popup,
@@ -535,7 +536,7 @@ app-settings-bridge {
   .popup-opening .popup-menu {
     animation: popupFadeInMobileSide 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
-  
+
   .popup-closing .connect-wallet,
   .popup-closing .wallet-popup,
   .popup-closing .popup-network,
@@ -547,7 +548,7 @@ app-settings-bridge {
   .popup-closing .popup-menu {
     animation: popupFadeOutMobileSide 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
-  
+
   /* Для попапов, которые обычно используют popupFadeIn */
   .popup-opening .bridge-tx,
   .popup-opening .network-change-from,
@@ -557,7 +558,7 @@ app-settings-bridge {
   .popup-opening app-token-change-buy .token-change {
     animation: popupFadeInMobile 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
-  
+
   .popup-closing .bridge-tx,
   .popup-closing .network-change-from,
   .popup-closing .network-change-to,

@@ -25,7 +25,6 @@ header {
 }
 
 h3 {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 800;
   font-size: 24px;
   color: white;
@@ -75,7 +74,6 @@ nav {
 
 nav a {
   font-size: 24px;
-  font-family: "JetBrains Mono", monospace;
   font-weight: 400;
   color: rgba(var(--white), 0.25);
   transition: 0.2s ease-in-out;
@@ -129,7 +127,6 @@ nav a.active-link {
 
 .xp p {
   font-size: 21px;
-  font-family: "JetBrains Mono", monospace;
   font-weight: 800;
   color: white;
 }
@@ -164,7 +161,6 @@ nav a.active-link {
 
 p {
   font-size: 21px;
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   color: rgba(var(--white), 1);
 }
