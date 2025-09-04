@@ -19,6 +19,7 @@ import { NetworkId, Wallets } from '../../models/wallet-provider.interface';
 import { WalletBalanceService } from '../../services/wallet-balance.service';
 import { MouseGradientService } from '../../services/mouse-gradient.service';
 import { TextScrambleDirective } from './text-scramble.directive';
+import { GmCounterService } from './gm-counter.service';
 
 // import providers from '@public/data/providers.json';
 
@@ -26,6 +27,7 @@ import { TextScrambleDirective } from './text-scramble.directive';
   selector: 'app-header',
   standalone: true,
   imports: [RouterModule, CommonModule, TextScrambleDirective],
+  providers: [GmCounterService],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss', './header.component.adaptives.scss'],
 })
@@ -35,16 +37,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   //@Input() selectedNetwork: string = 'ethereum';
   //@Input() selectedNetwork: { id: string; name: string; icon: string; } | null = null;
   gmCount: number | null = null;
-  popupMessage: string = ''; // Сообщение для мини-попапа
-  showPopup: boolean = false; // Управление отображением мини-попапа
-  private readonly GM_COUNT_KEY = 'gmCount';
-  private readonly LAST_GM_TIME_KEY = 'lastGmTime';
+  popupMessage: string = '';
+  showPopup: boolean = false;
   showBlackholeMenu = false;
   showConnectWalletPopup = false;
   showWalletPopup = false;
   //walletName: string = 'Connect Wallet';
   walletName = computed(() => this.blockchainStateService.getCurrentWalletAddress() ?? 'Connect Wallet');
-  private subscription: Subscription;
+  private readonly subscription: Subscription;
   private providers: Wallets[] = [];
   walletIcon = signal<string>('/img/header/wallet.png');
   nativeBalance = signal<string>('0');
@@ -67,6 +67,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public popupService: PopupService,
     public walletBalanceService: WalletBalanceService,
     private mouseGradientService: MouseGradientService,
+    private gm: GmCounterService,
   ) {
     this.subscription = this.popupService.activePopup$.subscribe((popupType) => {
       this.showBlackholeMenu = false;
@@ -118,7 +119,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   // });
 
   ngOnInit() {
-    this.loadGmCount();
+    this.gmCount = this.gm.loadGmCount();
     this.loadProviders();
   }
 
@@ -135,23 +136,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     Object.values(this.animationTimeouts).forEach((timeoutId) => {
       clearTimeout(timeoutId);
     });
-  }
-
-  loadGmCount() {
-    const savedCount = localStorage.getItem(this.GM_COUNT_KEY);
-    const lastGmTime = localStorage.getItem(this.LAST_GM_TIME_KEY);
-
-    if (savedCount && lastGmTime) {
-      const now = new Date().getTime();
-      const timeDiff = now - parseInt(lastGmTime);
-      if (timeDiff > 172800000) {
-        localStorage.removeItem(this.GM_COUNT_KEY);
-        localStorage.removeItem(this.LAST_GM_TIME_KEY);
-        this.gmCount = null;
-      } else {
-        this.gmCount = parseInt(savedCount);
-      }
-    }
   }
 
   togglePopup(event?: Event): void {
@@ -195,31 +179,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   incrementGmCount() {
-    const lastClickTime = localStorage.getItem('lastGmClick');
-    const now = new Date();
-
-    if (lastClickTime) {
-      const lastClickDate = new Date(lastClickTime);
-      const nextAllowedClick = new Date(lastClickDate);
-      nextAllowedClick.setUTCDate(lastClickDate.getUTCDate() + 1);
-
-      if (now < nextAllowedClick) {
-        const timeLeft = this.calculateTimeLeft(nextAllowedClick, now);
-        this.showPopupWithMessage(`Next GM in ${timeLeft}`);
-        return;
-      }
+    const res = this.gm.tryIncrement();
+    if (!res.ok) {
+      this.showPopupWithMessage(`Next GM in ${res.timeLeft}`);
+      return;
     }
-
     this.gmCount = (this.gmCount ?? 0) + 1;
-    localStorage.setItem('lastGmClick', now.toISOString());
     this.triggerFireworks();
-  }
-
-  calculateTimeLeft(nextAllowed: Date, current: Date): string {
-    const diff = nextAllowed.getTime() - current.getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    return `${hours}h ${minutes}m`;
   }
 
   showPopupWithMessage(message: string) {

@@ -70,61 +70,11 @@
 }
 
 html {
-  background-color: black;
   overflow: hidden;
 }
 
 html.documentation-page {
   overflow: auto;
-}
-
-html.form-page::before,
-html.form-page::after {
-  display: none;
-}
-
-html::before,
-html::after {
-  content: '';
-  position: fixed;
-  width: 60vmax;
-  height: 60vmax;
-  border-radius: 50%;
-  opacity: 0.15;
-  filter: blur(60px);
-  z-index: -1;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-html::before {
-  background-image: var(--current-network-icon-1);
-  top: -20%;
-  left: -20%;
-  animation: moveGradient 35s linear infinite;
-  animation-delay: -5s;
-}
-
-html::after {
-  background-image: var(--current-network-icon-2);
-  bottom: -20%;
-  right: -20%;
-  animation: moveGradient 30s linear infinite;
-  animation-delay: 0s;
-}
-
-html.documentation-page::before,
-html.documentation-page::after {
-  display: none;
-}
-
-@keyframes moveGradient {
-  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-  25% { transform: translate(10%, 15%) rotate(90deg) scale(0.9); }
-  50% { transform: translate(-5%, -10%) rotate(180deg) scale(1.1); }
-  75% { transform: translate(-15%, 5%) rotate(270deg) scale(0.9); }
-  100% { transform: translate(0, 0) rotate(360deg) scale(1); }
 }
 
 @keyframes colorChange {

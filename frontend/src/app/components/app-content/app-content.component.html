@@ -3,15 +3,15 @@
 {
   @if(activePopup === 'connectWallet')
   {
-    <app-connect-wallet 
+    <app-connect-wallet
       (close)="popupService.closeAllPopups()"
       (openWallet)="popupService.openPopup('wallet')">
     </app-connect-wallet>
   }
-  
+
   @if(activePopup === 'wallet')
   {
-    <app-wallet 
+    <app-wallet
       (close)="popupService.closeAllPopups()">
     </app-wallet>
   }
@@ -33,4 +33,4 @@
     </app-ecosystem-change>
   }
 }
-
+<app-background></app-background>
