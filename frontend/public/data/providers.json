@@ -18,7 +18,7 @@
   {
     "id": "backpack",
     "name": "Backpack",
-    "type": "SVM",
+    "type": "multichain",
     "cssClass": "backpack",
     "installUrl": "https://backpack.app/",
     "iconUrl": "/img/wallet-icns/Backpack.png"
@@ -70,5 +70,21 @@
     "cssClass": "magic-eden",
     "installUrl": "https://magiceden.io/download",
     "iconUrl": "/img/wallet-icns/MagicEden.png"
+  },
+  {
+    "id": "slush",
+    "name": "Slush",
+    "type": "MVM",
+    "cssClass": "slush",
+    "installUrl": "https://slush.app/download",
+    "iconUrl": "/img/wallet-icns/Slush.png"
+  },
+  {
+    "id": "walletconnect",
+    "name": "WalletConnect",
+    "type": "EVM",
+    "cssClass": "walletconnect",
+    "installUrl": "",
+    "iconUrl": "/img/wallet-icns/WalletConnect.png"
   }
 ]

@@ -4,9 +4,20 @@
 	flex-direction: column;
 	justify-content: space-between;
 	padding: 40px 40px 20px 40px;
+	box-sizing: border-box;
 	@supports (-webkit-touch-callout: none) {
     height: -webkit-fill-available;
   }
+}
+
+.upper{
+	display: flex;
+	flex-direction: column;
+	overflow: visible;
+}
+
+:host-context(.form-page) {
+	padding: 0;
 }
 
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
@@ -24,7 +35,7 @@
 		padding: 20px 20px 10px 20px;
 	}
 }
-@media screen and (min-width: 769px) and (max-width: 970px) {
+@media screen and (min-width: 480px) and (max-width: 970px) {
 	:host {
 		padding: 20px 20px 10px 20px;
 	}

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Title } from '@angular/platform-browser';
@@ -9,62 +9,60 @@ import { FooterComponent } from './components/footer/footer.component';
 import { AppContentComponent } from './components/app-content/app-content.component';
 import { ClosePopupsDirective } from './directives/close-popups.directive';
 import { PopupService } from './services/popup.service';
-import { BlockchainStateService } from './services/blockchain-state.service';
-import { ProviderType } from './models/wallet-provider.interface';
+import { ThemeService } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    HeaderComponent,
-    FooterComponent,
-    AppContentComponent
-  ],
+  imports: [CommonModule, RouterModule, HeaderComponent, FooterComponent, AppContentComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  hostDirectives: [ClosePopupsDirective]
+  hostDirectives: [ClosePopupsDirective],
 })
 export class AppComponent {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private titleService = inject(Title);
-  private blockchainStateService = inject(BlockchainStateService);
+  private renderer = inject(Renderer2);
   public popupService = inject(PopupService);
+  private themeService = inject(ThemeService);
 
   constructor() {
     this.setDynamicTitle();
-    this.initializeNetworks();
+    this.handleThemeOnRouteChange();
   }
 
-  private async initializeNetworks() {
-    try {
-      const response = await fetch('/data/networks.json');
-      const networks = await response.json();
-      this.blockchainStateService.allNetworks.set(networks);
-      this.blockchainStateService.loadNetworks(ProviderType.MULTICHAIN, true);
-    } catch (error) {
-      console.error('Failed to load networks:', error);
-    }
+  isDocumentationPage(): boolean {
+    return this.router.url.startsWith('/documentation');
+  }
+
+  isProPage(): boolean {
+    return this.router.url.startsWith('/pro');
   }
 
   private setDynamicTitle() {
     this.router.events
       .pipe(
-        filter(event => event instanceof NavigationEnd),
+        filter((event) => event instanceof NavigationEnd),
         map(() => {
           let route = this.activatedRoute;
           while (route.firstChild) route = route.firstChild;
           return route;
         }),
-        mergeMap(route => route.data)
+        mergeMap((route) => route.data),
       )
-      .subscribe(data => {
-        const pageTitle = data['title']
-          ? `Blackhole | ${data['title']}` 
-          : 'Blackhole';
+      .subscribe((/*data*/) => {
+        // const pageTitle = data['title'] ? `Alyra | ${data['title']}` : 'Alyra';
+        const pageTitle = "Alyra | Swap anything, across any chain.";
         this.titleService.setTitle(pageTitle);
+      });
+  }
+
+  private handleThemeOnRouteChange() {
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.themeService.handleRouteChange(event.url);
       });
   }
 }

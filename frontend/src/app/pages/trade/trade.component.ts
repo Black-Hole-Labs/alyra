@@ -1,35 +1,51 @@
-import { Component, Renderer2, ChangeDetectorRef, computed, signal, effect, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import {
+  Component,
+  Renderer2,
+  ChangeDetectorRef,
+  computed,
+  signal,
+  effect,
+  ViewChild,
+  ElementRef,
+  AfterViewChecked,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { TokenChangePopupComponent } from '../../components/popup/token-change/token-change.component';
+import { TokenChangePopupComponent } from '../../components/popup/token-change/token-selector.component';
 import { SettingsComponent } from '../../components/popup/settings/settings.component';
-import { BlockchainStateService } from '../../services/blockchain-state.service';
+import { BlockchainStateService, Ecosystem } from '../../services/blockchain-state.service';
 import { WalletBalanceService } from '../../services/wallet-balance.service';
 import { TransactionsService } from '../../services/transactions.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { NetworkId, TransactionRequestEVM, TransactionRequestSVM } from '../../models/wallet-provider.interface';
-import { ethers, parseUnits, ZeroAddress } from 'ethers';
+import {
+  NetworkId,
+  TransactionRequestEVM,
+  TransactionRequestSVM,
+  TransactionRequestMVM,
+  ProviderType,
+} from '../../models/wallet-provider.interface';
+import { ethers, parseUnits } from 'ethers';
 import { PopupService } from '../../services/popup.service';
 import { SuccessNotificationComponent } from '../../components/notification/success-notification/success-notification.component';
 import { FailedNotificationComponent } from '../../components/notification/failed-notification/failed-notification.component';
 import { PendingNotificationComponent } from '../../components/notification/pending-notification/pending-notification.component';
+import { PublicKey } from '@solana/web3.js';
+import { TokenService } from '../../services/token.service';
+import { MouseGradientService } from '../../services/mouse-gradient.service';
 
 export interface Token {
   symbol: string;
   imageUrl: string;
   contractAddress: string;
   chainId: number;
-  decimals: string;
+  decimals: number;
 }
 
 @Component({
   selector: 'app-trade',
   standalone: true,
   templateUrl: './trade.component.html',
-  styleUrls: [
-    './trade.component.scss',
-    './trade.component.adaptives.scss'
-  ],
+  styleUrls: ['./trade.component.scss', './trade.component.adaptives.scss'],
   imports: [
     FormsModule,
     CommonModule,
@@ -37,17 +53,17 @@ export interface Token {
     SettingsComponent,
     SuccessNotificationComponent,
     FailedNotificationComponent,
-    PendingNotificationComponent
-],
+    PendingNotificationComponent,
+  ],
 })
 export class TradeComponent implements AfterViewChecked {
-//[x: string]: any;
+  //[x: string]: any;
   sellAmount: string = '';
-  //validatedSellAmount: string = ''; 
-  sellAmountForInput= signal<string | undefined>(undefined);
+  //validatedSellAmount: string = '';
+  sellAmountForInput = signal<string | undefined>(undefined);
   validatedSellAmount = signal<number>(0);
   loading = signal<boolean>(false);
-  
+
   buyAmount = signal<string | undefined>(undefined);
   buyAmountForInput = signal<string | undefined>(undefined);
   price = signal<number>(0);
@@ -57,13 +73,11 @@ export class TradeComponent implements AfterViewChecked {
   balance = signal<number>(0.0);
   balanceBuy = signal<number>(0.0);
   rotationCount: number = 0;
-	slippage: number = 0.005; // 0.005 is default for LIFI
+  slippage: number = 0.005; // 0.005 is default for LIFI
   gasPriceUSD: number | undefined;
 
-  selectedToken = signal<Token | undefined>(undefined);
-  selectedBuyToken = signal<Token | undefined>(undefined);
   //showConnectWalletPopup: boolean = false;
-  txData = signal<TransactionRequestEVM | TransactionRequestSVM | undefined> (undefined);
+  txData = signal<TransactionRequestEVM | TransactionRequestSVM | TransactionRequestMVM | undefined>(undefined);
 
   walletTimer: any = null;
   findingRoutesTimer: any = null;
@@ -72,22 +86,23 @@ export class TradeComponent implements AfterViewChecked {
   showFailedNotification = false;
   showPendingNotification = false;
 
-  buttonState: 'swap' | 'finding' | 'approve' | 'wallet' | 'insufficient' | 'no-available-quotes' = 'swap';
-  
-  firstToken = computed(() => {
-    const tokens = this.blockchainStateService.filteredTokens();
-    return tokens.length > 0 ? tokens[0] : undefined;
-  });
+  customAddress = signal<string>('');
+  showCustomAddress: boolean = false;
 
-  swapButtonValidation = computed(() =>
-    this.txData() !== undefined
-  );
+  buttonState: 'swap' | 'finding' | 'approve' | 'wallet' | 'insufficient' | 'no-available-quotes' | 'wrong-address' | 'rate-limit' = 'swap';
 
-  allFieldsReady = computed(() =>
-    !!this.blockchainStateService.network() &&
-    this.selectedToken() !== undefined &&
-    this.selectedBuyToken() !== undefined &&
-    this.validatedSellAmount() !== 0
+  // firstToken = computed(() => {
+  //   const tokens = this.blockchainStateService.tokens();
+  //   return tokens.length > 0 ? tokens[0] : undefined;
+  // });
+
+  // swapButtonValidation = computed(() => this.txData() !== undefined);
+
+  allFieldsReady = computed(
+    () =>
+      this.tokenService.selectedSellToken() !== undefined &&
+      this.tokenService.selectedBuyToken() !== undefined &&
+      this.validatedSellAmount() !== 0,
   );
 
   @ViewChild('buyAmountText') buyAmountTextElement: ElementRef | null = null;
@@ -108,96 +123,198 @@ export class TradeComponent implements AfterViewChecked {
 
   private resizeObserver: any;
 
+  private networkUpdateInterval: any;
+
+
   constructor(
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
-    private blockchainStateService: BlockchainStateService,
+    public blockchainStateService: BlockchainStateService,
     private walletBalanceService: WalletBalanceService,
     private transactionsService: TransactionsService,
-    public popupService: PopupService
+    public popupService: PopupService,
+    public tokenService: TokenService,
+    private mouseGradientService: MouseGradientService,
   ) {
     this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
+    this.initializeNetworks();
 
-    effect(() => 
-    {
-      try{
-        if(this.allFieldsReady() && !this.isProcessingInput())
-        {
-          this.getTxData();
+    effect(
+      () => {
+        try {
+          if (this.allFieldsReady() && !this.isProcessingInput()) {
+            this.getTxData();
+          }
+          // else if (this.validatedSellAmount() == 0){
+          //   console.log("Show price rate");
+          //   this.loadInitialPriceRate();
+          // }
+        } catch (error) {
+          // this.updateBuyAmount('0.0');
+          // update gas = 0.0
+          // console.log("error",error);
+          this.buttonState = 'no-available-quotes';
         }
-      }
-      catch(error){
-        // this.updateBuyAmount('0.0');
-        // update gas = 0.0
-        // console.log("error",error);
-        this.buttonState = 'no-available-quotes';
-      }
-    }, { allowSignalWrites: true });
+      },
+      { allowSignalWrites: true },
+    );
 
-    effect(() => {
-      const tokens = this.blockchainStateService.filteredTokens();
-      const newSelectedToken = tokens.length > 0 ? tokens[0] : undefined;
-      const newSelectedBuyToken = tokens.length > 1 ? tokens[1] : undefined;
-  
-      this.selectedToken.set(newSelectedToken);
-      this.selectedBuyToken.set(newSelectedBuyToken);
-      if(!this.blockchainStateService.connected()){
-        return;
+    effect(
+      () => {
+      const network = this.blockchainStateService.networkSell();
+      const tokens  = this.blockchainStateService.getAllTokensForNetwork(network!.id);
+      if (!tokens?.length) return;
+
+      const current   = this.tokenService.selectedSellToken();
+      const newSel    = tokens.find(t => this.isSameToken(t, current))
+                      ?? tokens[0];
+
+      if (!this.isSameToken(current, newSel)) {
+        this.tokenService.setSelectedSellToken(newSel);
       }
-      Promise.resolve().then(() => {
-    
-        if (this.selectedToken()) {
-          this.walletBalanceService.getBalanceForToken(this.selectedToken()!)
-            .then((balanceStr) => {
-              this.balance.set(Number(parseFloat(balanceStr)));
-            })
-            .catch((error) => {
-              console.error('Error getting balance sell: ', error);
-              this.balance.set(0.0);
-            });
+
+      // this.balance.set(0);
+
+      if (newSel && this.blockchainStateService.connected()) {
+        this.walletBalanceService.getBalanceForToken(newSel)
+          .then(b => this.balance.set(+b));
+      }
+      }, 
+      { allowSignalWrites: true }
+    );
+
+
+    effect(
+      () => {
+      const network = this.blockchainStateService.networkBuy();
+      const tokens  = this.blockchainStateService.getAllTokensForNetwork(network!.id);
+      if (!tokens?.length) return;
+
+      const sellTok  = this.tokenService.selectedSellToken();
+      const current  = this.tokenService.selectedBuyToken();
+      const newBuy   = tokens.find(t => this.isSameToken(t, current))
+                    ?? tokens.find(t => !this.isSameToken(t, sellTok))
+                    ?? tokens[0];
+
+      if (!this.isSameToken(current, newBuy)) {
+        this.tokenService.setSelectedBuyToken(newBuy);
+      }
+
+      // this.balanceBuy.set(0);
+
+      if (newBuy && this.blockchainStateService.connected()) {
+        this.walletBalanceService.getBalanceForToken(newBuy)
+          .then(b => this.balanceBuy.set(+b));
+      }
+      }, 
+      { allowSignalWrites: true }
+    );
+
+
+    effect(
+      () => {
+        const isConnected = this.blockchainStateService.connected();
+        const buyNetwork = this.blockchainStateService.networkBuy();
+        const sellNetwork = this.blockchainStateService.networkSell();
+        if (isConnected && buyNetwork !== undefined && sellNetwork !== undefined) {
+          if (
+            (buyNetwork?.id == NetworkId.SOLANA_MAINNET || sellNetwork?.id == NetworkId.SOLANA_MAINNET) &&
+            !(buyNetwork?.id == NetworkId.SOLANA_MAINNET && sellNetwork?.id == NetworkId.SOLANA_MAINNET)
+          ) {
+            this.showCustomAddress = true;
+            if (buyNetwork.chainType == ProviderType.EVM)
+            {
+              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.EVM].address!);
+            }
+            else if (buyNetwork.chainType == ProviderType.MVM) 
+            {
+              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.MVM].address!);
+            }
+            else
+            {
+              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.SVM].address!);
+            }
+          }
+          else if (
+            (buyNetwork?.id == NetworkId.SUI_MAINNET || sellNetwork?.id == NetworkId.SUI_MAINNET) &&
+            !(buyNetwork?.id == NetworkId.SUI_MAINNET && sellNetwork?.id == NetworkId.SUI_MAINNET)
+          ) {
+              this.showCustomAddress = true;
+              if (buyNetwork.chainType == ProviderType.EVM)
+              {
+                this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.EVM].address!);
+              }
+              else if (buyNetwork.chainType == ProviderType.MVM) 
+              {
+                this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.MVM].address!);
+              }
+              else
+              {
+                this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.SVM].address!);
+              }
+          }
+          else {
+            this.showCustomAddress = false;
+            this.customAddress.set('');
+          }
+        } else {
+          this.showCustomAddress = false;
         }
-    
-        if (this.selectedBuyToken()) {
-          this.walletBalanceService.getBalanceForToken(this.selectedBuyToken()!)
-            .then((balanceStr) => {
-              this.balanceBuy.set(Number(parseFloat(balanceStr)));
-            })
-            .catch((error) => {
-              console.error('Error getting balance buy: ', error);
-              this.balanceBuy.set(0.0);
-            });
+      },
+      { allowSignalWrites: true },
+    );
+
+    effect(
+      () => {
+        if (this.validatedSellAmount() === 0) {
+          this.sellPriceUsd.set('');
+          this.buyPriceUsd.set('');
         }
-      });
-    }, { allowSignalWrites: true });
+      },
+      { allowSignalWrites: true }
+    );
   }
 
   ngOnInit() {
     this.resizeObserver = new ResizeObserver(() => {
       this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
     });
-    
+
     this.resizeObserver.observe(document.body);
+    // this.transactionsService
+    //   .getV1(
+    //     42161,
+    //     8453,
+    //     '0x0000000000000000000000000000000000000000',
+    //     '0x0000000000000000000000000000000000000000',
+    //     '100000000000000000',
+    //     '0x8C74EeC7Cf01BEb1c81ad532e573dC2eCb38f287'
+    //   )
+    //   .subscribe({
+    //     next: (response: any) => {console.log(response);}})
+    
+    // this.startNetworkUpdateInterval();
   }
 
   ngOnDestroy() {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }
+    // this.stopNetworkUpdateInterval();
   }
-  
+
   handleKeyDown(event: KeyboardEvent): void {
     const inputElement = event.target as HTMLInputElement;
     const cursorPos = inputElement.selectionStart ?? inputElement.value.length;
 
-    const replaceKeys = [',', '.', '/', 'б', 'ю']; 
+    const replaceKeys = [',', '.', '/', 'б', 'ю'];
 
     if (replaceKeys.includes(event.key)) {
-      event.preventDefault(); 
+      event.preventDefault();
 
       if (inputElement.value.includes('.')) return;
 
-      inputElement.value =
-        inputElement.value.slice(0, cursorPos) + '.' + inputElement.value.slice(cursorPos);
+      inputElement.value = inputElement.value.slice(0, cursorPos) + '.' + inputElement.value.slice(cursorPos);
 
       setTimeout(() => inputElement.setSelectionRange(cursorPos + 1, cursorPos + 1), 0);
     }
@@ -207,32 +324,28 @@ export class TradeComponent implements AfterViewChecked {
     this.txData.set(undefined);
     const inputElement = event.target as HTMLInputElement;
     inputElement.value = inputElement.value
-    .replace(/[^0-9.]/g, '')
-    .replace(/\.+/g, '.') 
-    .replace(/^(\.)/g, '');
+      .replace(/[^0-9.]/g, '')
+      .replace(/\.+/g, '.')
+      .replace(/^(\.)/g, '');
 
-    if (isSell)
-    {
-      this.isProcessingInput.update(value => true);
+    if (isSell) {
+      this.isProcessingInput.update((value) => true);
 
       this.sellAmount = inputElement.value;
-      this.validatedSellAmount.update(value => (Number(inputElement.value)));
-      
+      this.validatedSellAmount.update((value) => Number(inputElement.value));
+
       this.adjustFontSize(inputElement);
-      
-      if (this.validatedSellAmount() > this.balance())
-      {
+
+      if (this.validatedSellAmount() > this.balance()) {
         this.buttonState = 'insufficient';
         // this.updateBuyAmount('0.0');
-      }
-      else
-      {
+      } else {
         this.buttonState = 'swap';
       }
 
       if (!this.throttleActive) {
         this.throttleActive = true;
-        
+
         this.debounceTimer = setTimeout(() => {
           this.isProcessingInput.update(() => false);
           this.throttleActive = false;
@@ -244,13 +357,18 @@ export class TradeComponent implements AfterViewChecked {
   updateBuyAmount(value: string): void {
     const limited = this.limitDecimals(value, 6);
     const num = Number(limited);
-  
+
     if (!isNaN(num)) {
-      this.buyAmount.set(value); 
+      this.buyAmount.set(value);
       this.buyAmountForInput.set(limited);
-      
+
       this.buyAmountTextAnimated = false;
-      
+
+      const sellInput = document.getElementById('number-input-sell') as HTMLInputElement;
+      if (sellInput) {
+        this.adjustFontSize(sellInput);
+      }
+
       setTimeout(() => this.checkAndAnimateBuyText(), 0);
     } else {
       this.buyAmount.set('0');
@@ -261,16 +379,18 @@ export class TradeComponent implements AfterViewChecked {
   updateSellAmount(value: string): void {
     const limited = this.limitDecimals(value, 6);
     const num = Number(limited);
-  
+
     if (!isNaN(num)) {
-      this.sellAmount = value; 
+      this.sellAmount = value;
       this.sellAmountForInput.set(limited);
     } else {
       this.sellAmount = '0';
       this.sellAmountForInput.set('0');
     }
+    
+    this.recalculateFontSize();
   }
-  
+
   limitDecimals(value: string, maxDecimals: number): string {
     if (value.includes('.')) {
       const [intPart, decimalPart] = value.split('.');
@@ -298,47 +418,108 @@ export class TradeComponent implements AfterViewChecked {
 
   setMaxSellAmount(): void {
     this.updateSellAmount(this.balance().toString());
-    this.validatedSellAmount.update(value => this.balance());
+    this.validatedSellAmount.update((value) => this.balance());
     if (Number(this.validatedSellAmount()) > this.balance()) {
       this.buttonState = 'insufficient';
-      this.updateBuyAmount('0.0');
-    }
-    else
-    {
+    } else {
       this.buttonState = 'swap';
     }
   }
 
   rotateRefresh(): void {
-    if (this.isWalletConnected())
-    {
-      this.getTxData();
-    }
+    this.getTxData();
+    
     const refreshElement = document.querySelector('.refresh');
     if (refreshElement) {
       this.rotationCount += 1;
       this.renderer.setStyle(refreshElement, 'transform', `rotate(${this.rotationCount * -720}deg)`);
     }
   }
-	
-	swapTokens(): void {
-    this.txData.update(() => undefined);
-    this.buttonState = "swap";
-	
-    const tempToken = this.selectedToken();
-    this.selectedToken.update(() => this.selectedBuyToken());
-    this.selectedBuyToken.update(() => tempToken);
 
-    const tempBalance = this.balance(); 
-    this.balance.update(() => this.balanceBuy());
-    this.balanceBuy.update(() => tempBalance);
-
+  async swapTokens(): Promise<void> {
+    const tempSellToken = this.tokenService.selectedSellToken();
+    const tempBuyToken = this.tokenService.selectedBuyToken();
+    const tempBalance = this.balance();
+    const tempBalanceBuy = this.balanceBuy();
     const tempSellAmount = this.validatedSellAmount();
-    this.updateSellAmount(this.buyAmountForInput()!);
-    this.validatedSellAmount.set(Number(this.buyAmountForInput()));
-    this.updateBuyAmount(String(tempSellAmount));
-    //this.getTxData();
+    const tempBuyAmount = this.buyAmountForInput();
+
+    // if(this.blockchainStateService.connected()){
+    //   const provider = this.blockchainStateService.getCurrentProvider().provider;
+    //   try{
+    //     await provider.switchNetwork(this.blockchainStateService.networkBuy()!);
+    //     this.blockchainStateService.updateWalletAddress(provider.address);
+    //   }
+    //   catch (error) {
+    //     console.log("open popup");
+    //     // this.popupService.openPopup("connectWallet");
+    //     // this.blockchainStateService.disconnect(provider.address);
+    //   }
+    // }
+
+    this.txData.update(() => undefined);
+    this.buttonState = 'swap';
+
+    this.blockchainStateService.updateNetworkSell(tempBuyToken!.chainId);
+    this.blockchainStateService.updateNetworkBuy(tempSellToken!.chainId);
+
+    // this.selectedToken.set(tempBuyToken);
+    this.tokenService.setSelectedBuyToken(tempSellToken);
+    this.tokenService.setSelectedSellToken(tempBuyToken);
+
+    this.balance.set(tempBalanceBuy);
+    this.balanceBuy.set(tempBalance);
+
+    if (tempBuyAmount && tempBuyAmount !== '0' && tempBuyAmount !== '0.0') {
+      this.updateSellAmount(tempBuyAmount);
+      this.validatedSellAmount.set(Number(tempBuyAmount));
+    } else {
+      this.updateSellAmount('0');
+      this.validatedSellAmount.set(0);
+    }
+
+    if (tempSellAmount > 0) {
+      this.updateBuyAmount(String(tempSellAmount));
+    } else {
+      this.updateBuyAmount('0');
+    }
+
+    const newSellNetwork = this.blockchainStateService.networkSell();
+    if (newSellNetwork) {
+      this.blockchainStateService.updateNetworkBackgroundIcons(newSellNetwork);
+    }
+
+    //this.swapNetworks();
+    if (!this.blockchainStateService.isEcosystemConnected(newSellNetwork?.chainType as Ecosystem)) {
+      setTimeout(() => {
+        this.blockchainStateService.setEcosystemForPopup(newSellNetwork?.chainType as Ecosystem);
+        this.popupService.openPopup('connectWallet');
+      }, 0);
+      return;
+    }
+
+    this.cdr.detectChanges();
+
   }
+
+   private isSameToken = (a?: Token, b?: Token) =>
+      !!a && !!b &&
+      a.contractAddress === b.contractAddress &&
+      a.chainId         === b.chainId;
+
+  // private swapNetworks(): void {
+  //   try {
+  //     const tmp = this.blockchainStateService.networkBuy();
+  //     console.log("before buy:", this.blockchainStateService.networkBuy());
+  //     console.log("before sell:", this.blockchainStateService.networkSell());
+  //     this.blockchainStateService.setNetworkBuy(this.blockchainStateService.networkSell()!);
+  //     this.blockchainStateService.setNetworkSell(tmp!);
+  //     console.log("after buy:", this.blockchainStateService.networkBuy());
+  //     console.log("after sell:", this.blockchainStateService.networkSell());
+  //   } catch (error) {
+  //     console.warn('Error swapping network IDs:', error);
+  //   }
+  // }
 
   openTokenPopup(): void {
     this.popupService.openPopup('tokenChangeSell');
@@ -348,15 +529,10 @@ export class TradeComponent implements AfterViewChecked {
     this.popupService.closePopup('tokenChangeSell');
   }
 
-  async onTokenSelected(token: Token): Promise<void> {
+  async onSellTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
-    this.selectedToken.set(token);
-    this.balance.set(Number((parseFloat(await this.walletBalanceService.getBalanceForToken(token)))));
-    // this.selectedToken = token.symbol;
-    // this.selectedTokenImage = token.imageUrl;
-    // this.selectedTokenAddress = token.contractAddress;
-    // this.selectedTokendecimals = token.decimals;
-    this.closeTokenPopup();
+    this.tokenService.setSelectedSellToken(token);
+    this.balance.set(Number(parseFloat(await this.walletBalanceService.getBalanceForToken(token))));
   }
 
   openTokenBuyPopup(): void {
@@ -369,54 +545,34 @@ export class TradeComponent implements AfterViewChecked {
 
   async onBuyTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
-    this.selectedBuyToken.set(token);
+    this.tokenService.setSelectedBuyToken(token);
     this.balanceBuy.set(Number(parseFloat(await this.walletBalanceService.getBalanceForToken(token)).toFixed(6)));
-    // this.selectedBuyToken = token.symbol;
-    // this.selectedBuyTokenImage = token.imageUrl;
-    // this.selectedBuyTokenAddress = token.contractAddress;
-    // this.selectedTokenBuydecimals = token.decimals;
     this.closeTokenBuyPopup();
     this.popupService.closeAllPopups();
   }
 
-	get showSettingsPopup(): boolean {
+  get showSettingsPopup(): boolean {
     return this.popupService.getCurrentPopup() === 'settings';
   }
 
   toggleSettingsPopup(): void {
     if (this.showSettingsPopup) {
-      const settingsEl = document.querySelector('app-settings');
-      if (settingsEl) {
-        settingsEl.classList.add('closing');
-      }
-      document.body.classList.add('popup-closing');
-      setTimeout(() => {
-        this.popupService.closePopup('settings');
-        document.body.classList.remove('popup-closing');
-        if (settingsEl) {
-          settingsEl.classList.remove('closing');
-        }
-      }, 300);
+      this.popupService.closePopup('settings');
     } else {
-      document.body.classList.add('popup-opening');
       this.popupService.openPopup('settings');
     }
   }
 
-	onSlippageSave(value: string): void {
-    if (value === "Auto")
-    {
+  onSlippageSave(value: string): void {
+    if (value === 'Auto') {
       // console.log("Slippate is Auto. Default value is 0.005 (0.5%)");
       this.slippage = 0.005;
-    }
-    else
-    {
+    } else {
       const val = parseFloat(value.replace('%', ''));
-      if (val > 49.9)
-      {
-          throw "Slippage is too high!";
+      if (val > 49.9) {
+        throw 'Slippage is too high!';
       }
-  
+
       this.slippage = val / 100;
       // console.log(`Slippage set: ${this.slippage}; (${val}%)`);
     }
@@ -432,23 +588,21 @@ export class TradeComponent implements AfterViewChecked {
     this.showSuccessNotification = false;
     this.showFailedNotification = false;
     this.cdr.detectChanges();
-  
-    let txHash: string = "";
-    try
-    {
-      if (this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET) 
-      {
+
+    let txHash: string = '';
+    try {
+      if (this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET) {
         txHash = await this.svmSwap();
-      } 
-      else 
-      {
+      }
+      else if (this.blockchainStateService.networkSell()?.id === NetworkId.SUI_MAINNET){
+        txHash = await this.suiSwap();
+      }
+      else {
         txHash = await this.evmSwap();
       }
-    }
-    catch (error:any)
-    {
+    } catch (error: any) {
       this.showFailedNotification = true;
-      
+
       this.loading.set(false);
       //// console.log(error);
 
@@ -463,9 +617,44 @@ export class TradeComponent implements AfterViewChecked {
 
       return;
     }
+
+    // const finalStatus = await this.transactionsService.pollStatus(txHash);
+
+    let finalStatus: any;
     
-    const finalStatus = await this.transactionsService.pollStatus(txHash);
-    
+    try {
+      const sellNetworkId = this.blockchainStateService.networkSell()?.id;
+      if (sellNetworkId === NetworkId.SOLANA_MAINNET) {
+        const rpcUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(this.blockchainStateService.networkSell()!.id);
+        const receiptResult = await this.transactionsService.pollTransactionReceiptSvm(txHash, rpcUrl, 60, 5000);
+
+        if (receiptResult.success) {
+          finalStatus = { status: 'DONE', receipt: receiptResult.transaction };
+        } 
+        else {
+          finalStatus = { status: 'FAILED', error: receiptResult.error || receiptResult.status || 'Unknown' };
+        }
+      }
+      else if (sellNetworkId === NetworkId.SUI_MAINNET) {
+        finalStatus = await this.transactionsService.pollStatus(txHash);
+      }
+      else { // EVM
+        const rpcUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(this.blockchainStateService.networkSell()!.id);
+        const evmResult = await this.transactionsService.pollTransactionReceipt(txHash, rpcUrl);
+
+        if (evmResult.success) {
+          finalStatus = { status: 'DONE', receipt: evmResult.receipt };
+        } 
+        else {
+          finalStatus = { status: 'FAILED', error: evmResult.error || evmResult.receipt || 'Unknown' };
+        }
+
+      }
+    } catch (err) {
+      console.warn('Error while polling transaction status:', err);
+      finalStatus = { status: 'FAILED', error: err };
+    }
+
     this.showPendingNotification = false;
     if (finalStatus.status === 'DONE') {
       this.showSuccessNotification = true;
@@ -479,29 +668,45 @@ export class TradeComponent implements AfterViewChecked {
       this.showFailedNotification = false;
       this.cdr.detectChanges();
     }, 5000);
-    
-    try
-    {
-      this.balance.set(Number((parseFloat(await this.walletBalanceService.getBalanceForToken(this.selectedToken()!)))));
-      this.balanceBuy.set(Number((parseFloat(await this.walletBalanceService.getBalanceForToken(this.selectedBuyToken()!)))));
-    }
-    catch (error) 
-    {
+
+    try {
+      this.balance.set(
+        Number(parseFloat(await this.walletBalanceService.getBalanceForToken(this.tokenService.selectedSellToken()!))),
+      );
+      this.balanceBuy.set(
+        Number(parseFloat(await this.walletBalanceService.getBalanceForToken(this.tokenService.selectedBuyToken()!))),
+      );
+      this.walletBalanceService.invalidateBalanceCacheForToken(this.blockchainStateService.networkSell()!.id, this.tokenService.selectedSellToken()!.contractAddress);
+      this.walletBalanceService.invalidateBalanceCacheForToken(this.blockchainStateService.networkBuy()!.id, this.tokenService.selectedBuyToken()!.contractAddress);
+    } catch (error) {
       // console.log("error setting balance",error);
     }
 
     this.loading.set(false);
   }
 
+  async suiSwap(): Promise<string> {
+    const txReq = this.txData();
+    if (!txReq?.data) throw new Error('Missing SUI transaction data');
+
+    const provider = this.blockchainStateService.getCurrentProvider().provider;
+    const txBytes = await provider.sendTx(txReq);
+
+    this.showPendingNotification = true;
+    this.buttonState = 'swap';
+
+    return txBytes;
+  }
+
   async svmSwap(): Promise<string> {
-    const txData = this.txData(); 
+    const txData = this.txData();
     if (!txData) {
-      throw new Error("missing data transaction");
+      throw new Error('missing data transaction');
     }
     const provider = this.blockchainStateService.getCurrentProvider().provider;
-  
+
     const txHash = await provider.sendTx(txData);
-    
+
     this.showPendingNotification = true;
     this.buttonState = 'swap';
 
@@ -509,13 +714,13 @@ export class TradeComponent implements AfterViewChecked {
     return txHash.signature;
   }
 
-  async evmSwap(): Promise<string>{
+  async evmSwap(): Promise<string> {
     const provider = this.blockchainStateService.getCurrentProvider().provider;
-
+    await provider.switchNetwork(this.blockchainStateService.networkSell()!);
     const signer = await provider.signer;
 
-    const fromToken = this.selectedToken()!.contractAddress;
-    if(fromToken === ethers.ZeroAddress){
+    const fromToken = this.tokenService.selectedSellToken()!.contractAddress;
+    if (fromToken === ethers.ZeroAddress) {
       const txHash = await provider.sendTx(this.txData());
       this.showPendingNotification = true;
       this.buttonState = 'swap';
@@ -525,30 +730,30 @@ export class TradeComponent implements AfterViewChecked {
     const erc20Contract = new ethers.Contract(
       fromToken,
       [
-        "function approve(address spender, uint256 amount) public returns (bool)",
-        "function allowance(address owner, address spender) public view returns (uint256)"
+        'function approve(address spender, uint256 amount) public returns (bool)',
+        'function allowance(address owner, address spender) public view returns (uint256)',
       ],
-      signer
+      signer,
     );
 
     //const fromAddress = this.blockchainStateService.walletAddress()!;
-    const fromTokenDecimals = this.selectedToken()!.decimals;
+    const fromTokenDecimals = this.tokenService.selectedSellToken()!.decimals;
     const amount = this.transactionsService.toNonExponential(this.validatedSellAmount());
-    const approveAmount = parseUnits(amount, fromTokenDecimals)
+    const approveAmount = parseUnits(amount, fromTokenDecimals);
 
     // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
     // // console.log("allowance",allowance);
 
-    const approveTx = await erc20Contract["approve"]((this.txData() as TransactionRequestEVM).to, approveAmount);
-    
+    const approveTx = await erc20Contract['approve']((this.txData() as TransactionRequestEVM).to, approveAmount);
+
     // console.log("a");
 
-    await approveTx.wait();
+      await approveTx.wait();
 
     // console.log("Approve успешно выполнен:", approveTx.hash);
 
     const txHash = await provider.sendTx(this.txData(), true);
-    
+
     this.showPendingNotification = true;
     this.buttonState = 'swap';
 
@@ -557,10 +762,10 @@ export class TradeComponent implements AfterViewChecked {
   }
 
   sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  test(){
+  test() {
     this.transactionsService.runTest().subscribe({
       next: (response) => {
         // console.log('Quote:', response.quote);
@@ -568,42 +773,74 @@ export class TradeComponent implements AfterViewChecked {
       },
       error: (error) => {
         console.error('Ошибка запроса:', error);
-      }
+      },
     });
   }
 
   getTxData() {
     this.buttonState = 'finding';
-    const fromChain = this.blockchainStateService.network()!.id.toString();
-    const toChain = this.blockchainStateService.network()!.id.toString();
-    const fromTokenDecimals = this.selectedToken()!.decimals;
-    // console.log("this.validatedSellAmount()",this.validatedSellAmount());
+    const fromChain = this.blockchainStateService.networkSell()!.id.toString();
+    const toChain = this.blockchainStateService.networkBuy()!.id.toString();
+    const fromTokenDecimals = this.tokenService.selectedSellToken()!.decimals;
     const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
-    // console.log(formattedFromAmount,formattedFromAmount);
     const fromAmount = parseUnits(formattedFromAmount, fromTokenDecimals);
-    const fromToken = this.selectedToken()!.contractAddress;
-    const toToken = this.selectedBuyToken()!.contractAddress;
-    const toTokenDecimals = this.selectedBuyToken()!.decimals;
+    const fromToken = this.tokenService.selectedSellToken()!.contractAddress;
+    const toToken = this.tokenService.selectedBuyToken()!.contractAddress;
+    const toTokenDecimals = this.tokenService.selectedBuyToken()!.decimals;
+
     let fromAddress = '';
-    if(!this.blockchainStateService.walletAddress())
-    {
-      if(fromToken !== ethers.ZeroAddress)
-      {
-        fromAddress = fromToken;
-      }
-      else
-      {
-        fromAddress = toToken;
-      }
+    let toAddress = (this.customAddress() !== '' && this.addressStatus === 'good') ? this.customAddress() : undefined; 
+
+    const CONSTANT_ETH_ADDRESS = '0x1111111111111111111111111111111111111111';
+    const CONSTANT_SOL_ADDRESS = '11111111111111111111111111111111';
+    const CONSTANT_SUI_ADDRESS = '0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI';
+
+    const fromChainType = this.blockchainStateService.networkSell()?.chainType;
+    const toChainType = this.blockchainStateService.networkBuy()?.chainType;
+    const walletConnected = !!this.blockchainStateService.getCurrentWalletAddress();
+
+    if (!walletConnected) {
+        if (fromChainType === 'EVM') {
+            fromAddress = CONSTANT_ETH_ADDRESS;
+        } else if (fromChainType === 'SVM') {
+            fromAddress = CONSTANT_SOL_ADDRESS;
+        } else if (fromChainType === 'MVM') {
+          fromAddress = CONSTANT_SUI_ADDRESS;
+        }
+
+        if (!toAddress) {
+            if (toChainType === 'EVM') {
+                toAddress = CONSTANT_ETH_ADDRESS;
+            } else if (toChainType === 'SVM') {
+                toAddress = CONSTANT_SOL_ADDRESS;
+            } else if (fromChainType === 'MVM') {
+                fromAddress = CONSTANT_SUI_ADDRESS;
+            }
+        }
+    } else {
+        fromAddress = this.blockchainStateService.getCurrentWalletAddress()!;
+
+        if (fromChainType !== toChainType && !(toAddress && toAddress !== '')) {
+            if (toChainType === 'EVM') {
+                toAddress = CONSTANT_ETH_ADDRESS;
+            } else if (toChainType === 'SVM') {
+                toAddress = CONSTANT_SOL_ADDRESS;
+            } else if (toChainType === 'MVM') {
+                toAddress = CONSTANT_SUI_ADDRESS;
+            }
+        } else {
+            if (this.customAddress() !== '' && this.addressStatus === 'good') {
+                toAddress = this.customAddress();
+            } else {
+                toAddress = undefined;
+            }
+        }
     }
-    else
-    {
-      fromAddress = this.blockchainStateService.walletAddress()!;
-    }
+
     const adjustedFromAmount = fromAmount.toString();
 
     // console.log("fromChain",fromChain);
-  
+
     if (!fromChain || !toChain || !fromAddress || !fromAmount || !fromToken || !toToken || !fromTokenDecimals) {
       // console.log("fromChain",fromChain);
       // console.log("toChain",toChain);
@@ -612,114 +849,258 @@ export class TradeComponent implements AfterViewChecked {
       // console.log("fromToken",fromToken);
       // console.log("toToken",toToken);
       // console.log("fromTokenDecimals",fromTokenDecimals);
-      
+
       // console.log("adjusted From Amount",adjustedFromAmount);
 
       console.error('Missing required parameters');
       return;
     }
-    
+
     // console.log("fromAddress",fromAddress);
 
-    const slippageValue = this.slippage !== 0.005 ? this.slippage: undefined; // 0.005 is default for LIFI
+    const slippageValue = this.slippage !== 0.005 ? this.slippage : undefined; // 0.005 is default for LIFI
 
-    this.transactionsService.getQuote(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, slippageValue)
-    .subscribe({
-      next: (response: any) => {
-        // console.log('Quote received:', response);
-        if (response.estimate && response.transactionRequest) 
-        {
-          // console.log(`fromUSD: ${response.estimate.fromAmountUSD}; toUSD: ${response.estimate.toAmountUSD}`);
-          this.updateSellPriceUsd(response.estimate.fromAmountUSD);
-          this.updateBuyPriceUsd(response.estimate.toAmountUSD);
+    const mustHaveCustomAddress = (
+      walletConnected &&
+      fromChainType !== toChainType &&
+      !(this.customAddress() !== '' && this.addressStatus === 'good')
+    );
 
-          const toAmountNumber = Number(this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals)));
-          const readableToAmount = toAmountNumber.toFixed(Number(toTokenDecimals)).replace(/\.?0+$/, '');
-          // console.log('readableToAmount:', readableToAmount);
-          this.updateBuyAmount(readableToAmount);
-          
-          // if(this.blockchainStateService.network()!.id == NetworkId.SOLANA_MAINNET) // SVM
-          // {
-          //   gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
-          // }
-          // else // EVM
-          // {
-          //   const gasPriceHex = response.transactionRequest.gasPrice;
-          //   const gasLimitHex = response.transactionRequest.gasLimit;
-          //   const gasToken = response.estimate.gasCosts?.[0]?.token;
-          //   gasPriceUSD = this.transactionsService.parseGasPriceUSD(gasPriceHex, gasLimitHex, gasToken);
-          // }
+    if ([10, 56, 137, 42161, 1151111081099710].includes(this.blockchainStateService.networkSell()!.id)) // blackHole API for supportted chains
+    {
+      this.transactionsService
+        .getV1(
+          fromChain,
+          toChain,
+          fromToken,
+          toToken,
+          adjustedFromAmount,
+          fromAddress,
+          toAddress,
+          'EXACT_INPUT'
+        )
+        .subscribe({
+          next: (response: any) => {
+            // console.log('Quote received:', response);
+            if (response && response.calldata) {
+              // this.updateSellPriceUsd(response.estimate.fromAmountUSD);
+              // this.updateBuyPriceUsd(response.estimate.toAmountUSD);
 
-          const gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
+              const toAmountNumber = Number(
+                this.transactionsService.parseToAmount(response.outputAmount, toTokenDecimals),
+              );
+              const readableToAmount = toAmountNumber.toFixed(toTokenDecimals).replace(/\.?0+$/, '');
+              // console.log('readableToAmount:', readableToAmount);
+              this.updateBuyAmount(readableToAmount);
 
-          this.gasPriceUSD = Number(gasPriceUSD);
-          
-          // console.log('gasPriceUSD:', this.gasPriceUSD);
+              // const gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
+              // this.gasPriceUSD = Number(gasPriceUSD);
+              const totalFeesAmount = Number(response.fees?.total?.amount || '0');
+              const totalFeesDecimals = Number(response.fees?.total?.decimals ?? 18);
+              const gasTokenAmount = totalFeesAmount / Math.pow(10, totalFeesDecimals);
+              this.gasPriceUSD = gasTokenAmount;
 
-          const fromDecimal = parseFloat(
-            this.transactionsService.parseToAmount(response.estimate.fromAmount, Number(fromTokenDecimals))
-          );
-          const toDecimal = parseFloat(
-            this.transactionsService.parseToAmount(response.estimate.toAmount, Number(toTokenDecimals))
-          );
+              // console.log('gasPriceUSD:', this.gasPriceUSD);
 
-          if (fromDecimal > 0)
-          {
-            const ratio = toDecimal / fromDecimal;
-            this.price.set(Number(ratio.toFixed(3)));
+              const fromDecimal = parseFloat(
+                this.transactionsService.parseToAmount(response.inputAmount, fromTokenDecimals),
+              );
+              const toDecimal = parseFloat(
+                this.transactionsService.parseToAmount(response.outputAmount, toTokenDecimals),
+              );
 
-            const ratioUsd = Number(response.estimate.toAmountUSD) / fromDecimal;
-            this.priceUsd = Number(ratioUsd.toFixed(3));
+              if (fromDecimal > 0) {
+                const ratio = toDecimal / fromDecimal;
+                this.price.set(Number(ratio.toFixed(3)));
+
+                // const ratioUsd = Number(response.estimate.toAmountUSD) / fromDecimal;
+                // this.priceUsd = Number(ratioUsd.toFixed(3));
+              }
+            } else {
+              console.error('Missing calldata in response.');
+            }
+
+            if (response?.calldata) {
+              if (this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET)
+              {
+                this.txData.set(response.calldata.data as TransactionRequestSVM);
+                this.buttonState = 'swap';
+              }
+              else
+              {
+                const valueHex = ethers.toBeHex(BigInt(response.calldata.value || '0'));
+                const txRequest: TransactionRequestEVM = {
+                  value: valueHex,
+                  to: response.calldata.to,
+                  data: response.calldata.data,
+                  // chainId: Number(fromChain),
+                  // gasPrice: '0x0',
+                  // gasLimit: '0x0',
+                  from: fromAddress,
+                };
+                this.txData.set(txRequest);
+                this.buttonState = 'swap';
+                if (fromToken !== ethers.ZeroAddress) {
+                  this.buttonState = 'approve';
+                }
+              }
+            }
+          },
+          error: (error: HttpErrorResponse) => {
+            if (
+              error.error.message === 'No available quotes for the requested transfer' ||
+              error.error.statusCode === 422
+            )
+            {
+              this.buttonState = 'no-available-quotes';
+            }
+            else if(error.error.message.includes("Invalid toAddress") || error.error.message.includes("Invalid fromAddress"))
+            {
+              this.buttonState = 'wrong-address';
+            }
+            else if(error.error.statusCode === 429 || error.error.message.includes("Rate limit exceeded")){
+              this.buttonState = 'rate-limit';
+            }
+            else if (error.status === 404)
+            {
+              console.error('Custom error message:', error || 'Unknown error');
+              console.error('Custom error message:', error.error?.message || 'Unknown error');
+            }
+            else
+            {
+              console.error('Unexpected error:', error);
+            }
+          },
+          complete: () => {
+            // console.log('Quote request completed');
+            if (mustHaveCustomAddress) {
+              this.buttonState = 'wrong-address';
+              return;
+            }
+            if (!this.blockchainStateService.getCurrentWalletAddress()) {
+              this.buttonState = 'insufficient';
+            } else if (this.validatedSellAmount() > this.balance()) {
+              this.buttonState = 'insufficient';
+              return;
+            }
+          },
+        });
+
+    }
+    else // other - LI.FI
+    {
+      this.transactionsService
+      .getQuoteBridge(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress, slippageValue)
+      .subscribe({
+        next: (response: any) => {
+          // console.log('Quote received:', response);
+          if (response.estimate && response.transactionRequest) {
+            // console.log(`fromUSD: ${response.estimate.fromAmountUSD}; toUSD: ${response.estimate.toAmountUSD}`);
+            this.updateSellPriceUsd(response.estimate.fromAmountUSD);
+            this.updateBuyPriceUsd(response.estimate.toAmountUSD);
+
+            const toAmountNumber = Number(
+              this.transactionsService.parseToAmount(response.estimate.toAmount, toTokenDecimals),
+            );
+            const readableToAmount = toAmountNumber.toFixed(toTokenDecimals).replace(/\.?0+$/, '');
+            // console.log('readableToAmount:', readableToAmount);
+            this.updateBuyAmount(readableToAmount);
+
+            // if(this.blockchainStateService.networkSell()!.id == NetworkId.SOLANA_MAINNET) // SVM
+            // {
+            //   gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
+            // }
+            // else // EVM
+            // {
+            //   const gasPriceHex = response.transactionRequest.gasPrice;
+            //   const gasLimitHex = response.transactionRequest.gasLimit;
+            //   const gasToken = response.estimate.gasCosts?.[0]?.token;
+            //   gasPriceUSD = this.transactionsService.parseGasPriceUSD(gasPriceHex, gasLimitHex, gasToken);
+            // }
+
+            const gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
+
+            this.gasPriceUSD = Number(gasPriceUSD);
+
+            // console.log('gasPriceUSD:', this.gasPriceUSD);
+
+            const fromDecimal = parseFloat(
+              this.transactionsService.parseToAmount(response.estimate.fromAmount, fromTokenDecimals),
+            );
+            const toDecimal = parseFloat(
+              this.transactionsService.parseToAmount(response.estimate.toAmount, toTokenDecimals),
+            );
+
+            if (fromDecimal > 0) {
+              const ratio = toDecimal / fromDecimal;
+              this.price.set(Number(ratio.toFixed(3)));
+
+              const ratioUsd = Number(response.estimate.toAmountUSD) / fromDecimal;
+              this.priceUsd = Number(ratioUsd.toFixed(3));
+            }
+          } else {
+            console.error('Missing estimate or transactionRequest in response.');
           }
-        }
-        else 
-        {
-          console.error("Missing estimate or transactionRequest in response.");
-        }
 
-        if(response.transactionRequest.data)
-        {
-          if(this.blockchainStateService.network()?.id === NetworkId.SOLANA_MAINNET)
+          if (response.transactionRequest.data) {
+            if (this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET) {
+              this.txData.set(response.transactionRequest as TransactionRequestSVM);
+              this.buttonState = 'swap';
+            } 
+            else if (this.blockchainStateService.networkSell()?.id === NetworkId.SUI_MAINNET) {
+              this.txData.set(response.transactionRequest as TransactionRequestMVM);
+              this.buttonState = 'swap';
+            }
+            else {
+              this.txData.set(response.transactionRequest as TransactionRequestEVM);
+              this.buttonState = 'swap';
+              if (fromToken !== ethers.ZeroAddress) {
+                // console.log("this.buttonState = 'approve'");
+                this.buttonState = 'approve';
+              }
+            }
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          if (
+            error.error.message === 'No available quotes for the requested transfer' ||
+            error.error.statusCode === 422
+          )
           {
-            this.txData.set(response.transactionRequest as TransactionRequestSVM);
-            this.buttonState = 'swap';  
+            this.buttonState = 'no-available-quotes';
+          }
+          else if(error.error.message.includes("Invalid toAddress") || error.error.message.includes("Invalid fromAddress"))
+          {
+            this.buttonState = 'wrong-address';
+          }
+          else if(error.error.statusCode === 429 || error.error.message.includes("Rate limit exceeded")){
+            this.buttonState = 'rate-limit';
+          }
+          else if (error.status === 404)
+          {
+            console.error('Custom error message:', error || 'Unknown error');
+            console.error('Custom error message:', error.error?.message || 'Unknown error');
           }
           else
           {
-            this.txData.set(response.transactionRequest as TransactionRequestEVM);
-            this.buttonState = 'swap';
-            if(fromToken !== ethers.ZeroAddress){
-              // console.log("this.buttonState = 'approve'");
-              this.buttonState = 'approve';
-            }
+            console.error('Unexpected error:', error);
           }
-        }
-        
-      },
-      error: (error: HttpErrorResponse) => {
-        if(error.error.message === 'No available quotes for the requested transfer' || error.error.statusCode === 422){
-          this.buttonState = 'no-available-quotes';
-        }
-        else if (error.status === 404) {
-          console.error('Custom error message:', error || 'Unknown error');
-          console.error('Custom error message:', error.error?.message || 'Unknown error');
-        } else {
-          console.error('Unexpected error:', error);
-        }
-      },
-      complete: () => {
-        // console.log('Quote request completed');
-        if(!this.blockchainStateService.walletAddress())
-        {
-          this.buttonState = 'insufficient';
-        }
-        else if (this.validatedSellAmount() > this.balance()) {
-          this.buttonState = 'insufficient';
-          return;
-        }
-      }
-    });
-
+        },
+        complete: () => {
+          // console.log('Quote request completed');
+          if (mustHaveCustomAddress) {
+            this.buttonState = 'wrong-address';
+            return;
+          }
+          if (!this.blockchainStateService.getCurrentWalletAddress()) {
+            this.buttonState = 'insufficient';
+          } else if (this.validatedSellAmount() > this.balance()) {
+            this.buttonState = 'insufficient';
+            return;
+          }
+        },
+      });
+    }
   }
 
   isSwapButtonActive(): boolean {
@@ -739,8 +1120,6 @@ export class TradeComponent implements AfterViewChecked {
   closeConnectWalletPopup(): void {
     this.popupService.closePopup('connectWallet');
   }
-
-  
 
   get showConnectWalletPopup(): boolean {
     return this.popupService.getCurrentPopup() === 'connectWallet';
@@ -770,47 +1149,47 @@ export class TradeComponent implements AfterViewChecked {
    */
   animateText(element: HTMLElement, finalText: string, elementId: string): void {
     const originalText = finalText;
-    
+
     if (this.animationTimeouts[elementId]) {
       window.clearTimeout(this.animationTimeouts[elementId]);
       delete this.animationTimeouts[elementId];
     }
-    
+
     let frame = 0;
     const totalFrames = this.animationFrames;
-    
+
     const glitchStates = Array(finalText.length).fill(false);
     const resolvedChars = Array(finalText.length).fill(false);
-    
+
     const animate = () => {
       if (frame >= totalFrames) {
         element.textContent = originalText;
         delete this.animationTimeouts[elementId];
         return;
       }
-      
+
       let result = '';
       const progress = frame / totalFrames;
-      
+
       const easedProgress = Math.pow(progress, 0.6);
-      
+
       const resolvedCount = Math.floor(finalText.length * easedProgress);
-      
+
       for (let i = 0; i < resolvedCount; i++) {
         if (!resolvedChars[i]) {
           resolvedChars[i] = true;
         }
       }
-      
+
       if (frame % 2 === 0) {
-        const glitchProbability = 0.05 + (progress * 0.1);
+        const glitchProbability = 0.05 + progress * 0.1;
         for (let i = 0; i < finalText.length; i++) {
           if (Math.random() < glitchProbability) {
             glitchStates[i] = !glitchStates[i];
           }
         }
       }
-      
+
       for (let i = 0; i < finalText.length; i++) {
         if (resolvedChars[i]) {
           if (glitchStates[i] && frame < totalFrames * 0.95 && finalText[i] !== ' ') {
@@ -846,10 +1225,10 @@ export class TradeComponent implements AfterViewChecked {
           }
         }
       }
-      
+
       element.textContent = result;
       frame++;
-      
+
       let currentSpeed = this.animationSpeed;
       if (progress < 0.3) {
         currentSpeed = this.animationSpeed * 0.8;
@@ -858,22 +1237,24 @@ export class TradeComponent implements AfterViewChecked {
       } else {
         currentSpeed = this.animationSpeed * 1.2;
       }
-      
+
       this.animationTimeouts[elementId] = window.setTimeout(animate, currentSpeed);
     };
-    
+
     animate();
   }
 
   private checkAndAnimateBuyText() {
-    if (this.buyAmountTextElement && 
-        !this.buyAmountTextAnimated && 
-        this.selectedBuyToken()?.symbol && 
-        this.validatedSellAmount() > 0 &&
-        this.buyAmountForInput()) {
-        const finalText = `${this.buyAmountForInput()}`;
-        this.animateText(this.buyAmountTextElement.nativeElement, finalText, 'buyAmountText');
-        this.buyAmountTextAnimated = true;
+    if (
+      this.buyAmountTextElement &&
+      !this.buyAmountTextAnimated &&
+      this.tokenService.selectedBuyToken()?.symbol &&
+      this.validatedSellAmount() > 0 &&
+      this.buyAmountForInput()
+    ) {
+      const finalText = `${this.buyAmountForInput()}`;
+      this.animateText(this.buyAmountTextElement.nativeElement, finalText, 'buyAmountText');
+      this.buyAmountTextAnimated = true;
     }
   }
 
@@ -881,84 +1262,97 @@ export class TradeComponent implements AfterViewChecked {
     this.checkAndAnimateBuyText();
   }
 
+  recalculateFontSize(): void {
+    const sellTextLength = this.sellAmountForInput()?.length || 0;
+    const buyTextLength = this.buyAmountForInput()?.length || 0;
+    const maxTextLength = Math.max(sellTextLength, buyTextLength);
+    this.calculateFontSizeForLength(maxTextLength);
+  }
+
   adjustFontSize(inputElement: HTMLInputElement): void {
-    const textLength = inputElement.value.length;
+    const sellTextLength = inputElement.value.length;
+    const buyTextLength = this.buyAmountForInput()?.length || 0;
+    const maxTextLength = Math.max(sellTextLength, buyTextLength);
+    this.calculateFontSizeForLength(maxTextLength);
+  }
+
+  private calculateFontSizeForLength(maxTextLength: number): void {
     const width = window.innerWidth;
-    
+
     if (width >= 1601 && width <= 1920) {
       // 1601-1920px
-      if (textLength > 15) {
+      if (maxTextLength > 15) {
         this.inputFontSize.set(18);
-      } else if (textLength > 12) {
+      } else if (maxTextLength > 12) {
         this.inputFontSize.set(22);
-      } else if (textLength > 10) {
+      } else if (maxTextLength > 10) {
         this.inputFontSize.set(26);
-      } else if (textLength > 8) {
+      } else if (maxTextLength > 8) {
         this.inputFontSize.set(30);
       } else {
         this.inputFontSize.set(36);
       }
     } else if (width >= 1171 && width <= 1600) {
       // 1171-1600px
-      if (textLength > 15) {
+      if (maxTextLength > 15) {
         this.inputFontSize.set(18);
-      } else if (textLength > 12) {
+      } else if (maxTextLength > 12) {
         this.inputFontSize.set(22);
-      } else if (textLength > 10) {
+      } else if (maxTextLength > 10) {
         this.inputFontSize.set(26);
-      } else if (textLength > 8) {
+      } else if (maxTextLength > 8) {
         this.inputFontSize.set(30);
       } else {
         this.inputFontSize.set(36);
       }
     } else if (width >= 971 && width <= 1170) {
       // 971-1170px
-      if (textLength > 15) {
+      if (maxTextLength > 15) {
         this.inputFontSize.set(13);
-      } else if (textLength > 12) {
+      } else if (maxTextLength > 12) {
         this.inputFontSize.set(16);
-      } else if (textLength > 10) {
+      } else if (maxTextLength > 10) {
         this.inputFontSize.set(20);
-      } else if (textLength > 8) {
+      } else if (maxTextLength > 8) {
         this.inputFontSize.set(22);
       } else {
         this.inputFontSize.set(26);
       }
     } else if (width >= 480 && width <= 970) {
       // 480-970px
-      if (textLength > 15) {
+      if (maxTextLength > 15) {
         this.inputFontSize.set(18);
-      } else if (textLength > 12) {
+      } else if (maxTextLength > 12) {
         this.inputFontSize.set(22);
-      } else if (textLength > 10) {
+      } else if (maxTextLength > 10) {
         this.inputFontSize.set(26);
-      } else if (textLength > 8) {
+      } else if (maxTextLength > 8) {
         this.inputFontSize.set(30);
       } else {
         this.inputFontSize.set(36);
       }
     } else if (width >= 360 && width <= 479) {
       // 360-479px
-      if (textLength > 15) {
+      if (maxTextLength > 15) {
         this.inputFontSize.set(18);
-      } else if (textLength > 12) {
+      } else if (maxTextLength > 12) {
         this.inputFontSize.set(22);
-      } else if (textLength > 10) {
+      } else if (maxTextLength > 10) {
         this.inputFontSize.set(26);
-      } else if (textLength > 8) {
+      } else if (maxTextLength > 8) {
         this.inputFontSize.set(30);
       } else {
         this.inputFontSize.set(36);
       }
     } else {
       // default
-      if (textLength > 15) {
+      if (maxTextLength > 15) {
         this.inputFontSize.set(24);
-      } else if (textLength > 12) {
+      } else if (maxTextLength > 12) {
         this.inputFontSize.set(28);
-      } else if (textLength > 10) {
+      } else if (maxTextLength > 10) {
         this.inputFontSize.set(32);
-      } else if (textLength > 8) {
+      } else if (maxTextLength > 8) {
         this.inputFontSize.set(38);
       } else {
         this.inputFontSize.set(48);
@@ -972,7 +1366,7 @@ export class TradeComponent implements AfterViewChecked {
 
   private defaultFontSizeByScreenWidth(): number {
     const width = window.innerWidth;
-    
+
     if (width >= 1601 && width <= 1920) {
       return 36; // 1601-1920px
     } else if (width >= 1171 && width <= 1600) {
@@ -987,5 +1381,189 @@ export class TradeComponent implements AfterViewChecked {
       return 48; // default
     }
   }
-}
 
+  validateAddress(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.blockchainStateService.setCustomAddress(input.value);
+    this.customAddress.set(input.value);
+  }
+
+  toggleCustomAddress(): void {
+    this.showCustomAddress = !this.showCustomAddress;
+  }
+
+  get addressStatus(): 'none' | 'good' | 'bad' {
+    const addr = this.customAddress();
+    if (!addr) {
+      return 'none';
+    }
+
+    return this.isValidWalletAddress(addr, this.blockchainStateService.networkBuy()!.chainType) ? 'good' : 'bad';
+  }
+
+  private isValidWalletAddress(address: string, chainType: string): boolean {
+    if (chainType === 'EVM') {
+      return /^0x[a-fA-F0-9]{40}$/.test(address);
+    } 
+    else if (chainType === 'SVM') {
+      try {
+        new PublicKey(address);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+    else if (chainType === 'MVM') {
+      return /^0x[a-fA-F0-9]{64}$/.test(address);
+    }
+    return false;
+  }
+
+  private initializeNetworks(): void {
+    const allNetworks = this.blockchainStateService.allNetworks();
+
+    if (this.blockchainStateService.networkSell() === undefined) {    
+      const sellToken = this.tokenService.selectedSellToken();
+      if (sellToken) {
+        const tokenNetwork = allNetworks.find((n) => n.id === sellToken.chainId);
+        this.blockchainStateService.setNetworkSell(tokenNetwork!);
+      }
+    }
+
+    if (this.blockchainStateService.networkBuy() === undefined) {
+      const buyToken = this.tokenService.selectedBuyToken();
+      if (buyToken) {
+        const tokenNetwork = allNetworks.find((n) => n.id === buyToken.chainId);
+        this.blockchainStateService.setNetworkBuy(tokenNetwork!);
+      }
+    }
+  }
+
+  // private updateNetworks(): void {
+  //   console.log("updateNetworks");
+  //   const allNetworks = this.blockchainStateService.allNetworks();
+
+  //   if (this.blockchainStateService.networkSell() === undefined) {
+  //     const sellToken = this.tokenService.selectedSellToken();
+  //     if (sellToken) {
+  //       const tokenNetwork = allNetworks.find((n) => n.id === sellToken.chainId);
+  //       const networkToSet = tokenNetwork || this.blockchainStateService.networkSell() || undefined;
+  //       if (networkToSet && networkToSet.id !== this.blockchainStateService.networkSell()?.id) {
+  //         this.blockchainStateService.setNetworkSell(networkToSet);
+  //       }
+  //     }
+  //   }
+
+  //   if (this.blockchainStateService.networkBuy() === undefined) {
+  //     const buyToken = this.tokenService.selectedBuyToken();
+  //     if (buyToken) {
+  //       const tokenNetwork = allNetworks.find((n) => n.id === buyToken.chainId);
+  //       const networkToSet = tokenNetwork || this.blockchainStateService.networkSell() || undefined;
+  //       if (networkToSet && networkToSet.id !== this.blockchainStateService.networkBuy()?.id) {
+  //         this.blockchainStateService.setNetworkBuy(networkToSet);
+  //       }
+  //     }
+  //   }
+  // }
+
+  // private startNetworkUpdateInterval(): void {
+  //   this.networkUpdateInterval = setInterval(() => {
+  //     this.updateNetworks();
+  //   }, 500);
+  // }
+
+  // private stopNetworkUpdateInterval(): void {
+  //   if (this.networkUpdateInterval) {
+  //     clearInterval(this.networkUpdateInterval);
+  //     this.networkUpdateInterval = null;
+  //   }
+  // }
+
+  // private updateNetworksBasedOnTokens(): void {
+  //   this.updateNetworks();
+  // }
+
+  // loadInitialPriceRate() {
+  //   const fromChain = this.blockchainStateService.networkSell()!.id.toString();
+  //   const toChain = this.blockchainStateService.networkBuy()!.id.toString();
+  //   const toTokenDecimals = this.tokenService.selectedBuyToken()!.decimals;
+  //   const fromTokenDecimals = this.tokenService.selectedSellToken()!.decimals;
+  //   const fromAmount = parseUnits("1", fromTokenDecimals);
+  //   const fromToken = this.tokenService.selectedSellToken()!.contractAddress;
+  //   const toToken = this.tokenService.selectedBuyToken()!.contractAddress;
+
+  //   let fromAddress = '';
+  //   let toAddress = (this.customAddress() !== '' && this.addressStatus === 'good') ? this.customAddress() : undefined; 
+
+  //   const CONSTANT_ETH_ADDRESS = '0x1111111111111111111111111111111111111111';
+  //   const CONSTANT_SOL_ADDRESS = '11111111111111111111111111111111';
+
+  //   const fromChainType = this.blockchainStateService.networkSell()?.chainType;
+  //   const toChainType = this.blockchainStateService.networkBuy()?.chainType;
+  //   const walletConnected = !!this.blockchainStateService.walletAddress();
+
+  //   if (!walletConnected) {
+  //       if (fromChainType === 'EVM') {
+  //           fromAddress = CONSTANT_ETH_ADDRESS;
+  //       } else if (fromChainType === 'SVM') {
+  //           fromAddress = CONSTANT_SOL_ADDRESS;
+  //       }
+
+  //       if (!toAddress) {
+  //           if (toChainType === 'EVM') {
+  //               toAddress = CONSTANT_ETH_ADDRESS;
+  //           } else if (toChainType === 'SVM') {
+  //               toAddress = CONSTANT_SOL_ADDRESS;
+  //           }
+  //       }
+  //   } else {
+  //       fromAddress = this.blockchainStateService.walletAddress()!;
+
+  //       if (fromChainType !== toChainType && !(toAddress && toAddress !== '')) {
+  //           if (toChainType === 'EVM') {
+  //               toAddress = CONSTANT_ETH_ADDRESS;
+  //           } else if (toChainType === 'SVM') {
+  //               toAddress = CONSTANT_SOL_ADDRESS;
+  //           }
+  //       } else {
+  //           if (this.customAddress() !== '' && this.addressStatus === 'good') {
+  //               toAddress = this.customAddress();
+  //           } else {
+  //               toAddress = undefined;
+  //           }
+  //       }
+  //   }
+
+  //   this.transactionsService
+  //     .getQuoteBridge(fromChain, toChain, fromToken, toToken, fromAmount.toString(), fromAddress, toAddress)
+  //     .subscribe({
+  //       next: (response: any) => {
+  //         if (response.estimate) {
+  //           const toAmountNumber = Number(
+  //             this.transactionsService.parseToAmount(response.estimate.toAmount, toTokenDecimals),
+  //           );
+
+  //           const fromDecimal = parseFloat(
+  //             this.transactionsService.parseToAmount(response.estimate.fromAmount, fromTokenDecimals),
+  //           );
+
+  //           if (fromDecimal > 0) {
+  //             const ratio = toAmountNumber / fromDecimal;
+  //             this.price.set(Number(ratio.toFixed(3)));
+
+  //             const ratioUsd = Number(response.estimate.toAmountUSD) / fromDecimal;
+  //             this.priceUsd = Number(ratioUsd.toFixed(3));
+  //           }
+  //         }
+  //       },
+  //       error: (err) => {
+  //         console.error('Error loading initial price rate', err);
+  //       }
+  //   });
+  // }
+
+  onTradeMouseMove(event: MouseEvent): void {
+    this.mouseGradientService.onMouseMove(event);
+  }
+
+}

@@ -4,7 +4,7 @@
 	}
 	
 	.left {
-		gap: 60px;
+		gap: 40px;
 	}
 	
 	.right {
@@ -39,7 +39,7 @@
 	}
 
 	nav {
-		gap: 50px;
+		gap: 30px;
 	}
 	
 	nav a {
@@ -47,29 +47,33 @@
 	}
 
 	.xp {
-		padding: 12px 20px;
-		border-radius: 10px;
+		padding: 6px 20px;
+		border-radius: 6px;
 	}
 
 	.xp p {
 		font-size: 15px;
 	}
-	
-	.network {
-		padding: 10px;
-		border-radius: 10px;
-		gap: 6px;
-	}
 
-	.network-icon {
-		width: 24px;
-		height: 24px;
-	}
+	@import '../../styles/mouse-gradient-button';
 	
 	.wallet {
-		padding: 10px 13px;
-		border-radius: 10px;
+		@include mouse-gradient-button(
+			$padding: 10px 13px,
+			$height: auto,
+			$border-radius: 10px,
+			$include-responsive: false
+		);
 		gap: 12px;
+
+		&.connected {
+			@include mouse-gradient-button(
+				$padding: 7px 16px 7px 7px,
+				$height: auto,
+				$border-radius: 10px,
+				$include-responsive: false
+			);
+		}
 	}
 	
 	.wallet-icon {
@@ -87,7 +91,7 @@
 	}
 	
 	.left {
-		gap: 60px;
+		gap: 40px;
 	}
 	
 	.right {
@@ -122,37 +126,42 @@
 	}
 
 	nav {
-		gap: 50px;
+		gap: 30px;
 	}
 	
 	nav a {
 		font-size: 18px;
 	}
 
+
 	.xp {
-		padding: 12px 20px;
-		border-radius: 10px;
+		padding: 6px 20px;
+		border-radius: 6px;
 	}
 
 	.xp p {
 		font-size: 15px;
 	}
-	
-	.network {
-		padding: 10px;
-		border-radius: 10px;
-		gap: 6px;
-	}
 
-	.network-icon {
-		width: 24px;
-		height: 24px;
-	}
-	
+	@import '../../styles/mouse-gradient-button';
+
 	.wallet {
-		padding: 10px 13px;
-		border-radius: 10px;
+		@include mouse-gradient-button(
+			$padding: 10px 13px,
+			$height: auto,
+			$border-radius: 10px,
+			$include-responsive: false
+		);
 		gap: 12px;
+
+		&.connected {
+			@include mouse-gradient-button(
+				$padding: 7px 16px 7px 7px,
+				$height: auto,
+				$border-radius: 10px,
+				$include-responsive: false
+			);
+		}
 	}
 	
 	.wallet-icon {
@@ -170,7 +179,7 @@
 	}
 	
 	.left {
-		gap: 50px;
+		gap: 30px;
 	}
 	
 	.right {
@@ -205,7 +214,7 @@
 	}
 
 	nav {
-		gap: 35px;
+		gap: 20px;
 	}
 	
 	nav a {
@@ -213,29 +222,33 @@
 	}
 
 	.xp {
-		padding: 8px 15px;
-		border-radius: 7px;
+		padding: 2px 10px;
+		border-radius: 4px;
 	}
 
 	.xp p {
 		font-size: 11px;
 	}
-	
-	.network {
-		padding: 7px;
-		border-radius: 7px;
-		gap: 4px;
-	}
 
-	.network-icon {
-		width: 17px;
-		height: 17px;
-	}
-	
+	@import '../../styles/mouse-gradient-button';
+
 	.wallet {
-		padding: 7px 10px;
-		border-radius: 7px;
+		@include mouse-gradient-button(
+			$padding: 7px 10px,
+			$height: auto,
+			$border-radius: 7px,
+			$include-responsive: false
+		);
 		gap: 8px;
+
+		&.connected {
+			@include mouse-gradient-button(
+				$padding: 5px 10px 5px 5px,
+				$height: auto,
+				$border-radius: 7px,
+				$include-responsive: false
+			);
+		}
 	}
 	
 	.wallet-icon {
@@ -253,7 +266,7 @@
 	}
 	
 	.left {
-		gap: 60px;
+		gap: 40px;
 	}
 	
 	.right {
@@ -296,29 +309,31 @@
 	}
 
 	.xp {
-		padding: 12px 20px;
-		border-radius: 10px;
+		display: none;
 	}
 
 	.xp p {
 		font-size: 15px;
 	}
 	
-	.network {
-		padding: 10px;
-		border-radius: 10px;
-		gap: 6px;
+	@import '../../styles/mouse-gradient-button';
+
+	.wallet {
+		@include mouse-gradient-button(
+			$padding: 10px 13px,
+			$height: auto,
+			$border-radius: 10px,
+			$include-responsive: false
+		);
+		gap: 12px;
 	}
 
-	.network-icon {
-		width: 24px;
-		height: 24px;
+	.balance {
+		display: none;
 	}
-	
-	.wallet {
-		padding: 10px 13px;
-		border-radius: 10px;
-		gap: 12px;
+
+	.separator {
+		display: none;
 	}
 	
 	.wallet-icon {
@@ -375,24 +390,32 @@
 		display: none;
 	}
 
+
 	.xp {
 		display: none;
 	}
 
-	.network {
-		padding: 10px;
-		border-radius: 10px;
-		gap: 6px;
+	.xp p {
+		font-size: 14px;
 	}
 
-	.network-icon {
-		width: 24px;
-		height: 24px;
+	.balance {
+		display: none;
+	}
+
+	.separator {
+		display: none;
 	}
 	
+	@import '../../styles/mouse-gradient-button';
+
 	.wallet {
-		padding: 10px 13px;
-		border-radius: 10px;
+		@include mouse-gradient-button(
+			$padding: 10px 13px,
+			$height: auto,
+			$border-radius: 10px,
+			$include-responsive: false
+		);
 		gap: 12px;
 	}
 	

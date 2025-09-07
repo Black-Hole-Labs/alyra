@@ -1,4 +1,4 @@
-import { Directive, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { Directive, HostListener } from '@angular/core';
 import { PopupService } from '../services/popup.service';
 
 @Directive({
@@ -8,13 +8,7 @@ import { PopupService } from '../services/popup.service';
 export class ClosePopupsDirective {
   constructor(
     private popupService: PopupService,
-    private el: ElementRef,
-    private renderer: Renderer2
   ) {
-    this.renderer.setStyle(this.el.nativeElement, 'background', 'transparent');
-    this.renderer.setStyle(this.el.nativeElement, 'background-color', 'transparent');
-    this.renderer.setStyle(this.el.nativeElement, 'backdrop-filter', 'none');
-    this.renderer.setStyle(this.el.nativeElement, '-webkit-backdrop-filter', 'none');
   }
 
   @HostListener('document:click', ['$event'])

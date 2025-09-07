@@ -1,69 +1,35 @@
-import { ApplicationConfig, importProvidersFrom, Injector, provideZoneChangeDetection, APP_INITIALIZER } from '@angular/core';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  Injector,
+  provideZoneChangeDetection,
+  APP_INITIALIZER,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { BlockchainStateService } from './services/blockchain-state.service';
 import { routes } from './app.routes';
-import { Network, NetworkId, ProviderType } from './models/wallet-provider.interface';
+import { NetworkId } from './models/wallet-provider.interface';
 import {
-  MetaMaskProvider, SolflareProvider, PhantomProvider, MagicEdenProvider,
-  BackpackProvider, TrustWalletProvider, OkxWalletProvider,
-  CoinbaseWalletProvider, RabbyWalletProvider, WalletProviderManager
+  WalletProviderManager,
 } from './models/network.model';
 
-function registerProviders(stateService: BlockchainStateService, providers: any[], walletManager: WalletProviderManager, injector: Injector): void {
-  providers.forEach(provider => {
-    switch (provider.id) {
-      case 'metamask':
-        stateService.registerProvider(provider.id, new MetaMaskProvider(walletManager, injector), provider.type as ProviderType);
-        break;
-      case 'solflare':
-        stateService.registerProvider(provider.id, new SolflareProvider(injector), provider.type as ProviderType);
-        break;
-      case 'phantom':
-        stateService.registerProvider(provider.id, new PhantomProvider(walletManager, injector), provider.type as ProviderType);
-        break;
-      case 'magic-eden':
-        stateService.registerProvider(provider.id, new MagicEdenProvider(walletManager, injector), provider.type as ProviderType);
-        break;
-      case 'backpack':
-        stateService.registerProvider(provider.id, new BackpackProvider(walletManager, injector), provider.type as ProviderType);
-        break;
-      case 'trust-wallet':
-        stateService.registerProvider(provider.id, new TrustWalletProvider(injector), provider.type as ProviderType);
-        break;
-      case 'okx-wallet':
-        stateService.registerProvider(provider.id, new OkxWalletProvider(injector), provider.type as ProviderType);
-        break;
-      case 'coinbase-wallet':
-        stateService.registerProvider(provider.id, new CoinbaseWalletProvider(injector), provider.type as ProviderType);
-        break;
-      case 'rabby-wallet':
-        stateService.registerProvider(provider.id, new RabbyWalletProvider(walletManager, injector), provider.type as ProviderType);
-        break;
-      default:
-        console.warn(`Provider ${provider.id} is not yet implemented.`);
-    }
-  });
-}
+import networksImport from '@public/data/networks.json';
 
 async function initializeApp(injector: Injector): Promise<void> {
-  const walletManager = new WalletProviderManager();
-  const stateService = injector.get(BlockchainStateService);
+  const walletManager  = new WalletProviderManager();
+  const stateService   = injector.get(BlockchainStateService);
+
+  stateService.walletManager = walletManager;
+  stateService.allNetworks.set(networksImport);
+
+  await stateService.getWorkingRpcUrlForNetwork(NetworkId.ETHEREUM_MAINNET);
+  await stateService.getWorkingRpcUrlForNetwork(NetworkId.SOLANA_MAINNET);
+  await stateService.getWorkingRpcUrlForNetwork(NetworkId.SUI_MAINNET);
 
   try {
-    const response = await fetch('/data/providers.json');
-    if (!response.ok) throw new Error('Failed to load providers');
-    const providers = await response.json();
-    registerProviders(stateService, providers, walletManager, injector);
-  } catch (error) {
-    console.error('Error loading providers:', error);
-  }
-
-  try {
-    const responseNetworks = await fetch('/data/networks.json');
-    if (!responseNetworks.ok) throw new Error('Failed to load networks');
-    const allNetworks: Network[] = await responseNetworks.json();
+    // const allNetworks: Network[] = networksImport;
 
     // const excludeIds = [146, 1329, 324, 250, 1135, 13371, 1088, 42220, 122, 1284, 288];
     // const visibleNetworks = allNetworks.filter(network => !excludeIds.includes(network.id));
@@ -71,13 +37,9 @@ async function initializeApp(injector: Injector): Promise<void> {
     // stateService.allNetworks.set(visibleNetworks);
     // stateService.networks.set(visibleNetworks);
 
-    stateService.allNetworks.set(allNetworks);
-    stateService.networks.set(allNetworks);
-    stateService.updateNetwork(NetworkId.ETHEREUM_MAINNET);
-    stateService.tryAutoConnect();
-
+    await stateService.tryAutoConnect();
   } catch (error) {
-    console.error('Error loading networks:', error);
+    console.error('Error during autoconnect:', error);
   }
 }
 

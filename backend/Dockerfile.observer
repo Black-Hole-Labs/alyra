@@ -1,0 +1,26 @@
+# Простой Dockerfile для observer
+FROM node:18-alpine
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем package.json и package-lock.json из backend
+COPY backend/package*.json ./
+
+# Устанавливаем зависимости
+RUN npm install
+
+# Копируем исходный код из backend
+COPY backend/ ./
+
+# Собираем observer
+RUN npm run build:observer
+
+# Копируем TypeScript файлы миграций (они нужны для работы в продакшене)
+COPY backend/apps/core-db/src/migrations ./apps/core-db/src/migrations
+
+# Устанавливаем переменные окружения
+ENV NODE_ENV=production
+
+# Команда запуска
+CMD ["npm", "run", "start:observer"] 

@@ -1,11 +1,10 @@
 import { ethers, JsonRpcSigner } from 'ethers';
-import { ProviderType, TransactionRequestEVM, WalletProvider } from './wallet-provider.interface';
+import { NetworkId, ProviderType, TransactionRequestEVM, WalletProvider } from './wallet-provider.interface';
 import { Injector } from '@angular/core';
 import { BlockchainStateService } from '../services/blockchain-state.service';
 
 export class EvmWalletProvider implements WalletProvider {
   protected address: string = '';
-  protected network: string = '';
   protected provider: any;
   public signer?: JsonRpcSigner;
 
@@ -22,56 +21,92 @@ export class EvmWalletProvider implements WalletProvider {
     return !!this.provider;
   }
 
-  async connect(_provider?: any, isMultichain?: boolean): Promise<{ address: string; network: string }> {
+  async connect(_provider?: any): Promise<{ address: string, nameService: string | null }> {
+    if(this.blockchainStateService.networkSell() !== undefined && this.blockchainStateService.networkSell()?.chainType !== "EVM")
+    {
+      this.blockchainStateService.updateNetworkSell(NetworkId.ETHEREUM_MAINNET);
+    }
+    
     if (_provider) this.provider = _provider;
     if (!this.provider) throw new Error('Provider not installed');
     const accounts = await this.provider.request({ method: 'eth_requestAccounts' });
     this.address = accounts[0];
-    this.network = await this.getNetwork();
     const ethersProvider = new ethers.BrowserProvider(this.provider);
     this.signer = await ethersProvider.getSigner();
 
-    if(!isMultichain){
-      this.blockchainStateService.loadNetworks(ProviderType.EVM);
+    this.switchNetwork(this.blockchainStateService.networkSell());
+
+    let ens: string | null;
+    try
+    {
+      ens = await ethersProvider.lookupAddress(this.address);
+    }
+    catch(e)
+    {
+      // it can probably throw
+      ens = null;
     }
 
-    return { address: this.address, network: this.network };
+    return { address: this.address, nameService: ens ? ens : null };
   }
 
   async switchNetwork(selectedNetwork: any): Promise<void> {
+    
     try {
       await this.provider.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: selectedNetwork.idHex }],
       });
-      this.network = selectedNetwork.idHex;
     } catch (error: any) {
-      if (error.code === 4902) {
+      if (error.code === 4902 || error.message.includes("Unrecognized chain ID")) {
         await this.addNetwork(selectedNetwork);
-      } else {
+        await this.provider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: selectedNetwork.idHex }],
+        });
+      }
+      else if (error.code === 4001 
+               || error.message.includes("User rejected the request")
+               || error.message.includes("The Provider is not connected to the requested chain"))
+      {
         throw error;
+      }
+      else {
+        //this.blockchainStateService.disconnect(this.address);
+        throw new Error("unsupported_network"); //TODO
       }
     }
   }
 
   private async addNetwork(selectedNetwork: any): Promise<void> {
-    await this.provider.request({
-      method: 'wallet_addEthereumChain',
-      params: [
-        {
-          chainId: selectedNetwork.idHex,
-          chainName: selectedNetwork.name,
-          rpcUrls: selectedNetwork.rpcUrls,
-          nativeCurrency: selectedNetwork.nativeCurrency,
-        },
-      ],
-    });
+    try{
+      await this.provider.request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: selectedNetwork.idHex,
+            chainName: selectedNetwork.name,
+            rpcUrls: selectedNetwork.rpcUrls,
+            nativeCurrency: selectedNetwork.nativeCurrency,
+          },
+        ],
+      });
+    }
+    catch(error: any)
+    {
+      console.log("error",error);
+      if(error.code != -32603) // metamask problem. error after successfully adding new network to the wallet. ignore it
+      {
+        throw error;
+      }
+    }
+
   }
 
-  async getNetwork(): Promise<string> {
-    const chainId = await this.provider.request({ method: 'eth_chainId' });
-    return chainId || '';
-  }
+  // async getNetwork(): Promise<string> {
+  //   const chainId = await this.provider.request({ method: 'eth_chainId' });
+  //   return chainId || '';
+  // }
 
   getAddress(): string {
     return this.address;

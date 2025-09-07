@@ -1,9 +1,11 @@
-import { Component, Output, EventEmitter, effect, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { trigger, style, transition, animate } from '@angular/animations';
 import { PopupService } from '../../../services/popup.service';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
-import { Wallets } from '../../../models/wallet-provider.interface';
+import { MouseGradientService } from '../../../services/mouse-gradient.service';
+import { ProviderType, Wallets } from '../../../models/wallet-provider.interface';
 
 @Component({
   selector: 'app-connect-wallet',
@@ -13,37 +15,75 @@ import { Wallets } from '../../../models/wallet-provider.interface';
   styleUrls: [
 		'./connect-wallet.component.scss',
 		'./connect-wallet.component.adaptives.scss'
+  ],
+  animations: [
+    trigger('popupAnimation', [
+      transition(':enter', [
+        style({ 
+          opacity: 0, 
+          transform: 'scale(0.9)',
+          backgroundColor: 'rgba(var(--black), 0)',
+          backdropFilter: 'blur(0px)'
+        }),
+        animate('150ms ease-out', style({ 
+          opacity: 1, 
+          transform: 'scale(1)',
+          backgroundColor: 'rgba(var(--black), 0.3)',
+          backdropFilter: 'blur(35px)'
+        }))
+      ]),
+      transition(':leave', [
+        animate('150ms ease-in', style({ 
+          opacity: 0, 
+          transform: 'scale(0.9)',
+          backgroundColor: 'rgba(var(--black), 0)',
+          backdropFilter: 'blur(0px)'
+        }))
+      ])
+    ]),
+    trigger('modalAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.9)' }),
+        animate('150ms ease-out', style({ opacity: 1, transform: 'scale(1)' }))
+      ]),
+      transition(':leave', [
+        animate('150ms ease-in', style({ opacity: 0, transform: 'scale(0.9)' }))
+      ])
+    ])
   ]
 })
 export class ConnectWalletComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() openWallet = new EventEmitter<void>();
 
-  readonly connected: any;
   allWallets: Wallets[] = [];
   availableWallets: Wallets[] = [];
   otherWallets: Wallets[] = [];
+  isOtherWalletsVisible = false;
 
   private allProviders: string[] = [];
 
   constructor(
     private popupService: PopupService,
-    private blockchainStateService: BlockchainStateService
+    private blockchainStateService: BlockchainStateService,
+    private mouseGradientService: MouseGradientService
   ) {
-    this.connected = this.blockchainStateService.connected;
-
-    effect(() => {
-      if (this.connected()) {
-        // console.log('Wallet connected!:', this.blockchainStateService.walletAddress());
-      } else {
-        // console.log('Wallet disconnected');
-      }
-    }, { allowSignalWrites: true });
-  }
+   }
 
   async ngOnInit(): Promise<void> {
+    this.blockchainStateService.registerProviders();
+
     this.allWallets = await this.blockchainStateService.loadProviders();
     this.allProviders = this.allWallets.map(wallet => wallet.id);
+
+    const ecosystem = this.blockchainStateService.getEcosystemForPopup();
+
+    if (ecosystem) {
+      this.allWallets = this.allWallets.filter(wallet => {
+        const type = this.blockchainStateService.getType(wallet.id);
+        return type === ProviderType.MULTICHAIN || type === ecosystem;
+      });
+    }
 
     this.availableWallets = [];
     this.otherWallets = [];
@@ -97,36 +137,48 @@ export class ConnectWalletComponent implements OnInit {
       return;
     }
 
+    const type = this.blockchainStateService.getType(providerId);
+
+    if (type === ProviderType.MULTICHAIN) {
+      this.blockchainStateService.pendingProviderId = providerId;
+      this.popupService.openPopup('ecosystemChange');
+      return; 
+    }
+
+    this.closePopup();
+    const { address, nameService } = await provider.connect();
+    this.popupService.openPopup('wallet');
+    
     try {
       // console.log('Attempting to connect to provider...');
-      const { address } = await provider.connect();
+
+      this.blockchainStateService.setCurrentProvider(providerId, address, nameService);
+
+      if (type === ProviderType.EVM) {
+        sessionStorage.setItem('currentEvmProvider', providerId);
+        // sessionStorage.setItem('evmNetworkId', ...);
+      } else if (type === ProviderType.SVM) {
+        sessionStorage.setItem('currentSvmProvider', providerId);
+        // sessionStorage.setItem('svmNetworkId', ...);
+      } else if (type === ProviderType.MVM) {
+        sessionStorage.setItem('currentMvmProvider', providerId);
+        // sessionStorage.setItem('svmNetworkId', ...);
+      } else if (type === ProviderType.MULTICHAIN) {
+        if (provider.currentNetwork === ProviderType.EVM) {
+          sessionStorage.setItem('currentEvmProvider', providerId);
+        } else if (provider.currentNetwork === ProviderType.SVM) {
+          sessionStorage.setItem('currentSvmProvider', providerId);
+        } else if (provider.currentNetwork === ProviderType.MVM) {
+          sessionStorage.setItem('currentMvmProvider', providerId);
+        }
+      }
       // console.log('Successfully connected, address:', address);
 
-      sessionStorage.setItem('currentProvider', providerId);
-      sessionStorage.setItem('networkId', (this.blockchainStateService.network()!.id).toString());
-
-      try {
-        // console.log('Updating wallet address...');
-        this.blockchainStateService.updateWalletAddress(address);
-        // console.log('Wallet address updated');
-        
-        // console.log('Setting current provider:', providerId);
-        this.blockchainStateService.setCurrentProvider(providerId);
-        // console.log('Current provider set');
-        
-        this.closePopup();
-        
-        this.popupService.openPopup('ecosystemChange');
-      } catch(e: unknown) {
-        console.error("Error in post-connection steps:", e);
-      }
+      // sessionStorage.setItem('currentProvider', providerId);
+      sessionStorage.setItem('networkId', (this.blockchainStateService.networkSell()!.id).toString());
     } catch (error) {
       console.error('Connection error:', error);
     }
-  }
-
-  disconnectWallet(): void {
-    this.blockchainStateService.disconnect();
   }
 
   handleWalletClick(wallet: Wallets): void {
@@ -135,5 +187,13 @@ export class ConnectWalletComponent implements OnInit {
     } else {
       this.onWalletClick(wallet.id);
     }
+  }
+
+  toggleOtherWallets(): void {
+    this.isOtherWalletsVisible = !this.isOtherWalletsVisible;
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    this.mouseGradientService.onMouseMove(event);
   }
 }

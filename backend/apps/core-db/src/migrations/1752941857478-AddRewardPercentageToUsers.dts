@@ -1,0 +1,30 @@
+import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
+
+export class AddRewardPercentageToUsers1752941857478 implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    // Добавляем поле reward_percentage в таблицу users
+    await queryRunner.addColumn(
+      'users',
+      new TableColumn({
+        name: 'reward_percentage',
+        type: 'decimal',
+        precision: 5,
+        scale: 4,
+        default: 0.4000, // 40% по умолчанию
+        isNullable: false,
+      })
+    );
+
+    // Обновляем существующие записи, устанавливая дефолтное значение
+    await queryRunner.query(`
+      UPDATE users 
+      SET reward_percentage = 0.4000 
+      WHERE reward_percentage IS NULL
+    `);
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    // Удаляем поле reward_percentage из таблицы users
+    await queryRunner.dropColumn('users', 'reward_percentage');
+  }
+} 

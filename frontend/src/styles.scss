@@ -2,26 +2,84 @@
 @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Text:wght@100..900&display=swap');
 
 :root {
+	--white: 255, 255, 255;
+	--black: 0, 0, 0;
+
+	--dark-bg: 47, 47, 47;
   --elem-nonactive: #5D5D5D;
+	--dark-select: 27, 27, 27;
+	--btn-dark: #2F2F2F;
+
+	--blue: 92, 148, 252;
+	--dark-blue: 30, 0, 255;
+
 	--dark-violet: #39174F;
 	--violet: #BF57FF;
+
 	--dark-pink: 255, 0, 221;
 	--pink: #FF00DD;
-	--btn-dark: #2F2F2F;
-	--dark-select: #1B1B1B;
+	
 	--red: #FF7E7E;
 	--dark-red: 54, 24, 24;
 	--dark-red-hover: #723A3A;
-	--green: #5EC46C;
+
+	--green: 151, 255, 123;
 	--dark-green: 26, 36, 23;
+
 	--yellow: #FFBB00;
 	--dark-yellow: #4A3703;
-  --dark-bg: 47, 47, 47;
-	--white: 255, 255, 255;
+  
+	--gradient: linear-gradient(135deg, rgb(var(--blue)) 0%, rgb(var(--dark-blue)) 100%);
+
+	--quest-uncommon: 120, 255, 174;
+	--quest-uncommon-bg: 43, 111, 34;
+
+}
+
+.light-theme {
+  --dark-select: 245, 245, 245;
+  --elem-nonactive: rgba(0, 0, 0, 0.2);
+  --green: #00cc00;
+  
+  background-color: #ffffff;
+  color: #000000;
+
+  .form-container {
+    background-color: #ffffff;
+  }
+
+  h1, p, a {
+    color: #000000;
+  }
+
+  .link, .button, .input-container {
+    background: rgba(0, 0, 0, 0.05);
+    
+    &::before {
+      background: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+    }
+  }
+
+  input {
+    color: #000000;
+    &::placeholder {
+      color: rgba(0, 0, 0, 0.2);
+    }
+  }
 }
 
 html {
   background-color: black;
+  overflow: hidden;
+}
+
+html.documentation-page {
+  overflow: auto;
+}
+
+html.form-page::before,
+html.form-page::after {
+  display: none;
 }
 
 html::before,
@@ -53,6 +111,11 @@ html::after {
   right: -20%;
   animation: moveGradient 30s linear infinite;
   animation-delay: 0s;
+}
+
+html.documentation-page::before,
+html.documentation-page::after {
+  display: none;
 }
 
 @keyframes moveGradient {
@@ -253,20 +316,20 @@ app-token-change-buy .token-change,
 app-settings,
 app-settings-bridge {
   position: absolute;
-  top: -35px;
-  left: 140px;
+  top: 155px;
+  left: calc(50% + 320px);
+	z-index: 10;
 }
 
-.wallet-popup,
-.connect-wallet {
+.wallet-popup {
 	position: fixed;
-  top: 155px;
+  top: 130px;
   right: 40px;
 }
 
 .blackhole-menu {
 	position: fixed;
-  top: 155px;
+  top: 130px;
   left: 40px;
 }
 
@@ -284,30 +347,23 @@ app-settings-bridge {
   top: 156px;
   left: 50%;
   transform: translate(-50%, 0%);
-}
-
-.ecosystem-change {
-  position: fixed;
-  top: 155px;
-  right: 40px;
+	z-index: 100;
 }
 
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
 
-	app-settings-bridge,
 	app-settings {
-		top: -23px;
-		left: 100px;
+		top: 108px;
+		left: calc(50% + 240px);
 	}
 
-	.wallet-popup,
-	.connect-wallet {
-		top: 108px;
+	.wallet-popup {
+		top: 100px;
 		right: 30px;
 	}
 
 	.blackhole-menu {
-		top: 108px;
+		top: 100px;
 		left: 30px;
 	}
 
@@ -322,28 +378,21 @@ app-settings-bridge {
 	.token-change {
 		top: 108px;
 	}
-
-	.ecosystem-change {
-		top: 108px;
-		right: 30px;
-	}
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
 
-	app-settings-bridge,
 	app-settings {
-		top: -23px;
-		left: 100px;
+		top: 88px;
+		left: calc(50% + 240px);
 	}
 
-	.wallet-popup,
-	.connect-wallet {
-		top: 88px;
+	.wallet-popup {
+		top: 80px;
 		right: 20px;
 	}
 
 	.blackhole-menu {
-		top: 88px;
+		top: 80px;
 		left: 20px;
 	}
 
@@ -358,28 +407,21 @@ app-settings-bridge {
 	.token-change {
 		top: 88px;
 	}
-
-	.ecosystem-change {
-		top: 88px;
-		right: 20px;
-	}
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
 
-	app-settings-bridge,
 	app-settings {
-		top: -16px;
-		left: 75px;
+		top: 75px;
+		left: calc(50% + 175px);
 	}
 
-	.wallet-popup,
-	.connect-wallet {
-		top: 75px;
+	.wallet-popup {
+		top: 65px;
 		right: 20px;
 	}
 
 	.blackhole-menu {
-		top: 75px;
+		top: 65px;
 		left: 20px;
 	}
 
@@ -394,32 +436,21 @@ app-settings-bridge {
 	.token-change {
 		top: 75px;
 	}
-
-	.ecosystem-change {
-		top: 75px;
-		right: 20px;
-	}
 }
 @media screen and (min-width: 768px) and (max-width: 970px) {
   app-settings {
-    top: -23px;
-		left: -200px;
-		z-index: 1;
-	}
-  app-settings-bridge {
-    top: -23px;
-		left: -190px;
+    top: 200px;
+		left: calc(50% - 130px);
 		z-index: 1;
 	}
 
-	.wallet-popup,
-	.connect-wallet {
-		top: 88px;
+	.wallet-popup {
+		top: 80px;
 		right: 20px;
 	}
 
 	.blackhole-menu {
-		top: 88px;
+		top: 80px;
 		left: 20px;
 	}
 
@@ -433,33 +464,22 @@ app-settings-bridge {
 	.network-change-to,
 	.token-change {
 		top: 88px;
-	}
-
-	.ecosystem-change {
-		top: 88px;
-		right: 20px;
 	}
 }
 @media screen and (min-width: 480px) and (max-width: 767px) {
   app-settings {
-    top: -23px;
-    left: -55px;
-    z-index: 1;
-  }
-  app-settings-bridge {
-    top: -23px;
-    left: -65px;
+    top: 230px;
+    left: calc(50% - 130px);
     z-index: 1;
   }
 
-	.wallet-popup,
-	.connect-wallet {
-		top: 138px;
+	.wallet-popup {
+		top: 90px;
 		right: 20px;
 	}
 
 	.blackhole-menu {
-		top: 138px;
+		top: 80px;
 		left: 20px;
 	}
 
@@ -472,24 +492,15 @@ app-settings-bridge {
 	.network-change-from,
 	.network-change-to,
 	.token-change {
-		top: 138px;
-	}
-
-	.ecosystem-change {
-		top: 138px;
-		right: 20px;
+		top: 118px;
 	}
 }
 
 @media screen and (min-width: 360px) and (max-width: 479px) {
-  app-settings-bridge,
   app-settings {
     position: fixed;
-    top: 0px;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-    width: max-content;
+    top: 108px;
+    left: 5%;
     z-index: 100;
   }
 
@@ -500,14 +511,17 @@ app-settings-bridge {
   .bridge-tx,
   .network-change-from,
   .network-change-to,
-  .token-change,
-  .ecosystem-change {
+  .token-change{
     position: fixed;
     top: 108px;
     left: 50%;
     transform: translate(-50%, 0%);
     z-index: 1;
   }
+
+	.ecosystem-change {
+		left: 45%;
+	}
   
   /* Для попапов, которые обычно используют popupFadeInSide */
   .popup-opening .connect-wallet,

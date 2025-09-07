@@ -19,15 +19,10 @@
   @if(activePopup === 'blackholeMenu')
   {
     <app-blackhole-menu
-      (close)="popupService.closeAllPopups()">
+      (close)="popupService.closeAllPopups()"
+      (mouseEnter)="onPopupMouseEnter()"
+      (mouseLeave)="onPopupMouseLeave()">
     </app-blackhole-menu>
-  }
-
-  @if(activePopup === 'networkPopup')
-  {
-    <app-blackhole-network
-      (close)="popupService.closeAllPopups()">
-    </app-blackhole-network>
   }
 
   @if(popupService.getCurrentPopup() === 'ecosystemChange')

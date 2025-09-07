@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PopupService } from '../../../services/popup.service';
+import { MouseGradientService } from '../../../services/mouse-gradient.service';
 
 @Component({
   selector: 'app-settings',
@@ -20,7 +21,10 @@ export class SettingsComponent implements OnInit {
   selectedIndex: number | null = 0;
   customValue: string = '';
 
-  constructor(private popupService: PopupService) {}
+  constructor(
+    private popupService: PopupService,
+    private mouseGradientService: MouseGradientService
+  ) {}
 
   ngOnInit() {
     const savedIndex = localStorage.getItem('selectedIndex');
@@ -112,5 +116,9 @@ export class SettingsComponent implements OnInit {
     
     this.popupService.closePopup('settings');
     this.close.emit();
+  }
+
+  onSettingsMouseMove(event: MouseEvent): void {
+    this.mouseGradientService.onMouseMove(event);
   }
 }

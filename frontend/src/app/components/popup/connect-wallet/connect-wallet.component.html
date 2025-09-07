@@ -1,14 +1,10 @@
-<div class="connect-wallet">
+<div class="connect-wallet" [@modalAnimation] (mousemove)="onMouseMove($event)">
 	<div class="upper">
 		<h6>Connect Wallet</h6>
 		<button (click)="closePopup()"></button>
 	</div>
   
 	<div class="scroll-container">
-		<div class="devider">
-			<p>Available</p>
-			<hr class="hr1" />
-		</div>
 		
 		<div class="inner-wallets">
 			@for (wallet of availableWallets; track wallet.id) {
@@ -17,7 +13,7 @@
 				<div class="wallet-img" [style.background-image]="'url(' + wallet.iconUrl + ')'"></div>
 				<p>{{wallet.name}}</p>
 				</div>
-				@if (wallet.status) {
+				@if (wallet.status && wallet.status !== 'detected' && wallet.status !== 'connect') {
 				<div class="status {{wallet.status}}">
 					@if (wallet.status === 'install' && wallet.installUrl) {
 					<a href="{{wallet.installUrl}}" target="_blank" (click)="$event.stopPropagation()">Install</a>
@@ -30,19 +26,19 @@
 			}
 		</div>
 		
-		<div class="devider">
+		<div class="devider" (click)="toggleOtherWallets()">
 			<p>Other Wallets</p>
-			<hr class="hr2" />
+			<button [class.open]="isOtherWalletsVisible"></button>
 		</div>
 		
-		<div class="inner-wallets">
+		<div class="inner-wallets" [class.hidden]="!isOtherWalletsVisible">
 			@for (wallet of otherWallets; track wallet.id) {
 			<div class="wallet" (click)="handleWalletClick(wallet)">
 				<div class="name">
 				<div class="wallet-img" [style.background-image]="'url(' + wallet.iconUrl + ')'"></div>
 				<p>{{wallet.name}}</p>
 				</div>
-				@if (wallet.status) {
+				@if (wallet.status && wallet.status !== 'detected' && wallet.status !== 'connect') {
 				<div class="status {{wallet.status}}">
 					@if (wallet.status === 'install' && wallet.installUrl) {
 					<a href="{{wallet.installUrl}}" target="_blank" (click)="$event.stopPropagation()">Install</a>
@@ -57,5 +53,5 @@
 	</div>
 	
   
-	<p class="disclaimer">By connecting a wallet, you agree to Blackhole Aggregator's <a href="https://blackholelabs.gitbook.io/blackholelabs/policies/private-policy" target="_blank">Terms of Use</a> and consent to its <a href="https://blackholelabs.gitbook.io/blackholelabs/policies/terms-of-use" target="_blank">Privacy Policy</a>.</p>
+	<p class="disclaimer">// By connecting your wallet, you agree to the <br><a href="/documentation/termsofuse" target="_blank">Terms of Use</a> and <a href="/documentation/privacypolicy" target="_blank">Privacy Policy</a> of Alyra.</p>
   </div>

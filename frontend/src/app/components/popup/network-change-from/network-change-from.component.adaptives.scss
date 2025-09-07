@@ -1,9 +1,36 @@
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
+	@import '../../../styles/mouse-gradient-button';
+
 	.network-change-from {
+		@include mouse-gradient-button(
+			$padding: 20px,
+			$height: 625px,
+			$border-radius: 21px,
+			$background: rgba(var(--dark-bg), 0.01),
+			$backdrop-blur: 25px,
+			$include-responsive: false
+		);
+
+		position: fixed;
 		width: 450px;
-		height: 539px;
-		border-radius: 21px;
-		padding: 20px;
+		box-sizing: border-box;
+		z-index: 10;
+		overflow: hidden;
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: stretch;
+		z-index: 1000;
+
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.001) 0%, 
+				rgba(255, 255, 255, 0.0005) 50%, 
+				transparent 100%
+			);
+		}
 	}
 
 	h3 {
@@ -46,7 +73,6 @@
 	}
 
 	.network {
-		width: 420px;
 		height: 65px;
 		padding: 10px 14px;
 		border-radius: 12px;
@@ -63,11 +89,38 @@
 	}
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
+	@import '../../../styles/mouse-gradient-button';
+
 	.network-change-from {
+		@include mouse-gradient-button(
+			$padding: 20px,
+			$height: 625px,
+			$border-radius: 21px,
+			$background: rgba(var(--dark-bg), 0.01),
+			$backdrop-blur: 25px,
+			$include-responsive: false
+		);
+
+		position: fixed;
 		width: 450px;
-		height: 539px;
-		border-radius: 21px;
-		padding: 20px;
+		box-sizing: border-box;
+		z-index: 10;
+		overflow: hidden;
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: stretch;
+		z-index: 1000;
+
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.001) 0%, 
+				rgba(255, 255, 255, 0.0005) 50%, 
+				transparent 100%
+			);
+		}
 	}
 
 	h3 {
@@ -110,7 +163,6 @@
 	}
 
 	.network {
-		width: 420px;
 		height: 65px;
 		padding: 10px 14px;
 		border-radius: 12px;
@@ -127,11 +179,38 @@
 	}
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
+	@import '../../../styles/mouse-gradient-button';
+
 	.network-change-from {
+		@include mouse-gradient-button(
+			$padding: 15px,
+			$height: 470px,
+			$border-radius: 15px,
+			$background: rgba(var(--dark-bg), 0.01),
+			$backdrop-blur: 25px,
+			$include-responsive: false
+		);
+
+		position: fixed;
 		width: 330px;
-		height: 401px;
-		border-radius: 15px;
-		padding: 15px;
+		box-sizing: border-box;
+		z-index: 10;
+		overflow: hidden;
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: stretch;
+		z-index: 1000;
+
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.001) 0%, 
+				rgba(255, 255, 255, 0.0005) 50%, 
+				transparent 100%
+			);
+		}
 	}
 
 	h3 {
@@ -174,7 +253,6 @@
 	}
 
 	.network {
-		width: 320px;
 		height: 47px;
 		padding: 7px 10px;
 		border-radius: 8px;
@@ -191,11 +269,38 @@
 	}
 }
 @media screen and (min-width: 480px) and (max-width: 970px) {
+	@import '../../../styles/mouse-gradient-button';
+
 	.network-change-from {
+		@include mouse-gradient-button(
+			$padding: 20px,
+			$height: 625px,
+			$border-radius: 21px,
+			$background: rgba(var(--dark-bg), 0.01),
+			$backdrop-blur: 25px,
+			$include-responsive: false
+		);
+
+		position: fixed;
 		width: 450px;
-		height: 539px;
-		border-radius: 21px;
-		padding: 20px;
+		box-sizing: border-box;
+		z-index: 10;
+		overflow: hidden;
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: stretch;
+		z-index: 1000;
+
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.001) 0%, 
+				rgba(255, 255, 255, 0.0005) 50%, 
+				transparent 100%
+			);
+		}
 	}
 
 	h3 {
@@ -238,7 +343,6 @@
 	}
 
 	.network {
-		width: 420px;
 		height: 65px;
 		padding: 10px 14px;
 		border-radius: 12px;
@@ -256,13 +360,39 @@
 }
 
 @media screen and (min-width: 360px) and (max-width: 479px) {
+	@import '../../../styles/mouse-gradient-button';
+
 	.network-change-from {
+		@include mouse-gradient-button(
+			$padding: 15px 18px,
+			$height: 80vh,
+			$border-radius: 16px,
+			$background: rgba(var(--dark-bg), 0.01),
+			$backdrop-blur: 25px,
+			$include-responsive: false
+		);
+
+		position: fixed;
 		width: 90vw;
-		height: 70vh;
-		border-radius: 16px;
-		padding: 15px 18px;
-		backdrop-filter: blur(35px);
-		-webkit-backdrop-filter: blur(19px);
+		box-sizing: border-box;
+		z-index: 10;
+		overflow: hidden;
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: stretch;
+		-webkit-backdrop-filter: blur(35px);
+		z-index: 1000;
+
+		&:hover {
+			transform: none;
+			
+			background: radial-gradient(
+				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
+				rgba(255, 255, 255, 0.001) 0%, 
+				rgba(255, 255, 255, 0.0005) 50%, 
+				transparent 100%
+			);
+		}
 	}
 
 	h3 {
@@ -305,7 +435,7 @@
 	}
 
 	.network {
-		width: 420px;
+		width: 100%;
 		height: 65px;
 		padding: 10px 14px;
 		border-radius: 12px;

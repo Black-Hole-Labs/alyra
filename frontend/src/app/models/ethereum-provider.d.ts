@@ -16,4 +16,5 @@ interface Window {
   okexchain?: any;
   coinbaseWalletExtension?: any;
   rabby?: any;
+  slush?: any;
 }

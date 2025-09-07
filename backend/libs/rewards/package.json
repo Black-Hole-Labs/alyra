@@ -1,0 +1,20 @@
+{
+  "name": "@black-hole/rewards",
+  "version": "0.0.1",
+  "description": "Rewards library for Black Hole project",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^4.0.2",
+    "ethers": "^6.13.4",
+    "class-validator": "^0.14.2"
+  },
+  "peerDependencies": {
+    "@black-hole/core-db": "*"
+  }
+} 

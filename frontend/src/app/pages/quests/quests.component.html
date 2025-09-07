@@ -1,3 +1,86 @@
-<div class="quests">
-	<h6>It will be available soon...</h6>
+<div class="soon">
+	<h6>
+		Quests will be available soon...
+	</h6>
+</div>
+<div class="container">
+	<header>
+		<div class="nav-item" 
+			 [class.active]="isTabActive('available')"
+			 (click)="setActiveTab('available')">
+			<p>Available</p>
+			<div class="count">
+				<p>{{ availableQuests().length }}</p>
+			</div>
+		</div>
+		<div class="nav-item" 
+			 [class.active]="isTabActive('ended')"
+			 (click)="setActiveTab('ended')">
+			<p>Ended</p>
+			<div class="count">
+				<p>{{ endedQuests().length }}</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="quests">
+		<div class="quest-list">
+			@for (quest of getCurrentQuests(); track quest.id) {
+				<div class="quest">
+					<div class="image" [style.background-image]="'url(' + getRankConfig(quest.rank).backgroundImage + ')'">
+						<p [style.color]="getRankConfig(quest.rank).color">+{{ quest.xp }} XP</p>
+						<div class="quest-rank" [style.background-color]="getRankConfig(quest.rank).bgColor">
+							<p>{{ getRankConfig(quest.rank).name }}</p>
+						</div>
+					</div>
+					<div class="info">
+						<div class="upper">
+							<div class="title">
+								<h3>{{ quest.title }}</h3>
+								<p>{{ quest.description }}</p>
+							</div>
+													<div class="activity">
+							<p>{{ activeTab === 'ended' ? 'Ended' : 'Ends in ' + getTimeUntilEnd(quest) }}</p>
+							<div class="button" [class.ended]="activeTab === 'ended'">
+								<p>{{ activeTab === 'ended' ? 'Expired' : 'Start Trading' }}</p>
+							</div>
+						</div>
+						</div>
+						<div class="progress-bar">
+							<div class="bar">
+								<div class="progress-fill" [style.width.%]="quest.progress || 0"></div>
+							</div>
+							<p>{{ quest.progress || 0 }}%</p>
+						</div>
+					</div>
+				</div>
+			}
+			@empty {
+				<div class="empty-state">
+					<p>No ended quests</p>
+				</div>
+			}
+		</div>
+		<div class="my-activity">
+			<div class="header">
+				<h3>My Activity</h3>
+				<div class="count">
+					<p>{{ completedQuests().length }}</p>
+				</div>
+			</div>
+			<div class="activity-list">
+				@for (quest of completedQuests(); track quest.id) {
+					<div class="activity">
+						<p>{{ quest.title }}</p>
+						<p class="xp" [style.color]="getRankConfig(quest.rank).color">+{{ quest.xp }} XP</p>
+					</div>
+				}
+				@empty {
+					<div class="empty-activity">
+						<p>No completed quests yet</p>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
 </div>

@@ -1,48 +1,32 @@
-import { Injector } from "@angular/core";
-import { EvmWalletProvider } from "./evm-wallet-provider";
-import WalletConnectProvider from "@walletconnect/web3-provider";
-import { Network } from "./wallet-provider.interface";
-import * as allNetworks from "../../../public/data/networks.json";
-
-const networks = (allNetworks as any) as Network[];
+import { Injector } from '@angular/core';
+import { EvmWalletProvider } from './evm-wallet-provider';
+import EthereumProvider from "@walletconnect/ethereum-provider";
+import { Network } from './wallet-provider.interface';
 
 export class WalletConnectEvmProvider extends EvmWalletProvider {
-  private wcProvider: WalletConnectProvider;
+  private chains: number[];
 
-  constructor(injector: Injector) {
-    // Polyfill for global to fix "global is not defined" error
-    if (typeof window !== 'undefined') {
-      (window as any).global = window;
-    }
-
-    // Build a chainId->rpcUrl map from networks.json (pick first RPC per chain)
-    const rpc: Record<number, string> = networks
-      .filter(n => n.chainType === "EVM")
-      .reduce((map, n) => {
-        if (n.rpcUrls && n.rpcUrls.length) {
-          map[n.id] = n.rpcUrls[0];
-        }
-        return map;
-      }, {} as Record<number, string>);
-
-    // Initialize WalletConnectProvider with the RPC map
-    const wcProvider = new WalletConnectProvider({ rpc });
-    super(wcProvider, injector);
-    this.wcProvider = wcProvider;
+  constructor(injector: Injector, networks: Network[]) {
+    super(undefined as any, injector);
+    this.chains = networks
+      .filter(n => n.chainType === 'EVM')
+      .map(n => n.id);
   }
 
-  override async connect(): Promise<{ address: string; network: string }> {
-    await this.wcProvider.enable();
-    return super.connect(this.wcProvider);
+  override async connect(): Promise<{ address: string, nameService: string | null }> {
+    this.provider = await EthereumProvider.init({
+      projectId: "07389ba7749da9fd1b3bc8761a313675",
+      chains: [1, 137],
+      showQrModal: true,
+    });
+    await this.provider.enable();
+    return super.connect(this.provider, /* suppressModal: */);
   }
 
-  override async switchNetwork(_: any): Promise<void> {
-    console.warn(
-      "WalletConnect cannot programmatically switch chains. Prompt user to reconnect on the desired network."
-    );
-  }
-
-  async disconnect(): Promise<void> {
-    await this.wcProvider.disconnect();
+  override async switchNetwork(chainId: number): Promise<void> {
+    await this.provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: `0x${chainId.toString(16)}` }],
+    });
   }
 }

@@ -2,11 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { interval, lastValueFrom, Observable, switchMap, takeWhile } from 'rxjs';
 
+import { ethers } from 'ethers';
+import { Connection } from '@solana/web3.js';
+
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class TransactionsService {
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = environment.apiUrl;
+  private apiBack = environment.apiBack;
 
   constructor(
     private http: HttpClient,
@@ -89,6 +95,30 @@ export class TransactionsService {
     }
   
     return this.http.get<{ quote: any }>(`${this.apiUrl}/lifi/quote-bridge`, { params });
+  }
+
+  getV1(
+    originChainId: string | number,
+    destinationChainId: string | number,
+    originCurrency: string,
+    destinationCurrency: string,
+    amount: string,
+    senderAddress: string,
+    receiverAddress?: string,
+    tradeType: 'EXACT_INPUT' | 'EXACT_OUTPUT' = 'EXACT_INPUT'
+  ): Observable<any> {
+    const params: any = {
+      senderAddress,
+      receiverAddress: receiverAddress ?? senderAddress,
+      originChainId: Number(originChainId),
+      destinationChainId: Number(destinationChainId),
+      amount,
+      originCurrency,
+      destinationCurrency,
+      tradeType
+    };
+
+    return this.http.get<any>(`${this.apiBack}/v1/quotes`, { params });
   }
 
   public async pollStatus(
@@ -191,4 +221,133 @@ export class TransactionsService {
   
     return gasCostUSD.toFixed(2);
   }
+
+  /**
+   * Пуллинг статуса транзакции через receipt
+   * @param txHash - хеш транзакции
+   * @param rpcUrl - RPC URL для сети
+   * @param maxAttempts - максимальное количество попыток (по умолчанию 60)
+   * @param delayMs - задержка между попытками в миллисекундах (по умолчанию 5000)
+   * @returns Promise с результатом: { success: boolean, receipt?: any, error?: string }
+   */
+  async pollTransactionReceipt(
+    txHash: string, 
+    rpcUrl: string, 
+    maxAttempts: number = 60, 
+    delayMs: number = 5000
+  ): Promise<{ success: boolean; receipt?: any; error?: string }> {
+    try {
+      let receipt = null;
+      let attempts = 0;
+      
+      const ethersProvider = new ethers.JsonRpcProvider(rpcUrl);
+      
+      do {
+        await this.delay(delayMs);
+        attempts++;
+        
+        try {
+          receipt = await ethersProvider.getTransactionReceipt(txHash);
+          console.log(`Attempt ${attempts}: Receipt received:`, receipt ? 'Yes' : 'No');
+          if (receipt) {
+            console.log(`Attempt ${attempts}: Receipt status:`, receipt.status);
+          }
+        } catch (error) {
+          console.log(`Attempt ${attempts}: Transaction not yet mined, retrying... Error:`, error);
+        }
+      } while (!receipt && attempts < maxAttempts);
+      
+      if (receipt) {
+        console.log('Final receipt:', receipt);
+        const status = receipt.status;
+        if (status === 1) {
+          return { success: true, receipt };
+        } else {
+          return { success: false, receipt, error: 'Transaction failed' };
+        }
+      } else {
+        return { success: false, error: 'Transaction timeout - please check your wallet' };
+      }
+    } catch (error) {
+      console.error('Error polling transaction status:', error);
+      return { success: false, error: 'Error checking transaction status' };
+    }
+  }
+
+    /**
+   * Poll Solana transaction status by signature.
+   * Returns when tx is finalized (success) or failed, or when timeout occurs.
+   *
+   * @param signature - transaction signature (hash)
+   * @param rpcUrl - working RPC url for the network
+   * @param maxAttempts - how many attempts before giving up (default 60)
+   * @param delayMs - ms between attempts (default 5000)
+   */
+  async pollTransactionReceiptSvm(
+    signature: string,
+    rpcUrl: string,
+    maxAttempts: number = 60,
+    delayMs: number = 5000
+  ): Promise<{ success: boolean; signature: string; transaction?: any; status?: string; error?: string }> {
+    const connection = new Connection(rpcUrl, 'confirmed');
+    let attempts = 0;
+
+    if (!signature) {
+      return { success: false, signature, error: 'Empty signature' };
+    }
+
+    try {
+      do {
+        attempts++;
+
+        try {
+          const statuses = await connection.getSignatureStatuses([signature]);
+          const status = statuses?.value?.[0] ?? null;
+
+          if (!status) {
+            // console.log(`SVM: signature ${signature} not found yet (attempt ${attempts})`);
+          } else {
+            if (status.err) {
+              // console.log(`SVM: signature ${signature} failed (attempt ${attempts}):`, status.err);
+              return { success: false, signature, status: 'FAILED', error: JSON.stringify(status.err) };
+            }
+
+            if (status.confirmationStatus === 'finalized') {
+              try {
+                const tx = await connection.getTransaction(signature, { commitment: 'finalized', maxSupportedTransactionVersion: 0 });
+                return { success: true, signature, transaction: tx, status: 'FINALIZED' };
+              } catch (txErr: any) {
+                const msg = txErr?.message ?? String(txErr);
+                console.warn(`SVM: getTransaction failed for finalized tx ${signature} (attempt ${attempts}):`, msg);
+
+                if (msg.includes('maxSupportedTransactionVersion')) {
+                  try {
+                    const tx = await connection.getTransaction(signature, { commitment: 'finalized', maxSupportedTransactionVersion: 0 });
+                    return { success: true, signature, transaction: tx, status: 'FINALIZED' };
+                  } catch (txErr2: any) {
+                    console.warn('SVM: retry getTransaction with maxSupportedTransactionVersion failed — treating tx as FINALIZED.');
+                    return { success: true, signature, status: 'FINALIZED' };
+                  }
+                }
+
+                return { success: true, signature, status: 'FINALIZED' };
+              }
+            }
+
+            // console.log(`SVM: signature ${signature} pending (attempt ${attempts}) - confirmationStatus=${status.confirmationStatus}, confirmations=${status.confirmations}`);
+          }
+        } catch (innerErr: any) {
+          console.warn(`SVM: error checking signature status (attempt ${attempts}):`, innerErr?.message ?? innerErr);
+        }
+
+        await this.delay(delayMs);
+      } while (attempts < maxAttempts);
+
+      return { success: false, signature, status: 'TIMEOUT', error: 'Timeout waiting for transaction confirmation' };
+    } catch (err: any) {
+      console.error('SVM: unexpected error polling transaction:', err);
+      return { success: false, signature, error: (err && err.message) ? err.message : String(err) };
+    }
+  }
+
 }

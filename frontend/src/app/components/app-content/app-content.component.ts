@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
@@ -7,11 +7,11 @@ import { RouterModule } from '@angular/router';
 import { NetworkId, ProviderType } from '../../models/wallet-provider.interface';
 import { PopupService } from '../../services/popup.service';
 import { BlackholeMenuComponent } from '../popup/blackhole-menu/blackhole-menu.component';
-import { BlackholeNetworkComponent } from '../popup/blackhole-network/blackhole-network.component';
 import { WalletComponent } from "../popup/wallet/wallet.component";
 import { ConnectWalletComponent } from "../popup/connect-wallet/connect-wallet.component";
 import { EcosystemChangeComponent } from '../popup/ecosystem-change/ecosystem-change.component';
 import { BlockchainStateService } from '../../services/blockchain-state.service';
+
 @Component({
   selector: 'app-app-content',
   standalone: true,
@@ -25,7 +25,6 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
     RouterModule,
     BlackholeMenuComponent,
     CommonModule,
-    BlackholeNetworkComponent,
     WalletComponent,
     ConnectWalletComponent,
     EcosystemChangeComponent
@@ -34,6 +33,10 @@ import { BlockchainStateService } from '../../services/blockchain-state.service'
 export class AppContentComponent {
   isPopupVisible = false;
   isNetworkPopupVisible = false;
+
+  @HostBinding('class.documentation-page') get isDocumentationPage(): boolean {
+    return this.router.url.startsWith('/documentation');
+  }
 
   constructor(
     private router: Router, 
@@ -59,24 +62,59 @@ export class AppContentComponent {
     this.isPopupVisible = false;
     this.isNetworkPopupVisible = false;
   }
+  // TODO
+  async onEcosystemSelected(ecosystemId: string): Promise<void> {
 
-  onEcosystemSelected(ecosystemId: string): void {
-    if (ecosystemId === ProviderType.EVM)
-    {
-      this.blockchainStateService.updateNetwork(NetworkId.ETHEREUM_MAINNET);
+    const providerId = this.blockchainStateService.pendingProviderId;
+    if (!providerId) {
+      console.error('No pending multichain provider');
+      return;
     }
-    else if (ecosystemId === ProviderType.SVM)
-    {
-      this.blockchainStateService.updateNetwork(NetworkId.SOLANA_MAINNET);
-    }
-    
-    const provider = this.blockchainStateService.getCurrentProvider();
-    provider.provider.switchNetwork(this.blockchainStateService.getCurrentNetwork());
-    
+    const provider = this.blockchainStateService.getProvider(providerId);
+
+    const networkId = ecosystemId === ProviderType.EVM
+    ? NetworkId.ETHEREUM_MAINNET
+    : ecosystemId === ProviderType.SVM
+      ? NetworkId.SOLANA_MAINNET
+      : NetworkId.SUI_MAINNET;
+
+    const { address, nameService } = await provider.connect(networkId);
+
     this.popupService.openPopup('wallet');
+
+    this.blockchainStateService.setCurrentProvider(providerId, address, nameService);
+    if (ecosystemId === ProviderType.EVM) 
+    {
+      sessionStorage.setItem('currentEvmProvider', providerId);
+    } 
+    else 
+    {
+      sessionStorage.setItem('currentSvmProvider', providerId);
+    }
+    sessionStorage.setItem('networkId', networkId.toString());
+
+    this.blockchainStateService.pendingProviderId = null;
+
+    // if (ecosystemId === ProviderType.EVM)
+    // {
+    //   this.blockchainStateService.updateNetworkSell(NetworkId.ETHEREUM_MAINNET);
+    // }
+    // else if (ecosystemId === ProviderType.SVM)
+    // {
+    //   this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET);
+    // }
+
   }
 
   closeEcosystemPopup(): void {
     this.popupService.closePopup('ecosystemChange');
+  }
+
+  onPopupMouseEnter(): void {
+    this.popupService.onPopupMouseEnter();
+  }
+
+  onPopupMouseLeave(): void {
+    this.popupService.onPopupMouseLeave();
   }
 }

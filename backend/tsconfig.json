@@ -9,13 +9,20 @@
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@black-hole/config": ["libs/config/src/index.ts"],
+      "@black-hole/core-db": ["apps/core-db/dist/index.js"],
+      "@black-hole/core-db/*": ["apps/core-db/dist/*"],
+      "@black-hole/rewards": ["libs/rewards/src/index.ts"],
+      "@black-hole/rewards/*": ["libs/rewards/src/*"]
+    }
   }
 }

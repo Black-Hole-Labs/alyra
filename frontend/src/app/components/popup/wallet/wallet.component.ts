@@ -1,7 +1,9 @@
-import { Component, Output, EventEmitter, signal } from '@angular/core';
+import { Component, Output, EventEmitter, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PopupService } from '../../../services/popup.service';
-import { BlockchainStateService } from '../../../services/blockchain-state.service';
+import { BlockchainStateService, Ecosystem } from '../../../services/blockchain-state.service';
+import { MouseGradientService } from '../../../services/mouse-gradient.service';
+import { ProviderType, Wallets } from '../../../models/wallet-provider.interface';
 
 interface Token {
   name: string;
@@ -26,6 +28,9 @@ export class WalletComponent {
   @Output() close = new EventEmitter<void>();
   @Output() disconnect = new EventEmitter<void>();
   walletName = signal<string>('');
+  walletIcon = signal<string>('/img/wallet-icns/profile.png');
+  private providers: Wallets[] = [];
+  copiedAddresses = signal<Set<string>>(new Set<string>());
   
   tokens: Token[] = [
     {
@@ -46,8 +51,85 @@ export class WalletComponent {
     },
   ];
 
-  constructor(private blockchainStateService: BlockchainStateService, private popupService: PopupService) {
+  constructor(
+    public blockchainStateService: BlockchainStateService, 
+    private popupService: PopupService,
+    private mouseGradientService: MouseGradientService
+  ) {
     this.walletName.set(this.blockchainStateService.getCurrentWalletAddress()!);
+    this.loadProviders();
+
+    effect(
+      () => {
+        const isConnected = this.blockchainStateService.connected();
+        if (!isConnected) {
+          this.walletIcon.set('/img/wallet-icns/profile.png');
+          return;
+        }
+
+        if (this.providers.length === 0) {
+          this.loadProviders();
+          this.updateWalletIcon();
+        } else {
+          this.updateWalletIcon();
+        }
+      },
+      { allowSignalWrites: true },
+    );
+  }
+
+  get walletCount(): number {
+    const evm = this.blockchainStateService.currentProviderIds()[ProviderType.EVM].id;
+    const svm = this.blockchainStateService.currentProviderIds()[ProviderType.SVM].id;
+    const mvm = this.blockchainStateService.currentProviderIds()[ProviderType.MVM].id;
+    return (evm ? 1 : 0) + (svm ? 1 : 0) + (mvm ? 1 : 0);
+  }
+
+  getIconUrl(type: string): string {
+    const providerId = this.blockchainStateService.getCurrentProviderIdByType(type as Ecosystem);
+    const provider = this.providers.find(p => p.id === providerId);
+    return provider?.iconUrl || '/img/wallet-icns/profile.png';
+  }
+
+  onDisconnect(type: string): void {
+    if (type === 'EVM') {
+      this.blockchainStateService.disconnectEvm();
+    } else if (type === 'SVM') {
+      this.blockchainStateService.disconnectSvm();
+    } else if (type === 'MVM') {
+      this.blockchainStateService.disconnectMvm();
+    }
+    this.popupService.closeAllPopups();
+    this.disconnect.emit();
+  }
+
+  copyToClipboard(address: string, event: Event): void {
+    event.stopPropagation();
+    navigator.clipboard
+      .writeText(address)
+      .then(() => {
+        const currentCopied = this.copiedAddresses();
+        const newCopied = new Set(currentCopied);
+        newCopied.add(address);
+        this.copiedAddresses.set(newCopied);
+
+        setTimeout(() => {
+          const currentCopied = this.copiedAddresses();
+          const newCopied = new Set(currentCopied);
+          newCopied.delete(address);
+          this.copiedAddresses.set(newCopied);
+        }, 2000);
+      })
+      .catch(() => console.error('Failed to copy to clipboard'));
+  }
+
+  isCopied(address: string): boolean {
+    return this.copiedAddresses().has(address);
+  }
+
+  onConnectAnotherWallet(): void {
+    this.blockchainStateService.clearEcosystemForPopup();
+    this.popupService.openPopup('connectWallet');
   }
 
   get totalBalance(): number {
@@ -83,9 +165,37 @@ export class WalletComponent {
     this.close.emit();
   }
 
-  onDisconnect(): void {
-    this.blockchainStateService.disconnect();
-    this.popupService.closeAllPopups(); 
-    this.disconnect.emit();
+  // onDisconnect(): void {
+  //   this.blockchainStateService.disconnect();
+  //   this.popupService.closeAllPopups(); 
+  //   this.disconnect.emit();
+  // }
+
+  formatAddress(addr: string): string {
+    return addr.length > 20 ? addr.slice(0,6) + '...' + addr.slice(-4) : addr;
+  }
+
+
+  onWalletMouseMove(event: MouseEvent): void {
+    this.mouseGradientService.onMouseMove(event);
+  }
+  async loadProviders() {
+    this.providers = await this.blockchainStateService.loadProviders();
+    return this.updateWalletIcon();
+  }
+
+  updateWalletIcon(): void {
+    const providerId = this.blockchainStateService.getCurrentProviderId();
+    if (!providerId || !this.blockchainStateService.connected()) {
+      this.walletIcon.set('/img/wallet-icns/profile.png');
+      return;
+    }
+
+    const provider = this.providers.find((p) => p.id === providerId);
+    if (provider?.iconUrl) {
+      this.walletIcon.set(provider.iconUrl);
+    } else {
+      this.walletIcon.set('/img/wallet-icns/profile.png');
+    }
   }
 }

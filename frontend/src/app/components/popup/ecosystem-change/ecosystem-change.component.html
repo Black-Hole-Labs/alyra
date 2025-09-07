@@ -1,4 +1,4 @@
-<div class="ecosystem-change">
+<div class="ecosystem-change" (mousemove)="onEcosystemChangeMouseMove($event)">
   <div class="upper">
     <h6>Select Ecosystem</h6>
     <button (click)="closePopup()"></button>
@@ -10,15 +10,12 @@
         <div class="ecosystem" (click)="selectEcosystem(ecosystem.id)">
           <div class="name">
             <div class="ecosystem-img" [style.background-image]="'url(' + ecosystem.iconUrl + ')'"></div>
-            <div class="info">
-              <h4>{{ecosystem.name}}</h4>
-              <p>{{ecosystem.description}}</p>
-            </div>
+            <p>{{ecosystem.name}}</p>
           </div>
         </div>
       }
     </div>
   </div>
   
-  <p class="disclaimer">Select the blockchain ecosystem you want to use with BlackHole Aggregator</p>
+  <p class="disclaimer">// Select the blockchain ecosystem you want to use with Alyra</p>
 </div>

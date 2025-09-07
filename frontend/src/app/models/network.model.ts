@@ -3,6 +3,7 @@ import { EvmWalletProvider } from './evm-wallet-provider';
 import { MultiChainWalletProvider } from './multichain-wallet-provider';
 import { SvmWalletProvider } from './svm-wallet-provider';
 import { NetworkId } from './wallet-provider.interface';
+import { SuiWalletProvider } from './sui-wallet-provider';
 
 export class WalletProviderManager {
   private metaMaskProvider: any = null;
@@ -85,20 +86,22 @@ export class SolflareProvider extends SvmWalletProvider {
   }
 }
 
+/***************SUI***************/
+export class SlushProvider extends SuiWalletProvider  {
+  constructor(injector: Injector) {
+    super((window as any).slush, injector);
+  }
+}
+
 /***************MULTICHAIN***************/
 export class BackpackProvider extends MultiChainWalletProvider {
   constructor(walletManager: WalletProviderManager, injector: Injector) {
     super(injector);
     this.evmProviderInstance = walletManager.getBackPackProvider();
     this.svmProviderInstance = (window as any).backpack?.solana;
+    this.mvmProviderInstance = (window as any).backpack?.sui;
   }
 
-  override async connect(): Promise<{ address: string; network: string }> {
-    this.blockchainStateService.updateNetwork(NetworkId.SOLANA_MAINNET); // Solana is default for BackPack
-    const connection = await super.connect();
-
-    return connection;
-  }
 }
 
 export class PhantomProvider extends MultiChainWalletProvider {
@@ -106,14 +109,9 @@ export class PhantomProvider extends MultiChainWalletProvider {
     super(injector);
     this.evmProviderInstance = walletManager.getPhantomProvider();
     this.svmProviderInstance = (window as any).phantom?.solana;
+    this.mvmProviderInstance = (window as any).phantom?.sui;
   }
 
-  override async connect(): Promise<{ address: string; network: string }> {
-    this.blockchainStateService.updateNetwork(NetworkId.SOLANA_MAINNET); // Solana is default for Phantom
-    const connection = await super.connect();
-
-    return connection;
-  }
 }
 
 export class MagicEdenProvider extends MultiChainWalletProvider {
@@ -137,6 +135,7 @@ export class OkxWalletProvider extends MultiChainWalletProvider {
     super(injector);
     this.evmProviderInstance = window.okexchain;
     this.svmProviderInstance = (window as any).okexchain?.solana;
+    this.mvmProviderInstance = (window as any).okexchain?.sui;
   }
 }
 
