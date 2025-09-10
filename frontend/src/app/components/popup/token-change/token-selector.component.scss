@@ -1,34 +1,13 @@
-@import '../../../styles/mouse-gradient-button';
-
 .token-change {
-  @include mouse-gradient-button(
-    $padding: 30px 30px 0 30px,
-    $height: 865px,
-    $border-radius: 28px,
-    $background: rgba(var(--dark-bg), 0.1),
-    $backdrop-blur: 25px,
-    $include-responsive: false
-  );
-
 	position: fixed;
-	width: 600px;
+	width: 550px;
+  height: 700pxf;
   box-sizing: border-box;
   z-index: 10;
 	overflow: hidden;
   flex-direction: column;
   align-items: stretch;
   justify-content: stretch;
-  
-  &:hover {
-    transform: none;
-    
-		background: radial-gradient(
-      circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-      rgba(255, 255, 255, 0.001) 0%, 
-      rgba(255, 255, 255, 0.0005) 50%, 
-      transparent 100%
-    );
-  }
 }
 
 .header {
@@ -38,7 +17,6 @@
 }
 
 h3 {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 28px;
   color: white;
@@ -81,7 +59,7 @@ button:hover {
 	justify-content: center;
 	position: relative;
 	overflow: hidden;
-	
+
 	&::before {
 		content: '';
 		position: absolute;
@@ -94,7 +72,7 @@ button:hover {
 		transition: opacity 0.3s ease;
 		pointer-events: none;
 	}
-	
+
 	&:hover {
 		background-color: rgba(var(--dark-select), 1);
 		border: 1px solid rgba(var(--white), 0.6);
@@ -150,7 +128,6 @@ button:hover {
 }
 
 .more p {
-	font-family: "JetBrains Mono", monospace;
 	font-weight: 400;
 	font-size: 22px;
 	color: rgba(var(--white), 1);
@@ -160,7 +137,6 @@ button:hover {
   margin-top: 20px;
   display: flex;
   align-items: center;
-  width: 540px;
   height: 60px;
   background-color: rgba(var(--dark-select), 0.7);
 	border: 1px solid rgba(var(--white), 0.1);
@@ -172,7 +148,6 @@ button:hover {
 input {
   width: 476px;
   height: 24px;
-  font-family: "JetBrains Mono", monospace;
   font-weight: 400;
   font-size: 18px;
   color: white;
@@ -183,7 +158,6 @@ input {
 
 input::placeholder {
   color: var(--elem-nonactive);
-  font-family: "JetBrains Mono", monospace;
   font-weight: 400;
   font-size: 18px;
 }
@@ -211,17 +185,15 @@ input::placeholder {
 }
 
 .desc > p {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 400;
   font-size: 15px;
   color: white;
 }
 
 .list {
-  position: absolute;
+  margin-top: 25px;
   bottom:0px;
   left: 16px;
-  width: 567px;
   height: 570px;
   border-radius: 12px;
 }
@@ -233,7 +205,6 @@ input::placeholder {
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
-  margin-right: -8px;
   margin-left: 0px;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
@@ -244,7 +215,6 @@ input::placeholder {
 }
 
 .token {
-  width: 566px;
   height: 80px;
   background-color: rgba(var(--dark-bg), 0.01);
 	border: 1px solid rgba(var(--white), 0);
@@ -300,7 +270,6 @@ input::placeholder {
 }
 
 .token-letter {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 700;
   font-size: 18px;
   color: white;
@@ -346,7 +315,6 @@ input::placeholder {
 }
 
 .token .name h6 {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 700;
   font-size: 18px;
   color: rgba(var(--white), 0.4);
@@ -354,7 +322,6 @@ input::placeholder {
 
 .token .name p {
   margin-top: 1px;
-  font-family: "JetBrains Mono", monospace;
   font-weight: 700;
   font-size: 18px;
   color: white;
@@ -377,7 +344,6 @@ a:hover {
 }
 
 .token-balance p{
-	font-family: "JetBrains Mono", monospace;
 	font-weight: 700;
 	font-size: 18px;
 	color: white;
@@ -426,7 +392,6 @@ a:hover {
 }
 
 .token-change .contract p {
-  font-family: "JetBrains Mono", monospace !important;
   font-weight: 400;
   font-size: 15px;
   color: rgba(var(--white), 0.4);

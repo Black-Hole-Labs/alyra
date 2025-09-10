@@ -38,14 +38,17 @@ export class TokenChangePopupComponent {
   constructor(
     private tokenService: TokenService,
     public popupService: PopupService,
-    private mouseGradientService: MouseGradientService
   ) {}
 
   private tokenCache = new Map<number, Token[]>();
 
   blockchainStateService = inject(BlockchainStateService);
   walletBalanceService = inject(WalletBalanceService);
-  explorerUrl = computed(() => this.blockchainStateService.getNetworkById(this.displayedTokens()[0].chainId)?.explorerUrl || 'https://etherscan.io/token/');
+  explorerUrl = computed(
+    () =>
+      this.blockchainStateService.getNetworkById(this.displayedTokens()[0].chainId)?.explorerUrl ||
+      'https://etherscan.io/token/',
+  );
   ethers = ethers;
 
   networks = computed(() => {
@@ -72,18 +75,18 @@ export class TokenChangePopupComponent {
   });
 
   tokenList: Signal<TokenDisplay[]> = computed(() => {
-      const search = this.searchText().toLowerCase().trim();
+    const search = this.searchText().toLowerCase().trim();
 
-      if (!search) {
-          const tokens = this.getBaseTokens();
-          const filteredByExclude = this.filterByExcludeToken(tokens);
-          return filteredByExclude as TokenDisplay[];
-      }
-
-      const allTokens = this.blockchainStateService.allTokens();
-      const filteredBySearch = this.filterBySearch(allTokens, search);
-      const filteredByExclude = this.filterByExcludeToken(filteredBySearch);
+    if (!search) {
+      const tokens = this.getBaseTokens();
+      const filteredByExclude = this.filterByExcludeToken(tokens);
       return filteredByExclude as TokenDisplay[];
+    }
+
+    const allTokens = this.blockchainStateService.allTokens();
+    const filteredBySearch = this.filterBySearch(allTokens, search);
+    const filteredByExclude = this.filterByExcludeToken(filteredBySearch);
+    return filteredByExclude as TokenDisplay[];
   });
 
   displayedTokens: Signal<TokenDisplay[]> = computed(() => {
@@ -244,8 +247,7 @@ export class TokenChangePopupComponent {
     if (this.mode === 'sell') {
       this.blockchainStateService.updateNetworkSell(network.id);
 
-      if (network.id != this.blockchainStateService.getCurrentNetworkBuy()?.id)
-      {
+      if (network.id != this.blockchainStateService.getCurrentNetworkBuy()?.id) {
         this.blockchainStateService.setNetworkBuy(network);
       }
 
@@ -266,9 +268,8 @@ export class TokenChangePopupComponent {
 
       const provider = this.blockchainStateService.getProvider(providerId);
 
-      if (providerType != ProviderType.MULTICHAIN && providerType != network.chainType)
-      {
-        console.warn("Selected Unsupported network for the wallet! Disconnect");
+      if (providerType != ProviderType.MULTICHAIN && providerType != network.chainType) {
+        console.warn('Selected Unsupported network for the wallet! Disconnect');
         this.blockchainStateService.disconnect(provider.address);
         return;
       }
@@ -278,12 +279,12 @@ export class TokenChangePopupComponent {
       try {
         await provider.switchNetwork(network);
       } catch (error) {
-        if ((error as any).message.includes("User rejected the request") || (error as any).code === 4001) {
+        if ((error as any).message.includes('User rejected the request') || (error as any).code === 4001) {
           this.selectedNetworkId.set(prevNetworkId);
           this.selectedNetworkTokens.set(prevTokens);
           this.blockchainStateService.updateNetworkSell(prevNetworkId!);
           return;
-        } else if((error as any).message === 'unsupported_network'){
+        } else if ((error as any).message === 'unsupported_network') {
           throw error;
         } else {
           this.selectedNetworkId.set(prevNetworkId);
@@ -348,9 +349,5 @@ export class TokenChangePopupComponent {
       const isSameChain = token.chainId === this.excludeToken!.chainId;
       return !(isSameAddress && isSameChain);
     });
-  }
-
-  onTokenSelectorMouseMove(event: MouseEvent): void {
-    this.mouseGradientService.onMouseMove(event);
   }
 }

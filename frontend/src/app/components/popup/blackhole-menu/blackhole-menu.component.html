@@ -1,49 +1,51 @@
-<div class="popup-container blackhole-menu" 
-	(mousemove)="onMenuMouseMove($event)"
-	(mouseenter)="onPopupMouseEnter()"
-	(mouseleave)="onPopupMouseLeave()">
-	<div class="upper">
-		<h6>Menu</h6>
-		<button (click)="closePopup()"></button>
-	</div>
+<div class="popup-wrapper">
+  <div class="popup-container blackhole-menu"
+       (mousemove)="onMenuMouseMove($event)"
+       (mouseenter)="onPopupMouseEnter()"
+       (mouseleave)="onPopupMouseLeave()">
+    <div class="upper">
+      <h6>Menu</h6>
+      <button (click)="closePopup()"></button>
+    </div>
 
-	<div class="devider">
-		<p>Overview</p>
-	</div>
+    <div class="devider">
+      <p>Overview</p>
+    </div>
 
-	<div class="overview">
-		<div class="menu-item" routerLink="" (click)="closePopup()">
-			<div class="social-img trade"></div>
-			<p class="menu-text">Trade</p>
-		</div>
-		<div class="menu-item" routerLink="/rewards" (click)="closePopup()">
-			<div class="social-img rewards"></div>
-			<p class="menu-text">Rewards</p>
-		</div>
-	</div>
-	
-	<div class="devider">
-		<p>Social</p>
-	</div>
+    <div class="overview">
+      <div class="menu-item" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+           (click)="closePopup()">
+        <div class="social-img trade"></div>
+        <p class="menu-text">Trade</p>
+      </div>
+      <div class="menu-item" routerLink="/rewards" routerLinkActive="active" (click)="closePopup()">
+        <div class="social-img rewards"></div>
+        <p class="menu-text">Rewards</p>
+      </div>
+    </div>
 
-	<div class="socials">
-		<a class="menu-item" href="https://x.com/alyrafinance" target="_blank" (click)="closePopup()">
-			<div class="social-img twitter"></div>
-			<p class="menu-text">Twitter</p>
-		</a>
-		<a class="menu-item" href="https://blackholelabs.gitbook.io/blackholelabs" target="_blank" (click)="closePopup()">
-			<div class="social-img documentation"></div>
-			<p class="menu-text">Documentation</p>
-		</a>
-	</div>
+    <div class="devider">
+      <p>Social</p>
+    </div>
 
+    <div class="socials">
+      <a class="menu-item" href="https://x.com/alyrafinance" target="_blank" (click)="closePopup()">
+        <div class="social-img twitter"></div>
+        <p class="menu-text">Twitter</p>
+      </a>
+      <a class="menu-item" href="https://blackholelabs.gitbook.io/blackholelabs" target="_blank" (click)="closePopup()">
+        <div class="social-img documentation"></div>
+        <p class="menu-text">Documentation</p>
+      </a>
+    </div>
 
-	<div class="devider">
-		<p>Need help?</p>
-	</div>
+    <div class="devider">
+      <p>Need help?</p>
+    </div>
 
-	<a class="menu-item" href="https://t.me/blackhole_support" target="_blank" (click)="closePopup()">
-		<div class="social-img contact"></div>
-		<p class="menu-text">Contact us</p>
-	</a>
+    <a class="menu-item" href="https://t.me/blackhole_support" target="_blank" (click)="closePopup()">
+      <div class="social-img contact"></div>
+      <p class="menu-text">Contact us</p>
+    </a>
+  </div>
 </div>

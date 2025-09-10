@@ -1,4 +1,4 @@
-<div class="popup-container wallet-popup" (mousemove)="onWalletMouseMove($event)">
+<div class="popup-container wallet-popup">
 	<div class="header">
 		<p><span>{{ walletCount }}</span> Wallet{{ walletCount > 1 ? 's' : '' }}</p>
 		<button class="close-button" (click)="closePopup()"></button>
@@ -9,7 +9,7 @@
     <div class="avatar" [style.background-image]="'url(' + getIconUrl('EVM') + ')'"></div>
     <div class="wallet-name">
       <h3>{{ blockchainStateService.currentProviderIds()['EVM'].nameService ?
-             blockchainStateService.currentProviderIds()['EVM'].nameService : 
+             blockchainStateService.currentProviderIds()['EVM'].nameService :
              formatAddress(blockchainStateService.currentProviderIds()['EVM'].address!) }}</h3>
       <div class="wallet-address">
         <p>{{ formatAddress(blockchainStateService.currentProviderIds()['EVM'].address!) }}</p>
@@ -34,7 +34,7 @@
     <div class="avatar" [style.background-image]="'url(' + getIconUrl('SVM') + ')'"></div>
     <div class="wallet-name">
       <h3>{{ blockchainStateService.currentProviderIds()['SVM'].nameService ?
-             blockchainStateService.currentProviderIds()['SVM'].nameService : 
+             blockchainStateService.currentProviderIds()['SVM'].nameService :
              formatAddress(blockchainStateService.currentProviderIds()['SVM'].address!) }}</h3>
       <div class="wallet-address">
         <p>{{ formatAddress(blockchainStateService.currentProviderIds()['SVM'].address!) }}</p>
@@ -121,5 +121,5 @@
 			</div>
 		</div>
 	</div> -->
-	
+
 </div>

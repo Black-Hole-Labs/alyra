@@ -1,4 +1,4 @@
-<div class="trade-window" (mousemove)="onTradeMouseMove($event)">
+<div class="trade-window" [class.hidden]="(!showTrade())">
   <div class="header">
     <h3>Trade</h3>
     <div class="icons">
@@ -19,12 +19,11 @@
 
   <div class="swap-container">
     <div class="change-button" id="change-button" (click)="swapTokens()">
-      <!-- (mousedown)="onMouseDown()" 
+      <!-- (mousedown)="onMouseDown()"
 				(animationend)="onAnimationEnd()"> -->
       <div class="arrow-up"></div>
       <div class="arrow-down"></div>
     </div>
-
 
     <div class="sell">
       <div class="left">
@@ -122,9 +121,9 @@
 
     <button class="main-button" *ngIf="isWalletConnected(); else connectWallet"
       [class.inactive]="!isSwapButtonActive() || txData() === undefined || buttonState === 'rate-limit' || loading() === true"
-      [class.finding]="buttonState === 'finding'" 
+      [class.finding]="buttonState === 'finding'"
       [class.approve]="buttonState === 'approve'"
-      [class.wallet]="buttonState === 'wallet'" 
+      [class.wallet]="buttonState === 'wallet'"
       [class.insufficient]="buttonState === 'insufficient'"
       [class.wrong-address]="buttonState === 'wrong-address'"
       [class.no-available-quotes]="buttonState === 'no-available-quotes'"

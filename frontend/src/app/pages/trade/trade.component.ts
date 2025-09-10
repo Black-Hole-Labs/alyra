@@ -8,6 +8,7 @@ import {
   ViewChild,
   ElementRef,
   AfterViewChecked,
+  Signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -31,7 +32,9 @@ import { FailedNotificationComponent } from '../../components/notification/faile
 import { PendingNotificationComponent } from '../../components/notification/pending-notification/pending-notification.component';
 import { PublicKey } from '@solana/web3.js';
 import { TokenService } from '../../services/token.service';
-import { MouseGradientService } from '../../services/mouse-gradient.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { map } from 'rxjs';
 
 export interface Token {
   symbol: string;
@@ -60,6 +63,12 @@ export class TradeComponent implements AfterViewChecked {
   //[x: string]: any;
   sellAmount: string = '';
   //validatedSellAmount: string = '';
+  private allowWhenWide = new Set(['blackholeMenu', 'wallet', 'settings']);
+
+  isMobile!: Signal<boolean>;
+  activePopup!: Signal<string | null>;
+  showTrade!: Signal<boolean>;
+
   sellAmountForInput = signal<string | undefined>(undefined);
   validatedSellAmount = signal<number>(0);
   loading = signal<boolean>(false);
@@ -141,10 +150,21 @@ export class TradeComponent implements AfterViewChecked {
     private transactionsService: TransactionsService,
     public popupService: PopupService,
     public tokenService: TokenService,
-    private mouseGradientService: MouseGradientService,
+    private bp: BreakpointObserver,
   ) {
     this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
     this.initializeNetworks();
+
+    this.isMobile = toSignal(bp.observe('(max-width: 970px)').pipe(map((r) => r.matches)), { initialValue: false });
+    this.activePopup = toSignal(this.popupService.activePopup$, { initialValue: null });
+
+    this.showTrade = computed(() => {
+      const popup = this.activePopup();
+      const mobile = this.isMobile();
+      if (!popup) return true;
+      if (mobile) return false;
+      return this.allowWhenWide.has(popup);
+    });
 
     effect(
       () => {
@@ -1543,8 +1563,4 @@ export class TradeComponent implements AfterViewChecked {
   //       }
   //   });
   // }
-
-  onTradeMouseMove(event: MouseEvent): void {
-    this.mouseGradientService.onMouseMove(event);
-  }
 }

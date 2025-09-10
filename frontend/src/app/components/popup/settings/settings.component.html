@@ -1,4 +1,4 @@
-<div class="settings-popup" (mousemove)="onSettingsMouseMove($event)">
+<div class="settings-popup">
   <div class="settings-header">
     <h3>Settings</h3>
     <button class="close-button" (click)="closePopup()"></button>
@@ -32,7 +32,7 @@
 				<span class="percent" *ngIf="customValue.length > 0">%</span>
 			</div>
 		</div>
-		
+
     <button class="main" (click)="saveValue()">Save</button>
   </div>
 </div>

@@ -1,31 +1,31 @@
-@media screen and (min-width: 1601px) and (max-width: 1920px) {
+@media screen and (max-width: 1920px) {
 	.menu {
 		gap: 6px;
 	}
-	
+
 	.left {
 		gap: 40px;
 	}
-	
+
 	.right {
 		height: 44px;
 		gap: 10px;
 	}
-	
+
 	h3 {
 		font-size: 18px;
 	}
-	
+
 	a.logo {
 		width: 48px;
 		height: 48px;
 	}
-	
+
 	img {
 		height: 48px;
 		width: 48px;
 	}
-	
+
 	button.closed,
 	button.network-closed {
 		width: 6px;
@@ -41,7 +41,7 @@
 	nav {
 		gap: 30px;
 	}
-	
+
 	nav a {
 		font-size: 18px;
 	}
@@ -55,64 +55,47 @@
 		font-size: 15px;
 	}
 
-	@import '../../styles/mouse-gradient-button';
-	
 	.wallet {
-		@include mouse-gradient-button(
-			$padding: 10px 13px,
-			$height: auto,
-			$border-radius: 10px,
-			$include-responsive: false
-		);
 		gap: 12px;
-
-		&.connected {
-			@include mouse-gradient-button(
-				$padding: 7px 16px 7px 7px,
-				$height: auto,
-				$border-radius: 10px,
-				$include-responsive: false
-			);
-		}
 	}
-	
+
 	.wallet-icon {
 		width: 24px;
 		height: 24px;
 	}
-	
+
 	.wallet p {
 		font-size: 15px;
 	}
 }
-@media screen and (min-width: 1171px) and (max-width: 1600px) {
+@media screen and (max-width: 1600px) {
 	.menu {
 		gap: 6px;
 	}
-	
+
 	.left {
 		gap: 40px;
 	}
-	
+
 	.right {
 		height: 44px;
 		gap: 10px;
 	}
-	
+
 	h3 {
 		font-size: 18px;
 	}
-	
+
 	a.logo {
 		width: 48px;
 		height: 48px;
 	}
-	
+
 	img {
 		height: 48px;
 		width: 48px;
 	}
-	
+
 	button.closed,
 	button.network-closed {
 		width: 6px;
@@ -128,7 +111,7 @@
 	nav {
 		gap: 30px;
 	}
-	
+
 	nav a {
 		font-size: 18px;
 	}
@@ -143,64 +126,47 @@
 		font-size: 15px;
 	}
 
-	@import '../../styles/mouse-gradient-button';
-
 	.wallet {
-		@include mouse-gradient-button(
-			$padding: 10px 13px,
-			$height: auto,
-			$border-radius: 10px,
-			$include-responsive: false
-		);
 		gap: 12px;
-
-		&.connected {
-			@include mouse-gradient-button(
-				$padding: 7px 16px 7px 7px,
-				$height: auto,
-				$border-radius: 10px,
-				$include-responsive: false
-			);
-		}
 	}
-	
+
 	.wallet-icon {
 		width: 24px;
 		height: 24px;
 	}
-	
+
 	.wallet p {
 		font-size: 15px;
 	}
 }
-@media screen and (min-width: 971px) and (max-width: 1170px) {
+@media screen and (max-width: 1170px) {
 	.menu {
 		gap: 4px;
 	}
-	
+
 	.left {
 		gap: 30px;
 	}
-	
+
 	.right {
 		height: 31px;
 		gap: 7px;
 	}
-	
+
 	h3 {
 		font-size: 13px;
 	}
-	
+
 	a.logo {
 		width: 35px;
 		height: 35px;
 	}
-	
+
 	img {
 		height: 35px;
 		width: 35px;
 	}
-	
+
 	button.closed,
 	button.network-closed {
 		width: 5px;
@@ -216,7 +182,7 @@
 	nav {
 		gap: 20px;
 	}
-	
+
 	nav a {
 		font-size: 13px;
 	}
@@ -230,64 +196,47 @@
 		font-size: 11px;
 	}
 
-	@import '../../styles/mouse-gradient-button';
-
 	.wallet {
-		@include mouse-gradient-button(
-			$padding: 7px 10px,
-			$height: auto,
-			$border-radius: 7px,
-			$include-responsive: false
-		);
 		gap: 8px;
-
-		&.connected {
-			@include mouse-gradient-button(
-				$padding: 5px 10px 5px 5px,
-				$height: auto,
-				$border-radius: 7px,
-				$include-responsive: false
-			);
-		}
 	}
-	
+
 	.wallet-icon {
 		width: 17px;
 		height: 17px;
 	}
-	
+
 	.wallet p {
 		font-size: 11px;
 	}
 }
-@media screen and (min-width: 480px) and (max-width: 970px) {
+@media screen and (max-width: 970px) {
 	.menu {
 		gap: 6px;
 	}
-	
+
 	.left {
 		gap: 40px;
 	}
-	
+
 	.right {
 		height: 44px;
 		gap: 10px;
 	}
-	
+
 	h3 {
 		font-size: 18px;
 	}
-	
+
 	a.logo {
 		width: 48px;
 		height: 48px;
 	}
-	
+
 	img {
 		height: 48px;
 		width: 48px;
 	}
-	
+
 	button.closed,
 	button.network-closed {
 		width: 6px;
@@ -303,7 +252,7 @@
 	nav {
 		display: none;
 	}
-	
+
 	nav a {
 		font-size: 18px;
 	}
@@ -315,16 +264,8 @@
 	.xp p {
 		font-size: 15px;
 	}
-	
-	@import '../../styles/mouse-gradient-button';
 
 	.wallet {
-		@include mouse-gradient-button(
-			$padding: 10px 13px,
-			$height: auto,
-			$border-radius: 10px,
-			$include-responsive: false
-		);
 		gap: 12px;
 	}
 
@@ -335,45 +276,45 @@
 	.separator {
 		display: none;
 	}
-	
+
 	.wallet-icon {
 		width: 24px;
 		height: 24px;
 	}
-	
+
 	.wallet p {
 		font-size: 15px;
 	}
 }
 
-@media screen and (min-width: 360px) and (max-width: 479px) {
+@media screen and (max-width: 479px) {
 	.menu {
 		gap: 6px;
 	}
-	
+
 	.left {
 		gap: 60px;
 	}
-	
+
 	.right {
 		height: 44px;
 		gap: 10px;
 	}
-	
+
 	h3 {
 		font-size: 18px;
 	}
-	
+
 	a.logo {
 		width: 48px;
 		height: 48px;
 	}
-	
+
 	img {
 		height: 48px;
 		width: 48px;
 	}
-	
+
 	button.closed,
 	button.network-closed {
 		width: 6px;
@@ -406,24 +347,16 @@
 	.separator {
 		display: none;
 	}
-	
-	@import '../../styles/mouse-gradient-button';
 
 	.wallet {
-		@include mouse-gradient-button(
-			$padding: 10px 13px,
-			$height: auto,
-			$border-radius: 10px,
-			$include-responsive: false
-		);
 		gap: 12px;
 	}
-	
+
 	.wallet-icon {
 		width: 24px;
 		height: 24px;
 	}
-	
+
 	.wallet p {
 		display: none;
 	}

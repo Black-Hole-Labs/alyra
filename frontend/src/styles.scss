@@ -278,12 +278,6 @@ app-settings-bridge {
   right: 40px;
 }
 
-.blackhole-menu {
-	position: fixed;
-  top: 130px;
-  left: 40px;
-}
-
 .popup-network {
 	position: fixed;
   top: 155px;
@@ -305,17 +299,12 @@ app-settings-bridge {
 
 	app-settings {
 		top: 108px;
-		left: calc(50% + 240px);
+		left: calc(50% + 280px);
 	}
 
 	.wallet-popup {
 		top: 100px;
 		right: 30px;
-	}
-
-	.blackhole-menu {
-		top: 100px;
-		left: 30px;
 	}
 
 	.popup-network {
@@ -334,17 +323,12 @@ app-settings-bridge {
 
 	app-settings {
 		top: 88px;
-		left: calc(50% + 240px);
+		left: calc(50% + 280px);
 	}
 
 	.wallet-popup {
 		top: 80px;
 		right: 20px;
-	}
-
-	.blackhole-menu {
-		top: 80px;
-		left: 20px;
 	}
 
 	.popup-network {
@@ -371,11 +355,6 @@ app-settings-bridge {
 		right: 20px;
 	}
 
-	.blackhole-menu {
-		top: 65px;
-		left: 20px;
-	}
-
 	.popup-network {
 		top: 75px;
 		right: 36px;
@@ -398,11 +377,6 @@ app-settings-bridge {
 	.wallet-popup {
 		top: 80px;
 		right: 20px;
-	}
-
-	.blackhole-menu {
-		top: 80px;
-		left: 20px;
 	}
 
 	.popup-network {
@@ -458,7 +432,6 @@ app-settings-bridge {
   .wallet-popup,
   .connect-wallet,
   .popup-network,
-  .blackhole-menu,
   .bridge-tx,
   .network-change-from,
   .network-change-to,
