@@ -1,8 +1,7 @@
 footer{
 	display: flex;
-	flex-direction: column;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: center;
 }
 
 hr{
@@ -12,10 +11,9 @@ hr{
 }
 
 .content{
-	width: 100%;
 	display: flex;
 	align-items: center;
-	justify-content: flex-end;
+	justify-content: center;
 	gap: 20px;
 }
 
@@ -34,7 +32,6 @@ hr{
 	padding: 8px 12px;
 	border-radius: 8px;
 	white-space: nowrap;
-	font-family: "JetBrains Mono", monospace;
 	font-weight: 400;
 	font-size: 14px;
 	color: white;
@@ -81,18 +78,19 @@ hr{
 }
 
 p{
-	font-family: "JetBrains Mono", monospace;
 	font-weight: 400;
 	font-size: 14px;
 	color: white;
 }
 
 .separator{
-	color: var(--elem-nonactive);
+	background: rgba(var(--white), 0.15);
+	border: 0 solid rgba(var(--white), 0.15);
+  height: 15px;
+  width: 1px;
 }
 
 a{
-	font-family: "JetBrains Mono", monospace;
 	font-weight: 400;
 	font-size: 14px;
 	color: white;
@@ -117,7 +115,7 @@ a:hover{
 	border-radius: 50%;
 	position: relative;
 	box-shadow: 0 0 4px var(--green);
-	
+
 	&::after {
 		content: '';
 		position: absolute;

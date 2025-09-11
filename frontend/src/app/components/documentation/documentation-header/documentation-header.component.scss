@@ -12,7 +12,6 @@ header{
 	z-index: 1001;
 }
 h3{
-	font-family: "JetBrains Mono", monospace;
 	font-weight: 800;
 	font-size: 24px;
 	color: white;
@@ -60,7 +59,6 @@ nav{
 }
 nav a {
 	font-size: 20px;
-	font-family: "JetBrains Mono", monospace;
 	font-weight: 400;
 	color: var(--elem-nonactive);
 	transition: 0.2s;

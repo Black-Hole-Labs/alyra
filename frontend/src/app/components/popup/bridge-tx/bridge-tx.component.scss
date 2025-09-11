@@ -21,7 +21,7 @@
 .disabled-link {
 	text-decoration: none;
 	cursor: default;
-  }  
+  }
 
 .bridge-tx {
 	width: 681px;
@@ -58,7 +58,7 @@
 }
 
 .heading h3 {
-	font-family: "JetBrains Mono", monospace;
+
 	font-weight: 500;
 	font-size: 32px;
 	color: white;
@@ -103,7 +103,7 @@
 
 .left-network h4,
 .right-network h4 {
-	font-family: "JetBrains Mono", monospace;
+
 	font-weight: 500;
 	font-size: 22px;
 	color: white;
@@ -118,7 +118,7 @@
 }
 
 .explorer-link button {
-	font-family: "JetBrains Mono", monospace;
+
 	font-weight: 500;
 	font-size: 18px;
 	color: var(--elem-nonactive);
@@ -176,7 +176,7 @@
 }
 
 .elem h6 {
-	font-family: "JetBrains Mono", monospace;
+
 	font-weight: 500;
 	font-size: 20px;
 	color: white;
@@ -194,14 +194,14 @@
 }
 
 .tx-status p {
-	font-family: "JetBrains Mono", monospace;
+
 	font-weight: 400;
 	font-size: 14px;
 	color: var(--yellow);
 }
 
 .elem>p {
-	font-family: "JetBrains Mono", monospace;
+
 	font-weight: 300;
 	font-size: 20px;
 	color: white;
@@ -212,7 +212,7 @@
 	height: 72px;
 	background-color: rgba(var(--white), 1);
 	border-radius: 16px;
-	font-family: "JetBrains Mono", monospace;
+
 	font-weight: 500;
 	font-size: 21px;
 	color: black;
@@ -230,22 +230,22 @@
 		opacity: 1;
 		transform: rotate(-35deg) translateY(-105px);
 	}
-	
+
 	85% {
 		opacity: 1;
 		transform: rotate(28deg) translateY(-105px);
 	}
-	
+
 	90% {
 		opacity: 0;
 		transform: rotate(28deg) translateY(-105px);
 	}
-	
+
 	91% {
 		opacity: 0;
 		transform: rotate(-35deg) translateY(-105px);
 	}
-	
+
 	100% {
 		opacity: 1;
 		transform: rotate(-35deg) translateY(-105px);

@@ -17,7 +17,6 @@
 }
 
 .settings-header h3 {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 21px;
   color: white;
@@ -60,7 +59,6 @@
 }
 
 .limit > p {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 400;
   font-size: 18px;
   color: white;
@@ -74,7 +72,6 @@
 }
 
 .buttons > button {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 14px;
   color: white;
@@ -109,7 +106,6 @@
 }
 
 .custom input {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 14px;
   color: white;
@@ -122,14 +118,12 @@
 }
 
 .custom input::placeholder {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 14px;
   color: var(--elem-nonactive);
 }
 
 .custom span {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 14px;
   color: white;
@@ -162,7 +156,6 @@
   margin-top: 30px;
   background-color: white;
   border-radius: 16px;
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 18px;
   color: black;

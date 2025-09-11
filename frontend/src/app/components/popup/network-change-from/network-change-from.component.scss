@@ -18,14 +18,14 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: stretch;
-  
+
   &:hover {
     transform: none;
-    
+
     background: radial-gradient(
-      circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-      rgba(255, 255, 255, 0.001) 0%, 
-      rgba(255, 255, 255, 0.0005) 50%, 
+      circle at var(--gradient-x, 50%) var(--gradient-y, 50%),
+      rgba(255, 255, 255, 0.001) 0%,
+      rgba(255, 255, 255, 0.0005) 50%,
       transparent 100%
     );
   }
@@ -38,7 +38,7 @@
 }
 
 h3 {
-  font-family: "JetBrains Mono", monospace;
+
   font-weight: 500;
   font-size: 28px;
   color: white;
@@ -75,7 +75,7 @@ button:hover {
 input {
   width: 476px;
   height: 24px;
-  font-family: "JetBrains Mono", monospace;
+
   font-weight: 400;
   font-size: 18px;
   color: white;
@@ -86,7 +86,7 @@ input {
 
 input::placeholder {
   color: var(--elem-nonactive);
-  font-family: "JetBrains Mono", monospace;
+
   font-weight: 400;
   font-size: 18px;
 }
@@ -174,7 +174,7 @@ input::placeholder {
 }
 
 .name h6 {
-  font-family: "JetBrains Mono", monospace;
+
   font-weight: 700;
   font-size: 20px;
   color: white;

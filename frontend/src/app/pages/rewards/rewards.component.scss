@@ -27,7 +27,7 @@ header .left{
 }
 
 h1{
-	font-family: "JetBrains Mono", monospace;
+
 	font-weight: 400;
 	font-size: 42px;
 	color: white;
@@ -40,7 +40,7 @@ h1{
 }
 
 .comission-rate p{
-	font-family: "JetBrains Mono", monospace;
+
 	font-weight: 400;
 	font-size: 18px;
 	color: var(--pink);
@@ -58,7 +58,7 @@ h1{
 }
 
 .apply p{
-	font-family: "JetBrains Mono", monospace;
+
 	font-weight: 400;
 	font-size: 18px;
 	color: white;
@@ -76,7 +76,7 @@ h1{
 }
 
 .learn p{
-	font-family: "JetBrains Mono", monospace;
+
 	font-weight: 400;
 	font-size: 18px;
 	color: white;
@@ -121,7 +121,7 @@ h1{
 }
 
 p{
-	font-family: "JetBrains Mono", monospace;
+
 	font-weight: 400;
 	font-size: 18px;
 	color: var(--elem-nonactive);
@@ -196,7 +196,7 @@ hr{
 }
 
 .share-button p{
-	font-family: "JetBrains Mono", monospace;
+
 	font-weight: 400;
 	font-size: 18px;
 	color: black;
@@ -273,21 +273,21 @@ hr{
 	&:hover{
 		background-color: rgba(var(--white), 0.6);
 	}
-	
+
 	&.disabled{
 		background-color: rgba(var(--white), 0.3);
 		cursor: not-allowed;
 		// opacity: 0.5;
-		
+
 		// &:hover{
 		// 	background-color: rgba(var(--elem-nonactive), 0.3);
 		// }
 	}
-	
+
 	// &.claiming{
 	// 	background-color: rgba(var(--pink), 0.8);
 	// 	cursor: not-allowed;
-		
+
 	// 	&:hover{
 	// 		background-color: rgba(var(--pink), 0.8);
 	// 	}
@@ -295,7 +295,7 @@ hr{
 }
 
 .claim-button p{
-	font-family: "JetBrains Mono", monospace;
+
 	font-weight: 400;
 	font-size: 18px;
 	color: black;
