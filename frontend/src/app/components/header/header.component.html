@@ -1,40 +1,42 @@
 <header>
 
-	<div class="left">
-		<div class="menu"
-			(mouseenter)="onMenuMouseEnter()"
-			(mouseleave)="onMenuMouseLeave()">
-			<a routerLink="/" class="logo"></a>
-			<h3 (click)="togglePopup($event)">Alyra</h3>
-			<button (click)="togglePopup($event)" [ngClass]="{'open': isPopupVisible, 'closed': !isPopupVisible}"></button>
-		</div>
+  <div class="left">
+    <div class="menu"
+         (mouseenter)="onMenuMouseEnter()"
+         (mouseleave)="onMenuMouseLeave()">
+      <a routerLink="/" class="logo"></a>
+      <h3 (click)="togglePopup($event)">Alyra</h3>
+      <button (click)="togglePopup($event)" [ngClass]="{'open': isPopupVisible, 'closed': !isPopupVisible}"></button>
+    </div>
 
 
-		<nav>
-			<a appTextScramble routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Trade</a>
-			<a appTextScramble routerLink="/rewards" routerLinkActive="active-link">Rewards</a>
-			<a appTextScramble routerLink="/quests" routerLinkActive="active-link">Quests</a>
-		</nav>
-	</div>
+    <nav>
+      <a appTextScramble routerLink="/" routerLinkActive="active-link"
+         [routerLinkActiveOptions]="{exact: true}">Trade</a>
+      <a appTextScramble routerLink="/rewards" routerLinkActive="active-link">Rewards</a>
+      <a appTextScramble routerLink="/quests" routerLinkActive="active-link">Quests</a>
+    </nav>
+  </div>
 
-	<div class="right">
-
-		<div class="wallet" [ngClass]="{'connected': blockchainStateService.connected()}" (click)="openConnectWalletPopup()" (mousemove)="onWalletMouseMove($event)">
-			<div class="xp" *ngIf="blockchainStateService.connected()" routerLink="/rewards">
-				<p>0 XP</p>
-			</div>
-
-			<p>{{ walletName().length > 20 ? walletName().slice(0, 6) + '...' + walletName().slice(-3) : walletName()}}</p>
-
-			@if(blockchainStateService.connected() && blockchainStateService.networkSell() !== undefined)
-			{
-				<p class="separator">|</p>
-				<p class="balance">
-					{{ walletBalanceService.nativeBalance() | number:'1.6-6' }} {{ blockchainStateService.networkSell()!.nativeCurrency.symbol }}
-				</p>
-			}
-		</div>
-
-	</div>
+  <div class="right">
+    <div class="wallet" [ngClass]="{'connected': blockchainStateService.connected()}" (click)="openConnectWalletPopup()"
+         (mousemove)="onWalletMouseMove($event)">
+      <div class="xp" *ngIf="blockchainStateService.connected()" routerLink="/rewards">
+        <p>0 XP</p>
+      </div>
+      <div class="separator" *ngIf="blockchainStateService.connected()"></div>
+      <p class="walletId">
+        <img class="icon" [ngSrc]="currentWalletIcon()" width="15" height="15"
+             alt="Wallet icon"/>
+        {{ walletName().length > 20 ? walletName().slice(0, 6) + '...' + walletName().slice(-3) : walletName() }}
+      </p>
+      @if (blockchainStateService.connected() && blockchainStateService.networkSell() !== undefined) {
+        <div class="separator"></div>
+        <p class="balance">
+          {{ walletBalanceService.nativeBalance() | number:'1.6-6' }} {{ blockchainStateService.networkSell()!.nativeCurrency.symbol }}
+        </p>
+      }
+    </div>
+  </div>
 
 </header>

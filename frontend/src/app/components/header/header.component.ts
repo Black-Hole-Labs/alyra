@@ -1,5 +1,5 @@
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { PopupService } from '../../services/popup.service';
 import { Subscription } from 'rxjs';
 import {
@@ -26,7 +26,7 @@ import { GmCounterService } from './gm-counter.service';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule, CommonModule, TextScrambleDirective],
+  imports: [RouterModule, CommonModule, TextScrambleDirective, NgOptimizedImage],
   providers: [GmCounterService],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss', './header.component.adaptives.scss'],
@@ -44,6 +44,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showWalletPopup = false;
   //walletName: string = 'Connect Wallet';
   walletName = computed(() => this.blockchainStateService.getCurrentWalletAddress() ?? 'Connect Wallet');
+  currentWalletIcon = computed(() => {
+    if (!this.blockchainStateService.connected()) {
+      return '/img/header/wallet.png';
+    }
+    const providerId = this.blockchainStateService.getCurrentProviderId();
+    const provider = this.providers.find((p) => p.id === providerId);
+    return provider?.iconUrl ?? '/img/header/wallet.png';
+  });
   private readonly subscription: Subscription;
   private providers: Wallets[] = [];
   walletIcon = signal<string>('/img/header/wallet.png');
