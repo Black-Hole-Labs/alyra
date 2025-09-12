@@ -1,33 +1,32 @@
-import { computed,Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 
-import { CreateQuestDto,Quest, QuestRank, QuestStatus } from '../models/quest.interface';
+import { CreateQuestDto, Quest, QuestRank, QuestStatus } from '../models/quest.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class QuestService {
   private questsSignal = signal<Quest[]>([]);
 
   quests = this.questsSignal.asReadonly();
-  
-  availableQuests = computed(() => 
-    this.questsSignal().filter(quest => quest.status === QuestStatus.AVAILABLE)
+
+  availableQuests = computed(() =>
+    this.questsSignal().filter((quest) => quest.status === QuestStatus.AVAILABLE),
   );
-  
-  endedQuests = computed(() => 
-    this.questsSignal().filter(quest => quest.status === QuestStatus.ENDED)
+
+  endedQuests = computed(() =>
+    this.questsSignal().filter((quest) => quest.status === QuestStatus.ENDED),
   );
-  
-  completedQuests = computed(() => 
-    this.questsSignal().filter(quest => quest.status === QuestStatus.COMPLETED)
+
+  completedQuests = computed(() =>
+    this.questsSignal().filter((quest) => quest.status === QuestStatus.COMPLETED),
   );
 
   constructor() {
     this.loadQuests();
-    
+
     setInterval(() => this.checkExpiredQuests(), 60000);
   }
-
 
   createQuest(questData: CreateQuestDto): Quest {
     const newQuest: Quest = {
@@ -39,65 +38,63 @@ export class QuestService {
       endTime: questData.endTime,
       status: QuestStatus.AVAILABLE,
       progress: 0,
-      createdAt: new Date()
+      createdAt: new Date(),
     };
 
-    this.questsSignal.update(quests => [...quests, newQuest]);
+    this.questsSignal.update((quests) => [...quests, newQuest]);
     this.saveQuests();
-    
+
     return newQuest;
   }
 
-
   updateQuest(questId: string, updates: Partial<Quest>): boolean {
-    const questIndex = this.questsSignal().findIndex(q => q.id === questId);
-    
+    const questIndex = this.questsSignal().findIndex((q) => q.id === questId);
+
     if (questIndex === -1) {
       return false;
     }
 
-    this.questsSignal.update(quests => {
+    this.questsSignal.update((quests) => {
       const updatedQuests = [...quests];
       updatedQuests[questIndex] = { ...updatedQuests[questIndex], ...updates };
       return updatedQuests;
     });
-    
+
     this.saveQuests();
     return true;
   }
 
   deleteQuest(questId: string): boolean {
     const initialLength = this.questsSignal().length;
-    
-    this.questsSignal.update(quests => quests.filter(q => q.id !== questId));
-    
+
+    this.questsSignal.update((quests) => quests.filter((q) => q.id !== questId));
+
     const wasDeleted = this.questsSignal().length < initialLength;
     if (wasDeleted) {
       this.saveQuests();
     }
-    
+
     return wasDeleted;
   }
 
   getQuestById(questId: string): Quest | undefined {
-    return this.questsSignal().find(q => q.id === questId);
+    return this.questsSignal().find((q) => q.id === questId);
   }
 
   updateProgress(questId: string, progress: number): boolean {
     const quest = this.getQuestById(questId);
-    
+
     if (!quest || quest.status !== QuestStatus.AVAILABLE) {
       return false;
     }
 
     const clampedProgress = Math.max(0, Math.min(100, progress));
     const updates: Partial<Quest> = { progress: clampedProgress };
-    
 
     if (clampedProgress >= 100) {
       updates.status = QuestStatus.COMPLETED;
     }
-    
+
     return this.updateQuest(questId, updates);
   }
 
@@ -129,32 +126,32 @@ export class QuestService {
         color: 'rgba(255, 255, 255, 1)',
         bgColor: 'rgba(255, 255, 255, 0)',
         backgroundImage: '/img/quests/common-quest-bg.png',
-        name: 'Common'
+        name: 'Common',
       },
       [QuestRank.UNCOMMON]: {
         color: 'rgba(120, 255, 174, 1)',
         bgColor: 'rgba(43, 111, 34, 0.4)',
         backgroundImage: '/img/quests/uncommon-quest-bg.png',
-        name: 'Uncommon'
+        name: 'Uncommon',
       },
       [QuestRank.RARE]: {
         color: 'rgba(170, 212, 255, 1)',
         bgColor: 'rgba(60, 156, 255, 0.2)',
         backgroundImage: '/img/quests/rare-quest-bg.png',
-        name: 'Rare'
+        name: 'Rare',
       },
       [QuestRank.EPIC]: {
         color: 'rgba(197, 140, 255, 1)',
         bgColor: 'rgba(147, 51, 234, 0.2)',
         backgroundImage: '/img/quests/epic-quest-bg.png',
-        name: 'Epic'
+        name: 'Epic',
       },
       [QuestRank.LEGENDARY]: {
         color: 'rgba(255, 214, 120, 1)',
         bgColor: 'rgba(245, 158, 11, 0.2)',
         backgroundImage: '/img/quests/legendary-quest-bg.png',
-        name: 'Legendary'
-      }
+        name: 'Legendary',
+      },
     };
 
     return configs[rank];
@@ -169,8 +166,8 @@ export class QuestService {
     const now = new Date();
     let hasChanges = false;
 
-    this.questsSignal.update(quests => {
-      return quests.map(quest => {
+    this.questsSignal.update((quests) => {
+      return quests.map((quest) => {
         if (quest.status === QuestStatus.AVAILABLE && new Date(quest.endTime) <= now) {
           hasChanges = true;
           return { ...quest, status: QuestStatus.ENDED };
@@ -197,10 +194,10 @@ export class QuestService {
       const savedQuests = localStorage.getItem('quests');
       if (savedQuests) {
         const quests = JSON.parse(savedQuests) as Quest[];
-        const questsWithDates = quests.map(quest => ({
+        const questsWithDates = quests.map((quest) => ({
           ...quest,
           endTime: new Date(quest.endTime),
-          createdAt: new Date(quest.createdAt)
+          createdAt: new Date(quest.createdAt),
         }));
         this.questsSignal.set(questsWithDates);
       }

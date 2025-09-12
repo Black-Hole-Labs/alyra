@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostBinding,OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { ClosePopupsDirective } from '../../../directives/close-popups.directive';
@@ -11,16 +11,11 @@ import { DocumentationHeaderComponent } from '../documentation-header/documentat
   standalone: true,
   templateUrl: './documentation-page.component.html',
   styleUrls: [
-		'./documentation-page.component.scss',
-		'./documentation-page.component.adaptives.scss'
-	],
-  imports: [
-    RouterModule,
-		CommonModule,
-    DocumentationHeaderComponent,
-    DocumentationFooterComponent,
+    './documentation-page.component.scss',
+    './documentation-page.component.adaptives.scss',
   ],
-	hostDirectives: [ClosePopupsDirective]
+  imports: [RouterModule, CommonModule, DocumentationHeaderComponent, DocumentationFooterComponent],
+  hostDirectives: [ClosePopupsDirective],
 })
 export class DocumentationPageComponent implements OnInit, OnDestroy {
   @HostBinding('class.documentation-page') isDocumentationPage = true;

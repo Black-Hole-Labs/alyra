@@ -46,7 +46,10 @@ export default [
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
-      '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'no-type-imports', fixStyle: 'separate-type-imports' }],
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { prefer: 'no-type-imports', fixStyle: 'separate-type-imports' },
+      ],
 
       // Imports
       'import/newline-after-import': ['error', { count: 1 }],

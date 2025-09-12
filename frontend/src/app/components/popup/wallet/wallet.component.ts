@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect,EventEmitter, Output, signal } from '@angular/core';
+import { Component, effect, EventEmitter, Output, signal } from '@angular/core';
 
 import { ProviderType, Wallets } from '../../../models/wallet-provider.interface';
 import { BlockchainStateService, Ecosystem } from '../../../services/blockchain-state.service';

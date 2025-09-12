@@ -1,32 +1,36 @@
-import { animate, state, style, transition,trigger } from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input,OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-reward-success-notification',
   standalone: true,
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   templateUrl: './reward-success-notification.component.html',
   styleUrls: [
-    './reward-success-notification.component.scss', 
-    './reward-success-notification.component.adaptives.scss'
+    './reward-success-notification.component.scss',
+    './reward-success-notification.component.adaptives.scss',
   ],
   animations: [
     trigger('slideInOut', [
-      state('void', style({
-        transform: 'translateX(100%)',
-        opacity: 0
-      })),
-      state('*', style({
-        transform: 'translateX(0)',
-        opacity: 1
-      })),
+      state(
+        'void',
+        style({
+          transform: 'translateX(100%)',
+          opacity: 0,
+        }),
+      ),
+      state(
+        '*',
+        style({
+          transform: 'translateX(0)',
+          opacity: 1,
+        }),
+      ),
       transition('void => *', animate('300ms ease-out')),
-      transition('* => void', animate('300ms ease-in'))
-    ])
-  ]
+      transition('* => void', animate('300ms ease-in')),
+    ]),
+  ],
 })
 export class RewardSuccessNotificationComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
@@ -46,4 +50,4 @@ export class RewardSuccessNotificationComponent implements OnInit {
       this.close.emit();
     }, 300);
   }
-} 
+}

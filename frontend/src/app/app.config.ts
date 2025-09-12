@@ -11,15 +11,13 @@ import { provideRouter } from '@angular/router';
 import networksImport from '@public/data/networks.json';
 
 import { routes } from './app.routes';
-import {
-  WalletProviderManager,
-} from './models/network.model';
+import { WalletProviderManager } from './models/network.model';
 import { NetworkId } from './models/wallet-provider.interface';
 import { BlockchainStateService } from './services/blockchain-state.service';
 
 async function initializeApp(injector: Injector): Promise<void> {
-  const walletManager  = new WalletProviderManager();
-  const stateService   = injector.get(BlockchainStateService);
+  const walletManager = new WalletProviderManager();
+  const stateService = injector.get(BlockchainStateService);
 
   stateService.walletManager = walletManager;
   stateService.allNetworks.set(networksImport);

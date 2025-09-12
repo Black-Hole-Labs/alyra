@@ -16,7 +16,7 @@
   position: absolute;
   left: 0;
   bottom: 0;
-  background: url("/img/background/ellipses-left.png") no-repeat;
+  background: url('/img/background/ellipses-left.png') no-repeat;
 }
 
 .right {
@@ -25,12 +25,12 @@
   position: absolute;
   right: 0;
   bottom: 0;
-  background: url("/img/background/ellipses-right.png") no-repeat;
+  background: url('/img/background/ellipses-right.png') no-repeat;
 }
 
 @media screen and (max-width: 970px) {
   .left {
-  left: -50px;
+    left: -50px;
     bottom: -100px;
   }
 
@@ -39,7 +39,7 @@
     height: 690px;
     top: 0;
     bottom: auto;
-    background: url("/img/background/ellipses-right-mobile.png") no-repeat;
+    background: url('/img/background/ellipses-right-mobile.png') no-repeat;
   }
 }
 

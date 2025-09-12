@@ -1,5 +1,5 @@
 .notification {
-	background: rgba(var(--dark-red), 1);
+  background: rgba(var(--dark-red), 1);
   position: fixed;
   top: 150px;
   right: 40px;
@@ -85,8 +85,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error-message {

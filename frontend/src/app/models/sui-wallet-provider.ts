@@ -19,7 +19,9 @@ export class SuiWalletProvider implements WalletProvider {
   }
 
   isAvailable(): boolean {
-    const wallets = getWallets().get().filter(w => w.chains.includes('sui:mainnet'));
+    const wallets = getWallets()
+      .get()
+      .filter((w) => w.chains.includes('sui:mainnet'));
     return wallets.length > 0;
   }
 
@@ -34,16 +36,19 @@ export class SuiWalletProvider implements WalletProvider {
     }
 
     const walletsList = getWallets().get();
-    const wanted = (this.provider && typeof this.provider === 'string')
-      ? this.provider
-      : (this.provider && (this.provider as any).name) || 'slush';
+    const wanted =
+      this.provider && typeof this.provider === 'string'
+        ? this.provider
+        : (this.provider && (this.provider as any).name) || 'slush';
     const wantedLower = String(wanted).toLowerCase();
 
     let found: any = walletsList.find((w: any) => {
       if ((this.provider as any)?.isPhantom) {
         return Array.isArray(w.chains) && w.chains.includes('sui:mainnet');
       }
-      const name = (w.name || w.id || w.constructor?.name || w.client?.name || '').toString().toLowerCase();
+      const name = (w.name || w.id || w.constructor?.name || w.client?.name || '')
+        .toString()
+        .toLowerCase();
       const supportsSui = Array.isArray(w.chains) && w.chains.includes('sui:mainnet');
       return supportsSui && name.includes(wantedLower);
     });
@@ -88,7 +93,7 @@ export class SuiWalletProvider implements WalletProvider {
 
   async sendTx(txData: TransactionRequestMVM): Promise<string> {
     if (!this.wallet) throw new Error('Wallet not connected');
-    const txBytes = Uint8Array.from(atob(txData.data), c => c.charCodeAt(0));
+    const txBytes = Uint8Array.from(atob(txData.data), (c) => c.charCodeAt(0));
     const txBlock = Transaction.from(txBytes);
 
     const feat = this.wallet.features['sui:signAndExecuteTransaction'] as any;

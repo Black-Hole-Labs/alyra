@@ -1,7 +1,7 @@
 @import '../../../styles/mouse-gradient-button';
 
 .blackhole-menu {
-	position: fixed;
+  position: fixed;
   top: 130px;
   left: 40px;
   flex-direction: column;
@@ -47,11 +47,11 @@ button:hover {
 }
 
 .devider {
-	padding: 2px 8px;
-	box-sizing: border-box;
-	background-color: rgba(var(--white), 0.15);
-	width: fit-content;
-	border-radius: 5px;
+  padding: 2px 8px;
+  box-sizing: border-box;
+  background-color: rgba(var(--white), 0.15);
+  width: fit-content;
+  border-radius: 5px;
   margin-top: 25px;
   display: flex;
   align-items: center;
@@ -95,21 +95,21 @@ p {
 }
 
 .menu-item {
-	margin-top: 8px;
+  margin-top: 8px;
   display: flex;
   align-items: center;
   gap: 8px;
-	padding: 10px 5px;
-	box-sizing: border-box;
-	background-color: transparent;
-	border: 1px solid rgba(var(--white), 0);
-	border-radius: 5px;
-	transition: 0.2s ease-in-out;
-	cursor: pointer;
-	&:hover {
-		background-color: rgba(var(--dark-select), 0.5);
-		border: 1px solid rgba(var(--white), 0.2);
-	}
+  padding: 10px 5px;
+  box-sizing: border-box;
+  background-color: transparent;
+  border: 1px solid rgba(var(--white), 0);
+  border-radius: 5px;
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(var(--dark-select), 0.5);
+    border: 1px solid rgba(var(--white), 0.2);
+  }
 }
 
 .menu-item.active {

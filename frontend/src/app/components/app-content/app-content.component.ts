@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostBinding } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NavigationEnd,Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 

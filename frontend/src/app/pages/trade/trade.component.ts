@@ -87,7 +87,9 @@ export class TradeComponent implements AfterViewChecked {
   gasPriceUSD: number | undefined;
 
   //showConnectWalletPopup: boolean = false;
-  txData = signal<TransactionRequestEVM | TransactionRequestSVM | TransactionRequestMVM | undefined>(undefined);
+  txData = signal<
+    TransactionRequestEVM | TransactionRequestSVM | TransactionRequestMVM | undefined
+  >(undefined);
 
   walletTimer: any = null;
   findingRoutesTimer: any = null;
@@ -126,7 +128,8 @@ export class TradeComponent implements AfterViewChecked {
   @ViewChild('buyAmountText') buyAmountTextElement: ElementRef | null = null;
   private buyAmountTextAnimated = false;
 
-  private possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}:"<>?|';
+  private possibleChars =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}:"<>?|';
   private glitchChars = '!@#$%^&*()_+{}:"<>?|\\';
   private cyberChars = '01010101110010101010101110101010';
   private animationFrames = 60;
@@ -156,7 +159,9 @@ export class TradeComponent implements AfterViewChecked {
     this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
     this.initializeNetworks();
 
-    this.isMobile = toSignal(bp.observe('(max-width: 970px)').pipe(map((r) => r.matches)), { initialValue: false });
+    this.isMobile = toSignal(bp.observe('(max-width: 970px)').pipe(map((r) => r.matches)), {
+      initialValue: false,
+    });
     this.activePopup = toSignal(this.popupService.activePopup$, { initialValue: null });
 
     this.showTrade = computed(() => {
@@ -242,16 +247,26 @@ export class TradeComponent implements AfterViewChecked {
         const sellNetwork = this.blockchainStateService.networkSell();
         if (isConnected && buyNetwork !== undefined && sellNetwork !== undefined) {
           if (
-            (buyNetwork?.id == NetworkId.SOLANA_MAINNET || sellNetwork?.id == NetworkId.SOLANA_MAINNET) &&
-            !(buyNetwork?.id == NetworkId.SOLANA_MAINNET && sellNetwork?.id == NetworkId.SOLANA_MAINNET)
+            (buyNetwork?.id == NetworkId.SOLANA_MAINNET ||
+              sellNetwork?.id == NetworkId.SOLANA_MAINNET) &&
+            !(
+              buyNetwork?.id == NetworkId.SOLANA_MAINNET &&
+              sellNetwork?.id == NetworkId.SOLANA_MAINNET
+            )
           ) {
             this.showCustomAddress = true;
             if (buyNetwork.chainType == ProviderType.EVM) {
-              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.EVM].address!);
+              this.customAddress.set(
+                this.blockchainStateService.currentProviderIds()[ProviderType.EVM].address!,
+              );
             } else if (buyNetwork.chainType == ProviderType.MVM) {
-              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.MVM].address!);
+              this.customAddress.set(
+                this.blockchainStateService.currentProviderIds()[ProviderType.MVM].address!,
+              );
             } else {
-              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.SVM].address!);
+              this.customAddress.set(
+                this.blockchainStateService.currentProviderIds()[ProviderType.SVM].address!,
+              );
             }
           } else if (
             (buyNetwork?.id == NetworkId.SUI_MAINNET || sellNetwork?.id == NetworkId.SUI_MAINNET) &&
@@ -259,11 +274,17 @@ export class TradeComponent implements AfterViewChecked {
           ) {
             this.showCustomAddress = true;
             if (buyNetwork.chainType == ProviderType.EVM) {
-              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.EVM].address!);
+              this.customAddress.set(
+                this.blockchainStateService.currentProviderIds()[ProviderType.EVM].address!,
+              );
             } else if (buyNetwork.chainType == ProviderType.MVM) {
-              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.MVM].address!);
+              this.customAddress.set(
+                this.blockchainStateService.currentProviderIds()[ProviderType.MVM].address!,
+              );
             } else {
-              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.SVM].address!);
+              this.customAddress.set(
+                this.blockchainStateService.currentProviderIds()[ProviderType.SVM].address!,
+              );
             }
           } else {
             this.showCustomAddress = false;
@@ -326,7 +347,8 @@ export class TradeComponent implements AfterViewChecked {
 
       if (inputElement.value.includes('.')) return;
 
-      inputElement.value = inputElement.value.slice(0, cursorPos) + '.' + inputElement.value.slice(cursorPos);
+      inputElement.value =
+        inputElement.value.slice(0, cursorPos) + '.' + inputElement.value.slice(cursorPos);
 
       setTimeout(() => inputElement.setSelectionRange(cursorPos + 1, cursorPos + 1), 0);
     }
@@ -444,7 +466,11 @@ export class TradeComponent implements AfterViewChecked {
     const refreshElement = document.querySelector('.refresh');
     if (refreshElement) {
       this.rotationCount += 1;
-      this.renderer.setStyle(refreshElement, 'transform', `rotate(${this.rotationCount * -720}deg)`);
+      this.renderer.setStyle(
+        refreshElement,
+        'transform',
+        `rotate(${this.rotationCount * -720}deg)`,
+      );
     }
   }
 
@@ -552,7 +578,9 @@ export class TradeComponent implements AfterViewChecked {
   async onBuyTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.tokenService.setSelectedBuyToken(token);
-    this.balanceBuy.set(Number(parseFloat(await this.walletBalanceService.getBalanceForToken(token)).toFixed(6)));
+    this.balanceBuy.set(
+      Number(parseFloat(await this.walletBalanceService.getBalanceForToken(token)).toFixed(6)),
+    );
     this.closeTokenBuyPopup();
     this.popupService.closeAllPopups();
   }
@@ -632,12 +660,20 @@ export class TradeComponent implements AfterViewChecked {
         const rpcUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(
           this.blockchainStateService.networkSell()!.id,
         );
-        const receiptResult = await this.transactionsService.pollTransactionReceiptSvm(txHash, rpcUrl, 60, 5000);
+        const receiptResult = await this.transactionsService.pollTransactionReceiptSvm(
+          txHash,
+          rpcUrl,
+          60,
+          5000,
+        );
 
         if (receiptResult.success) {
           finalStatus = { status: 'DONE', receipt: receiptResult.transaction };
         } else {
-          finalStatus = { status: 'FAILED', error: receiptResult.error || receiptResult.status || 'Unknown' };
+          finalStatus = {
+            status: 'FAILED',
+            error: receiptResult.error || receiptResult.status || 'Unknown',
+          };
         }
       } else if (sellNetworkId === NetworkId.SUI_MAINNET) {
         finalStatus = await this.transactionsService.pollStatus(txHash);
@@ -651,7 +687,10 @@ export class TradeComponent implements AfterViewChecked {
         if (evmResult.success) {
           finalStatus = { status: 'DONE', receipt: evmResult.receipt };
         } else {
-          finalStatus = { status: 'FAILED', error: evmResult.error || evmResult.receipt || 'Unknown' };
+          finalStatus = {
+            status: 'FAILED',
+            error: evmResult.error || evmResult.receipt || 'Unknown',
+          };
         }
       }
     } catch (err) {
@@ -675,10 +714,22 @@ export class TradeComponent implements AfterViewChecked {
 
     try {
       this.balance.set(
-        Number(parseFloat(await this.walletBalanceService.getBalanceForToken(this.tokenService.selectedSellToken()!))),
+        Number(
+          parseFloat(
+            await this.walletBalanceService.getBalanceForToken(
+              this.tokenService.selectedSellToken()!,
+            ),
+          ),
+        ),
       );
       this.balanceBuy.set(
-        Number(parseFloat(await this.walletBalanceService.getBalanceForToken(this.tokenService.selectedBuyToken()!))),
+        Number(
+          parseFloat(
+            await this.walletBalanceService.getBalanceForToken(
+              this.tokenService.selectedBuyToken()!,
+            ),
+          ),
+        ),
       );
       this.walletBalanceService.invalidateBalanceCacheForToken(
         this.blockchainStateService.networkSell()!.id,
@@ -754,7 +805,10 @@ export class TradeComponent implements AfterViewChecked {
     // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
     // // console.log("allowance",allowance);
 
-    const approveTx = await erc20Contract['approve']((this.txData() as TransactionRequestEVM).to, approveAmount);
+    const approveTx = await erc20Contract['approve'](
+      (this.txData() as TransactionRequestEVM).to,
+      approveAmount,
+    );
 
     // console.log("a");
 
@@ -792,18 +846,24 @@ export class TradeComponent implements AfterViewChecked {
     const fromChain = this.blockchainStateService.networkSell()!.id.toString();
     const toChain = this.blockchainStateService.networkBuy()!.id.toString();
     const fromTokenDecimals = this.tokenService.selectedSellToken()!.decimals;
-    const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
+    const formattedFromAmount = this.transactionsService.toNonExponential(
+      this.validatedSellAmount(),
+    );
     const fromAmount = parseUnits(formattedFromAmount, fromTokenDecimals);
     const fromToken = this.tokenService.selectedSellToken()!.contractAddress;
     const toToken = this.tokenService.selectedBuyToken()!.contractAddress;
     const toTokenDecimals = this.tokenService.selectedBuyToken()!.decimals;
 
     let fromAddress = '';
-    let toAddress = this.customAddress() !== '' && this.addressStatus === 'good' ? this.customAddress() : undefined;
+    let toAddress =
+      this.customAddress() !== '' && this.addressStatus === 'good'
+        ? this.customAddress()
+        : undefined;
 
     const CONSTANT_ETH_ADDRESS = '0x1111111111111111111111111111111111111111';
     const CONSTANT_SOL_ADDRESS = '11111111111111111111111111111111';
-    const CONSTANT_SUI_ADDRESS = '0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI';
+    const CONSTANT_SUI_ADDRESS =
+      '0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI';
 
     const fromChainType = this.blockchainStateService.networkSell()?.chainType;
     const toChainType = this.blockchainStateService.networkBuy()?.chainType;
@@ -851,7 +911,15 @@ export class TradeComponent implements AfterViewChecked {
 
     // console.log("fromChain",fromChain);
 
-    if (!fromChain || !toChain || !fromAddress || !fromAmount || !fromToken || !toToken || !fromTokenDecimals) {
+    if (
+      !fromChain ||
+      !toChain ||
+      !fromAddress ||
+      !fromAmount ||
+      !fromToken ||
+      !toToken ||
+      !fromTokenDecimals
+    ) {
       // console.log("fromChain",fromChain);
       // console.log("toChain",toChain);
       // console.log("fromAddress",fromAddress);
@@ -875,10 +943,21 @@ export class TradeComponent implements AfterViewChecked {
       fromChainType !== toChainType &&
       !(this.customAddress() !== '' && this.addressStatus === 'good');
 
-    if ([10, 56, 137, 42161, 1151111081099710].includes(this.blockchainStateService.networkSell()!.id)) {
+    if (
+      [10, 56, 137, 42161, 1151111081099710].includes(this.blockchainStateService.networkSell()!.id)
+    ) {
       // blackHole API for supportted chains
       this.transactionsService
-        .getV1(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress, 'EXACT_INPUT')
+        .getV1(
+          fromChain,
+          toChain,
+          fromToken,
+          toToken,
+          adjustedFromAmount,
+          fromAddress,
+          toAddress,
+          'EXACT_INPUT',
+        )
         .subscribe({
           next: (response: any) => {
             // console.log('Quote received:', response);
@@ -889,7 +968,9 @@ export class TradeComponent implements AfterViewChecked {
               const toAmountNumber = Number(
                 this.transactionsService.parseToAmount(response.outputAmount, toTokenDecimals),
               );
-              const readableToAmount = toAmountNumber.toFixed(toTokenDecimals).replace(/\.?0+$/, '');
+              const readableToAmount = toAmountNumber
+                .toFixed(toTokenDecimals)
+                .replace(/\.?0+$/, '');
               // console.log('readableToAmount:', readableToAmount);
               this.updateBuyAmount(readableToAmount);
 
@@ -954,7 +1035,10 @@ export class TradeComponent implements AfterViewChecked {
               error.error.message.includes('Invalid fromAddress')
             ) {
               this.buttonState = 'wrong-address';
-            } else if (error.error.statusCode === 429 || error.error.message.includes('Rate limit exceeded')) {
+            } else if (
+              error.error.statusCode === 429 ||
+              error.error.message.includes('Rate limit exceeded')
+            ) {
               this.buttonState = 'rate-limit';
             } else if (error.status === 404) {
               console.error('Custom error message:', error || 'Unknown error');
@@ -1001,7 +1085,9 @@ export class TradeComponent implements AfterViewChecked {
               const toAmountNumber = Number(
                 this.transactionsService.parseToAmount(response.estimate.toAmount, toTokenDecimals),
               );
-              const readableToAmount = toAmountNumber.toFixed(toTokenDecimals).replace(/\.?0+$/, '');
+              const readableToAmount = toAmountNumber
+                .toFixed(toTokenDecimals)
+                .replace(/\.?0+$/, '');
               // console.log('readableToAmount:', readableToAmount);
               this.updateBuyAmount(readableToAmount);
 
@@ -1024,7 +1110,10 @@ export class TradeComponent implements AfterViewChecked {
               // console.log('gasPriceUSD:', this.gasPriceUSD);
 
               const fromDecimal = parseFloat(
-                this.transactionsService.parseToAmount(response.estimate.fromAmount, fromTokenDecimals),
+                this.transactionsService.parseToAmount(
+                  response.estimate.fromAmount,
+                  fromTokenDecimals,
+                ),
               );
               const toDecimal = parseFloat(
                 this.transactionsService.parseToAmount(response.estimate.toAmount, toTokenDecimals),
@@ -1069,7 +1158,10 @@ export class TradeComponent implements AfterViewChecked {
               error.error.message.includes('Invalid fromAddress')
             ) {
               this.buttonState = 'wrong-address';
-            } else if (error.error.statusCode === 429 || error.error.message.includes('Rate limit exceeded')) {
+            } else if (
+              error.error.statusCode === 429 ||
+              error.error.message.includes('Rate limit exceeded')
+            ) {
               this.buttonState = 'rate-limit';
             } else if (error.status === 404) {
               console.error('Custom error message:', error || 'Unknown error');
@@ -1390,7 +1482,9 @@ export class TradeComponent implements AfterViewChecked {
       return 'none';
     }
 
-    return this.isValidWalletAddress(addr, this.blockchainStateService.networkBuy()!.chainType) ? 'good' : 'bad';
+    return this.isValidWalletAddress(addr, this.blockchainStateService.networkBuy()!.chainType)
+      ? 'good'
+      : 'bad';
   }
 
   private isValidWalletAddress(address: string, chainType: string): boolean {

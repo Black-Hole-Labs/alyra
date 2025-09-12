@@ -44,7 +44,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showConnectWalletPopup = false;
   showWalletPopup = false;
   //walletName: string = 'Connect Wallet';
-  walletName = computed(() => this.blockchainStateService.getCurrentWalletAddress() ?? 'Connect Wallet');
+  walletName = computed(
+    () => this.blockchainStateService.getCurrentWalletAddress() ?? 'Connect Wallet',
+  );
   currentWalletIcon = computed(() => {
     if (!this.blockchainStateService.connected()) {
       return '';
@@ -317,7 +319,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       const nativeToken = {
         symbol: network.nativeCurrency.symbol,
         imageUrl: '',
-        contractAddress: network.chainType === 'SVM' ? address : '0x0000000000000000000000000000000000000000',
+        contractAddress:
+          network.chainType === 'SVM' ? address : '0x0000000000000000000000000000000000000000',
         chainId: network.id,
         decimals: network.nativeCurrency.decimals,
       };

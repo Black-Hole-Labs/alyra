@@ -30,7 +30,6 @@
 }
 
 .upper h6 {
-
   font-weight: 500;
   font-size: 22px;
   color: white;
@@ -66,10 +65,10 @@
 
 .devider {
   margin-top: 17px;
-	padding: 6px 18px;
-	background-color: var(--btn-dark);
-	border-radius: 10px;
-	gap: 10px;
+  padding: 6px 18px;
+  background-color: var(--btn-dark);
+  border-radius: 10px;
+  gap: 10px;
   display: flex;
   align-items: center;
   width: fit-content;
@@ -82,7 +81,6 @@
 }
 
 .devider p {
-
   font-weight: 400;
   font-size: 16px;
   color: white;
@@ -90,7 +88,7 @@
 }
 
 .devider button {
-	background: url(/img/header/open-img.png);
+  background: url(/img/header/open-img.png);
   width: 10px;
   height: 6px;
   background-size: cover;
@@ -132,12 +130,12 @@
   padding: 10px 20px 10px 10px;
   cursor: pointer;
   transition: 0.2s ease-in-out;
-	border: 1px solid rgba(var(--white), 0);
+  border: 1px solid rgba(var(--white), 0);
 }
 
 .wallet:hover {
   background-color: rgba(var(--dark-select), 0.5);
-	border: 1px solid rgba(var(--white), 0.2);
+  border: 1px solid rgba(var(--white), 0.2);
 }
 
 .name {
@@ -155,7 +153,6 @@
 }
 
 .name p {
-
   font-weight: 700;
   font-size: 18px;
   color: white;
@@ -172,7 +169,6 @@
 
 .status p,
 .status a {
-
   font-weight: 400;
   font-size: 13px;
 }
@@ -194,7 +190,6 @@
 }
 
 .disclaimer {
-
   font-weight: 400;
   font-size: 12px;
   color: var(--elem-nonactive);

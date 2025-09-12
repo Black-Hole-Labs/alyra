@@ -14,7 +14,7 @@ export const routes: Routes = [
   { path: 'rewards', component: RewardsComponent, data: { title: 'Rewards' } },
   { path: 'quests', component: QuestsComponent, data: { title: 'Quests' } },
   { path: 'pro', component: FormPageComponent, data: { title: 'Pro' } },
-	{
+  {
     path: 'documentation',
     component: DocumentationPageComponent,
     children: documentationRoutes,

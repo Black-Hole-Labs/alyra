@@ -46,9 +46,7 @@
     "id": 9270000000000000,
     "idHex": "9270000000000000",
     "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/20947.png",
-    "rpcUrls": [
-      "https://fullnode.mainnet.sui.io:443"
-    ],
+    "rpcUrls": ["https://fullnode.mainnet.sui.io:443"],
     "nativeCurrency": {
       "name": "Sui",
       "symbol": "SUI",
@@ -186,9 +184,7 @@
     "id": 59144,
     "idHex": "0xe708",
     "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/linea.svg",
-    "rpcUrls": [
-      "https://rpc.linea.build"
-    ],
+    "rpcUrls": ["https://rpc.linea.build"],
     "nativeCurrency": {
       "name": "ETH",
       "symbol": "ETH",
@@ -239,11 +235,11 @@
     "idHex": "0x74c",
     "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/soneium.svg",
     "rpcUrls": ["https://rpc.soneium.org/"],
-      "nativeCurrency": {
-        "name": "Ether",
-        "symbol": "ETH",
-        "decimals": 18
-      },
+    "nativeCurrency": {
+      "name": "Ether",
+      "symbol": "ETH",
+      "decimals": 18
+    },
     "explorerUrl": "https://soneium.blockscout.com/token/"
   },
   {
@@ -253,9 +249,7 @@
     "id": 2741,
     "idHex": "0xab5",
     "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/abstract.svg",
-    "rpcUrls": [
-      "https://rpc.fsd.adfasd32442ds.com"
-    ],
+    "rpcUrls": ["https://rpc.fsd.adfasd32442ds.com"],
     "nativeCurrency": {
       "name": "Ethereum",
       "symbol": "ETH",
@@ -371,10 +365,7 @@
     "id": 1088,
     "idHex": "0x440",
     "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/metis.svg",
-    "rpcUrls": [
-      "https://andromeda.metis.io",
-      "https://metis.drpc.org"
-    ],
+    "rpcUrls": ["https://andromeda.metis.io", "https://metis.drpc.org"],
     "nativeCurrency": {
       "name": "METIS",
       "symbol": "METIS",
@@ -389,7 +380,10 @@
     "id": 480,
     "idHex": "0x1e0",
     "logoURI": "https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/world.svg",
-    "rpcUrls": ["https://worldchain-mainnet.g.alchemy.com/public", "https://worldchain-mainnet.gateway.tenderly.co"],
+    "rpcUrls": [
+      "https://worldchain-mainnet.g.alchemy.com/public",
+      "https://worldchain-mainnet.gateway.tenderly.co"
+    ],
     "nativeCurrency": {
       "name": "Ethereum",
       "symbol": "ETH",

@@ -3,7 +3,17 @@
     <div class="info">
       <h3>{{ message ? 'Error' : 'Swap failed!' }}</h3>
       <p>
-        {{ message ? message : (sellAmount + ' ' + (selectedToken?.symbol || '') + ' to ' + buyAmount + ' ' + (selectedBuyToken?.symbol || '')) }}
+        {{
+          message
+            ? message
+            : sellAmount +
+              ' ' +
+              (selectedToken?.symbol || '') +
+              ' to ' +
+              buyAmount +
+              ' ' +
+              (selectedBuyToken?.symbol || '')
+        }}
       </p>
     </div>
   </div>

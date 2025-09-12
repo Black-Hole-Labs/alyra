@@ -3,38 +3,37 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
 :root {
-	--white: 255, 255, 255;
-	--black: 0, 0, 0;
+  --white: 255, 255, 255;
+  --black: 0, 0, 0;
 
-	--dark-bg: 47, 47, 47;
-  --elem-nonactive: #5D5D5D;
-	--dark-select: 27, 27, 27;
-	--btn-dark: #2F2F2F;
+  --dark-bg: 47, 47, 47;
+  --elem-nonactive: #5d5d5d;
+  --dark-select: 27, 27, 27;
+  --btn-dark: #2f2f2f;
 
-	--blue: 92, 148, 252;
-	--dark-blue: 30, 0, 255;
+  --blue: 92, 148, 252;
+  --dark-blue: 30, 0, 255;
 
-	--dark-violet: #39174F;
-	--violet: #BF57FF;
+  --dark-violet: #39174f;
+  --violet: #bf57ff;
 
-	--dark-pink: 255, 0, 221;
-	--pink: #FF00DD;
+  --dark-pink: 255, 0, 221;
+  --pink: #ff00dd;
 
-	--red: #FF7E7E;
-	--dark-red: 54, 24, 24;
-	--dark-red-hover: #723A3A;
+  --red: #ff7e7e;
+  --dark-red: 54, 24, 24;
+  --dark-red-hover: #723a3a;
 
-	--green: 151, 255, 123;
-	--dark-green: 26, 36, 23;
+  --green: 151, 255, 123;
+  --dark-green: 26, 36, 23;
 
-	--yellow: #FFBB00;
-	--dark-yellow: #4A3703;
+  --yellow: #ffbb00;
+  --dark-yellow: #4a3703;
 
-	--gradient: linear-gradient(135deg, rgb(var(--blue)) 0%, rgb(var(--dark-blue)) 100%);
+  --gradient: linear-gradient(135deg, rgb(var(--blue)) 0%, rgb(var(--dark-blue)) 100%);
 
-	--quest-uncommon: 120, 255, 174;
-	--quest-uncommon-bg: 43, 111, 34;
-
+  --quest-uncommon: 120, 255, 174;
+  --quest-uncommon-bg: 43, 111, 34;
 }
 
 .light-theme {
@@ -49,11 +48,15 @@
     background-color: #ffffff;
   }
 
-  h1, p, a {
+  h1,
+  p,
+  a {
     color: #000000;
   }
 
-  .link, .button, .input-container {
+  .link,
+  .button,
+  .input-container {
     background: rgba(0, 0, 0, 0.05);
 
     &::before {
@@ -78,9 +81,15 @@ html.documentation-page {
 }
 
 @keyframes colorChange {
-  0% { filter: blur(60px) hue-rotate(0deg); }
-  50% { filter: blur(60px) hue-rotate(180deg); }
-  100% { filter: blur(60px) hue-rotate(360deg); }
+  0% {
+    filter: blur(60px) hue-rotate(0deg);
+  }
+  50% {
+    filter: blur(60px) hue-rotate(180deg);
+  }
+  100% {
+    filter: blur(60px) hue-rotate(360deg);
+  }
 }
 
 @keyframes popupFadeIn {
@@ -269,17 +278,17 @@ app-settings-bridge {
   position: absolute;
   top: 155px;
   left: calc(50% + 320px);
-	z-index: 10;
+  z-index: 10;
 }
 
 .wallet-popup {
-	position: fixed;
+  position: fixed;
   top: 130px;
   right: 40px;
 }
 
 .popup-network {
-	position: fixed;
+  position: fixed;
   top: 155px;
   right: 130px;
 }
@@ -288,108 +297,105 @@ app-settings-bridge {
 .network-change-from,
 .network-change-to,
 .token-change {
-	position: fixed;
+  position: fixed;
   top: 156px;
   left: 50%;
   transform: translate(-50%, 0%);
-	z-index: 100;
+  z-index: 100;
 }
 
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
+  app-settings {
+    top: 108px;
+    left: calc(50% + 280px);
+  }
 
-	app-settings {
-		top: 108px;
-		left: calc(50% + 280px);
-	}
+  .wallet-popup {
+    top: 100px;
+    right: 30px;
+  }
 
-	.wallet-popup {
-		top: 100px;
-		right: 30px;
-	}
+  .popup-network {
+    top: 108px;
+    right: 55px;
+  }
 
-	.popup-network {
-		top: 108px;
-		right: 55px;
-	}
-
-	.bridge-tx,
-	.network-change-from,
-	.network-change-to,
-	.token-change {
-		top: 108px;
-	}
+  .bridge-tx,
+  .network-change-from,
+  .network-change-to,
+  .token-change {
+    top: 108px;
+  }
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
+  app-settings {
+    top: 88px;
+    left: calc(50% + 280px);
+  }
 
-	app-settings {
-		top: 88px;
-		left: calc(50% + 280px);
-	}
+  .wallet-popup {
+    top: 80px;
+    right: 20px;
+  }
 
-	.wallet-popup {
-		top: 80px;
-		right: 20px;
-	}
+  .popup-network {
+    top: 88px;
+    right: 55px;
+  }
 
-	.popup-network {
-		top: 88px;
-		right: 55px;
-	}
-
-	.bridge-tx,
-	.network-change-from,
-	.network-change-to,
-	.token-change {
-		top: 88px;
-	}
+  .bridge-tx,
+  .network-change-from,
+  .network-change-to,
+  .token-change {
+    top: 88px;
+  }
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
+  app-settings {
+    top: 75px;
+    left: calc(50% + 175px);
+  }
 
-	app-settings {
-		top: 75px;
-		left: calc(50% + 175px);
-	}
+  .wallet-popup {
+    top: 65px;
+    right: 20px;
+  }
 
-	.wallet-popup {
-		top: 65px;
-		right: 20px;
-	}
+  .popup-network {
+    top: 75px;
+    right: 36px;
+  }
 
-	.popup-network {
-		top: 75px;
-		right: 36px;
-	}
-
-	.bridge-tx,
-	.network-change-from,
-	.network-change-to,
-	.token-change {
-		top: 75px;
-	}
+  .bridge-tx,
+  .network-change-from,
+  .network-change-to,
+  .token-change {
+    top: 75px;
+  }
 }
 @media screen and (min-width: 768px) and (max-width: 970px) {
   app-settings {
     top: 200px;
-		left: calc(50% - 130px);
-		z-index: 1;
-	}
+    left: calc(50% - 130px);
+    z-index: 1;
+  }
 
-	.wallet-popup {
-		top: 80px;
-		right: 20px;
-	}
+  .wallet-popup {
+    top: 80px;
+    right: 20px;
+  }
 
-	.popup-network {
-		top: 88px;
-		right: 55px;
-	}
+  .popup-network {
+    top: 88px;
+    right: 55px;
+  }
 
-	.bridge-tx,
-	.network-change-from,
-	.network-change-to,
-	.token-change {
-		top: 88px;
-	}
+  .bridge-tx,
+  .network-change-from,
+  .network-change-to,
+  .token-change {
+    top: 88px;
+  }
 }
 @media screen and (min-width: 480px) and (max-width: 767px) {
   app-settings {
@@ -398,27 +404,27 @@ app-settings-bridge {
     z-index: 1;
   }
 
-	.wallet-popup {
-		top: 90px;
-		right: 20px;
-	}
+  .wallet-popup {
+    top: 90px;
+    right: 20px;
+  }
 
-	.blackhole-menu {
-		top: 80px;
-		left: 20px;
-	}
+  .blackhole-menu {
+    top: 80px;
+    left: 20px;
+  }
 
-	.popup-network {
-		top: 138px;
-		right: 55px;
-	}
+  .popup-network {
+    top: 138px;
+    right: 55px;
+  }
 
-	.bridge-tx,
-	.network-change-from,
-	.network-change-to,
-	.token-change {
-		top: 118px;
-	}
+  .bridge-tx,
+  .network-change-from,
+  .network-change-to,
+  .token-change {
+    top: 118px;
+  }
 }
 
 @media screen and (min-width: 360px) and (max-width: 479px) {
@@ -435,7 +441,7 @@ app-settings-bridge {
   .bridge-tx,
   .network-change-from,
   .network-change-to,
-  .token-change{
+  .token-change {
     position: fixed;
     top: 108px;
     left: 50%;
@@ -443,9 +449,9 @@ app-settings-bridge {
     z-index: 1;
   }
 
-	.ecosystem-change {
-		left: 45%;
-	}
+  .ecosystem-change {
+    left: 45%;
+  }
 
   /* Для попапов, которые обычно используют popupFadeInSide */
   .popup-opening .connect-wallet,

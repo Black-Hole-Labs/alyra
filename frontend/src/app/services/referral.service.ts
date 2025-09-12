@@ -29,7 +29,7 @@ export interface ReferralStats {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReferralService {
   private readonly API_BASE_URL = environment.apiUrl || 'http://localhost:3000';
@@ -81,11 +81,13 @@ export class ReferralService {
   // Регистрация реферала (создание интегратора)
   async registerReferral(address: string, chainId: number): Promise<ReferralInfo> {
     try {
-      const response = await this.http.post<ReferralInfo>(`${this.API_BASE_URL}/referral/register`, {
-        referrerAddress: address,
-        chainId: chainId
-      }).toPromise();
-      
+      const response = await this.http
+        .post<ReferralInfo>(`${this.API_BASE_URL}/referral/register`, {
+          referrerAddress: address,
+          chainId: chainId,
+        })
+        .toPromise();
+
       if (response) {
         this.referralInfo.set(response);
         this.isReferral.set(true);
@@ -101,14 +103,20 @@ export class ReferralService {
   }
 
   // Регистрация реферала с существующим кодом
-  async registerReferralWithCode(code: string, address: string, chainId: number): Promise<ReferralInfo> {
+  async registerReferralWithCode(
+    code: string,
+    address: string,
+    chainId: number,
+  ): Promise<ReferralInfo> {
     try {
-      const response = await this.http.post<ReferralInfo>(`${this.API_BASE_URL}/referral/register-with-code`, {
-        referrerCode: code,
-        referrerAddress: address,
-        chainId: chainId
-      }).toPromise();
-      
+      const response = await this.http
+        .post<ReferralInfo>(`${this.API_BASE_URL}/referral/register-with-code`, {
+          referrerCode: code,
+          referrerAddress: address,
+          chainId: chainId,
+        })
+        .toPromise();
+
       if (response) {
         this.referralInfo.set(response);
         this.isReferral.set(true);
@@ -126,7 +134,9 @@ export class ReferralService {
   // Получение информации о реферале
   async getReferralInfo(address: string, chainId: number): Promise<ReferralInfo | null> {
     try {
-      const response = await this.http.get<ReferralInfo>(`${this.API_BASE_URL}/referral/info/${address}?chainId=${chainId}`).toPromise();
+      const response = await this.http
+        .get<ReferralInfo>(`${this.API_BASE_URL}/referral/info/${address}?chainId=${chainId}`)
+        .toPromise();
       if (response) {
         this.referralInfo.set(response);
         this.isReferral.set(true);
@@ -149,12 +159,14 @@ export class ReferralService {
     }
 
     try {
-      const response = await this.http.post<UserReferralInfo>(`${this.API_BASE_URL}/referral/join`, {
-        referrerCode: referralCode,
-        userAddress,
-        userChainId
-      }).toPromise();
-      
+      const response = await this.http
+        .post<UserReferralInfo>(`${this.API_BASE_URL}/referral/join`, {
+          referrerCode: referralCode,
+          userAddress,
+          userChainId,
+        })
+        .toPromise();
+
       if (response) {
         this.hasJoined.set(true);
         return response;
@@ -185,14 +197,18 @@ export class ReferralService {
   async getReferralStatsByCode(code: string): Promise<ReferralStats | null> {
     // Проверяем, не выполняется ли уже запрос
     if (this.isGettingStats) {
-      console.log('[ReferralService.getReferralStatsByCode] Request already in progress, skipping...');
+      console.log(
+        '[ReferralService.getReferralStatsByCode] Request already in progress, skipping...',
+      );
       return this.referralStats();
     }
 
     // Проверяем кэш - если недавно запрашивали тот же код, возвращаем кэшированный результат
-    if (this.lastStatsRequest && 
-        this.lastStatsRequest.code === code && 
-        Date.now() - this.lastStatsRequest.timestamp < this.STATS_CACHE_DURATION) {
+    if (
+      this.lastStatsRequest &&
+      this.lastStatsRequest.code === code &&
+      Date.now() - this.lastStatsRequest.timestamp < this.STATS_CACHE_DURATION
+    ) {
       console.log('[ReferralService.getReferralStatsByCode] Using cached stats for code:', code);
       return this.referralStats();
     }
@@ -202,7 +218,9 @@ export class ReferralService {
 
     try {
       console.log('[ReferralService.getReferralStatsByCode] Calling with code:', code);
-      const response = await this.http.get<ReferralStats>(`${this.API_BASE_URL}/referral/stats-by-code/${code}`).toPromise();
+      const response = await this.http
+        .get<ReferralStats>(`${this.API_BASE_URL}/referral/stats-by-code/${code}`)
+        .toPromise();
       if (response) {
         this.referralStats.set(response);
         return response;
@@ -236,7 +254,7 @@ export class ReferralService {
     if (!this.referralInfo()) {
       return window.location.origin;
     }
-    
+
     const currentUrl = new URL(window.location.href);
     currentUrl.searchParams.set('ref', this.referralInfo()!.referrerCode);
     return currentUrl.toString();
@@ -253,4 +271,4 @@ export class ReferralService {
       return false;
     }
   }
-} 
+}

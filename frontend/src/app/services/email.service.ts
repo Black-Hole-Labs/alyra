@@ -9,7 +9,7 @@ export interface AddEmailDto {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EmailService {
   private apiUrl = environment.apiUrl;

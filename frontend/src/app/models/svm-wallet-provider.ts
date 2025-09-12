@@ -20,9 +20,11 @@ export class SvmWalletProvider implements WalletProvider {
     return !!this.provider;
   }
 
-  async connect(_provider?: any): Promise<{ address: string, nameService: string | null }>  {
-    if(this.blockchainStateService.networkSell() !== undefined && this.blockchainStateService.networkSell()?.chainType !== "SVM")
-    {
+  async connect(_provider?: any): Promise<{ address: string; nameService: string | null }> {
+    if (
+      this.blockchainStateService.networkSell() !== undefined &&
+      this.blockchainStateService.networkSell()?.chainType !== 'SVM'
+    ) {
       this.blockchainStateService.updateNetworkSell(NetworkId.SOLANA_MAINNET);
     }
 
@@ -36,18 +38,14 @@ export class SvmWalletProvider implements WalletProvider {
     this.address = account;
 
     const rpcUrl =
-      (await this.blockchainStateService.getWorkingRpcUrlForNetwork(
-        NetworkId.SOLANA_MAINNET
-      )) || clusterApiUrl('mainnet-beta');
+      (await this.blockchainStateService.getWorkingRpcUrlForNetwork(NetworkId.SOLANA_MAINNET)) ||
+      clusterApiUrl('mainnet-beta');
     const connection = new Connection(rpcUrl, 'confirmed');
 
     let sns: string | null;
     try {
       // returns the base name (without .sol)
-      const base = await reverseLookup(
-        connection,
-        this.provider.publicKey
-      );
+      const base = await reverseLookup(connection, this.provider.publicKey);
       sns = base ? `${base}.sol` : null;
     } catch {
       // it can probably throw
@@ -62,9 +60,11 @@ export class SvmWalletProvider implements WalletProvider {
   }
 
   async sendTx(txData: TransactionRequestSVM): Promise<string> {
-    const solanaRPC = await this.blockchainStateService.getWorkingRpcUrlForNetwork(NetworkId.SOLANA_MAINNET) || "https://solana-rpc.publicnode.com";
-    const connection = new Connection(solanaRPC, 'confirmed');//todo rpc error after bridge
-    const decodedTx = Uint8Array.from(atob(txData.data.toString()), c => c.charCodeAt(0));
+    const solanaRPC =
+      (await this.blockchainStateService.getWorkingRpcUrlForNetwork(NetworkId.SOLANA_MAINNET)) ||
+      'https://solana-rpc.publicnode.com';
+    const connection = new Connection(solanaRPC, 'confirmed'); //todo rpc error after bridge
+    const decodedTx = Uint8Array.from(atob(txData.data.toString()), (c) => c.charCodeAt(0));
     const versionedTx = VersionedTransaction.deserialize(decodedTx);
     const signedTx = await this.provider.signAndSendTransaction(versionedTx);
     // console.log('SVM Transaction sent:', signedTx);
@@ -74,6 +74,6 @@ export class SvmWalletProvider implements WalletProvider {
 
   async switchNetwork(): Promise<void> {
     //this.blockchainStateService.disconnect(this.address);
-    throw new Error("unsupported_network"); //TODO
+    throw new Error('unsupported_network'); //TODO
   }
 }

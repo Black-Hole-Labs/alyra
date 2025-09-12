@@ -2,12 +2,12 @@
   "name": "black-hole",
   "version": "0.0.0",
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix --max-warnings=0",
-      "prettier -w"
+    "*.{ts,tsx,js,jsx,html,css,scss}": [
+      "prettier -c",
+      "eslint --max-warnings=0"
     ],
-    "*.{md,json,yml,yaml,css,scss}": [
-      "prettier -w"
+    "*.{md,json,yml,yaml}": [
+      "prettier -c"
     ]
   },
   "scripts": {

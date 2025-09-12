@@ -1,4 +1,4 @@
-import { computed, effect, Injectable, Injector, Signal,signal } from '@angular/core';
+import { computed, effect, Injectable, Injector, Signal, signal } from '@angular/core';
 import { SuiClient } from '@mysten/sui/client';
 import providersImport from '@public/data/providers.json';
 import tokensImport from '@public/data/tokens.json';
@@ -53,7 +53,9 @@ export type Ecosystem = Exclude<ProviderType, ProviderType.MULTICHAIN>;
 export class BlockchainStateService {
   private providers: Record<string, { provider: any; type: ProviderType }> = {};
   // private currentProviderId: string | null = null;
-  readonly currentEcosystem: Signal<Ecosystem> = computed(() => this.networkSell()!.chainType as Ecosystem);
+  readonly currentEcosystem: Signal<Ecosystem> = computed(
+    () => this.networkSell()!.chainType as Ecosystem,
+  );
   private rpcCache = new Map<number, string>();
 
   // readonly walletAddress = signal<string | null>(null);
@@ -87,7 +89,11 @@ export class BlockchainStateService {
 
   readonly connected = computed(() => {
     const m = this.currentProviderIds();
-    return !!m[ProviderType.EVM].address || !!m[ProviderType.SVM].address || !!m[ProviderType.MVM].address;
+    return (
+      !!m[ProviderType.EVM].address ||
+      !!m[ProviderType.SVM].address ||
+      !!m[ProviderType.MVM].address
+    );
   });
   // readonly evmWalletAddress = signal<string | null>(null);
   // readonly svmWalletAddress = signal<string | null>(null);
@@ -188,10 +194,18 @@ export class BlockchainStateService {
           );
           break;
         case 'solflare':
-          this.registerProvider(provider.id, new SolflareProvider(this.injector!), provider.type as ProviderType);
+          this.registerProvider(
+            provider.id,
+            new SolflareProvider(this.injector!),
+            provider.type as ProviderType,
+          );
           break;
         case 'slush':
-          this.registerProvider(provider.id, new SlushProvider(this.injector!), provider.type as ProviderType);
+          this.registerProvider(
+            provider.id,
+            new SlushProvider(this.injector!),
+            provider.type as ProviderType,
+          );
           break;
         case 'phantom':
           this.registerProvider(
@@ -215,13 +229,25 @@ export class BlockchainStateService {
           );
           break;
         case 'trust-wallet':
-          this.registerProvider(provider.id, new TrustWalletProvider(this.injector!), provider.type as ProviderType);
+          this.registerProvider(
+            provider.id,
+            new TrustWalletProvider(this.injector!),
+            provider.type as ProviderType,
+          );
           break;
         case 'okx-wallet':
-          this.registerProvider(provider.id, new OkxWalletProvider(this.injector!), provider.type as ProviderType);
+          this.registerProvider(
+            provider.id,
+            new OkxWalletProvider(this.injector!),
+            provider.type as ProviderType,
+          );
           break;
         case 'coinbase-wallet':
-          this.registerProvider(provider.id, new CoinbaseWalletProvider(this.injector!), provider.type as ProviderType);
+          this.registerProvider(
+            provider.id,
+            new CoinbaseWalletProvider(this.injector!),
+            provider.type as ProviderType,
+          );
           break;
         case 'rabby-wallet':
           this.registerProvider(
@@ -361,7 +387,9 @@ export class BlockchainStateService {
     const networkKey = network.toString();
     const tokensData = tokensSearch as unknown as TokensData;
     const tokensForNetwork =
-      tokensData.tokensEVM[networkKey] || tokensData.tokensSVM[networkKey] || tokensData.tokensMVM[networkKey];
+      tokensData.tokensEVM[networkKey] ||
+      tokensData.tokensSVM[networkKey] ||
+      tokensData.tokensMVM[networkKey];
 
     if (tokensForNetwork) {
       this.allTokens.set(
@@ -384,7 +412,9 @@ export class BlockchainStateService {
     const tokensData = tokensImport as unknown as TokensData;
     const networkKey = network.toString();
     const tokensForNetwork =
-      tokensData.tokensEVM[networkKey] || tokensData.tokensSVM[networkKey] || tokensData.tokensMVM[networkKey];
+      tokensData.tokensEVM[networkKey] ||
+      tokensData.tokensSVM[networkKey] ||
+      tokensData.tokensMVM[networkKey];
 
     if (tokensForNetwork) {
       this.tokens.set(
@@ -408,7 +438,13 @@ export class BlockchainStateService {
     const evmList = (tokensImport as TokensData).tokensEVM[networkKey] || [];
     const svmList = (tokensImport as TokensData).tokensSVM[networkKey] || [];
     const mvmList = (tokensImport as TokensData).tokensMVM[networkKey] || [];
-    const tokensForNetwork = evmList.length ? evmList : svmList.length ? svmList : mvmList.length ? mvmList : [];
+    const tokensForNetwork = evmList.length
+      ? evmList
+      : svmList.length
+        ? svmList
+        : mvmList.length
+          ? mvmList
+          : [];
 
     if (!tokensForNetwork.length) {
       console.warn(`No tokens found for network ${networkId}`);
@@ -430,7 +466,13 @@ export class BlockchainStateService {
     const evmList = (tokensSearch as TokensData).tokensEVM[networkKey] || [];
     const svmList = (tokensSearch as TokensData).tokensSVM[networkKey] || [];
     const mvmList = (tokensSearch as TokensData).tokensMVM[networkKey] || [];
-    const tokensForNetwork = evmList.length ? evmList : svmList.length ? svmList : mvmList.length ? mvmList : [];
+    const tokensForNetwork = evmList.length
+      ? evmList
+      : svmList.length
+        ? svmList
+        : mvmList.length
+          ? mvmList
+          : [];
 
     if (!tokensForNetwork.length) {
       console.warn(`No tokens found for network ${networkId}`);

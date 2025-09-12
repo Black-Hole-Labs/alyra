@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Renderer2 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationEnd,Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
 import { AppContentComponent } from './components/app-content/app-content.component';
@@ -53,7 +53,7 @@ export class AppComponent {
       )
       .subscribe((/*data*/) => {
         // const pageTitle = data['title'] ? `Alyra | ${data['title']}` : 'Alyra';
-        const pageTitle = "Alyra | Swap anything, across any chain.";
+        const pageTitle = 'Alyra | Swap anything, across any chain.';
         this.titleService.setTitle(pageTitle);
       });
   }

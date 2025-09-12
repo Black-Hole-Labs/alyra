@@ -17,13 +17,10 @@ import { TransactionsService } from '../../services/transactions.service';
     CommonModule,
     RewardSuccessNotificationComponent,
     RewardFailedNotificationComponent,
-    RewardPendingNotificationComponent
+    RewardPendingNotificationComponent,
   ],
   templateUrl: './rewards.component.html',
-  styleUrls: [
-    './rewards.component.scss',
-    './rewards.component.adaptives.scss'
-  ]
+  styleUrls: ['./rewards.component.scss', './rewards.component.adaptives.scss'],
 })
 export class RewardsComponent implements OnInit, OnDestroy {
   // Сигналы для UI
@@ -38,9 +35,11 @@ export class RewardsComponent implements OnInit, OnDestroy {
   private lastInitializedAddress = '';
 
   // Computed значения
-  readonly isConnected = signal<boolean>(false);//computed(() => this.blockchainStateService.connected());
+  readonly isConnected = signal<boolean>(false); //computed(() => this.blockchainStateService.connected());
   readonly walletAddress = computed(() => this.blockchainStateService.getCurrentWalletAddress());
-  readonly networkName = computed(() => this.blockchainStateService.networkSell()?.name || 'ethereum');
+  readonly networkName = computed(
+    () => this.blockchainStateService.networkSell()?.name || 'ethereum',
+  );
   readonly chainId = computed(() => this.blockchainStateService.networkSell()?.id || 1);
 
   readonly isReferral = computed(() => this.referralService.isReferral());
@@ -53,31 +52,37 @@ export class RewardsComponent implements OnInit, OnDestroy {
     public blockchainStateService: BlockchainStateService,
     public referralService: ReferralService,
     public rewardsService: RewardsService,
-    private transactionsService: TransactionsService
+    private transactionsService: TransactionsService,
   ) {
     // Эффект для инициализации реферальной системы при подключении кошелька
-    effect(() => {
-      const address = this.walletAddress();
-      const isConnected = this.isConnected();
+    effect(
+      () => {
+        const address = this.walletAddress();
+        const isConnected = this.isConnected();
 
-      if (isConnected && address && address !== this.lastInitializedAddress) {
-        this.lastInitializedAddress = address;
-        this.initializeReferralSystem(address);
-        this.initializeRewards(address);
-      } else if (!isConnected) {
-        this.referralService.clearReferralData();
-        this.rewardsService.rewards.set([]);
-        this.lastInitializedAddress = '';
-      }
-    }, { allowSignalWrites: true });
+        if (isConnected && address && address !== this.lastInitializedAddress) {
+          this.lastInitializedAddress = address;
+          this.initializeReferralSystem(address);
+          this.initializeRewards(address);
+        } else if (!isConnected) {
+          this.referralService.clearReferralData();
+          this.rewardsService.rewards.set([]);
+          this.lastInitializedAddress = '';
+        }
+      },
+      { allowSignalWrites: true },
+    );
 
     // Эффект для обновления реферальной ссылки
-    effect(() => {
-      const info = this.referralInfo();
-      if (info) {
-        this.referralLink.set(this.referralService.getReferralLink());
-      }
-    }, { allowSignalWrites: true });
+    effect(
+      () => {
+        const info = this.referralInfo();
+        if (info) {
+          this.referralLink.set(this.referralService.getReferralLink());
+        }
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   ngOnInit() {
@@ -92,7 +97,9 @@ export class RewardsComponent implements OnInit, OnDestroy {
   // Инициализация реферальной системы
   private async initializeReferralSystem(address: string): Promise<void> {
     if (this.isInitializingReferral) {
-      console.log('[QuestsComponent] Referral system initialization already in progress, skipping...');
+      console.log(
+        '[QuestsComponent] Referral system initialization already in progress, skipping...',
+      );
       return;
     }
 
@@ -129,10 +136,17 @@ export class RewardsComponent implements OnInit, OnDestroy {
       } else if (existingReferralCode) {
         if (!isReferral) {
           // Только если адрес еще не зарегистрирован — регистрируем
-          info = await this.referralService.registerReferralWithCode(existingReferralCode, address, chainId);
+          info = await this.referralService.registerReferralWithCode(
+            existingReferralCode,
+            address,
+            chainId,
+          );
         }
         if (info) {
-          console.log('[QuestsComponent] Getting stats for code (existingReferralCode):', info.referrerCode);
+          console.log(
+            '[QuestsComponent] Getting stats for code (existingReferralCode):',
+            info.referrerCode,
+          );
           await this.referralService.getReferralStatsByCode(info.referrerCode);
         }
         this.showReferralInfo.set(true);
@@ -142,7 +156,10 @@ export class RewardsComponent implements OnInit, OnDestroy {
           info = await this.referralService.registerReferral(address, chainId);
         }
         if (info) {
-          console.log('[QuestsComponent] Getting stats for code (new registration):', info.referrerCode);
+          console.log(
+            '[QuestsComponent] Getting stats for code (new registration):',
+            info.referrerCode,
+          );
           await this.referralService.getReferralStatsByCode(info.referrerCode);
         }
         this.showReferralInfo.set(true);
@@ -196,7 +213,7 @@ export class RewardsComponent implements OnInit, OnDestroy {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }).format(amount);
   }
 
@@ -204,7 +221,7 @@ export class RewardsComponent implements OnInit, OnDestroy {
   formatRewardAmount(amount: number, decimals: number = 18): string {
     return new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 6
+      maximumFractionDigits: 6,
     }).format(amount / Math.pow(10, decimals));
   }
 
@@ -274,7 +291,9 @@ export class RewardsComponent implements OnInit, OnDestroy {
   // Computed значения для ревардов
   readonly claimableRewards = computed(() => this.rewardsService.getClaimableRewards());
   readonly totalClaimableAmount = computed(() => this.rewardsService.getClaimableAmount());
-  readonly hasClaimableRewards = computed(() => this.rewardsService.getClaimableRewards().length > 0);
+  readonly hasClaimableRewards = computed(
+    () => this.rewardsService.getClaimableRewards().length > 0,
+  );
 
   // Computed значение для уже склеймленных наград
   readonly totalClaimedAmount = computed(() => this.rewardsService.getClaimedRewards());
@@ -306,19 +325,21 @@ export class RewardsComponent implements OnInit, OnDestroy {
         return;
       }
 
-        // Берем первый ревард пул (предполагаем, что все реварды в одной сети)
-       const rewardPool = rewardPools[0];
-       const requiredChainId = Number(rewardPool.rewardToken.chainId);
-       const currentChainId = this.blockchainStateService.networkSell()?.id;
+      // Берем первый ревард пул (предполагаем, что все реварды в одной сети)
+      const rewardPool = rewardPools[0];
+      const requiredChainId = Number(rewardPool.rewardToken.chainId);
+      const currentChainId = this.blockchainStateService.networkSell()?.id;
 
-
-       // Проверяем, нужно ли переключить сеть
+      // Проверяем, нужно ли переключить сеть
       if (!currentChainId || currentChainId !== requiredChainId) {
-
-         console.log(`Switching network from ${currentChainId || 'undefined'} to ${requiredChainId} for reward claim`);
+        console.log(
+          `Switching network from ${currentChainId || 'undefined'} to ${requiredChainId} for reward claim`,
+        );
 
         // Получаем информацию о нужной сети
-        const targetNetwork = this.blockchainStateService.allNetworks().find(n => n.id === requiredChainId);
+        const targetNetwork = this.blockchainStateService
+          .allNetworks()
+          .find((n) => n.id === requiredChainId);
         if (!targetNetwork) {
           this.rewardErrorMessage.set(`Network with chainId ${requiredChainId} not found`);
           this.showRewardError.set(true);
@@ -327,7 +348,9 @@ export class RewardsComponent implements OnInit, OnDestroy {
 
         // Проверяем, подключен ли кошелек к нужной экосистеме
         if (!this.blockchainStateService.isEcosystemConnected(targetNetwork.chainType as any)) {
-          this.rewardErrorMessage.set(`Wallet not connected to ${targetNetwork.chainType} ecosystem`);
+          this.rewardErrorMessage.set(
+            `Wallet not connected to ${targetNetwork.chainType} ecosystem`,
+          );
           this.showRewardError.set(true);
           return;
         }
@@ -345,7 +368,9 @@ export class RewardsComponent implements OnInit, OnDestroy {
 
         // Проверяем совместимость провайдера с сетью
         if (providerType !== ProviderType.MULTICHAIN && providerType !== targetNetwork.chainType) {
-          this.rewardErrorMessage.set(`Selected wallet doesn't support ${targetNetwork.chainType} networks`);
+          this.rewardErrorMessage.set(
+            `Selected wallet doesn't support ${targetNetwork.chainType} networks`,
+          );
           this.showRewardError.set(true);
           return;
         }
@@ -359,13 +384,20 @@ export class RewardsComponent implements OnInit, OnDestroy {
           // Обновляем адрес кошелька
           this.blockchainStateService.updateWalletAddress(provider.address);
 
-          console.log(`Successfully switched to network ${targetNetwork.name} (${requiredChainId})`);
+          console.log(
+            `Successfully switched to network ${targetNetwork.name} (${requiredChainId})`,
+          );
         } catch (error) {
           console.error('Error switching network:', error);
-          if ((error as any).message.includes("User rejected the request") || (error as any).code === 4001) {
+          if (
+            (error as any).message.includes('User rejected the request') ||
+            (error as any).code === 4001
+          ) {
             this.rewardErrorMessage.set('Network switch was rejected by user');
           } else if ((error as any).message === 'unsupported_network') {
-            this.rewardErrorMessage.set(`Network ${targetNetwork.name} is not supported by your wallet`);
+            this.rewardErrorMessage.set(
+              `Network ${targetNetwork.name} is not supported by your wallet`,
+            );
           } else {
             this.rewardErrorMessage.set(`Failed to switch network: ${(error as Error).message}`);
           }
@@ -409,7 +441,9 @@ export class RewardsComponent implements OnInit, OnDestroy {
       }
 
       // Получаем рабочий RPC URL для сети
-      const rpcUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(currentNetwork.id);
+      const rpcUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(
+        currentNetwork.id,
+      );
 
       // Используем TransactionsService для пулинга
       const result = await this.transactionsService.pollTransactionReceipt(txHash, rpcUrl);
@@ -433,8 +467,6 @@ export class RewardsComponent implements OnInit, OnDestroy {
       this.rewardErrorMessage.set('Error checking transaction status');
     }
   }
-
-
 
   // Закрытие уведомлений
   closeRewardSuccessNotification(): void {

@@ -1,9 +1,12 @@
 <div class="notification" [@slideInOut] *ngIf="isVisible">
   <div class="content">
-		<div class="info">
-			<h3>Pending...</h3>
-			<p>{{ sellAmount }} {{ selectedToken?.symbol }} to {{ buyAmount }} {{ selectedBuyToken?.symbol }}</p>
-		</div>
+    <div class="info">
+      <h3>Pending...</h3>
+      <p>
+        {{ sellAmount }} {{ selectedToken?.symbol }} to {{ buyAmount }}
+        {{ selectedBuyToken?.symbol }}
+      </p>
+    </div>
   </div>
-	<div class="pending-icon"></div>
+  <div class="pending-icon"></div>
 </div>

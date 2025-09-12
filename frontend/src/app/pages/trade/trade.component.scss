@@ -40,7 +40,9 @@ h3 {
     cursor: pointer;
     background-color: rgba(var(--dark-select), 1);
 
-    .refresh, .settings, .custom-wallet-button {
+    .refresh,
+    .settings,
+    .custom-wallet-button {
       opacity: 1;
     }
   }
@@ -48,12 +50,16 @@ h3 {
   .icon.active {
     background-color: rgba(var(--dark-select), 1);
 
-    .refresh, .settings, .custom-wallet-button {
+    .refresh,
+    .settings,
+    .custom-wallet-button {
       opacity: 1;
     }
   }
 
-  .refresh, .settings, .custom-wallet-button {
+  .refresh,
+  .settings,
+  .custom-wallet-button {
     background-size: cover;
     background-repeat: no-repeat;
     height: 30px;
@@ -67,7 +73,9 @@ h3 {
     background-image: url(/img/trade/refresh.png);
     transform: rotate(0deg);
     transform-origin: center;
-    transition: opacity 0.1s ease-in-out, transform 1s ease-in-out;
+    transition:
+      opacity 0.1s ease-in-out,
+      transform 1s ease-in-out;
   }
 
   .settings {
@@ -77,7 +85,6 @@ h3 {
   .rotate {
     transform: rotate(-720deg);
   }
-
 }
 
 .change-button {
@@ -96,7 +103,8 @@ h3 {
   z-index: 1;
 }
 
-.arrow-up, .arrow-down {
+.arrow-up,
+.arrow-down {
   background-image: url(/img/trade/change-arrow.png);
   background-size: cover;
   background-repeat: no-repeat;
@@ -129,7 +137,8 @@ h3 {
   position: relative;
 }
 
-.sell, .buy {
+.sell,
+.buy {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -142,7 +151,8 @@ h3 {
   background: rgba(var(--black), 0.3);
 }
 
-.sell-h6, .buy-h6 {
+.sell-h6,
+.buy-h6 {
   font-weight: 500;
   font-size: 18px;
 }
@@ -297,9 +307,9 @@ p {
   margin-top: 25px;
   width: 100%;
   height: 62px;
-  background-color: rgba(#2F2F2F, 0.30);
+  background-color: rgba(#2f2f2f, 0.3);
   border-radius: 16px;
-  border: 1px solid rgba(#2F2F2F, 0.30);
+  border: 1px solid rgba(#2f2f2f, 0.3);
   font-weight: 500;
   font-size: 18px;
   color: rgba(var(--white), 1);
@@ -322,13 +332,15 @@ p {
   background-color: rgba(var(--dark-select), 1);
 }
 
-.main-button.finding, .main-button.wallet {
+.main-button.finding,
+.main-button.wallet {
   background-color: rgba(var(--dark-select), 1);
   color: var(--elem-nonactive);
   cursor: wait;
 }
 
-.main-button.finding:hover, .main-button.wallet:hover {
+.main-button.finding:hover,
+.main-button.wallet:hover {
   background-color: rgba(var(--dark-select), 1);
 }
 
@@ -364,14 +376,17 @@ p {
   max-height: 0;
   overflow: hidden;
   opacity: 0;
-  transition: max-height 0.3s ease, opacity 0.2s ease, margin-top 0.3s ease, padding 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.2s ease,
+    margin-top 0.3s ease,
+    padding 0.3s ease;
 }
 
 .info.show {
   max-height: 400px;
   opacity: 1;
 }
-
 
 .info-item-main {
   display: flex;
@@ -382,7 +397,11 @@ p {
   padding: 0;
   overflow: hidden;
   opacity: 0;
-  transition: max-height 0.3s ease, opacity 0.2s ease, margin-top 0.3s ease, padding 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.2s ease,
+    margin-top 0.3s ease,
+    padding 0.3s ease;
 }
 
 .info-item-main.show {
@@ -419,7 +438,11 @@ p {
   opacity: 0;
   visibility: hidden;
   position: absolute;
-  transition: max-height 0.3s ease, opacity 0.2s ease, margin-top 0.3s ease, padding 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.2s ease,
+    margin-top 0.3s ease,
+    padding 0.3s ease;
 }
 
 .custom-address.show {
@@ -491,7 +514,11 @@ p {
   padding: 0;
   overflow: hidden;
   opacity: 0;
-  transition: max-height 0.3s ease, opacity 0.2s ease, margin-top 0.3s ease, padding 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.2s ease,
+    margin-top 0.3s ease,
+    padding 0.3s ease;
 }
 
 // .trade-info.show {

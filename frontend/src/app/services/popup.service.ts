@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PopupService {
   private activePopupSubject = new BehaviorSubject<string | null>(null);
   public activePopup$ = this.activePopupSubject.asObservable();
-  
+
   private menuCloseTimer: number | null = null;
   private isMenuClickedOpen: boolean = false;
 
@@ -52,7 +52,7 @@ export class PopupService {
 
   onMenuMouseEnter(): void {
     this.clearMenuTimer();
-    
+
     if (this.getCurrentPopup() !== 'blackholeMenu') {
       this.openPopup('blackholeMenu');
       this.isMenuClickedOpen = false;
@@ -67,7 +67,7 @@ export class PopupService {
 
   onMenuClick(): void {
     this.clearMenuTimer();
-    
+
     if (this.getCurrentPopup() === 'blackholeMenu') {
       if (!this.isMenuClickedOpen) {
         this.isMenuClickedOpen = true;
