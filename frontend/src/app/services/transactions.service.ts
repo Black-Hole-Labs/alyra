@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { interval, lastValueFrom, Observable, switchMap, takeWhile } from 'rxjs';
-
-import { ethers } from 'ethers';
 import { Connection } from '@solana/web3.js';
+import { ethers } from 'ethers';
+import { interval, lastValueFrom, Observable, switchMap, takeWhile } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 
@@ -16,7 +15,7 @@ export class TransactionsService {
 
   constructor(
     private http: HttpClient,
-  ) 
+  )
   {
 
   }
@@ -63,7 +62,7 @@ export class TransactionsService {
     if (slippage) {
       params.slippage = slippage;
     }
-  
+
     return this.http.get<{ quote: any }>(`${this.apiUrl}/lifi/quote`, { params }); //todo rename?
   }
 
@@ -85,7 +84,7 @@ export class TransactionsService {
       fromAmount,
       fromAddress
     };
-  
+
     if (toAddress) {
       params.toAddress = toAddress;
     }
@@ -93,7 +92,7 @@ export class TransactionsService {
     if (slippage) {
       params.slippage = slippage;
     }
-  
+
     return this.http.get<{ quote: any }>(`${this.apiUrl}/lifi/quote-bridge`, { params });
   }
 
@@ -126,52 +125,52 @@ export class TransactionsService {
     onInitialLinks?: (sending: string, receiving: string) => void
   ): Promise<any> {
     let result: any;
-    
+
     do {
       try {
         result = await this.getStatus(txHash);
-        
+
         if (result?.sending?.txLink || result?.receiving?.txLink) {
           onInitialLinks?.(
             result?.sending?.txLink || '',
             result?.receiving?.txLink || ''
           );
         }
-        
+
         await this.delay(1000);
-      } catch (error) {
+      } catch {
         await this.delay(1000);
       }
     } while (!result || (result.status !== 'DONE' && result.status !== 'FAILED'));
-    
+
     return result;
   }
 
   async getInitialStatus(txHash: string): Promise<any> {
     try {
       return await this.getStatus(txHash);
-    } catch (error) {
+    } catch {
       // console.log('Error fetching initial status:', error);
       return {};
     }
   }
-  
+
   async waitForCompletion(txHash: string): Promise<any> {
     let result: any;
-    
+
     do {
       try {
         result = await this.getStatus(txHash);
         await this.delay(1000);
-      } catch (error) {
+      } catch {
         // console.log('Error polling status:', error);
         await this.delay(1000);
       }
     } while (!result || (result.status !== 'DONE' && result.status !== 'FAILED'));
-    
+
     return result;
   }
-  
+
   private async getStatus(txHash: string): Promise<any> {
     try {
       const request = this.http.get('https://li.quest/v1/status', {
@@ -185,40 +184,40 @@ export class TransactionsService {
         throw error;
       }
     }
-  }  
+  }
 
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-  
+
   parseToAmount(toAmount: string, decimals: number): string {
     return (Number(toAmount) / Math.pow(10, decimals)).toString();
   }
 
   toNonExponential(num: number, decimals: number = 18): string {
     if (!isFinite(num)) return '0';
-  
+
     const [intPart, decPart = ''] = num.toString().split('e').length === 2
       ? Number(num).toFixed(30).split('.')
       : num.toString().split('.');
-  
+
     const trimmedDec = decPart.slice(0, decimals);
     const result = trimmedDec ? `${intPart}.${trimmedDec}` : intPart;
-  
+
     return result.includes('.') ? result.replace(/\.?0+$/, '') : result;
   }
-  
+
 
   parseGasPriceUSD(gasPriceHex: string, gasLimitHex: string, token: { decimals: number; priceUSD: string }): string {
     const gasPriceWei = parseInt(gasPriceHex, 16);
     const gasLimit = parseInt(gasLimitHex, 16);
-  
+
     const gasCostWei = gasPriceWei * gasLimit;
-  
+
     const gasCostInToken = gasCostWei / Math.pow(10, token.decimals);
-  
+
     const gasCostUSD = gasCostInToken * parseFloat(token.priceUSD);
-  
+
     return gasCostUSD.toFixed(2);
   }
 
@@ -231,21 +230,21 @@ export class TransactionsService {
    * @returns Promise с результатом: { success: boolean, receipt?: any, error?: string }
    */
   async pollTransactionReceipt(
-    txHash: string, 
-    rpcUrl: string, 
-    maxAttempts: number = 60, 
+    txHash: string,
+    rpcUrl: string,
+    maxAttempts: number = 60,
     delayMs: number = 5000
   ): Promise<{ success: boolean; receipt?: any; error?: string }> {
     try {
       let receipt = null;
       let attempts = 0;
-      
+
       const ethersProvider = new ethers.JsonRpcProvider(rpcUrl);
-      
+
       do {
         await this.delay(delayMs);
         attempts++;
-        
+
         try {
           receipt = await ethersProvider.getTransactionReceipt(txHash);
           console.log(`Attempt ${attempts}: Receipt received:`, receipt ? 'Yes' : 'No');
@@ -256,7 +255,7 @@ export class TransactionsService {
           console.log(`Attempt ${attempts}: Transaction not yet mined, retrying... Error:`, error);
         }
       } while (!receipt && attempts < maxAttempts);
-      
+
       if (receipt) {
         console.log('Final receipt:', receipt);
         const status = receipt.status;
@@ -324,7 +323,7 @@ export class TransactionsService {
                   try {
                     const tx = await connection.getTransaction(signature, { commitment: 'finalized', maxSupportedTransactionVersion: 0 });
                     return { success: true, signature, transaction: tx, status: 'FINALIZED' };
-                  } catch (txErr2: any) {
+                  } catch {
                     console.warn('SVM: retry getTransaction with maxSupportedTransactionVersion failed — treating tx as FINALIZED.');
                     return { success: true, signature, status: 'FINALIZED' };
                   }

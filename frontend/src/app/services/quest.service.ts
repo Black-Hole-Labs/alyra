@@ -1,5 +1,6 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { Quest, QuestRank, QuestStatus, CreateQuestDto } from '../models/quest.interface';
+import { computed,Injectable, signal } from '@angular/core';
+
+import { CreateQuestDto,Quest, QuestRank, QuestStatus } from '../models/quest.interface';
 
 @Injectable({
   providedIn: 'root'

@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Token } from '../../../pages/trade/trade.component';
+import { Component, EventEmitter, Input, OnInit,Output } from '@angular/core';
+
 import { Network } from '../../../models/wallet-provider.interface';
+import { Token } from '../../../pages/trade/trade.component';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 import { TransactionsService } from '../../../services/transactions.service';
 

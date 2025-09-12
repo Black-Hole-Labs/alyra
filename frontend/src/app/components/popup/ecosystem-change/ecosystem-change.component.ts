@@ -1,9 +1,10 @@
-import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter,Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { PopupService } from '../../../services/popup.service';
-import { MouseGradientService } from '../../../services/mouse-gradient.service';
+
 import { ProviderType } from '../../../models/wallet-provider.interface';
+import { MouseGradientService } from '../../../services/mouse-gradient.service';
+import { PopupService } from '../../../services/popup.service';
 
 @Component({
   selector: 'app-ecosystem-change',

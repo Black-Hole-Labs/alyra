@@ -1,14 +1,15 @@
-import { Component, EventEmitter, Output, inject, Input, Signal, computed, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed,EventEmitter, inject, Input, Output, Signal, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BlockchainStateService, Ecosystem } from '../../../services/blockchain-state.service';
-import { WalletBalanceService } from '../../../services/wallet-balance.service';
-import { Token } from '../../../pages/trade/trade.component';
-import { Network, ProviderType } from '../../../models/wallet-provider.interface';
 import { ethers } from 'ethers';
-import { NetworkChangeFromPopupComponent } from '../network-change-from/network-change-from.component';
-import { TokenService } from '../../../services/token.service';
+
+import { Network, ProviderType } from '../../../models/wallet-provider.interface';
+import { Token } from '../../../pages/trade/trade.component';
+import { BlockchainStateService, Ecosystem } from '../../../services/blockchain-state.service';
 import { PopupService } from '../../../services/popup.service';
+import { TokenService } from '../../../services/token.service';
+import { WalletBalanceService } from '../../../services/wallet-balance.service';
+import { NetworkChangeFromPopupComponent } from '../network-change-from/network-change-from.component';
 
 export interface TokenDisplay extends Token {
   name?: string;
@@ -218,7 +219,7 @@ export class TokenChangePopupComponent {
     return token.contractAddress === ethers.ZeroAddress;
   }
 
-  isVerifiedToken(token: TokenDisplay): boolean {
+  isVerifiedToken(): boolean {
     return true;
   }
 

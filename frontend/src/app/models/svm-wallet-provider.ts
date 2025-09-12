@@ -1,8 +1,9 @@
-import { clusterApiUrl, Connection, VersionedTransaction } from '@solana/web3.js';
-import { NetworkId, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
-import { BlockchainStateService } from '../services/blockchain-state.service';
 import { Injector } from '@angular/core';
 import { reverseLookup } from '@bonfida/spl-name-service';
+import { clusterApiUrl, Connection, VersionedTransaction } from '@solana/web3.js';
+
+import { BlockchainStateService } from '../services/blockchain-state.service';
+import { NetworkId, TransactionRequestSVM, WalletProvider } from './wallet-provider.interface';
 
 export class SvmWalletProvider implements WalletProvider {
   protected address: string = '';
@@ -48,7 +49,7 @@ export class SvmWalletProvider implements WalletProvider {
         this.provider.publicKey
       );
       sns = base ? `${base}.sol` : null;
-    } catch (e) {
+    } catch {
       // it can probably throw
       sns = null;
     }
@@ -71,7 +72,7 @@ export class SvmWalletProvider implements WalletProvider {
     return signedTx;
   }
 
-  async switchNetwork(selectedNetwork: any): Promise<void> {
+  async switchNetwork(): Promise<void> {
     //this.blockchainStateService.disconnect(this.address);
     throw new Error("unsupported_network"); //TODO
   }

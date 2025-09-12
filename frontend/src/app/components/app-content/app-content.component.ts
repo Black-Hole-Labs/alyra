@@ -1,17 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { Component, HostBinding } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { NavigationEnd,Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { filter } from 'rxjs/operators';
+
 import { NetworkId, ProviderType } from '../../models/wallet-provider.interface';
+import { BlockchainStateService } from '../../services/blockchain-state.service';
 import { PopupService } from '../../services/popup.service';
+import { BackgroundComponent } from '../background/background.component';
 import { BlackholeMenuComponent } from '../popup/blackhole-menu/blackhole-menu.component';
-import { WalletComponent } from '../popup/wallet/wallet.component';
 import { ConnectWalletComponent } from '../popup/connect-wallet/connect-wallet.component';
 import { EcosystemChangeComponent } from '../popup/ecosystem-change/ecosystem-change.component';
-import { BlockchainStateService } from '../../services/blockchain-state.service';
-import { BackgroundComponent } from '../background/background.component';
+import { WalletComponent } from '../popup/wallet/wallet.component';
 
 @Component({
   selector: 'app-app-content',

@@ -1,9 +1,10 @@
-import { NetworkId, TransactionRequestMVM, WalletProvider } from './wallet-provider.interface';
-import { BlockchainStateService } from '../services/blockchain-state.service';
 import { Injector } from '@angular/core';
-import { Transaction } from '@mysten/sui/transactions';
 import { registerSlushWallet } from '@mysten/slush-wallet';
-import { getWallets, type Wallet } from '@mysten/wallet-standard';
+import { Transaction } from '@mysten/sui/transactions';
+import { getWallets, Wallet } from '@mysten/wallet-standard';
+
+import { BlockchainStateService } from '../services/blockchain-state.service';
+import { NetworkId, TransactionRequestMVM, WalletProvider } from './wallet-provider.interface';
 
 export class SuiWalletProvider implements WalletProvider {
   private address: string = '';
@@ -31,7 +32,7 @@ export class SuiWalletProvider implements WalletProvider {
     if (String(this.provider).toLowerCase().includes('slush')) {
       registerSlushWallet(this.appName);
     }
-    
+
     const walletsList = getWallets().get();
     const wanted = (this.provider && typeof this.provider === 'string')
       ? this.provider
@@ -75,7 +76,7 @@ export class SuiWalletProvider implements WalletProvider {
     const res = await connectFE.connect({ chains: ['sui:mainnet'] });
     const accounts = res?.accounts || (this.wallet as any).accounts;
     if (!accounts || !accounts.length) throw new Error('No accounts returned by wallet.connect()');
-    
+
     this.address = accounts[0].address;
 
     return { address: this.address, nameService: null };
@@ -107,7 +108,7 @@ export class SuiWalletProvider implements WalletProvider {
     return result.digest;
   }
 
-  async switchNetwork(selectedNetwork: any): Promise<void> {
+  async switchNetwork(): Promise<void> {
     throw new Error('Network switching not supported');
   }
 }

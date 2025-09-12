@@ -1,6 +1,7 @@
-import { Component, Output, EventEmitter, OnInit, Input } from '@angular/core';
+import { animate, state, style, transition,trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import { Component, EventEmitter, Input,OnInit, Output } from '@angular/core';
+
 import { Token } from '../../../pages/trade/trade.component';
 
 @Component({

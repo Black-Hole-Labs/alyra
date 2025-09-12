@@ -1,14 +1,14 @@
-import { Component, OnInit, OnDestroy, computed, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BlockchainStateService } from '../../services/blockchain-state.service';
-import { ReferralService, ReferralInfo, ReferralStats } from '../../services/referral.service';
-import { RewardsService } from '../../services/rewards.service';
-import { TransactionsService } from '../../services/transactions.service';
-import { ProviderType } from '../../models/wallet-provider.interface';
-import { ethers } from 'ethers';
-import { RewardSuccessNotificationComponent } from '../../components/notification/reward-success-notification/reward-success-notification.component';
+import { Component, computed, effect, OnDestroy, OnInit, signal } from '@angular/core';
+
 import { RewardFailedNotificationComponent } from '../../components/notification/reward-failed-notification/reward-failed-notification.component';
 import { RewardPendingNotificationComponent } from '../../components/notification/reward-pending-notification/reward-pending-notification.component';
+import { RewardSuccessNotificationComponent } from '../../components/notification/reward-success-notification/reward-success-notification.component';
+import { ProviderType } from '../../models/wallet-provider.interface';
+import { BlockchainStateService } from '../../services/blockchain-state.service';
+import { ReferralService } from '../../services/referral.service';
+import { RewardsService } from '../../services/rewards.service';
+import { TransactionsService } from '../../services/transactions.service';
 
 @Component({
   selector: 'app-quests',
@@ -42,10 +42,10 @@ export class RewardsComponent implements OnInit, OnDestroy {
   readonly walletAddress = computed(() => this.blockchainStateService.getCurrentWalletAddress());
   readonly networkName = computed(() => this.blockchainStateService.networkSell()?.name || 'ethereum');
   readonly chainId = computed(() => this.blockchainStateService.networkSell()?.id || 1);
-  
+
   readonly isReferral = computed(() => this.referralService.isReferral());
   readonly hasJoined = computed(() => this.referralService.hasJoined());
-  
+
   readonly referralInfo = computed(() => this.referralService.referralInfo());
   readonly referralStats = computed(() => this.referralService.referralStats());
 
@@ -59,7 +59,7 @@ export class RewardsComponent implements OnInit, OnDestroy {
     effect(() => {
       const address = this.walletAddress();
       const isConnected = this.isConnected();
-      
+
       if (isConnected && address && address !== this.lastInitializedAddress) {
         this.lastInitializedAddress = address;
         this.initializeReferralSystem(address);
@@ -95,7 +95,7 @@ export class RewardsComponent implements OnInit, OnDestroy {
       console.log('[QuestsComponent] Referral system initialization already in progress, skipping...');
       return;
     }
-    
+
     this.isInitializingReferral = true;
     this.isLoading.set(true);
     try {
@@ -275,7 +275,7 @@ export class RewardsComponent implements OnInit, OnDestroy {
   readonly claimableRewards = computed(() => this.rewardsService.getClaimableRewards());
   readonly totalClaimableAmount = computed(() => this.rewardsService.getClaimableAmount());
   readonly hasClaimableRewards = computed(() => this.rewardsService.getClaimableRewards().length > 0);
-  
+
   // Computed значение для уже склеймленных наград
   readonly totalClaimedAmount = computed(() => this.rewardsService.getClaimedRewards());
 
@@ -314,9 +314,9 @@ export class RewardsComponent implements OnInit, OnDestroy {
 
        // Проверяем, нужно ли переключить сеть
       if (!currentChainId || currentChainId !== requiredChainId) {
-        
+
          console.log(`Switching network from ${currentChainId || 'undefined'} to ${requiredChainId} for reward claim`);
-        
+
         // Получаем информацию о нужной сети
         const targetNetwork = this.blockchainStateService.allNetworks().find(n => n.id === requiredChainId);
         if (!targetNetwork) {
@@ -355,10 +355,10 @@ export class RewardsComponent implements OnInit, OnDestroy {
           this.blockchainStateService.updateNetworkSell(requiredChainId);
           // Переключаем сеть в кошельке
           await provider.switchNetwork(targetNetwork);
-          
+
           // Обновляем адрес кошелька
           this.blockchainStateService.updateWalletAddress(provider.address);
-          
+
           console.log(`Successfully switched to network ${targetNetwork.name} (${requiredChainId})`);
         } catch (error) {
           console.error('Error switching network:', error);
@@ -373,18 +373,18 @@ export class RewardsComponent implements OnInit, OnDestroy {
           return;
         }
       }
-      
+
       const provider = this.blockchainStateService.getCurrentProvider().provider;
       const transactionHashes = await this.rewardsService.claimAllRewards(address, provider);
-      
+
       if (transactionHashes.length > 0) {
         // Показываем pending уведомление для первой транзакции
         this.rewardTransactionHash.set(transactionHashes[0]);
         this.showRewardPending.set(true);
-        
+
         // Пулим статус транзакции
         await this.pollTransactionStatus(transactionHashes[0]);
-        
+
         // Принудительно обновляем реварды после завершения
         await this.rewardsService.forceLoadRewards(address);
       } else {
@@ -407,13 +407,13 @@ export class RewardsComponent implements OnInit, OnDestroy {
       if (!currentNetwork) {
         throw new Error('No current network found');
       }
-      
+
       // Получаем рабочий RPC URL для сети
       const rpcUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(currentNetwork.id);
-      
+
       // Используем TransactionsService для пулинга
       const result = await this.transactionsService.pollTransactionReceipt(txHash, rpcUrl);
-      
+
       if (result.success) {
         // Транзакция успешна
         this.showRewardPending.set(false);

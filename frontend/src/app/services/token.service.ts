@@ -1,6 +1,6 @@
-import { effect, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
+
 import { Token } from '../pages/trade/trade.component';
-import { Network } from '../models/wallet-provider.interface';
 
 @Injectable({
   providedIn: 'root',

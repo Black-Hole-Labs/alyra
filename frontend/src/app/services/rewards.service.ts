@@ -1,9 +1,10 @@
-import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { ethers } from 'ethers';
-import { BlockchainStateService } from './blockchain-state.service';
+import { Injectable, signal } from '@angular/core';
 import rewardPoolsData from '@public/data/reward-pools.json';
+import { ethers } from 'ethers';
+
+import { environment } from '../../environments/environment';
+import { BlockchainStateService } from './blockchain-state.service';
 
 // Типизация данных из reward-pools.json
 const rewardPools: RewardPool[] = rewardPoolsData as RewardPool[];
@@ -102,8 +103,8 @@ export class RewardsService {
     }
 
     // Проверяем кэш - если недавно запрашивали тот же адрес, возвращаем кэшированный результат
-    if (this.lastRewardsRequest && 
-        this.lastRewardsRequest.address === walletAddress && 
+    if (this.lastRewardsRequest &&
+        this.lastRewardsRequest.address === walletAddress &&
         Date.now() - this.lastRewardsRequest.timestamp < this.REWARDS_CACHE_DURATION) {
       console.log('[loadRewards] Using cached rewards for address:', walletAddress);
       return this.rewards();
@@ -117,14 +118,14 @@ export class RewardsService {
       console.log('[loadRewards] walletAddress:', walletAddress);
       const rewards = await this.http.get<Reward[]>(`${this.API_BASE_URL}/rewards/address/${walletAddress}`).toPromise();
       console.log('[loadRewards] rewards from backend:', rewards);
-      
+
       // Получаем информацию о склеймленных значениях для каждого реварда
       const rewardsWithClaimed = await Promise.all(
         (rewards || []).map(async (reward) => {
           try {
             // Получаем информацию о пуле ревардов из локального файла
             const rewardPool = rewardPools.find(pool => pool.id === reward.rewardPoolId);
-            
+
             if (rewardPool && rewardPool.claimerAddress && rewardPool.rewardToken?.address) {
               const claimedAmount = await this.getClaimedAmount(
                 walletAddress,
@@ -132,32 +133,32 @@ export class RewardsService {
                 rewardPool.claimerAddress,
                 rewardPool.rewardToken.chainId
               );
-              
+
               // Приводим reward.amount к wei для корректного сравнения
               const decimals = rewardPool.rewardToken.decimals;
               const rewardAmountInWei = BigInt(Math.floor(reward.amount * Math.pow(10, decimals)));
               const availableAmountInWei = rewardAmountInWei - claimedAmount;
               const availableAmount = Math.max(0, Number(availableAmountInWei) / Math.pow(10, decimals));
-              
+
               console.log(`[loadRewards] Reward ${reward.id}: amount=${reward.amount}, amount(wei)=${rewardAmountInWei}, claimedAmount(wei)=${claimedAmount}, availableAmount(wei)=${availableAmountInWei}, availableAmount=${availableAmount}, decimals=${decimals}`);
-              
+
               return {
                 ...reward,
                 claimedAmount: Number(claimedAmount) / Math.pow(10, decimals),
                 availableAmount
               };
             }
-            
+
             return { ...reward, claimedAmount: 0, availableAmount: reward.amount };
-          } catch (error) {
+          } catch {
             return { ...reward, claimedAmount: 0, availableAmount: reward.amount };
           }
         })
       );
-      
+
       this.rewards.set(rewardsWithClaimed);
       return rewardsWithClaimed;
-    } catch (error) {
+    } catch {
       this.rewards.set([]);
       return [];
     } finally {
@@ -177,7 +178,7 @@ export class RewardsService {
     try {
       const transactions = await this.http.get<ClaimTransaction[]>(`${this.API_BASE_URL}/rewards/claim/${walletAddress}`).toPromise();
       return transactions || [];
-    } catch (error) {
+    } catch {
       return [];
     }
   }
@@ -186,20 +187,20 @@ export class RewardsService {
   async claimAllRewards(walletAddress: string, provider: any): Promise<string[]> {
     const claimTxs = await this.getClaimTransaction(walletAddress);
     const hashes: string[] = [];
-    
+
     for (const claimTx of claimTxs) {
       try {
         if (!(claimTx.transaction as any).from) {
           (claimTx.transaction as any).from = walletAddress;
         }
-        
+
         const txHash = await provider.sendTx(claimTx.transaction);
         hashes.push(txHash);
       } catch (error) {
         throw error;
       }
     }
-    
+
     return hashes;
   }
 
@@ -271,4 +272,4 @@ export class RewardsService {
   async getRewardPools(): Promise<RewardPool[]> {
     return rewardPools;
   }
-} 
+}

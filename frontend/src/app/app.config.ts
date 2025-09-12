@@ -1,21 +1,21 @@
+import { provideHttpClient } from '@angular/common/http';
 import {
+  APP_INITIALIZER,
   ApplicationConfig,
   importProvidersFrom,
   Injector,
   provideZoneChangeDetection,
-  APP_INITIALIZER,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
-import { BlockchainStateService } from './services/blockchain-state.service';
+import { provideRouter } from '@angular/router';
+import networksImport from '@public/data/networks.json';
+
 import { routes } from './app.routes';
-import { NetworkId } from './models/wallet-provider.interface';
 import {
   WalletProviderManager,
 } from './models/network.model';
-
-import networksImport from '@public/data/networks.json';
+import { NetworkId } from './models/wallet-provider.interface';
+import { BlockchainStateService } from './services/blockchain-state.service';
 
 async function initializeApp(injector: Injector): Promise<void> {
   const walletManager  = new WalletProviderManager();

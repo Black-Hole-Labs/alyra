@@ -1,11 +1,12 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { animate,style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, OnInit,Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { trigger, style, transition, animate } from '@angular/animations';
-import { PopupService } from '../../../services/popup.service';
+
+import { ProviderType, Wallets } from '../../../models/wallet-provider.interface';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 import { MouseGradientService } from '../../../services/mouse-gradient.service';
-import { ProviderType, Wallets } from '../../../models/wallet-provider.interface';
+import { PopupService } from '../../../services/popup.service';
 
 @Component({
   selector: 'app-connect-wallet',

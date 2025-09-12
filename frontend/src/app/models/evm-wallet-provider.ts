@@ -1,7 +1,8 @@
-import { ethers, JsonRpcSigner } from 'ethers';
-import { NetworkId, ProviderType, TransactionRequestEVM, WalletProvider } from './wallet-provider.interface';
 import { Injector } from '@angular/core';
+import { ethers, JsonRpcSigner } from 'ethers';
+
 import { BlockchainStateService } from '../services/blockchain-state.service';
+import { NetworkId, TransactionRequestEVM, WalletProvider } from './wallet-provider.interface';
 
 export class EvmWalletProvider implements WalletProvider {
   protected address: string = '';
@@ -26,7 +27,7 @@ export class EvmWalletProvider implements WalletProvider {
     {
       this.blockchainStateService.updateNetworkSell(NetworkId.ETHEREUM_MAINNET);
     }
-    
+
     if (_provider) this.provider = _provider;
     if (!this.provider) throw new Error('Provider not installed');
     const accounts = await this.provider.request({ method: 'eth_requestAccounts' });
@@ -41,7 +42,7 @@ export class EvmWalletProvider implements WalletProvider {
     {
       ens = await ethersProvider.lookupAddress(this.address);
     }
-    catch(e)
+    catch
     {
       // it can probably throw
       ens = null;
@@ -51,7 +52,7 @@ export class EvmWalletProvider implements WalletProvider {
   }
 
   async switchNetwork(selectedNetwork: any): Promise<void> {
-    
+
     try {
       await this.provider.request({
         method: 'wallet_switchEthereumChain',
@@ -65,7 +66,7 @@ export class EvmWalletProvider implements WalletProvider {
           params: [{ chainId: selectedNetwork.idHex }],
         });
       }
-      else if (error.code === 4001 
+      else if (error.code === 4001
                || error.message.includes("User rejected the request")
                || error.message.includes("The Provider is not connected to the requested chain"))
       {

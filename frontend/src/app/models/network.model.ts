@@ -1,9 +1,9 @@
 import { Injector } from '@angular/core';
+
 import { EvmWalletProvider } from './evm-wallet-provider';
 import { MultiChainWalletProvider } from './multichain-wallet-provider';
-import { SvmWalletProvider } from './svm-wallet-provider';
-import { NetworkId } from './wallet-provider.interface';
 import { SuiWalletProvider } from './sui-wallet-provider';
+import { SvmWalletProvider } from './svm-wallet-provider';
 
 export class WalletProviderManager {
   private metaMaskProvider: any = null;

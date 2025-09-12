@@ -1,6 +1,7 @@
 import { Injector } from '@angular/core';
-import { EvmWalletProvider } from './evm-wallet-provider';
 import EthereumProvider from "@walletconnect/ethereum-provider";
+
+import { EvmWalletProvider } from './evm-wallet-provider';
 import { Network } from './wallet-provider.interface';
 
 export class WalletConnectEvmProvider extends EvmWalletProvider {

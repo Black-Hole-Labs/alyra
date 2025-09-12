@@ -1,12 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { firstValueFrom, Observable } from 'rxjs';
-import { ThemeService } from '../../services/theme.service';
+import { Component, OnDestroy,OnInit } from '@angular/core';
+import { AbstractControl, FormControl, ReactiveFormsModule, ValidationErrors,Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { PopupService } from '../../services/popup.service';
-import { StarAnimationService, Star } from '../../services/star-animation.service';
+import { Observable } from 'rxjs';
+
 import { EmailService } from '../../services/email.service';
+import { PopupService } from '../../services/popup.service';
+import { Star,StarAnimationService } from '../../services/star-animation.service';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-form',
@@ -26,7 +27,7 @@ export class FormPageComponent implements OnInit, OnDestroy {
 	emailControl = new FormControl('', [Validators.required, this.customEmailValidator]);
 	isSubmitted = false;
 	isPopupVisible = false;
-	
+
 	// Variables for glitch animation
 	private possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 	private glitchChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -43,7 +44,7 @@ export class FormPageComponent implements OnInit, OnDestroy {
 		private popupService: PopupService
 	) {
 		this.stars$ = this.starAnimationService.stars;
-		
+
 		this.popupService.activePopup$.subscribe((popupType) => {
 			this.isPopupVisible = popupType === 'blackholeMenu';
 		});
@@ -53,16 +54,16 @@ export class FormPageComponent implements OnInit, OnDestroy {
 		document.documentElement.classList.add('form-page');
 		this.starAnimationService.initializeStars();
 		this.initTitleAnimation();
-		
+
 		const emailSubmitted = localStorage.getItem('blackhole-email-submitted');
 		if (emailSubmitted === 'true') {
 			this.isSubmitted = true;
 		}
-		
+
 		(window as any).setStarAnimation = (mode: 'high' | 'medium' | 'low' | 'disabled') => {
 			this.starAnimationService.setPerformanceMode(mode);
 		};
-		
+
 		(window as any).getStarAnimation = () => {
 			return this.starAnimationService.getPerformanceMode();
 		};
@@ -70,11 +71,11 @@ export class FormPageComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		document.documentElement.classList.remove('form-page');
-		
+
 		if (this.animationTimeout) {
 			clearTimeout(this.animationTimeout);
 		}
-		
+
 		delete (window as any).setStarAnimation;
 		delete (window as any).getStarAnimation;
 	}
@@ -85,7 +86,7 @@ export class FormPageComponent implements OnInit, OnDestroy {
 			setTimeout(() => {
 				this.animateTitle(titleElement as HTMLElement);
 			}, 500);
-			
+
 			titleElement.addEventListener('mouseenter', () => {
 				this.animateTitle(titleElement as HTMLElement);
 			});
@@ -110,7 +111,7 @@ export class FormPageComponent implements OnInit, OnDestroy {
 
 			let result = '';
 			const progress = frame / this.animationFrames;
-			
+
 			const currentCharIndex = Math.floor(finalText.length * progress);
 
 			for (let i = 0; i < finalText.length; i++) {
@@ -123,7 +124,7 @@ export class FormPageComponent implements OnInit, OnDestroy {
 						resolvedChars[i] = true;
 					} else {
 						const showCorrect = Math.random() < 0.7;
-						
+
 						if (showCorrect) {
 							result += finalText[i];
 						} else {
@@ -173,10 +174,10 @@ export class FormPageComponent implements OnInit, OnDestroy {
 		const rect = (element as HTMLElement).getBoundingClientRect();
 		const x = event.clientX - rect.left;
 		const y = event.clientY - rect.top;
-		
+
 		const gradientX = (x / rect.width) * 100;
 		const gradientY = (y / rect.height) * 100;
-		
+
 		(element as HTMLElement).style.setProperty('--gradient-x', `${gradientX}%`);
 		(element as HTMLElement).style.setProperty('--gradient-y', `${gradientY}%`);
 	}
@@ -207,7 +208,7 @@ export class FormPageComponent implements OnInit, OnDestroy {
 		this.isSubmitted = true;
 
 		try {
-			const response = await firstValueFrom(this.emailService.sendEmail(this.emailControl.value));
+			// const response = await firstValueFrom(this.emailService.sendEmail(this.emailControl.value));
 			localStorage.setItem('blackhole-email-submitted', 'true');
 		} catch (err: any) {
 			if (err.status == 201)
@@ -228,19 +229,19 @@ export class FormPageComponent implements OnInit, OnDestroy {
 
 	private customEmailValidator(control: AbstractControl): ValidationErrors | null {
 		const email = control.value;
-		
+
 		if (!email) {
 			return null;
 		}
 
 		const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-		
+
 		if (!emailRegex.test(email)) {
 			return { invalidEmail: true };
 		}
 
 		const latinOnlyRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/;
-		
+
 		if (!latinOnlyRegex.test(email)) {
 			return { invalidEmail: true };
 		}
@@ -251,7 +252,7 @@ export class FormPageComponent implements OnInit, OnDestroy {
 		}
 
 		const [localPart, domain] = parts;
-		
+
 		if (localPart.length === 0 || localPart.startsWith('.') || localPart.endsWith('.') || localPart.includes('..')) {
 			return { invalidEmail: true };
 		}
@@ -269,7 +270,7 @@ export class FormPageComponent implements OnInit, OnDestroy {
 
 		const tld = domainParts[domainParts.length - 1];
 		const tldRegex = /^[a-zA-Z]{2,}$/;
-		
+
 		if (!tldRegex.test(tld)) {
 			return { invalidEmail: true };
 		}
@@ -288,4 +289,4 @@ export class FormPageComponent implements OnInit, OnDestroy {
       this.popupService.openPopup('blackholeMenu');
     }
   }
-} 
+}

@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, HostBinding } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, HostBinding,OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { CommonModule } from '@angular/common';
-import { DocumentationHeaderComponent } from '../documentation-header/documentation-header.component';
-import { DocumentationFooterComponent } from '../documentation-footer/documentation-footer.component';
 import { ClosePopupsDirective } from '../../../directives/close-popups.directive';
+import { DocumentationFooterComponent } from '../documentation-footer/documentation-footer.component';
+import { DocumentationHeaderComponent } from '../documentation-header/documentation-header.component';
 
 @Component({
   selector: 'app-documentation-page',

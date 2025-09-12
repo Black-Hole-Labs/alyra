@@ -1,10 +1,11 @@
 import { Injectable, signal } from '@angular/core';
-import { ethers } from 'ethers';
+import { getFullnodeUrl,SuiClient } from '@mysten/sui/client';
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+import { ethers } from 'ethers';
+
+import { NetworkId } from '../models/wallet-provider.interface';
 import { Token } from '../pages/trade/trade.component';
 import { BlockchainStateService } from './blockchain-state.service';
-import { NetworkId } from '../models/wallet-provider.interface';
-import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';
 
 @Injectable({
   providedIn: 'root'

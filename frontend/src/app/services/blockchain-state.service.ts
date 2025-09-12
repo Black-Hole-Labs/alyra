@@ -1,10 +1,11 @@
-import { Injectable, signal, effect, computed, Injector, Signal } from '@angular/core';
-import { Network, NetworkId, ProviderType, Wallets } from '../models/wallet-provider.interface';
-import { Token } from '../pages/trade/trade.component';
-import { BehaviorSubject } from 'rxjs';
-
-import { ethers } from 'ethers';
+import { computed, effect, Injectable, Injector, Signal,signal } from '@angular/core';
+import { SuiClient } from '@mysten/sui/client';
+import providersImport from '@public/data/providers.json';
+import tokensImport from '@public/data/tokens.json';
+import tokensSearch from '@public/data/tokens_search.json';
 import { Connection } from '@solana/web3.js';
+import { ethers } from 'ethers';
+import { BehaviorSubject } from 'rxjs';
 
 import {
   BackpackProvider,
@@ -18,13 +19,10 @@ import {
   SolflareProvider,
   TrustWalletProvider,
 } from '../models/network.model';
-import { WalletConnectEvmProvider } from '../models/walletconnect-provider';
 import { WalletProviderManager } from '../models/network.model';
-
-import tokensSearch from '@public/data/tokens_search.json';
-import providersImport from '@public/data/providers.json';
-import tokensImport from '@public/data/tokens.json';
-import { SuiClient } from '@mysten/sui/client';
+import { Network, NetworkId, ProviderType, Wallets } from '../models/wallet-provider.interface';
+import { WalletConnectEvmProvider } from '../models/walletconnect-provider';
+import { Token } from '../pages/trade/trade.component';
 
 interface TokenData {
   chainId: number;

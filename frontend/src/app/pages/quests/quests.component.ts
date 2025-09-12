@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+
+import { CreateQuestDto,Quest, QuestRank } from '../../models/quest.interface';
 import { QuestService } from '../../services/quest.service';
-import { Quest, QuestRank, CreateQuestDto } from '../../models/quest.interface';
 
 @Component({
   selector: 'app-quests',

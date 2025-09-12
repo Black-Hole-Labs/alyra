@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, OnInit,Output } from '@angular/core';
+
 import { PopupService } from '../../../services/popup.service';
-import { MouseGradientService } from '../../../services/mouse-gradient.service';
 
 @Component({
   selector: 'app-settings',

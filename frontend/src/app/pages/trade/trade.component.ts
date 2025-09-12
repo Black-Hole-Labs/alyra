@@ -1,40 +1,41 @@
-import {
-  Component,
-  Renderer2,
-  ChangeDetectorRef,
-  computed,
-  signal,
-  effect,
-  ViewChild,
-  ElementRef,
-  AfterViewChecked,
-  Signal,
-} from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
-import { TokenChangePopupComponent } from '../../components/popup/token-change/token-selector.component';
-import { SettingsComponent } from '../../components/popup/settings/settings.component';
-import { BlockchainStateService, Ecosystem } from '../../services/blockchain-state.service';
-import { WalletBalanceService } from '../../services/wallet-balance.service';
-import { TransactionsService } from '../../services/transactions.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
-  NetworkId,
-  TransactionRequestEVM,
-  TransactionRequestSVM,
-  TransactionRequestMVM,
-  ProviderType,
-} from '../../models/wallet-provider.interface';
+  AfterViewChecked,
+  ChangeDetectorRef,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  Renderer2,
+  Signal,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { PublicKey } from '@solana/web3.js';
 import { ethers, parseUnits } from 'ethers';
-import { PopupService } from '../../services/popup.service';
-import { SuccessNotificationComponent } from '../../components/notification/success-notification/success-notification.component';
+import { map } from 'rxjs';
+
 import { FailedNotificationComponent } from '../../components/notification/failed-notification/failed-notification.component';
 import { PendingNotificationComponent } from '../../components/notification/pending-notification/pending-notification.component';
-import { PublicKey } from '@solana/web3.js';
+import { SuccessNotificationComponent } from '../../components/notification/success-notification/success-notification.component';
+import { SettingsComponent } from '../../components/popup/settings/settings.component';
+import { TokenChangePopupComponent } from '../../components/popup/token-change/token-selector.component';
+import {
+  NetworkId,
+  ProviderType,
+  TransactionRequestEVM,
+  TransactionRequestMVM,
+  TransactionRequestSVM,
+} from '../../models/wallet-provider.interface';
+import { BlockchainStateService, Ecosystem } from '../../services/blockchain-state.service';
+import { PopupService } from '../../services/popup.service';
 import { TokenService } from '../../services/token.service';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { map } from 'rxjs';
+import { TransactionsService } from '../../services/transactions.service';
+import { WalletBalanceService } from '../../services/wallet-balance.service';
 
 export interface Token {
   symbol: string;
@@ -176,7 +177,7 @@ export class TradeComponent implements AfterViewChecked {
           //   console.log("Show price rate");
           //   this.loadInitialPriceRate();
           // }
-        } catch (error) {
+        } catch {
           // this.updateBuyAmount('0.0');
           // update gas = 0.0
           // console.log("error",error);
@@ -340,10 +341,10 @@ export class TradeComponent implements AfterViewChecked {
       .replace(/^(\.)/g, '');
 
     if (isSell) {
-      this.isProcessingInput.update((value) => true);
+      this.isProcessingInput.update(() => true);
 
       this.sellAmount = inputElement.value;
-      this.validatedSellAmount.update((value) => Number(inputElement.value));
+      this.validatedSellAmount.update(() => Number(inputElement.value));
 
       this.adjustFontSize(inputElement);
 
@@ -429,7 +430,7 @@ export class TradeComponent implements AfterViewChecked {
 
   setMaxSellAmount(): void {
     this.updateSellAmount(this.balance().toString());
-    this.validatedSellAmount.update((value) => this.balance());
+    this.validatedSellAmount.update(() => this.balance());
     if (Number(this.validatedSellAmount()) > this.balance()) {
       this.buttonState = 'insufficient';
     } else {
@@ -603,7 +604,7 @@ export class TradeComponent implements AfterViewChecked {
       } else {
         txHash = await this.evmSwap();
       }
-    } catch (error: any) {
+    } catch {
       this.showFailedNotification = true;
 
       this.loading.set(false);
@@ -687,7 +688,7 @@ export class TradeComponent implements AfterViewChecked {
         this.blockchainStateService.networkBuy()!.id,
         this.tokenService.selectedBuyToken()!.contractAddress,
       );
-    } catch (error) {
+    } catch {
       // console.log("error setting balance",error);
     }
 
@@ -776,7 +777,7 @@ export class TradeComponent implements AfterViewChecked {
 
   test() {
     this.transactionsService.runTest().subscribe({
-      next: (response) => {
+      next: () => {
         // console.log('Quote:', response.quote);
         // console.log('Simulation Result:', response.simulationResult);
       },

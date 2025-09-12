@@ -1,9 +1,9 @@
-import { Component, Output, EventEmitter, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PopupService } from '../../../services/popup.service';
-import { BlockchainStateService, Ecosystem } from '../../../services/blockchain-state.service';
-import { MouseGradientService } from '../../../services/mouse-gradient.service';
+import { Component, effect,EventEmitter, Output, signal } from '@angular/core';
+
 import { ProviderType, Wallets } from '../../../models/wallet-provider.interface';
+import { BlockchainStateService, Ecosystem } from '../../../services/blockchain-state.service';
+import { PopupService } from '../../../services/popup.service';
 
 interface Token {
   name: string;

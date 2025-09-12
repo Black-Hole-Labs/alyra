@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit, effect, signal } from '@angular/core';
+import { Component, effect, OnDestroy, OnInit, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { SuiClient } from '@mysten/sui/client';
 import { Connection } from '@solana/web3.js';
 import { ethers } from 'ethers';
-import { BlockchainStateService } from '../../services/blockchain-state.service';
+
 import { NetworkId } from '../../models/wallet-provider.interface';
-import { SuiClient } from '@mysten/sui/client';
+import { BlockchainStateService } from '../../services/blockchain-state.service';
 
 @Component({
   selector: 'app-footer',

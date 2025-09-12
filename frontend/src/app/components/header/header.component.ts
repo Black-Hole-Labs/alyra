@@ -1,25 +1,26 @@
-import { RouterModule } from '@angular/router';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { PopupService } from '../../services/popup.service';
-import { Subscription } from 'rxjs';
 import {
   Component,
-  ElementRef,
-  Renderer2,
-  EventEmitter,
-  Output,
-  OnInit,
-  OnDestroy,
   computed,
-  signal,
   effect,
+  ElementRef,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+  Renderer2,
+  signal,
 } from '@angular/core';
-import { BlockchainStateService } from '../../services/blockchain-state.service';
+import { RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
+
 import { NetworkId, Wallets } from '../../models/wallet-provider.interface';
-import { WalletBalanceService } from '../../services/wallet-balance.service';
+import { BlockchainStateService } from '../../services/blockchain-state.service';
 import { MouseGradientService } from '../../services/mouse-gradient.service';
-import { TextScrambleDirective } from './text-scramble.directive';
+import { PopupService } from '../../services/popup.service';
+import { WalletBalanceService } from '../../services/wallet-balance.service';
 import { GmCounterService } from './gm-counter.service';
+import { TextScrambleDirective } from './text-scramble.directive';
 
 // import providers from '@public/data/providers.json';
 
@@ -322,7 +323,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       };
       const balance = await this.walletBalanceService.getBalanceForToken(nativeToken);
       this.nativeBalance.set(this.truncateTo6Decimals(parseFloat(balance)));
-    } catch (e) {
+    } catch {
       this.nativeBalance.set('0');
     }
   }
