@@ -44,7 +44,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
     }
     if (this.mvmProviderInstance) {
       //console.log(this.mvmProviderInstance);
-      this.mvmProvider = new SuiWalletProvider('MyDApp', this.mvmProviderInstance, this.injector);
+      this.mvmProvider = new SuiWalletProvider(this.mvmProviderInstance, this.injector);
     }
     else {
       console.error("Multichain::connect(): MVM not found!")
@@ -52,7 +52,7 @@ export abstract class MultiChainWalletProvider implements WalletProvider {
 
     let nameService;
 
-    if (netowrkId === NetworkId.ETHEREUM_MAINNET && this.evmProvider && this.mvmProvider) {
+    if (netowrkId === NetworkId.ETHEREUM_MAINNET && this.evmProvider) {
       const { address, nameService } = await this.evmProvider.connect(this.evmProviderInstance);
       this.address = address;
       this.currentNetwork = 'EVM';

@@ -626,7 +626,8 @@ export class TradeComponent implements AfterViewChecked {
     let finalStatus: any;
 
     try {
-      if (this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET) {
+      const sellNetworkId = this.blockchainStateService.networkSell()?.id;
+      if (sellNetworkId === NetworkId.SOLANA_MAINNET) {
         const rpcUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(
           this.blockchainStateService.networkSell()!.id,
         );
@@ -637,8 +638,20 @@ export class TradeComponent implements AfterViewChecked {
         } else {
           finalStatus = { status: 'FAILED', error: receiptResult.error || receiptResult.status || 'Unknown' };
         }
-      } else {
+      } else if (sellNetworkId === NetworkId.SUI_MAINNET) {
         finalStatus = await this.transactionsService.pollStatus(txHash);
+      } else {
+        // EVM
+        const rpcUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(
+          this.blockchainStateService.networkSell()!.id,
+        );
+        const evmResult = await this.transactionsService.pollTransactionReceipt(txHash, rpcUrl);
+
+        if (evmResult.success) {
+          finalStatus = { status: 'DONE', receipt: evmResult.receipt };
+        } else {
+          finalStatus = { status: 'FAILED', error: evmResult.error || evmResult.receipt || 'Unknown' };
+        }
       }
     } catch (err) {
       console.warn('Error while polling transaction status:', err);
@@ -816,10 +829,7 @@ export class TradeComponent implements AfterViewChecked {
     } else {
       fromAddress = this.blockchainStateService.getCurrentWalletAddress()!;
 
-      // ---- ДОБАВЬ ВОТ ЭТОТ КУСОК ----
-      // Если типы сетей разные
       if (fromChainType !== toChainType && !(toAddress && toAddress !== '')) {
-        // всегда используем константный адрес в toAddress
         if (toChainType === 'EVM') {
           toAddress = CONSTANT_ETH_ADDRESS;
         } else if (toChainType === 'SVM') {
@@ -828,7 +838,6 @@ export class TradeComponent implements AfterViewChecked {
           toAddress = CONSTANT_SUI_ADDRESS;
         }
       } else {
-        // как раньше - если кастомный введён и валиден, подставляем его
         if (this.customAddress() !== '' && this.addressStatus === 'good') {
           toAddress = this.customAddress();
         } else {
@@ -865,7 +874,110 @@ export class TradeComponent implements AfterViewChecked {
       fromChainType !== toChainType &&
       !(this.customAddress() !== '' && this.addressStatus === 'good');
 
-    if (fromChainType !== 'SVM') {
+    if ([10, 56, 137, 42161, 1151111081099710].includes(this.blockchainStateService.networkSell()!.id)) {
+      // blackHole API for supportted chains
+      this.transactionsService
+        .getV1(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress, 'EXACT_INPUT')
+        .subscribe({
+          next: (response: any) => {
+            // console.log('Quote received:', response);
+            if (response && response.calldata) {
+              // this.updateSellPriceUsd(response.estimate.fromAmountUSD);
+              // this.updateBuyPriceUsd(response.estimate.toAmountUSD);
+
+              const toAmountNumber = Number(
+                this.transactionsService.parseToAmount(response.outputAmount, toTokenDecimals),
+              );
+              const readableToAmount = toAmountNumber.toFixed(toTokenDecimals).replace(/\.?0+$/, '');
+              // console.log('readableToAmount:', readableToAmount);
+              this.updateBuyAmount(readableToAmount);
+
+              // const gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
+              // this.gasPriceUSD = Number(gasPriceUSD);
+              const totalFeesAmount = Number(response.fees?.total?.amount || '0');
+              const totalFeesDecimals = Number(response.fees?.total?.decimals ?? 18);
+              const gasTokenAmount = totalFeesAmount / Math.pow(10, totalFeesDecimals);
+              this.gasPriceUSD = gasTokenAmount;
+
+              // console.log('gasPriceUSD:', this.gasPriceUSD);
+
+              const fromDecimal = parseFloat(
+                this.transactionsService.parseToAmount(response.inputAmount, fromTokenDecimals),
+              );
+              const toDecimal = parseFloat(
+                this.transactionsService.parseToAmount(response.outputAmount, toTokenDecimals),
+              );
+
+              if (fromDecimal > 0) {
+                const ratio = toDecimal / fromDecimal;
+                this.price.set(Number(ratio.toFixed(3)));
+
+                // const ratioUsd = Number(response.estimate.toAmountUSD) / fromDecimal;
+                // this.priceUsd = Number(ratioUsd.toFixed(3));
+              }
+            } else {
+              console.error('Missing calldata in response.');
+            }
+
+            if (response?.calldata) {
+              if (this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET) {
+                this.txData.set(response.calldata.data as TransactionRequestSVM);
+                this.buttonState = 'swap';
+              } else {
+                const valueHex = ethers.toBeHex(BigInt(response.calldata.value || '0'));
+                const txRequest: TransactionRequestEVM = {
+                  value: valueHex,
+                  to: response.calldata.to,
+                  data: response.calldata.data,
+                  // chainId: Number(fromChain),
+                  // gasPrice: '0x0',
+                  // gasLimit: '0x0',
+                  from: fromAddress,
+                };
+                this.txData.set(txRequest);
+                this.buttonState = 'swap';
+                if (fromToken !== ethers.ZeroAddress) {
+                  this.buttonState = 'approve';
+                }
+              }
+            }
+          },
+          error: (error: HttpErrorResponse) => {
+            if (
+              error.error.message === 'No available quotes for the requested transfer' ||
+              error.error.statusCode === 422
+            ) {
+              this.buttonState = 'no-available-quotes';
+            } else if (
+              error.error.message.includes('Invalid toAddress') ||
+              error.error.message.includes('Invalid fromAddress')
+            ) {
+              this.buttonState = 'wrong-address';
+            } else if (error.error.statusCode === 429 || error.error.message.includes('Rate limit exceeded')) {
+              this.buttonState = 'rate-limit';
+            } else if (error.status === 404) {
+              console.error('Custom error message:', error || 'Unknown error');
+              console.error('Custom error message:', error.error?.message || 'Unknown error');
+            } else {
+              console.error('Unexpected error:', error);
+            }
+          },
+          complete: () => {
+            // console.log('Quote request completed');
+            if (mustHaveCustomAddress) {
+              this.buttonState = 'wrong-address';
+              return;
+            }
+            if (!this.blockchainStateService.getCurrentWalletAddress()) {
+              this.buttonState = 'insufficient';
+            } else if (this.validatedSellAmount() > this.balance()) {
+              this.buttonState = 'insufficient';
+              return;
+            }
+          },
+        });
+    } // other - LI.FI
+    else {
       this.transactionsService
         .getQuoteBridge(
           fromChain,
@@ -943,131 +1055,6 @@ export class TradeComponent implements AfterViewChecked {
                   this.buttonState = 'approve';
                 }
               }
-            }
-          },
-          error: (error: HttpErrorResponse) => {
-            if (
-              error.error.message === 'No available quotes for the requested transfer' ||
-              error.error.statusCode === 422
-            ) {
-              this.buttonState = 'no-available-quotes';
-            } else if (
-              error.error.message.includes('Invalid toAddress') ||
-              error.error.message.includes('Invalid fromAddress')
-            ) {
-              this.buttonState = 'wrong-address';
-            } else if (error.error.statusCode === 429 || error.error.message.includes('Rate limit exceeded')) {
-              this.buttonState = 'rate-limit';
-            } else if (error.status === 404) {
-              console.error('Custom error message:', error || 'Unknown error');
-              console.error('Custom error message:', error.error?.message || 'Unknown error');
-            } else {
-              console.error('Unexpected error:', error);
-            }
-          },
-          complete: () => {
-            // console.log('Quote request completed');
-            if (mustHaveCustomAddress) {
-              this.buttonState = 'wrong-address';
-              return;
-            }
-            if (!this.blockchainStateService.getCurrentWalletAddress()) {
-              this.buttonState = 'insufficient';
-            } else if (this.validatedSellAmount() > this.balance()) {
-              this.buttonState = 'insufficient';
-              return;
-            }
-          },
-        });
-    } else {
-      this.transactionsService
-        .getV1(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress, 'EXACT_INPUT')
-        .subscribe({
-          next: (response: any) => {
-            // console.log('Quote received:', response);
-            if (response && response.calldata) {
-              // this.updateSellPriceUsd(response.estimate.fromAmountUSD);
-              // this.updateBuyPriceUsd(response.estimate.toAmountUSD);
-
-              const toAmountNumber = Number(
-                this.transactionsService.parseToAmount(response.outputAmount, toTokenDecimals),
-              );
-              const readableToAmount = toAmountNumber.toFixed(toTokenDecimals).replace(/\.?0+$/, '');
-              // console.log('readableToAmount:', readableToAmount);
-              this.updateBuyAmount(readableToAmount);
-
-              // if(this.blockchainStateService.networkSell()!.id == NetworkId.SOLANA_MAINNET) // SVM
-              // {
-              //   gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
-              // }
-              // else // EVM
-              // {
-              //   const gasPriceHex = response.transactionRequest.gasPrice;
-              //   const gasLimitHex = response.transactionRequest.gasLimit;
-              //   const gasToken = response.estimate.gasCosts?.[0]?.token;
-              //   gasPriceUSD = this.transactionsService.parseGasPriceUSD(gasPriceHex, gasLimitHex, gasToken);
-              // }
-
-              // const gasPriceUSD = response.estimate.gasCosts?.[0]?.amountUSD;
-              // this.gasPriceUSD = Number(gasPriceUSD);
-              const totalFeesAmount = Number(response.fees?.total?.amount || '0');
-              const totalFeesDecimals = Number(response.fees?.total?.decimals ?? 18);
-              const gasTokenAmount = totalFeesAmount / Math.pow(10, totalFeesDecimals);
-              this.gasPriceUSD = gasTokenAmount;
-
-              // console.log('gasPriceUSD:', this.gasPriceUSD);
-
-              const fromDecimal = parseFloat(
-                this.transactionsService.parseToAmount(response.inputAmount, fromTokenDecimals),
-              );
-              const toDecimal = parseFloat(
-                this.transactionsService.parseToAmount(response.outputAmount, toTokenDecimals),
-              );
-
-              if (fromDecimal > 0) {
-                const ratio = toDecimal / fromDecimal;
-                this.price.set(Number(ratio.toFixed(3)));
-
-                // const ratioUsd = Number(response.estimate.toAmountUSD) / fromDecimal;
-                // this.priceUsd = Number(ratioUsd.toFixed(3));
-              }
-            } else {
-              console.error('Missing calldata in response.');
-            }
-
-            // if (response.transactionRequest.data) {
-            //   if (this.blockchainStateService.networkSell()?.id === NetworkId.SOLANA_MAINNET) {
-            //     this.txData.set(response.transactionRequest as TransactionRequestSVM);
-            //     this.buttonState = 'swap';
-            //   }
-            //   else if (this.blockchainStateService.networkSell()?.id === NetworkId.SUI_MAINNET) {
-            //     this.txData.set(response.transactionRequest as TransactionRequestMVM);
-            //     this.buttonState = 'swap';
-            //   }
-            //   else {
-            //     this.txData.set(response.transactionRequest as TransactionRequestEVM);
-            //     this.buttonState = 'swap';
-            //     if (fromToken !== ethers.ZeroAddress) {
-            //       // console.log("this.buttonState = 'approve'");
-            //       this.buttonState = 'approve';
-            //     }
-            //   }
-            // }
-
-            if (response?.calldata) {
-              const valueHex = ethers.toBeHex(BigInt(response.calldata.value || '0'));
-              const txRequest: TransactionRequestSVM = {
-                //value: valueHex,
-                //to: response.calldata.to,
-                data: response.calldata.data,
-                // chainId: Number(fromChain),
-                // gasPrice: '0x0',
-                // gasLimit: '0x0',
-                //from: fromAddress,
-              };
-              this.txData.set(txRequest);
-              this.buttonState = 'swap';
-              console.log('this.txData', this.txData);
             }
           },
           error: (error: HttpErrorResponse) => {

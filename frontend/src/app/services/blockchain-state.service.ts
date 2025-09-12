@@ -14,6 +14,7 @@ import {
   OkxWalletProvider,
   PhantomProvider,
   RabbyWalletProvider,
+  SlushProvider,
   SolflareProvider,
   TrustWalletProvider,
 } from '../models/network.model';
@@ -190,6 +191,9 @@ export class BlockchainStateService {
           break;
         case 'solflare':
           this.registerProvider(provider.id, new SolflareProvider(this.injector!), provider.type as ProviderType);
+          break;
+        case 'slush':
+          this.registerProvider(provider.id, new SlushProvider(this.injector!), provider.type as ProviderType);
           break;
         case 'phantom':
           this.registerProvider(

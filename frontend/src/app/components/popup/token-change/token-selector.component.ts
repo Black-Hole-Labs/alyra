@@ -8,7 +8,6 @@ import { Network, ProviderType } from '../../../models/wallet-provider.interface
 import { ethers } from 'ethers';
 import { NetworkChangeFromPopupComponent } from '../network-change-from/network-change-from.component';
 import { TokenService } from '../../../services/token.service';
-import { MouseGradientService } from '../../../services/mouse-gradient.service';
 import { PopupService } from '../../../services/popup.service';
 
 export interface TokenDisplay extends Token {
@@ -68,25 +67,27 @@ export class TokenChangePopupComponent {
   });
   currentNetwork = computed(() => this.blockchainStateService.networkSell());
 
-  additionalNetworksCount = computed(() => {
-    const totalNetworks = this.blockchainStateService.allNetworks().length;
-    const displayedNetworks = 6;
-    return Math.max(0, totalNetworks - displayedNetworks);
+  additionalNetworks = computed(() => {
+    const allNetworks = this.blockchainStateService.allNetworks();
+    const displayedIds = new Set(this.networks().map((n) => n.id));
+    return allNetworks.filter((n) => !displayedIds.has(n.id));
   });
+
+  additionalNetworksCount = computed(() => this.additionalNetworks().length);
 
   tokenList: Signal<TokenDisplay[]> = computed(() => {
     const search = this.searchText().toLowerCase().trim();
 
-    if (!search) {
-      const tokens = this.getBaseTokens();
-      const filteredByExclude = this.filterByExcludeToken(tokens);
+      if (!search) {
+          const tokens = this.getBaseTokens();
+          const filteredByExclude = this.filterByExcludeToken(tokens);
+          return filteredByExclude as TokenDisplay[];
+      }
+      const networkId = this.selectedNetworkId();
+      const allTokens = this.blockchainStateService.getAllTokensForNetwork(networkId!);
+      const filteredBySearch = this.filterBySearch(allTokens, search);
+      const filteredByExclude = this.filterByExcludeToken(filteredBySearch);
       return filteredByExclude as TokenDisplay[];
-    }
-
-    const allTokens = this.blockchainStateService.allTokens();
-    const filteredBySearch = this.filterBySearch(allTokens, search);
-    const filteredByExclude = this.filterByExcludeToken(filteredBySearch);
-    return filteredByExclude as TokenDisplay[];
   });
 
   displayedTokens: Signal<TokenDisplay[]> = computed(() => {

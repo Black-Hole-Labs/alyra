@@ -3,6 +3,7 @@ import { EvmWalletProvider } from './evm-wallet-provider';
 import { MultiChainWalletProvider } from './multichain-wallet-provider';
 import { SvmWalletProvider } from './svm-wallet-provider';
 import { NetworkId } from './wallet-provider.interface';
+import { SuiWalletProvider } from './sui-wallet-provider';
 
 export class WalletProviderManager {
   private metaMaskProvider: any = null;
@@ -82,6 +83,13 @@ export class RabbyWalletProvider extends EvmWalletProvider {
 export class SolflareProvider extends SvmWalletProvider {
   constructor(injector: Injector) {
     super((window as any).solflare, injector);
+  }
+}
+
+/***************SUI***************/
+export class SlushProvider extends SuiWalletProvider  {
+  constructor(injector: Injector) {
+    super((window as any).slush, injector);
   }
 }
 
