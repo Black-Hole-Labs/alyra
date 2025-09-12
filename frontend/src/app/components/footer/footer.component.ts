@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit, effect, signal } from '@angular/core';
+import { Component, effect, OnDestroy, OnInit, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { SuiClient } from '@mysten/sui/client';
 import { Connection } from '@solana/web3.js';
 import { ethers } from 'ethers';
-import { BlockchainStateService } from '../../services/blockchain-state.service';
+
 import { NetworkId } from '../../models/wallet-provider.interface';
-import { SuiClient } from '@mysten/sui/client';
+import { BlockchainStateService } from '../../services/blockchain-state.service';
 
 @Component({
   selector: 'app-footer',
@@ -22,17 +23,14 @@ export class FooterComponent implements OnInit, OnDestroy {
 
   private isStopBlockFetching = false;
 
-  constructor(
-    private blockchainStateService: BlockchainStateService,
-  ) {
+  constructor(private blockchainStateService: BlockchainStateService) {
     effect(
       async () => {
         const chainId = this.blockchainStateService.networkSell()?.id;
         this.isStopBlockFetching = false;
         if (!chainId) return;
 
-        if (chainId === NetworkId.SOLANA_MAINNET)
-        {
+        if (chainId === NetworkId.SOLANA_MAINNET) {
           this.updateBlockNumber();
         }
 
@@ -48,12 +46,18 @@ export class FooterComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    const rpcUrlEvm = await this.blockchainStateService.getWorkingRpcUrlForNetwork(NetworkId.ETHEREUM_MAINNET);
-    const rpcUrlSol = await this.blockchainStateService.getWorkingRpcUrlForNetwork(NetworkId.SOLANA_MAINNET);
-    const rpcUrlSui = await this.blockchainStateService.getWorkingRpcUrlForNetwork(NetworkId.SUI_MAINNET);
+    const rpcUrlEvm = await this.blockchainStateService.getWorkingRpcUrlForNetwork(
+      NetworkId.ETHEREUM_MAINNET,
+    );
+    const rpcUrlSol = await this.blockchainStateService.getWorkingRpcUrlForNetwork(
+      NetworkId.SOLANA_MAINNET,
+    );
+    const rpcUrlSui = await this.blockchainStateService.getWorkingRpcUrlForNetwork(
+      NetworkId.SUI_MAINNET,
+    );
     this.providerEvm.set(new ethers.JsonRpcProvider(rpcUrlEvm));
     this.providerSol.set(new Connection(rpcUrlSol));
-    this.providerSui.set(new SuiClient({url: rpcUrlSui}));
+    this.providerSui.set(new SuiClient({ url: rpcUrlSui }));
 
     this.updateBlockNumber();
 

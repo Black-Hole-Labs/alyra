@@ -1,16 +1,13 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+
 import { PopupService } from '../../../services/popup.service';
-import { MouseGradientService } from '../../../services/mouse-gradient.service';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
   templateUrl: './settings.component.html',
-  styleUrls: [
-		'./settings.component.scss',
-		'./settings.component.adaptives.scss'
-	],
+  styleUrls: ['./settings.component.scss', './settings.component.adaptives.scss'],
   imports: [CommonModule],
 })
 export class SettingsComponent implements OnInit {
@@ -21,10 +18,7 @@ export class SettingsComponent implements OnInit {
   selectedIndex: number | null = 0;
   customValue: string = '';
 
-  constructor(
-    private popupService: PopupService,
-    private mouseGradientService: MouseGradientService
-  ) {}
+  constructor(private popupService: PopupService) {}
 
   ngOnInit() {
     const savedIndex = localStorage.getItem('selectedIndex');
@@ -62,10 +56,7 @@ export class SettingsComponent implements OnInit {
   restrictInput(event: KeyboardEvent): void {
     const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', '.', ','];
 
-    if (
-      (event.key >= '0' && event.key <= '9') || 
-      allowedKeys.includes(event.key)
-    ) {
+    if ((event.key >= '0' && event.key <= '9') || allowedKeys.includes(event.key)) {
       return;
     }
 
@@ -86,8 +77,7 @@ export class SettingsComponent implements OnInit {
 
     const firstDotIndex = value.indexOf('.');
     if (firstDotIndex !== -1) {
-      value = value.slice(0, firstDotIndex + 1) +
-        value.slice(firstDotIndex + 1).replace(/\./g, '');
+      value = value.slice(0, firstDotIndex + 1) + value.slice(firstDotIndex + 1).replace(/\./g, '');
     }
 
     value = value.slice(0, 4);
@@ -108,17 +98,13 @@ export class SettingsComponent implements OnInit {
     } else if (this.customValue) {
       value = this.customValue + '%';
     }
-    
+
     if (value) {
       localStorage.setItem('slippageValue', value);
       this.save.emit(value);
     }
-    
+
     this.popupService.closePopup('settings');
     this.close.emit();
-  }
-
-  onSettingsMouseMove(event: MouseEvent): void {
-    this.mouseGradientService.onMouseMove(event);
   }
 }

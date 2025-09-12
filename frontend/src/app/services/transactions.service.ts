@@ -1,45 +1,46 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { interval, lastValueFrom, Observable, switchMap, takeWhile } from 'rxjs';
-
-import { ethers } from 'ethers';
 import { Connection } from '@solana/web3.js';
+import { ethers } from 'ethers';
+import { interval, lastValueFrom, Observable, switchMap, takeWhile } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TransactionsService {
   private apiUrl = environment.apiUrl;
   private apiBack = environment.apiBack;
 
-  constructor(
-    private http: HttpClient,
-  ) 
-  {
+  constructor(private http: HttpClient) {}
 
-  }
-
-  swapTokens(walletAddress: string, amount: string, network: string, token: string): Observable<{ txHash: string }> {
+  swapTokens(
+    walletAddress: string,
+    amount: string,
+    network: string,
+    token: string,
+  ): Observable<{ txHash: string }> {
     return this.http.post<{ txHash: string }>(`${this.apiUrl}/swap`, {
       walletAddress,
       amount,
       network,
-      token
+      token,
     });
   }
 
   checkTransactionStatus(txHash: string): Observable<{ status: string }> {
     return interval(5000).pipe(
       switchMap(() => this.http.get<{ status: string }>(`${this.apiUrl}/tx-status/${txHash}`)),
-      takeWhile(response => response.status !== 'confirmed', true)
+      takeWhile((response) => response.status !== 'confirmed', true),
     );
   }
 
   runTest(): Observable<{ quote: any; simulationResult: any }> {
-    return this.http.get<{quote: any; simulationResult: any}>(`${this.apiUrl}/lifi-tenderly/test`, {
-    });
+    return this.http.get<{ quote: any; simulationResult: any }>(
+      `${this.apiUrl}/lifi-tenderly/test`,
+      {},
+    );
   }
 
   getQuote(
@@ -49,7 +50,7 @@ export class TransactionsService {
     toToken: string,
     fromAmount: string,
     fromAddress: string,
-    slippage?: number
+    slippage?: number,
   ): Observable<{ quote: any }> {
     const params: any = {
       fromChain,
@@ -63,7 +64,7 @@ export class TransactionsService {
     if (slippage) {
       params.slippage = slippage;
     }
-  
+
     return this.http.get<{ quote: any }>(`${this.apiUrl}/lifi/quote`, { params }); //todo rename?
   }
 
@@ -75,7 +76,7 @@ export class TransactionsService {
     fromAmount: string,
     fromAddress: string,
     toAddress?: string,
-    slippage?: number
+    slippage?: number,
   ): Observable<{ quote: any }> {
     const params: any = {
       fromChain,
@@ -83,9 +84,9 @@ export class TransactionsService {
       fromToken,
       toToken,
       fromAmount,
-      fromAddress
+      fromAddress,
     };
-  
+
     if (toAddress) {
       params.toAddress = toAddress;
     }
@@ -93,7 +94,7 @@ export class TransactionsService {
     if (slippage) {
       params.slippage = slippage;
     }
-  
+
     return this.http.get<{ quote: any }>(`${this.apiUrl}/lifi/quote-bridge`, { params });
   }
 
@@ -105,7 +106,7 @@ export class TransactionsService {
     amount: string,
     senderAddress: string,
     receiverAddress?: string,
-    tradeType: 'EXACT_INPUT' | 'EXACT_OUTPUT' = 'EXACT_INPUT'
+    tradeType: 'EXACT_INPUT' | 'EXACT_OUTPUT' = 'EXACT_INPUT',
   ): Observable<any> {
     const params: any = {
       senderAddress,
@@ -115,7 +116,7 @@ export class TransactionsService {
       amount,
       originCurrency,
       destinationCurrency,
-      tradeType
+      tradeType,
     };
 
     return this.http.get<any>(`${this.apiBack}/v1/quotes`, { params });
@@ -123,102 +124,103 @@ export class TransactionsService {
 
   public async pollStatus(
     txHash: string,
-    onInitialLinks?: (sending: string, receiving: string) => void
+    onInitialLinks?: (sending: string, receiving: string) => void,
   ): Promise<any> {
     let result: any;
-    
+
     do {
       try {
         result = await this.getStatus(txHash);
-        
+
         if (result?.sending?.txLink || result?.receiving?.txLink) {
-          onInitialLinks?.(
-            result?.sending?.txLink || '',
-            result?.receiving?.txLink || ''
-          );
+          onInitialLinks?.(result?.sending?.txLink || '', result?.receiving?.txLink || '');
         }
-        
+
         await this.delay(1000);
-      } catch (error) {
+      } catch {
         await this.delay(1000);
       }
     } while (!result || (result.status !== 'DONE' && result.status !== 'FAILED'));
-    
+
     return result;
   }
 
   async getInitialStatus(txHash: string): Promise<any> {
     try {
       return await this.getStatus(txHash);
-    } catch (error) {
+    } catch {
       // console.log('Error fetching initial status:', error);
       return {};
     }
   }
-  
+
   async waitForCompletion(txHash: string): Promise<any> {
     let result: any;
-    
+
     do {
       try {
         result = await this.getStatus(txHash);
         await this.delay(1000);
-      } catch (error) {
+      } catch {
         // console.log('Error polling status:', error);
         await this.delay(1000);
       }
     } while (!result || (result.status !== 'DONE' && result.status !== 'FAILED'));
-    
+
     return result;
   }
-  
+
   private async getStatus(txHash: string): Promise<any> {
     try {
       const request = this.http.get('https://li.quest/v1/status', {
-        params: { txHash }
+        params: { txHash },
       });
       return await lastValueFrom(request);
     } catch (error: any) {
-      if (error?.error?.code === 1011 && error?.error?.message.includes("Not a valid txHash")) {
+      if (error?.error?.code === 1011 && error?.error?.message.includes('Not a valid txHash')) {
         throw new Error('txHash not yet valid');
       } else {
         throw error;
       }
     }
-  }  
+  }
 
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
-  
+
   parseToAmount(toAmount: string, decimals: number): string {
     return (Number(toAmount) / Math.pow(10, decimals)).toString();
   }
 
   toNonExponential(num: number, decimals: number = 18): string {
     if (!isFinite(num)) return '0';
-  
-    const [intPart, decPart = ''] = num.toString().split('e').length === 2
-      ? Number(num).toFixed(30).split('.')
-      : num.toString().split('.');
-  
+
+    const [intPart, decPart = ''] =
+      num.toString().split('e').length === 2
+        ? Number(num).toFixed(30).split('.')
+        : num.toString().split('.');
+
     const trimmedDec = decPart.slice(0, decimals);
     const result = trimmedDec ? `${intPart}.${trimmedDec}` : intPart;
-  
+
     return result.includes('.') ? result.replace(/\.?0+$/, '') : result;
   }
-  
 
-  parseGasPriceUSD(gasPriceHex: string, gasLimitHex: string, token: { decimals: number; priceUSD: string }): string {
+  parseGasPriceUSD(
+    gasPriceHex: string,
+    gasLimitHex: string,
+    token: { decimals: number; priceUSD: string },
+  ): string {
     const gasPriceWei = parseInt(gasPriceHex, 16);
     const gasLimit = parseInt(gasLimitHex, 16);
-  
+
     const gasCostWei = gasPriceWei * gasLimit;
-  
+
     const gasCostInToken = gasCostWei / Math.pow(10, token.decimals);
-  
+
     const gasCostUSD = gasCostInToken * parseFloat(token.priceUSD);
-  
+
     return gasCostUSD.toFixed(2);
   }
 
@@ -231,21 +233,21 @@ export class TransactionsService {
    * @returns Promise с результатом: { success: boolean, receipt?: any, error?: string }
    */
   async pollTransactionReceipt(
-    txHash: string, 
-    rpcUrl: string, 
-    maxAttempts: number = 60, 
-    delayMs: number = 5000
+    txHash: string,
+    rpcUrl: string,
+    maxAttempts: number = 60,
+    delayMs: number = 5000,
   ): Promise<{ success: boolean; receipt?: any; error?: string }> {
     try {
       let receipt = null;
       let attempts = 0;
-      
+
       const ethersProvider = new ethers.JsonRpcProvider(rpcUrl);
-      
+
       do {
         await this.delay(delayMs);
         attempts++;
-        
+
         try {
           receipt = await ethersProvider.getTransactionReceipt(txHash);
           console.log(`Attempt ${attempts}: Receipt received:`, receipt ? 'Yes' : 'No');
@@ -256,7 +258,7 @@ export class TransactionsService {
           console.log(`Attempt ${attempts}: Transaction not yet mined, retrying... Error:`, error);
         }
       } while (!receipt && attempts < maxAttempts);
-      
+
       if (receipt) {
         console.log('Final receipt:', receipt);
         const status = receipt.status;
@@ -274,7 +276,7 @@ export class TransactionsService {
     }
   }
 
-    /**
+  /**
    * Poll Solana transaction status by signature.
    * Returns when tx is finalized (success) or failed, or when timeout occurs.
    *
@@ -287,8 +289,14 @@ export class TransactionsService {
     signature: string,
     rpcUrl: string,
     maxAttempts: number = 60,
-    delayMs: number = 5000
-  ): Promise<{ success: boolean; signature: string; transaction?: any; status?: string; error?: string }> {
+    delayMs: number = 5000,
+  ): Promise<{
+    success: boolean;
+    signature: string;
+    transaction?: any;
+    status?: string;
+    error?: string;
+  }> {
     const connection = new Connection(rpcUrl, 'confirmed');
     let attempts = 0;
 
@@ -309,23 +317,39 @@ export class TransactionsService {
           } else {
             if (status.err) {
               // console.log(`SVM: signature ${signature} failed (attempt ${attempts}):`, status.err);
-              return { success: false, signature, status: 'FAILED', error: JSON.stringify(status.err) };
+              return {
+                success: false,
+                signature,
+                status: 'FAILED',
+                error: JSON.stringify(status.err),
+              };
             }
 
             if (status.confirmationStatus === 'finalized') {
               try {
-                const tx = await connection.getTransaction(signature, { commitment: 'finalized', maxSupportedTransactionVersion: 0 });
+                const tx = await connection.getTransaction(signature, {
+                  commitment: 'finalized',
+                  maxSupportedTransactionVersion: 0,
+                });
                 return { success: true, signature, transaction: tx, status: 'FINALIZED' };
               } catch (txErr: any) {
                 const msg = txErr?.message ?? String(txErr);
-                console.warn(`SVM: getTransaction failed for finalized tx ${signature} (attempt ${attempts}):`, msg);
+                console.warn(
+                  `SVM: getTransaction failed for finalized tx ${signature} (attempt ${attempts}):`,
+                  msg,
+                );
 
                 if (msg.includes('maxSupportedTransactionVersion')) {
                   try {
-                    const tx = await connection.getTransaction(signature, { commitment: 'finalized', maxSupportedTransactionVersion: 0 });
+                    const tx = await connection.getTransaction(signature, {
+                      commitment: 'finalized',
+                      maxSupportedTransactionVersion: 0,
+                    });
                     return { success: true, signature, transaction: tx, status: 'FINALIZED' };
-                  } catch (txErr2: any) {
-                    console.warn('SVM: retry getTransaction with maxSupportedTransactionVersion failed — treating tx as FINALIZED.');
+                  } catch {
+                    console.warn(
+                      'SVM: retry getTransaction with maxSupportedTransactionVersion failed — treating tx as FINALIZED.',
+                    );
                     return { success: true, signature, status: 'FINALIZED' };
                   }
                 }
@@ -337,17 +361,24 @@ export class TransactionsService {
             // console.log(`SVM: signature ${signature} pending (attempt ${attempts}) - confirmationStatus=${status.confirmationStatus}, confirmations=${status.confirmations}`);
           }
         } catch (innerErr: any) {
-          console.warn(`SVM: error checking signature status (attempt ${attempts}):`, innerErr?.message ?? innerErr);
+          console.warn(
+            `SVM: error checking signature status (attempt ${attempts}):`,
+            innerErr?.message ?? innerErr,
+          );
         }
 
         await this.delay(delayMs);
       } while (attempts < maxAttempts);
 
-      return { success: false, signature, status: 'TIMEOUT', error: 'Timeout waiting for transaction confirmation' };
+      return {
+        success: false,
+        signature,
+        status: 'TIMEOUT',
+        error: 'Timeout waiting for transaction confirmation',
+      };
     } catch (err: any) {
       console.error('SVM: unexpected error polling transaction:', err);
-      return { success: false, signature, error: (err && err.message) ? err.message : String(err) };
+      return { success: false, signature, error: err && err.message ? err.message : String(err) };
     }
   }
-
 }

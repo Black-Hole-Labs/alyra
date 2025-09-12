@@ -1,181 +1,152 @@
-@import '../../../styles/mouse-gradient-button';
-
 .wallet-popup {
-  @include mouse-gradient-button(
-    $padding: 30px,
-    $height: auto,
-    $border-radius: 28px,
-    $background: rgba(var(--dark-bg), 0.1),
-    $backdrop-blur: 25px,
-    $include-responsive: false
-  );
-
-	display: flex;
-	position: fixed;
-	width: 500px;
+  display: flex;
+  position: fixed;
+  width: 400px;
   box-sizing: border-box;
   z-index: 10;
-	overflow: hidden;
+  overflow: hidden;
   flex-direction: column;
   align-items: stretch;
   justify-content: stretch;
-  
-  &:hover {
-    transform: none;
-    
-		background: radial-gradient(
-      circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-      rgba(255, 255, 255, 0.001) 0%, 
-      rgba(255, 255, 255, 0.0005) 50%, 
-      transparent 100%
-    );
-  }
 }
 
 .header {
-	align-items: center;
-	width: 100%;
-	display: flex;
-	justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 
 .header p {
-	font-family: "JetBrains Mono", monospace;
-	font-size: 16px;
-	color: var(--elem-nonactive);
+  font-size: 16px;
+  color: var(--elem-nonactive);
 }
 
 .header p span {
-	font-family: "JetBrains Mono", monospace;
-	font-size: 16px;
-	color: rgba(var(--white), 1);
+  font-size: 16px;
+  color: rgba(var(--white), 1);
 }
 
 .header button {
-	height: 15px;
-	width: 15px;
-	background: url(/img/header/popup-menu/close-icon.png) no-repeat;
-	background-size: cover;
-	opacity: 0.3;
-	cursor: pointer;
-	transition: 0.2s ease-in-out;
+  height: 15px;
+  width: 15px;
+  background: url(/img/header/popup-menu/close-icon.png) no-repeat;
+  background-size: cover;
+  opacity: 0.3;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
 }
 
 .header button:hover {
-	opacity: 1;
+  opacity: 1;
 }
 
 .left-wallet {
-	display: flex;
-	align-items: center;
-	gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .right-wallet {
-	display: flex;
-	align-items: center;
-	gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .wallet {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
 .wallet p {
-	font-family: "JetBrains Mono", monospace;
-	font-size: 16px;
-	color: var(--elem-nonactive);
+  font-size: 16px;
+  color: var(--elem-nonactive);
 }
 
 .avatar {
-	width: 60px;
-	height: 60px;
-	background-size: cover;
-	background-repeat: no-repeat;
-	border-radius: 10px;
+  width: 60px;
+  height: 60px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 10px;
 }
 
 .wallet-name {
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .wallet-name h3 {
-	font-family: "JetBrains Mono", monospace;
-	font-size: 18px;
-	color: white;
+  font-size: 18px;
+  color: white;
 }
 
 .wallet-address {
-	display: flex;
-	align-items: center;
-	gap: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .wallet-address p {
-	font-family: "JetBrains Mono", monospace;
-	font-size: 16px;
-	color: var(--elem-nonactive);
+  font-size: 16px;
+  color: var(--elem-nonactive);
 }
 
 .copy {
-	width: 20px;
-	height: 20px;
-	background: url(/img/trade/copy-hover.png);
-	background-size: cover;
-	opacity: 0.3;
-	cursor: pointer;
-	transition: 0.2s ease-in-out;
+  width: 20px;
+  height: 20px;
+  background: url(/img/trade/copy-hover.png);
+  background-size: cover;
+  opacity: 0.3;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
 }
 
 .copy:hover {
-	opacity: 1;
+  opacity: 1;
 }
 
 .copy.copied {
   background: url(/img/trade/copy-check.png);
-	background-size: cover;
+  background-size: cover;
   background-repeat: no-repeat;
   opacity: 1;
   animation: fadeIn 0.3s ease-in-out;
 }
 
 .disconnect {
-	padding: 4px 9px;
-	border-radius: 10px;
-	background-color: rgba(var(--dark-red), 1);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: 0.2s ease-in-out;
-	cursor: pointer;
+  padding: 4px 9px;
+  border-radius: 10px;
+  background-color: rgba(var(--dark-red), 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 .disconnect p {
-	font-family: "JetBrains Mono", monospace;
-	font-size: 13px;
-	color: var(--red);
+  font-size: 13px;
+  color: var(--red);
 }
 
 .disconnect:hover {
-	background-color: var(--dark-red-hover);
+  background-color: var(--dark-red-hover);
 }
 
 .button-connect {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 30px;
-	width: 100%;
   height: 62px;
   background-color: rgba(var(--dark-bg), 0.1);
   border-radius: 16px;
-	border: 1px solid rgba(var(--white), 0.1);
-  font-family: "JetBrains Mono", monospace;
+  border: 1px solid rgba(var(--white), 0.1);
+
   font-weight: 400;
   font-size: 18px;
   color: rgba(var(--white), 1);
@@ -185,151 +156,143 @@
 
 .button-connect:hover {
   background-color: rgba(var(--white), 0.1);
-	border: 1px solid rgba(var(--white), 0.2);
+  border: 1px solid rgba(var(--white), 0.2);
 }
 
-
-
 .devider {
-	margin-top: 27px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+  margin-top: 27px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .devider p {
-	font-family: "JetBrains Mono", monospace;
-	font-size: 18px;
-	color: var(--elem-nonactive);
-	margin-right: 17px;
+  font-size: 18px;
+  color: var(--elem-nonactive);
+  margin-right: 17px;
 }
 
 .hr1 {
-	width: 332px;
-	border: 1px solid var(--elem-nonactive);
+  width: 332px;
+  border: 1px solid var(--elem-nonactive);
 }
 
 .hr2 {
-	width: 304px;
-	border: 1px solid var(--elem-nonactive);
+  width: 304px;
+  border: 1px solid var(--elem-nonactive);
 }
 
 .balance {
-	align-self: flex-start;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	margin: 20px 0 13px;
-	gap: 5px;
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 20px 0 13px;
+  gap: 5px;
 }
 
 .balance h2 {
-	font-family: "JetBrains Mono", monospace;
-	font-size: 45px;
-	color: white;
+  font-size: 45px;
+  color: white;
 }
 
 .grow {
-	display: flex;
-	align-items: center;
-	gap: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .grow p {
-	font-family: "JetBrains Mono", monospace;
-	font-size: 22px;
+  font-size: 22px;
 }
 
 .usd {
-	color: var(--red);
+  color: var(--red);
 }
 
 .percent {
-	color: var(--elem-nonactive);
+  color: var(--elem-nonactive);
 }
 
 .token-portfolio {
-	width: 100%;
-	height: 432px;
-	overflow-y: auto;
-	overflow-x: hidden;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	margin-top: 30px;
-	gap: 25px;
-	-ms-overflow-style: none;
-	scrollbar-width: none;
+  width: 100%;
+  height: 432px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+  gap: 25px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .token-portfolio::-webkit-scrollbar {
-	display: none;
+  display: none;
 }
 
 .token {
-	width: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .token-left {
-	display: flex;
-	align-items: center;
-	gap: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .token-img {
-	width: 60px;
-	height: 60px;
-	background: url(/img/trade/eth.png) no-repeat;
-	background-size: cover;
+  width: 60px;
+  height: 60px;
+  background: url(/img/trade/eth.png) no-repeat;
+  background-size: cover;
 }
 
 .token-info {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .token-info p {
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 700;
-	font-size: 20px;
-	color: white;
+  font-weight: 700;
+  font-size: 20px;
+  color: white;
 }
 
 .token-balance {
-	color: var(--elem-nonactive);
+  color: var(--elem-nonactive);
 }
 
 .token-right {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-end;
-	gap: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
 }
 
 .token-right h5 {
-	font-family: "JetBrains Mono", monospace;
-	font-size: 24px;
-	color: white;
+  font-size: 24px;
+  color: white;
 }
 
 .token-price-change {
-	display: flex;
-	align-items: center;
-	gap: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .token-price-change p {
-	font-family: "JetBrains Mono", monospace;
-	font-size: 16px;
+  font-size: 16px;
 }
 
 .usd-change {
-	color: var(--red);
+  color: var(--red);
 }
 
 .percent-change {
-	color: var(--elem-nonactive);
+  color: var(--elem-nonactive);
 }

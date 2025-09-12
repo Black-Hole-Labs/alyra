@@ -1,18 +1,16 @@
-import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { PopupService } from '../../../services/popup.service';
+
 import { MouseGradientService } from '../../../services/mouse-gradient.service';
+import { PopupService } from '../../../services/popup.service';
 
 @Component({
   selector: 'app-blackhole-menu',
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './blackhole-menu.component.html',
-  styleUrls: [
-		'./blackhole-menu.component.scss', 
-		'./blackhole-menu.component.adaptives.scss'
-	]
+  styleUrls: ['./blackhole-menu.component.scss', './blackhole-menu.component.adaptives.scss'],
 })
 export class BlackholeMenuComponent {
   @Output() close = new EventEmitter<void>();
@@ -21,7 +19,7 @@ export class BlackholeMenuComponent {
 
   constructor(
     private popupService: PopupService,
-    private mouseGradientService: MouseGradientService
+    private mouseGradientService: MouseGradientService,
   ) {}
 
   closePopup(): void {

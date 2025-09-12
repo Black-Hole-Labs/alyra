@@ -1,106 +1,135 @@
 <div class="form-container" (mousemove)="onMouseMoveGlobal($event)">
-	<div class="stars-container">
-		<div *ngFor="let star of stars$ | async; trackBy: trackByStar" class="star" 
-			[style.left.%]="star.initialX" 
-			[style.top.%]="star.initialY"
-			[style.opacity]="star.opacity"
-			[style.--offset-x1]="star.offsetX1"
-			[style.--offset-y1]="star.offsetY1"
-			[style.--offset-x2]="star.offsetX2"
-			[style.--offset-y2]="star.offsetY2"
-			[style.--offset-x3]="star.offsetX3"
-			[style.--offset-y3]="star.offsetY3"
-			[style.--duration]="star.duration"
-			[style.--delay]="star.delay"
-			[style.--weight]="star.weight">
-			<img src="/img/header/star.png" alt="star">
-		</div>
-	</div>
+  <div class="stars-container">
+    <div
+      *ngFor="let star of stars$ | async; trackBy: trackByStar"
+      class="star"
+      [style.left.%]="star.initialX"
+      [style.top.%]="star.initialY"
+      [style.opacity]="star.opacity"
+      [style.--offset-x1]="star.offsetX1"
+      [style.--offset-y1]="star.offsetY1"
+      [style.--offset-x2]="star.offsetX2"
+      [style.--offset-y2]="star.offsetY2"
+      [style.--offset-x3]="star.offsetX3"
+      [style.--offset-y3]="star.offsetY3"
+      [style.--duration]="star.duration"
+      [style.--delay]="star.delay"
+      [style.--weight]="star.weight"
+    >
+      <img src="/img/header/star.png" alt="star" />
+    </div>
+  </div>
 
-	<div class="header">
-		<div class="menu">
-			<a routerLink="/" class="logo"></a>
-			<h3 (click)="togglePopup($event)">Blackhole PRO</h3>
-			<button (click)="togglePopup($event)" [ngClass]="{'open': isPopupVisible, 'closed': !isPopupVisible}"></button>
-		</div>
-		<div class="links">
-			<a href="https://x.com/blackhole_labs" target="_blank" class="link"
-				(mousemove)="onMouseMove($event, $event.currentTarget)"
-				(mouseleave)="onMouseLeave($event.currentTarget)">
-				<div class="img twitter"></div>
-			</a>
-			<a href="https://blackholelabs.gitbook.io/blackholelabs" target="_blank" class="link"
-				(mousemove)="onMouseMove($event, $event.currentTarget)"
-				(mouseleave)="onMouseLeave($event.currentTarget)">
-				<div class="img gitbook"></div>
-			</a>
-			<a href="https://linktr.ee/blackholelabs" target="_blank" class="link"
-				(mousemove)="onMouseMove($event, $event.currentTarget)"
-				(mouseleave)="onMouseLeave($event.currentTarget)">
-				<div class="img linktree"></div>
-			</a>
-		</div>
-		<div class="link theme"
-				(mousemove)="onMouseMove($event, $event.currentTarget)"
-				(mouseleave)="onMouseLeave($event.currentTarget)"
-				(click)="toggleTheme()">
-				<div class="img" [class.dark-theme]="!themeService.getCurrentTheme()" [class.light-theme]="themeService.getCurrentTheme()"></div>
-		</div>
-	</div>
+  <div class="header">
+    <div class="menu">
+      <a routerLink="/" class="logo"></a>
+      <h3 (click)="togglePopup($event)">Blackhole PRO</h3>
+      <button
+        (click)="togglePopup($event)"
+        [ngClass]="{ open: isPopupVisible, closed: !isPopupVisible }"
+      ></button>
+    </div>
+    <div class="links">
+      <a
+        href="https://x.com/blackhole_labs"
+        target="_blank"
+        class="link"
+        (mousemove)="onMouseMove($event, $event.currentTarget)"
+        (mouseleave)="onMouseLeave($event.currentTarget)"
+      >
+        <div class="img twitter"></div>
+      </a>
+      <a
+        href="https://blackholelabs.gitbook.io/blackholelabs"
+        target="_blank"
+        class="link"
+        (mousemove)="onMouseMove($event, $event.currentTarget)"
+        (mouseleave)="onMouseLeave($event.currentTarget)"
+      >
+        <div class="img gitbook"></div>
+      </a>
+      <a
+        href="https://linktr.ee/blackholelabs"
+        target="_blank"
+        class="link"
+        (mousemove)="onMouseMove($event, $event.currentTarget)"
+        (mouseleave)="onMouseLeave($event.currentTarget)"
+      >
+        <div class="img linktree"></div>
+      </a>
+    </div>
+    <div
+      class="link theme"
+      (mousemove)="onMouseMove($event, $event.currentTarget)"
+      (mouseleave)="onMouseLeave($event.currentTarget)"
+      (click)="toggleTheme()"
+    >
+      <div
+        class="img"
+        [class.dark-theme]="!themeService.getCurrentTheme()"
+        [class.light-theme]="themeService.getCurrentTheme()"
+      ></div>
+    </div>
+  </div>
 
-	<h1>
-		Blackhole PRO
-	</h1>
+  <h1>Blackhole PRO</h1>
 
-	<div class="mail">
-		<ng-container *ngIf="!isSubmitted">
-			<p>Submit your EMAIL:</p>
-			<div class="input-container"
-				(mousemove)="onMouseMove($event, $event.currentTarget)"
-				(mouseleave)="onMouseLeave($event.currentTarget)">
-				<input type="email" placeholder="EXAMPLE@MAIL.COM" [formControl]="emailControl">
-			</div>
-			<div class="buttons">
-				<div class="apply button"
-					[class.disabled]="!isEmailValid"
-					(click)="onApplyClick()"
-					(mousemove)="onMouseMove($event, $event.currentTarget)"
-					(mouseleave)="onMouseLeave($event.currentTarget)">
-					<p>APPLY</p>
-				</div>
-				<div class="button"
-					(mousemove)="onMouseMove($event, $event.currentTarget)"
-					(mouseleave)="onMouseLeave($event.currentTarget)">
-					<p>EXPLORE</p>
-				</div>
-			</div>
-		</ng-container>
-		
-		<ng-container *ngIf="isSubmitted">
-			<p>Thanks for your response!</p>
-			<div class="buttons">
-				<div class="button"
-					(mousemove)="onMouseMove($event, $event.currentTarget)"
-					(mouseleave)="onMouseLeave($event.currentTarget)">
-					<p>EXPLORE</p>
-				</div>
-			</div>
-		</ng-container>
-		<div class="footer-content">
-			<div class="copyright-container">
-				<div class="copyright-text">2025 Blackhole Labs | All Rights Reserved</div>
-				<div class="copyright"></div>
-			</div>
-			<p class="separator">|</p>
-			<a href="/documentation/termsofuse" target="_blank">Terms of Use</a>
-			<p class="separator">|</p>
-			<a href="/documentation/privacypolicy" target="_blank">Privacy Policy</a>
-			<p class="separator">|</p>
-			<div class="block-number">
-				<p>2734862374</p>
-				<div class="indicator"></div>
-			</div>
-		</div>
-	</div>
+  <div class="mail">
+    <ng-container *ngIf="!isSubmitted">
+      <p>Submit your EMAIL:</p>
+      <div
+        class="input-container"
+        (mousemove)="onMouseMove($event, $event.currentTarget)"
+        (mouseleave)="onMouseLeave($event.currentTarget)"
+      >
+        <input type="email" placeholder="EXAMPLE@MAIL.COM" [formControl]="emailControl" />
+      </div>
+      <div class="buttons">
+        <div
+          class="apply button"
+          [class.disabled]="!isEmailValid"
+          (click)="onApplyClick()"
+          (mousemove)="onMouseMove($event, $event.currentTarget)"
+          (mouseleave)="onMouseLeave($event.currentTarget)"
+        >
+          <p>APPLY</p>
+        </div>
+        <div
+          class="button"
+          (mousemove)="onMouseMove($event, $event.currentTarget)"
+          (mouseleave)="onMouseLeave($event.currentTarget)"
+        >
+          <p>EXPLORE</p>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isSubmitted">
+      <p>Thanks for your response!</p>
+      <div class="buttons">
+        <div
+          class="button"
+          (mousemove)="onMouseMove($event, $event.currentTarget)"
+          (mouseleave)="onMouseLeave($event.currentTarget)"
+        >
+          <p>EXPLORE</p>
+        </div>
+      </div>
+    </ng-container>
+    <div class="footer-content">
+      <div class="copyright-container">
+        <div class="copyright-text">2025 Blackhole Labs | All Rights Reserved</div>
+        <div class="copyright"></div>
+      </div>
+      <p class="separator">|</p>
+      <a href="/documentation/termsofuse" target="_blank">Terms of Use</a>
+      <p class="separator">|</p>
+      <a href="/documentation/privacypolicy" target="_blank">Privacy Policy</a>
+      <p class="separator">|</p>
+      <div class="block-number">
+        <p>2734862374</p>
+        <div class="indicator"></div>
+      </div>
+    </div>
+  </div>
 </div>
-

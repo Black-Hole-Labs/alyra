@@ -1,496 +1,386 @@
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
+  .setting-popup {
+    box-sizing: border-box;
+    z-index: 10;
+    position: fixed;
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-	@import '../../../styles/mouse-gradient-button';
-	.settings-popup {
-		@include mouse-gradient-button(
-			$padding: 20px,
-			$height: auto,
-			$border-radius: 22px,
-			$background: rgba(var(--dark-bg), 0.3),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
+  .settings-header h3 {
+    font-size: 20px;
+  }
 
-		box-sizing: border-box;
-		z-index: 10;
+  .close-button {
+    height: 16px;
+    width: 16px;
+  }
 
-		position: fixed;
-		
-		flex-direction: column;
-		align-items: stretch;
-		
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.03) 0%, 
-				rgba(255, 255, 255, 0.01) 50%, 
-				transparent 100%
-			);
-		}
-	}
-	
-	.settings-header h3 {
-		font-size: 20px;
-	}
-	
-	.close-button {
-		height: 16px;
-		width: 16px;
-	}
-	
-	.limit {
-		margin-top: 10px;
-		gap: 7px;
-	}
-	
-	.limit-image {
-		height: 13px;
-		width: 13px;
-	}
-	
-	.limit > p {
-		font-size: 12px;
-	}
-	
-	.buttons {
-		gap: 5px;
-		margin-top: 15px;
-	}
-	
-	.buttons > button {
-		font-size: 10px;
-		padding: 4px 14px;
-		border: 1px solid var(--elem-nonactive);
-		border-radius: 12px;
-	}
-	
-	.custom {
-		width: 54px;
-		height: 26px;
-		border: 1px solid var(--elem-nonactive);
-		border-radius: 12px;
-	}
-	
-	.custom input {
-		font-size: 10px;
-		width: 36px;
-	}
-	
-	.custom input::placeholder {
-		font-size: 10px;
-	}
-	
-	.custom span {
-		font-size: 10px;
-	}
-	
-	.custom span.percent {
-		right: 8px;
-	}
-	
-	.main {
-		width: 230px;
-		height: 35px;
-		margin-top: 20px;
-		border-radius: 12px;
-		font-size: 12px;
-	}
+  .limit {
+    margin-top: 10px;
+    gap: 7px;
+  }
+
+  .limit-image {
+    height: 13px;
+    width: 13px;
+  }
+
+  .limit > p {
+    font-size: 12px;
+  }
+
+  .buttons {
+    gap: 5px;
+    margin-top: 15px;
+  }
+
+  .buttons > button {
+    font-size: 10px;
+    padding: 4px 14px;
+    border: 1px solid var(--elem-nonactive);
+    border-radius: 12px;
+  }
+
+  .custom {
+    width: 54px;
+    height: 26px;
+    border: 1px solid var(--elem-nonactive);
+    border-radius: 12px;
+  }
+
+  .custom input {
+    font-size: 10px;
+    width: 36px;
+  }
+
+  .custom input::placeholder {
+    font-size: 10px;
+  }
+
+  .custom span {
+    font-size: 10px;
+  }
+
+  .custom span.percent {
+    right: 8px;
+  }
+
+  .main {
+    width: 230px;
+    height: 35px;
+    margin-top: 20px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
-	@import '../../../styles/mouse-gradient-button';
-	.settings-popup {
-		@include mouse-gradient-button(
-			$padding: 20px,
-			$height: auto,
-			$border-radius: 22px,
-			$background: rgba(var(--dark-bg), 0.3),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
+  .settings-popup {
+    box-sizing: border-box;
+    z-index: 10;
+    position: fixed;
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-		box-sizing: border-box;
-		z-index: 10;
+  .settings-header h3 {
+    font-size: 20px;
+  }
 
-		position: fixed;
-		
-		flex-direction: column;
-		align-items: stretch;
-		
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.03) 0%, 
-				rgba(255, 255, 255, 0.01) 50%, 
-				transparent 100%
-			);
-		}
-	}
-	
-	.settings-header h3 {
-		font-size: 20px;
-	}
-	
-	.close-button {
-		height: 16px;
-		width: 16px;
-	}
-	
-	.limit {
-		margin-top: 10px;
-		gap: 7px;
-	}
-	
-	.limit-image {
-		height: 13px;
-		width: 13px;
-	}
-	
-	.limit > p {
-		font-size: 12px;
-	}
-	
-	.buttons {
-		gap: 5px;
-		margin-top: 15px;
-	}
-	
-	.buttons > button {
-		font-size: 10px;
-		padding: 4px 14px;
-		border: 1px solid var(--elem-nonactive);
-		border-radius: 12px;
-	}
-	
-	.custom {
-		width: 53px;
-		height: 24px;
-		border: 1px solid var(--elem-nonactive);
-		border-radius: 12px;
-	}
-	
-	.custom input {
-		font-size: 10px;
-		width: 36px;
-	}
-	
-	.custom input::placeholder {
-		font-size: 10px;
-	}
-	
-	.custom span {
-		font-size: 10px;
-	}
-	
-	.custom span.percent {
-		right: 8px;
-	}
-	
-	.main {
-		width: 230px;
-		height: 35px;
-		margin-top: 20px;
-		border-radius: 12px;
-		font-size: 12px;
-	}
+  .close-button {
+    height: 16px;
+    width: 16px;
+  }
+
+  .limit {
+    margin-top: 10px;
+    gap: 7px;
+  }
+
+  .limit-image {
+    height: 13px;
+    width: 13px;
+  }
+
+  .limit > p {
+    font-size: 12px;
+  }
+
+  .buttons {
+    gap: 5px;
+    margin-top: 15px;
+  }
+
+  .buttons > button {
+    font-size: 10px;
+    padding: 4px 14px;
+    border: 1px solid var(--elem-nonactive);
+    border-radius: 12px;
+  }
+
+  .custom {
+    width: 53px;
+    height: 24px;
+    border: 1px solid var(--elem-nonactive);
+    border-radius: 12px;
+  }
+
+  .custom input {
+    font-size: 10px;
+    width: 36px;
+  }
+
+  .custom input::placeholder {
+    font-size: 10px;
+  }
+
+  .custom span {
+    font-size: 10px;
+  }
+
+  .custom span.percent {
+    right: 8px;
+  }
+
+  .main {
+    width: 230px;
+    height: 35px;
+    margin-top: 20px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
+  .settings-popup {
+    box-sizing: border-box;
+    z-index: 10;
+    position: fixed;
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-	@import '../../../styles/mouse-gradient-button';
-	.settings-popup {
-		@include mouse-gradient-button(
-			$padding: 15px,
-			$height: auto,
-			$border-radius: 16px,
-			$background: rgba(var(--dark-bg), 0.3),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
+  .settings-header h3 {
+    font-size: 13px;
+  }
 
-		box-sizing: border-box;
-		z-index: 10;
+  .close-button {
+    height: 14px;
+    width: 14px;
+  }
 
-		position: fixed;
-		
-		flex-direction: column;
-		align-items: stretch;
-		
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.03) 0%, 
-				rgba(255, 255, 255, 0.01) 50%, 
-				transparent 100%
-			);
-		}
-	}
-	
-	.settings-header h3 {
-		font-size: 13px;
-	}
-	
-	.close-button {
-		height: 14px;
-		width: 14px;
-	}
-	
-	.limit {
-		margin-top: 9px;
-		gap: 5px;
-	}
-	
-	.limit-image {
-		height: 9px;
-		width: 9px;
-	}
-	
-	.limit > p {
-		font-size: 8px;
-	}
-	
-	.buttons {
-		gap: 6px;
-		margin-top: 10px;
-	}
-	
-	.buttons > button {
-		font-size: 7px;
-		padding: 4px 10px 2px 10px;
-		border-radius: 9px;
-	}
-	
-	.custom {
-		width: 38px;
-		height: 19px;
-		padding-top: 2px;
-		border-radius: 9px;
-	}
-	
-	.custom input {
-		font-size: 7px;
-		width: 26px;
-	}
-	
-	.custom input::placeholder {
-		font-size: 7px;
-	}
-	
-	.custom span {
-		font-size: 7px;
-	}
-	
-	.custom span.percent {
-		right: 6px;
-	}
-	
-	.main {
-		width: 170px;
-		height: 25px;
-		margin-top: 10px;
-		border-radius: 9px;
-		font-size: 9px;
-	}
+  .limit {
+    margin-top: 9px;
+    gap: 5px;
+  }
+
+  .limit-image {
+    height: 9px;
+    width: 9px;
+  }
+
+  .limit > p {
+    font-size: 8px;
+  }
+
+  .buttons {
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .buttons > button {
+    font-size: 7px;
+    padding: 4px 10px 2px 10px;
+    border-radius: 9px;
+  }
+
+  .custom {
+    width: 38px;
+    height: 19px;
+    padding-top: 2px;
+    border-radius: 9px;
+  }
+
+  .custom input {
+    font-size: 7px;
+    width: 26px;
+  }
+
+  .custom input::placeholder {
+    font-size: 7px;
+  }
+
+  .custom span {
+    font-size: 7px;
+  }
+
+  .custom span.percent {
+    right: 6px;
+  }
+
+  .main {
+    width: 170px;
+    height: 25px;
+    margin-top: 10px;
+    border-radius: 9px;
+    font-size: 9px;
+  }
 }
 @media screen and (min-width: 480px) and (max-width: 970px) {
-	@import '../../../styles/mouse-gradient-button';
-	.settings-popup {
-		@include mouse-gradient-button(
-			$padding: 20px,
-			$height: auto,
-			$border-radius: 22px,
-			$background: rgba(var(--dark-bg), 1),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
-		
-		box-sizing: border-box;
-		z-index: 10;
+  .settings-popup {
+    box-sizing: border-box;
+    z-index: 10;
+    position: fixed;
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-		position: fixed;
-		
-		flex-direction: column;
-		align-items: stretch;
-		
-		&:hover {
-			transform: none;
-			
-			background: rgba(var(--dark-bg), 1);
-		}
-	}
-	
-	.settings-header h3 {
-		font-size: 20px;
-	}
-	
-	.close-button {
-		height: 16px;
-		width: 16px;
-	}
-	
-	.limit {
-		margin-top: 10px;
-		gap: 7px;
-	}
-	
-	.limit-image {
-		height: 13px;
-		width: 13px;
-	}
-	
-	.limit > p {
-		font-size: 12px;
-	}
-	
-	.buttons {
-		gap: 5px;
-		margin-top: 15px;
-	}
-	
-	.buttons > button {
-		font-size: 10px;
-		padding: 4px 14px;
-		border: 1px solid var(--elem-nonactive);
-		border-radius: 12px;
-	}
-	
-	.custom {
-		width: 53px;
-		height: 24px;
-		border: 1px solid var(--elem-nonactive);
-		border-radius: 12px;
-	}
-	
-	.custom input {
-		font-size: 10px;
-		width: 36px;
-	}
-	
-	.custom input::placeholder {
-		font-size: 10px;
-	}
-	
-	.custom span {
-		font-size: 10px;
-	}
-	
-	.custom span.percent {
-		right: 8px;
-	}
-	
-	.main {
-		width: 230px;
-		height: 35px;
-		margin-top: 15px;
-		border-radius: 12px;
-		font-size: 12px;
-	}
+  .settings-header h3 {
+    font-size: 20px;
+  }
+
+  .close-button {
+    height: 16px;
+    width: 16px;
+  }
+
+  .limit {
+    margin-top: 10px;
+    gap: 7px;
+  }
+
+  .limit-image {
+    height: 13px;
+    width: 13px;
+  }
+
+  .limit > p {
+    font-size: 12px;
+  }
+
+  .buttons {
+    gap: 5px;
+    margin-top: 15px;
+  }
+
+  .buttons > button {
+    font-size: 10px;
+    padding: 4px 14px;
+    border: 1px solid var(--elem-nonactive);
+    border-radius: 12px;
+  }
+
+  .custom {
+    width: 53px;
+    height: 24px;
+    border: 1px solid var(--elem-nonactive);
+    border-radius: 12px;
+  }
+
+  .custom input {
+    font-size: 10px;
+    width: 36px;
+  }
+
+  .custom input::placeholder {
+    font-size: 10px;
+  }
+
+  .custom span {
+    font-size: 10px;
+  }
+
+  .custom span.percent {
+    right: 8px;
+  }
+
+  .main {
+    width: 230px;
+    height: 35px;
+    margin-top: 15px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
 }
 
 @media screen and (min-width: 360px) and (max-width: 479px) {
+  .settings-popup {
+    width: 90vw;
+    box-sizing: border-box;
+    z-index: 10;
+    position: fixed;
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-	@import '../../../styles/mouse-gradient-button';
-	.settings-popup {
-		@include mouse-gradient-button(
-			$padding: 15px,
-			$height: auto,
-			$border-radius: 16px,
-			$background: rgba(var(--dark-bg), 1),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
-		
-		width: 90vw;	
-		box-sizing: border-box;
-		z-index: 10;
+  .settings-header h3 {
+    font-size: 18px;
+  }
 
-		position: fixed;
-		
-		flex-direction: column;
-		align-items: stretch;
-		
-		&:hover {
-			transform: none;
-			
-			background: rgba(var(--dark-bg), 1);
-		}
-	}
+  .close-button {
+    height: 16px;
+    width: 16px;
+  }
 
-	
-	
-	.settings-header h3 {
-		font-size: 18px;
-	}
-	
-	.close-button {
-		height: 16px;
-		width: 16px;
-	}
-	
-	.limit {
-		margin-left: 50%;
-		transform: translate(-50%, 0%);
-		gap: 7px;
-	}
-	
-	.limit-image {
-		height: 15px;
-		width: 15px;
-	}
-	
-	.limit > p {
-		font-size: 15px;
-	}
-	
-	.buttons {
-		width: 300px;
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
-		margin-top: 15px;
-		margin-left: 50%;
-		transform: translate(-50%, 0%);
-	}
-	
-	.buttons > button {
-		width: 145px;
-		font-size: 16px;
-		padding: 14px 4px;
-		border-radius: 11px;
-	}
-	
-	.custom {
-		width: 145px;
-		height: 54px;
-		border-radius: 11px;
-	}
-	
-	.custom input {
-		font-size: 16px;
-		width: 100px;
-	}
-	
-	.custom input::placeholder {
-		font-size: 16px;
-	}
-	
-	.custom span {
-		font-size: 16px;
-	}
-	
-	.custom span.percent {
-		right: 10px;
-	}
-	
-	.main {
-		width: 100%;
-		height: 45px;
-		border-radius: 12px;
-		font-size: 12px;
-		bottom: 15px;
-	}
+  .limit {
+    margin-left: 50%;
+    transform: translate(-50%, 0%);
+    gap: 7px;
+  }
+
+  .limit-image {
+    height: 15px;
+    width: 15px;
+  }
+
+  .limit > p {
+    font-size: 15px;
+  }
+
+  .buttons {
+    width: 300px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    margin-left: 50%;
+    transform: translate(-50%, 0%);
+  }
+
+  .buttons > button {
+    width: 145px;
+    font-size: 16px;
+    padding: 14px 4px;
+    border-radius: 11px;
+  }
+
+  .custom {
+    width: 145px;
+    height: 54px;
+    border-radius: 11px;
+  }
+
+  .custom input {
+    font-size: 16px;
+    width: 100px;
+  }
+
+  .custom input::placeholder {
+    font-size: 16px;
+  }
+
+  .custom span {
+    font-size: 16px;
+  }
+
+  .custom span.percent {
+    right: 10px;
+  }
+
+  .main {
+    width: 100%;
+    height: 45px;
+    border-radius: 12px;
+    font-size: 12px;
+    bottom: 15px;
+  }
 }

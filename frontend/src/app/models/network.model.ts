@@ -1,9 +1,9 @@
 import { Injector } from '@angular/core';
+
 import { EvmWalletProvider } from './evm-wallet-provider';
 import { MultiChainWalletProvider } from './multichain-wallet-provider';
-import { SvmWalletProvider } from './svm-wallet-provider';
-import { NetworkId } from './wallet-provider.interface';
 import { SuiWalletProvider } from './sui-wallet-provider';
+import { SvmWalletProvider } from './svm-wallet-provider';
 
 export class WalletProviderManager {
   private metaMaskProvider: any = null;
@@ -18,30 +18,25 @@ export class WalletProviderManager {
   }
 
   private initializeProviders(): void {
-    window.addEventListener("eip6963:announceProvider", (event: any) => {
+    window.addEventListener('eip6963:announceProvider', (event: any) => {
       const provider = event.detail.provider;
 
       if (provider.isMagicEden) {
         // console.log("Detected MagicEden");
         this.magicEdenProvider = provider;
-      }
-      else if (provider.isPhantom) {
+      } else if (provider.isPhantom) {
         // console.log("Detected Phantom");
         this.PhantomProvider = provider;
-      }
-      else if (provider.isBackpack) {
+      } else if (provider.isBackpack) {
         // console.log("Detected BackPack");
         this.backPackProvider = provider;
-      }
-      else if (provider.isRabby) {
+      } else if (provider.isRabby) {
         // console.log("Detected RabbyWallet");
         this.RabbyWalletProvider = provider;
-      }
-      else if (provider.isMetaMask && !provider.isPontem && !provider.isKeplr) {
+      } else if (provider.isMetaMask && !provider.isPontem && !provider.isKeplr) {
         // console.log("Detected MetaMask");
         this.metaMaskProvider = provider;
-      }
-      else if (provider.isTrust || provider.isTrustWallet) {
+      } else if (provider.isTrust || provider.isTrustWallet) {
         // console.log("Detected Trust");
         this.trustWalletProvider = provider;
       }
@@ -55,15 +50,27 @@ export class WalletProviderManager {
       // }
     });
 
-    window.dispatchEvent(new Event("eip6963:requestProvider"));
+    window.dispatchEvent(new Event('eip6963:requestProvider'));
   }
 
-  getMetaMaskProvider(): any { return this.metaMaskProvider; }
-  getRabbyWalletProvider(): any { return this.RabbyWalletProvider; }
-  getTrustWalletProvider(): any { return this.trustWalletProvider; }
-  getMagicEdenProvider(): any { return this.magicEdenProvider; }
-  getPhantomProvider(): any { return this.PhantomProvider; }
-  getBackPackProvider(): any { return this.backPackProvider; }
+  getMetaMaskProvider(): any {
+    return this.metaMaskProvider;
+  }
+  getRabbyWalletProvider(): any {
+    return this.RabbyWalletProvider;
+  }
+  getTrustWalletProvider(): any {
+    return this.trustWalletProvider;
+  }
+  getMagicEdenProvider(): any {
+    return this.magicEdenProvider;
+  }
+  getPhantomProvider(): any {
+    return this.PhantomProvider;
+  }
+  getBackPackProvider(): any {
+    return this.backPackProvider;
+  }
 }
 
 /***************EVM***************/
@@ -87,7 +94,7 @@ export class SolflareProvider extends SvmWalletProvider {
 }
 
 /***************SUI***************/
-export class SlushProvider extends SuiWalletProvider  {
+export class SlushProvider extends SuiWalletProvider {
   constructor(injector: Injector) {
     super((window as any).slush, injector);
   }
@@ -101,7 +108,6 @@ export class BackpackProvider extends MultiChainWalletProvider {
     this.svmProviderInstance = (window as any).backpack?.solana;
     this.mvmProviderInstance = (window as any).backpack?.sui;
   }
-
 }
 
 export class PhantomProvider extends MultiChainWalletProvider {
@@ -111,7 +117,6 @@ export class PhantomProvider extends MultiChainWalletProvider {
     this.svmProviderInstance = (window as any).phantom?.solana;
     this.mvmProviderInstance = (window as any).phantom?.sui;
   }
-
 }
 
 export class MagicEdenProvider extends MultiChainWalletProvider {
@@ -146,4 +151,3 @@ export class CoinbaseWalletProvider extends MultiChainWalletProvider {
     this.svmProviderInstance = (window as any).coinbaseSolana;
   }
 }
-

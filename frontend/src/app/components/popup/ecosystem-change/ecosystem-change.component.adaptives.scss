@@ -1,309 +1,317 @@
-@media screen and (min-width: 1601px) and (max-width: 1920px) {
-	.ecosystem-change {
-		width: 360px;
-		max-height: 716px;
-		border-radius: 22px;
-		padding: 30px;
+@media screen and (max-width: 1920px) {
+  .ecosystem-change {
+    width: 520px;
+    max-height: 716px;
+    border-radius: 22px;
+    padding: 30px;
 
-		&::before {
-			border-radius: 22px;
-		}
+    &::before {
+      border-radius: 22px;
+    }
 
-		&::after {
-			border-radius: 22px;
-		}
-	}
-	
-	.upper {
-		margin-bottom: 10px;
-	}
-	
-	.upper h6 {
-		font-size: 20px;
-	}
-	
-	.upper button {
-		height: 13px;
-		width: 13px;
-	}
-	
-	.scroll-container {
-		margin-bottom: 10px;
-	}
-	
-	.ecosystems {
-		gap: 8px;
-	}
-	
-	.ecosystem {
-		height: 60px;
-		border-radius: 12px;
-		padding: 8px 17px 8px 8px;
-	}
+    &::after {
+      border-radius: 22px;
+    }
+  }
 
-	.name {
-		gap: 16px;
-	}
-	
-	.ecosystem-img {
-		width: 45px;
-		height: 45px;
-		border-radius: 12px;
-	}
-	
-	.name p {
-		font-size: 14px;
-	}
+  .upper {
+    margin-bottom: 10px;
+  }
 
-	.disclaimer {
-		font-size: 10px;
-	}
+  .upper h6 {
+    font-size: 20px;
+  }
+
+  .upper button {
+    height: 13px;
+    width: 13px;
+  }
+
+  .scroll-container {
+    margin-bottom: 10px;
+  }
+
+  .ecosystems {
+    gap: 8px;
+  }
+
+  .ecosystem {
+    height: 60px;
+    border-radius: 12px;
+    padding: 8px 17px 8px 8px;
+  }
+
+  .name {
+    gap: 16px;
+  }
+
+  .ecosystem-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+  }
+
+  .name p {
+    font-size: 14px;
+  }
+
+  .disclaimer {
+    font-size: 10px;
+  }
 }
-@media screen and (min-width: 1171px) and (max-width: 1600px) {
-	.ecosystem-change {
-		width: 360px;
-		max-height: 716px;
-		border-radius: 22px;
-		padding: 30px;
+@media screen and (max-width: 1600px) {
+  .ecosystem-change {
+    width: 400px;
+    max-height: 716px;
+    border-radius: 22px;
+    padding: 30px;
 
-		&::before {
-			border-radius: 22px;
-		}
+    &::before {
+      border-radius: 22px;
+    }
 
-		&::after {
-			border-radius: 22px;
-		}
-	}
-	
-	.upper {
-		margin-bottom: 10px;
-	}
-	
-	.upper h6 {
-		font-size: 20px;
-	}
-	
-	.upper button {
-		height: 13px;
-		width: 13px;
-	}
-	
-	.scroll-container {
-		margin-bottom: 10px;
-	}
-	
-	.ecosystems {
-		gap: 8px;
-	}
-	
-	.ecosystem {
-		height: 60px;
-		border-radius: 12px;
-		padding: 8px 17px 8px 8px;
-	}
+    &::after {
+      border-radius: 22px;
+    }
+  }
 
-	.name {
-		gap: 16px;
-	}
-	
-	.ecosystem-img {
-		width: 45px;
-		height: 45px;
-		border-radius: 12px;
-	}
-	
-	.name p {
-		font-size: 14px;
-	}
+  .upper {
+    margin-bottom: 10px;
+  }
 
-	.disclaimer {
-		font-size: 10px;
-	}
+  .upper h6 {
+    font-size: 20px;
+  }
+
+  .upper button {
+    height: 13px;
+    width: 13px;
+  }
+
+  .scroll-container {
+    margin-bottom: 10px;
+  }
+
+  .ecosystems {
+    gap: 8px;
+  }
+
+  .ecosystem {
+    height: 60px;
+    border-radius: 12px;
+    padding: 8px 17px 8px 8px;
+  }
+
+  .name {
+    gap: 16px;
+  }
+
+  .ecosystem-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+  }
+
+  .name p {
+    font-size: 14px;
+  }
+
+  .disclaimer {
+    font-size: 10px;
+  }
 }
-@media screen and (min-width: 971px) and (max-width: 1170px) {
-	.ecosystem-change {
-		width: 280px;
-		min-height: 100px;
-		max-height: 524px;
-		border-radius: 16px;
-		padding: 15px;
+@media screen and (max-width: 1170px) {
+  .ecosystem-change {
+    width: 350px;
+    min-height: 100px;
+    max-height: 524px;
+    border-radius: 16px;
+    padding: 15px;
 
-		&::before {
-			border-radius: 16px;
-		}
+    &::before {
+      border-radius: 16px;
+    }
 
-		&::after {
-			border-radius: 16px;
-		}
-	}
-	
-	.upper {
-		margin-bottom: 10px;
-	}
-	
-	.upper h6 {
-		font-size: 13px;
-	}
-	
-	.upper button {
-		height: 10px;
-		width: 10px;
-	}
-	
-	.scroll-container {
-		margin-bottom: 10px;
-	}
+    &::after {
+      border-radius: 16px;
+    }
+  }
 
-	.ecosystems {
-		gap: 5px;
-	}
-	
-	.ecosystem {
-		height: 50px;
-		border-radius: 10px;
-		padding: 6px 8px 6px 6px;
-	}
+  .upper {
+    margin-bottom: 10px;
+  }
 
-	.name {
-		gap: 11px;
-	}
-	
-	.ecosystem-img {
-		width: 34px;
-		height: 34px;
-		border-radius: 8px;
-	}
-	
-	.name p {
-		font-size: 10px;
-	}
+  .upper h6 {
+    font-size: 13px;
+  }
 
-	.disclaimer {
-		font-size: 8px;
-	}
+  .upper button {
+    height: 10px;
+    width: 10px;
+  }
+
+  .scroll-container {
+    margin-bottom: 10px;
+  }
+
+  .ecosystems {
+    gap: 5px;
+  }
+
+  .ecosystem {
+    height: 50px;
+    border-radius: 10px;
+    padding: 6px 8px 6px 6px;
+  }
+
+  .name {
+    gap: 11px;
+  }
+
+  .ecosystem-img {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+  }
+
+  .name p {
+    font-size: 10px;
+  }
+
+  .disclaimer {
+    font-size: 8px;
+  }
 }
-@media screen and (min-width: 480px) and (max-width: 970px) {
-	.ecosystem-change {
-		width: 360px;
-		max-height: 716px;
-		border-radius: 22px;
-		padding: 30px;
+@media screen and (max-width: 970px) {
+  .ecosystem-change {
+    width: 550px;
+    max-height: 716px;
+    border-radius: 22px;
+    padding: 30px;
 
-		&::before {
-			border-radius: 22px;
-		}
+    &::before {
+      border-radius: 22px;
+    }
 
-		&::after {
-			border-radius: 22px;
-		}
-	}
-	
-	.upper {
-		margin-bottom: 10px;
-	}
-	
-	.upper h6 {
-		font-size: 20px;
-	}
-	
-	.upper button {
-		height: 13px;
-		width: 13px;
-	}
-	
-	.scroll-container {
-		margin-bottom: 10px;
-	}
-	
-	.ecosystems {
-		gap: 8px;
-	}
-	
-	.ecosystem {
-		height: 60px;
-		border-radius: 12px;
-		padding: 8px 17px 8px 8px;
-	}
+    &::after {
+      border-radius: 22px;
+    }
+  }
 
-	.name {
-		gap: 16px;
-	}
-	
-	.ecosystem-img {
-		width: 45px;
-		height: 45px;
-		border-radius: 12px;
-	}
-	
-	.name p {
-		font-size: 14px;
-	}
+  .upper {
+    margin-bottom: 10px;
+  }
 
-	.disclaimer {
-		font-size: 10px;
-	}
+  .upper h6 {
+    font-size: 20px;
+  }
+
+  .upper button {
+    height: 13px;
+    width: 13px;
+  }
+
+  .scroll-container {
+    margin-bottom: 10px;
+  }
+
+  .ecosystems {
+    gap: 8px;
+  }
+
+  .ecosystem {
+    height: 60px;
+    border-radius: 12px;
+    padding: 8px 17px 8px 8px;
+  }
+
+  .name {
+    gap: 16px;
+  }
+
+  .ecosystem-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+  }
+
+  .name p {
+    font-size: 14px;
+  }
+
+  .disclaimer {
+    font-size: 10px;
+  }
 }
 
-@media screen and (min-width: 360px) and (max-width: 479px) {
-	.ecosystem-change {
-		width: 90%;
-		max-height: 70%;
-		border-radius: 16px;
-		padding: 15px 18px;
-		backdrop-filter: blur(65px);
-		-webkit-backdrop-filter: blur(65px);
+@media screen and (max-width: 768px) {
+  .ecosystem-change {
+    width: 400px;
+  }
+}
 
-		&::before {
-			border-radius: 16px;
-		}
+@media screen and (max-width: 479px) {
+  .ecosystem-change {
+    position: fixed;
+    left: 50%;
+    width: 320px;
+    max-height: 70%;
+    border-radius: 16px;
+    padding: 15px 18px;
+    backdrop-filter: blur(65px);
+    -webkit-backdrop-filter: blur(65px);
 
-		&::after {
-			border-radius: 16px;
-		}
-	}
-	
-	.upper {
-		margin-bottom: 10px;
-	}
-	
-	.upper h6 {
-		font-size: 18px;
-	}
-	
-	.upper button {
-		height: 13px;
-		width: 13px;
-	}
-	
-	.scroll-container {
-		margin-bottom: 10px;
-	}
-	
-	.ecosystems {
-		gap: 0px;
-	}
-	
-	.ecosystem {
-		height: 74px;
-		border-radius: 12px;
-		padding: 8px 17px 8px 8px;
-	}
+    &::before {
+      border-radius: 16px;
+    }
 
-	.name {
-		gap: 16px;
-	}
-	
-	.ecosystem-img {
-		width: 45px;
-		height: 45px;
-		border-radius: 13px;
-	}
-	
-	.name p {
-		font-size: 14px;
-	}
+    &::after {
+      border-radius: 16px;
+    }
+  }
 
-	.disclaimer {
-		font-size: 11px;
-	}
+  .upper {
+    margin-bottom: 10px;
+  }
+
+  .upper h6 {
+    font-size: 18px;
+  }
+
+  .upper button {
+    height: 13px;
+    width: 13px;
+  }
+
+  .scroll-container {
+    margin-bottom: 10px;
+  }
+
+  .ecosystems {
+    gap: 0px;
+  }
+
+  .ecosystem {
+    height: 74px;
+    border-radius: 12px;
+    padding: 8px 17px 8px 8px;
+  }
+
+  .name {
+    gap: 16px;
+  }
+
+  .ecosystem-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 13px;
+  }
+
+  .name p {
+    font-size: 14px;
+  }
+
+  .disclaimer {
+    font-size: 11px;
+  }
 }

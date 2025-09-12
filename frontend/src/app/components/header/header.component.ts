@@ -1,30 +1,34 @@
-import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { PopupService } from '../../services/popup.service';
-import { Subscription } from 'rxjs';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {
   Component,
-  ElementRef,
-  Renderer2,
-  EventEmitter,
-  Output,
-  OnInit,
-  OnDestroy,
   computed,
-  signal,
   effect,
+  ElementRef,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+  Renderer2,
+  signal,
 } from '@angular/core';
-import { BlockchainStateService } from '../../services/blockchain-state.service';
+import { RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
+
 import { NetworkId, Wallets } from '../../models/wallet-provider.interface';
-import { WalletBalanceService } from '../../services/wallet-balance.service';
+import { BlockchainStateService } from '../../services/blockchain-state.service';
 import { MouseGradientService } from '../../services/mouse-gradient.service';
+import { PopupService } from '../../services/popup.service';
+import { WalletBalanceService } from '../../services/wallet-balance.service';
+import { GmCounterService } from './gm-counter.service';
+import { TextScrambleDirective } from './text-scramble.directive';
 
 // import providers from '@public/data/providers.json';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, TextScrambleDirective, NgOptimizedImage],
+  providers: [GmCounterService],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss', './header.component.adaptives.scss'],
 })
@@ -34,16 +38,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
   //@Input() selectedNetwork: string = 'ethereum';
   //@Input() selectedNetwork: { id: string; name: string; icon: string; } | null = null;
   gmCount: number | null = null;
-  popupMessage: string = ''; // Сообщение для мини-попапа
-  showPopup: boolean = false; // Управление отображением мини-попапа
-  private readonly GM_COUNT_KEY = 'gmCount';
-  private readonly LAST_GM_TIME_KEY = 'lastGmTime';
+  popupMessage: string = '';
+  showPopup: boolean = false;
   showBlackholeMenu = false;
   showConnectWalletPopup = false;
   showWalletPopup = false;
   //walletName: string = 'Connect Wallet';
-  walletName = computed(() => this.blockchainStateService.getCurrentWalletAddress() ?? 'Connect Wallet');
-  private subscription: Subscription;
+  walletName = computed(
+    () => this.blockchainStateService.getCurrentWalletAddress() ?? 'Connect Wallet',
+  );
+  currentWalletIcon = computed(() => {
+    if (!this.blockchainStateService.connected()) {
+      return '';
+    }
+    const providerId = this.blockchainStateService.getCurrentProviderId();
+    const provider = this.providers.find((p) => p.id === providerId);
+    return provider?.iconUrl ?? '/img/header/wallet.png';
+  });
+  private readonly subscription: Subscription;
   private providers: Wallets[] = [];
   walletIcon = signal<string>('/img/header/wallet.png');
   nativeBalance = signal<string>('0');
@@ -52,15 +64,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @Output() toggleNetwork = new EventEmitter<void>();
 
   private menuItems: { element: HTMLElement; originalText: string }[] = [];
-  private possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}:"<>?|';
-  private glitchChars = '!@#$%^&*()_+{}:"<>?|\\';
-  private cyberChars = '01010101110010101010101110101010';
-  private animationFrames = 20;
-  private animationSpeed = 20;
+
   private animationTimeouts: { [key: string]: number } = {};
-  private isSafari: boolean;
   private menuCloseTimer: number | null = null;
-  private isMenuClickedOpen: boolean = false; 
+  private isMenuClickedOpen: boolean = false;
 
   NetworkId = NetworkId;
 
@@ -70,11 +77,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public blockchainStateService: BlockchainStateService,
     public popupService: PopupService,
     public walletBalanceService: WalletBalanceService,
-    private mouseGradientService: MouseGradientService
+    private mouseGradientService: MouseGradientService,
+    private gm: GmCounterService,
   ) {
-    // Определяем Safari
-    this.isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
     this.subscription = this.popupService.activePopup$.subscribe((popupType) => {
       this.showBlackholeMenu = false;
       this.showConnectWalletPopup = false;
@@ -125,12 +130,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   // });
 
   ngOnInit() {
-    this.loadGmCount();
+    this.gmCount = this.gm.loadGmCount();
     this.loadProviders();
-
-    setTimeout(() => {
-      this.initTextAnimation();
-    }, 0);
   }
 
   ngOnDestroy() {
@@ -148,28 +149,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadGmCount() {
-    const savedCount = localStorage.getItem(this.GM_COUNT_KEY);
-    const lastGmTime = localStorage.getItem(this.LAST_GM_TIME_KEY);
-
-    if (savedCount && lastGmTime) {
-      const now = new Date().getTime();
-      const timeDiff = now - parseInt(lastGmTime);
-      if (timeDiff > 172800000) {
-        localStorage.removeItem(this.GM_COUNT_KEY);
-        localStorage.removeItem(this.LAST_GM_TIME_KEY);
-        this.gmCount = null;
-      } else {
-        this.gmCount = parseInt(savedCount);
-      }
-    }
-  }
-
   togglePopup(event?: Event): void {
     if (event) {
       event.stopPropagation();
     }
-    
+
     this.popupService.onMenuClick();
   }
 
@@ -206,31 +190,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   incrementGmCount() {
-    const lastClickTime = localStorage.getItem('lastGmClick');
-    const now = new Date();
-
-    if (lastClickTime) {
-      const lastClickDate = new Date(lastClickTime);
-      const nextAllowedClick = new Date(lastClickDate);
-      nextAllowedClick.setUTCDate(lastClickDate.getUTCDate() + 1);
-
-      if (now < nextAllowedClick) {
-        const timeLeft = this.calculateTimeLeft(nextAllowedClick, now);
-        this.showPopupWithMessage(`Next GM in ${timeLeft}`);
-        return;
-      }
+    const res = this.gm.tryIncrement();
+    if (!res.ok) {
+      this.showPopupWithMessage(`Next GM in ${res.timeLeft}`);
+      return;
     }
-
     this.gmCount = (this.gmCount ?? 0) + 1;
-    localStorage.setItem('lastGmClick', now.toISOString());
     this.triggerFireworks();
-  }
-
-  calculateTimeLeft(nextAllowed: Date, current: Date): string {
-    const diff = nextAllowed.getTime() - current.getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    return `${hours}h ${minutes}m`;
   }
 
   showPopupWithMessage(message: string) {
@@ -322,109 +288,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.popupService.openPopup('settings');
   }
 
-  private initTextAnimation(): void {
-    const menuLinks = this.elRef.nativeElement.querySelectorAll('nav a');
-
-    menuLinks.forEach((link: HTMLElement) => {
-      const originalText = link.textContent || '';
-      this.menuItems.push({ element: link, originalText });
-
-      this.renderer.listen(link, 'mouseenter', () => {
-        if (this.isSafari) {
-          // Для Safari просто меняем текст без анимации
-          link.textContent = originalText;
-        } else {
-          this.animateText(link, originalText);
-        }
-      });
-
-      this.renderer.listen(link, 'mouseleave', () => {
-        link.textContent = originalText;
-      });
-    });
-  }
-
-  private animateText(element: HTMLElement, finalText: string): void {
-    const elementId = element.getAttribute('data-animation-id') || Math.random().toString(36).substring(2, 9);
-    element.setAttribute('data-animation-id', elementId);
-
-    if (this.animationTimeouts[elementId]) {
-      clearTimeout(this.animationTimeouts[elementId]);
-    }
-
-    let frame = 0;
-    const totalFrames = this.animationFrames;
-
-    const glitchStates = Array(finalText.length).fill(false);
-    const resolvedChars = Array(finalText.length).fill(false);
-
-    const animate = () => {
-      if (frame >= totalFrames) {
-        element.textContent = finalText;
-        delete this.animationTimeouts[elementId];
-        return;
-      }
-
-      let result = '';
-      const progress = frame / totalFrames;
-
-      const resolvedCount = Math.floor(finalText.length * Math.pow(progress, 0.8));
-
-      for (let i = 0; i < resolvedCount; i++) {
-        if (!resolvedChars[i]) {
-          resolvedChars[i] = true;
-        }
-      }
-
-      if (frame % 3 === 0) {
-        for (let i = 0; i < finalText.length; i++) {
-          if (Math.random() < 0.1) {
-            glitchStates[i] = !glitchStates[i];
-          }
-        }
-      }
-
-      for (let i = 0; i < finalText.length; i++) {
-        if (resolvedChars[i]) {
-          if (glitchStates[i] && frame < totalFrames * 0.9 && finalText[i] !== ' ') {
-            if (Math.random() < 0.3) {
-              const cyberIndex = Math.floor(Math.random() * this.cyberChars.length);
-              result += this.cyberChars[cyberIndex];
-            } else {
-              const glitchIndex = Math.floor(Math.random() * this.glitchChars.length);
-              result += this.glitchChars[glitchIndex];
-            }
-          } else {
-            result += finalText[i];
-          }
-        } else {
-          if (finalText[i] === ' ') {
-            result += ' ';
-          } else {
-            const rand = Math.random();
-            if (rand < 0.2) {
-              const glitchIndex = Math.floor(Math.random() * this.glitchChars.length);
-              result += this.glitchChars[glitchIndex];
-            } else if (rand < 0.4) {
-              const cyberIndex = Math.floor(Math.random() * this.cyberChars.length);
-              result += this.cyberChars[cyberIndex];
-            } else {
-              const randomIndex = Math.floor(Math.random() * this.possibleChars.length);
-              result += this.possibleChars[randomIndex];
-            }
-          }
-        }
-      }
-
-      element.textContent = result;
-      frame++;
-
-      this.animationTimeouts[elementId] = window.setTimeout(animate, this.animationSpeed);
-    };
-
-    animate();
-  }
-
   async loadProviders() {
     this.providers = await this.blockchainStateService.loadProviders();
     return this.updateWalletIcon();
@@ -456,13 +319,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
       const nativeToken = {
         symbol: network.nativeCurrency.symbol,
         imageUrl: '',
-        contractAddress: network.chainType === 'SVM' ? address : '0x0000000000000000000000000000000000000000',
+        contractAddress:
+          network.chainType === 'SVM' ? address : '0x0000000000000000000000000000000000000000',
         chainId: network.id,
         decimals: network.nativeCurrency.decimals,
       };
       const balance = await this.walletBalanceService.getBalanceForToken(nativeToken);
       this.nativeBalance.set(this.truncateTo6Decimals(parseFloat(balance)));
-    } catch (e) {
+    } catch {
       this.nativeBalance.set('0');
     }
   }

@@ -7,7 +7,7 @@
   border-radius: 28px;
   box-sizing: border-box;
   padding: 30px;
-	z-index: 10;
+  z-index: 10;
 }
 
 .settings-header {
@@ -17,7 +17,6 @@
 }
 
 .settings-header h3 {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 21px;
   color: white;
@@ -60,7 +59,6 @@
 }
 
 .limit > p {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 400;
   font-size: 18px;
   color: white;
@@ -74,14 +72,13 @@
 }
 
 .buttons > button {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 14px;
   color: white;
   padding: 6px 20px;
   border: 1px solid var(--elem-nonactive);
   border-radius: 16px;
-	box-sizing: border-box;
+  box-sizing: border-box;
   cursor: pointer;
   transition: 0.2s ease-in-out;
 }
@@ -109,7 +106,6 @@
 }
 
 .custom input {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 14px;
   color: white;
@@ -122,14 +118,12 @@
 }
 
 .custom input::placeholder {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 14px;
   color: var(--elem-nonactive);
 }
 
 .custom span {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 14px;
   color: white;
@@ -162,7 +156,6 @@
   margin-top: 30px;
   background-color: white;
   border-radius: 16px;
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 18px;
   color: black;

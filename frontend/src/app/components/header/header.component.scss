@@ -8,13 +8,13 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-	gap: 8px;
+  gap: 8px;
 }
 
 .left {
   display: flex;
   align-items: center;
-	gap: 80px;
+  gap: 80px;
 }
 
 .right {
@@ -25,7 +25,6 @@ header {
 }
 
 h3 {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 800;
   font-size: 24px;
   color: white;
@@ -75,7 +74,6 @@ nav {
 
 nav a {
   font-size: 24px;
-  font-family: "JetBrains Mono", monospace;
   font-weight: 400;
   color: rgba(var(--white), 0.25);
   transition: 0.2s ease-in-out;
@@ -96,9 +94,15 @@ nav a.active-link {
 }
 
 @keyframes menu-item-flash {
-  0% { color: rgba(var(--white), 0.25); }
-  50% { color: rgba(var(--white), 1); }
-  100% { color: rgba(var(--white), 0.25); }
+  0% {
+    color: rgba(var(--white), 0.25);
+  }
+  50% {
+    color: rgba(var(--white), 1);
+  }
+  100% {
+    color: rgba(var(--white), 0.25);
+  }
 }
 
 .menu-item-animating {
@@ -106,7 +110,8 @@ nav a.active-link {
 }
 
 @keyframes character-shuffle {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: translateY(0);
   }
@@ -118,7 +123,18 @@ nav a.active-link {
 
 .xp {
   padding: 6px 20px;
-  background: var(--gradient);
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0.28) 100%),
+    linear-gradient(
+      101deg,
+      #e5e5e5 0%,
+      #e9cf5c 16%,
+      #d72fad 31%,
+      #8d0cfe 47%,
+      #3027f7 69%,
+      #0198fe 93%,
+      #0ab756 100%
+    );
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -129,28 +145,38 @@ nav a.active-link {
 
 .xp p {
   font-size: 21px;
-  font-family: "JetBrains Mono", monospace;
   font-weight: 800;
   color: white;
 }
 
-
-@import '../../styles/mouse-gradient-button';
-
 .wallet {
-  @include mouse-gradient-button(
-    $padding: 14px 18px,
-    $height: auto,
-    $border-radius: 14px
-  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 16px;
+  cursor: pointer;
+  color: rgba(var(--white), 0.2);
+  padding: 10px;
+  background: rgba(var(--black), 0.3);
+  border-radius: 20px;
 
-  &.connected {
-    @include mouse-gradient-button(
-      $padding: 10px 20px 10px 10px,
-      $height: auto,
-      $border-radius: 14px
-    );
+  .separator {
+    height: 15px;
+    width: 1px;
+    border: 0 solid rgba(var(--white), 0.35);
+    background: rgba(var(--white), 0.35);
+  }
+
+  .walletId {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    .icon {
+      width: 32px;
+      height: 32px;
+    }
   }
 }
 
@@ -164,19 +190,21 @@ nav a.active-link {
 
 p {
   font-size: 21px;
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   color: rgba(var(--white), 1);
 }
 
-.wallet .separator {
-	color: rgba(var(--white), 0.2);
-}
-
-
 @keyframes fadeInOut {
-  0% { opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

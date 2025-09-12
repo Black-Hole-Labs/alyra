@@ -1,453 +1,453 @@
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
-	@import '../../../styles/mouse-gradient-button';
+  @import '../../../styles/mouse-gradient-button';
 
-	.network-change-from {
-		@include mouse-gradient-button(
-			$padding: 20px,
-			$height: 625px,
-			$border-radius: 21px,
-			$background: rgba(var(--dark-bg), 0.01),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
+  .network-change-from {
+    @include mouse-gradient-button(
+      $padding: 20px,
+      $height: 625px,
+      $border-radius: 21px,
+      $background: rgba(var(--dark-bg), 0.01),
+      $backdrop-blur: 25px,
+      $include-responsive: false
+    );
 
-		position: fixed;
-		width: 450px;
-		box-sizing: border-box;
-		z-index: 10;
-		overflow: hidden;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: stretch;
-		z-index: 1000;
+    position: fixed;
+    width: 450px;
+    box-sizing: border-box;
+    z-index: 10;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+    z-index: 1000;
 
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
+    &:hover {
+      transform: none;
 
-	h3 {
-		font-size: 20px;
-	}
-	
-	button {
-		height: 20px;
-		width: 20px;
-	}
+      background: radial-gradient(
+        circle at var(--gradient-x, 50%) var(--gradient-y, 50%),
+        rgba(255, 255, 255, 0.001) 0%,
+        rgba(255, 255, 255, 0.0005) 50%,
+        transparent 100%
+      );
+    }
+  }
 
-	.search {
-		margin-top: 20px;
-		width: 410px;
-		height: 45px;
-		border-radius: 13px;
-		padding: 0 15px;
-	}
-	
-	input {
-		width: 357px;
-		height: 18px;
-		font-size: 14px;
-	}
-	
-	input::placeholder {
-		font-size: 14px;
-	}
-	
-	.search-button {
-		height: 18px;
-		width: 18px;
-	}
-	
-	.list {
-		top: 131px;
-		left: 10px;
-		width: 420px;
-		border-radius: 12px;
-	}
+  h3 {
+    font-size: 20px;
+  }
 
-	.network {
-		height: 65px;
-		padding: 10px 14px;
-		border-radius: 12px;
-	}
+  button {
+    height: 20px;
+    width: 20px;
+  }
 
-	.image {
-		width: 45px;
-		height: 45px;
-		margin-right: 15px;
-	}
+  .search {
+    margin-top: 20px;
+    width: 410px;
+    height: 45px;
+    border-radius: 13px;
+    padding: 0 15px;
+  }
 
-	.name h6 {
-		font-size: 14px;
-	}
+  input {
+    width: 357px;
+    height: 18px;
+    font-size: 14px;
+  }
+
+  input::placeholder {
+    font-size: 14px;
+  }
+
+  .search-button {
+    height: 18px;
+    width: 18px;
+  }
+
+  .list {
+    top: 131px;
+    left: 10px;
+    width: 420px;
+    border-radius: 12px;
+  }
+
+  .network {
+    height: 65px;
+    padding: 10px 14px;
+    border-radius: 12px;
+  }
+
+  .image {
+    width: 45px;
+    height: 45px;
+    margin-right: 15px;
+  }
+
+  .name h6 {
+    font-size: 14px;
+  }
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
-	@import '../../../styles/mouse-gradient-button';
+  @import '../../../styles/mouse-gradient-button';
 
-	.network-change-from {
-		@include mouse-gradient-button(
-			$padding: 20px,
-			$height: 625px,
-			$border-radius: 21px,
-			$background: rgba(var(--dark-bg), 0.01),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
+  .network-change-from {
+    @include mouse-gradient-button(
+      $padding: 20px,
+      $height: 625px,
+      $border-radius: 21px,
+      $background: rgba(var(--dark-bg), 0.01),
+      $backdrop-blur: 25px,
+      $include-responsive: false
+    );
 
-		position: fixed;
-		width: 450px;
-		box-sizing: border-box;
-		z-index: 10;
-		overflow: hidden;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: stretch;
-		z-index: 1000;
+    position: fixed;
+    width: 450px;
+    box-sizing: border-box;
+    z-index: 10;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+    z-index: 1000;
 
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
+    &:hover {
+      transform: none;
 
-	h3 {
-		font-size: 20px;
-	}
-	
-	button {
-		height: 20px;
-		width: 20px;
-	}
+      background: radial-gradient(
+        circle at var(--gradient-x, 50%) var(--gradient-y, 50%),
+        rgba(255, 255, 255, 0.001) 0%,
+        rgba(255, 255, 255, 0.0005) 50%,
+        transparent 100%
+      );
+    }
+  }
 
-	.search {
-		margin-top: 20px;
-		width: 410px;
-		height: 45px;
-		border-radius: 13px;
-		padding: 0 15px;
-	}
-	
-	input {
-		width: 357px;
-		height: 18px;
-		font-size: 14px;
-	}
-	
-	input::placeholder {
-		font-size: 14px;
-	}
-	
-	.search-button {
-		height: 18px;
-		width: 18px;
-	}
-	
-	.list {
-		top: 131px;
-		left: 10px;
-		width: 420px;
-		border-radius: 12px;
-	}
+  h3 {
+    font-size: 20px;
+  }
 
-	.network {
-		height: 65px;
-		padding: 10px 14px;
-		border-radius: 12px;
-	}
+  button {
+    height: 20px;
+    width: 20px;
+  }
 
-	.image {
-		width: 45px;
-		height: 45px;
-		margin-right: 15px;
-	}
+  .search {
+    margin-top: 20px;
+    width: 410px;
+    height: 45px;
+    border-radius: 13px;
+    padding: 0 15px;
+  }
 
-	.name h6 {
-		font-size: 14px;
-	}
+  input {
+    width: 357px;
+    height: 18px;
+    font-size: 14px;
+  }
+
+  input::placeholder {
+    font-size: 14px;
+  }
+
+  .search-button {
+    height: 18px;
+    width: 18px;
+  }
+
+  .list {
+    top: 131px;
+    left: 10px;
+    width: 420px;
+    border-radius: 12px;
+  }
+
+  .network {
+    height: 65px;
+    padding: 10px 14px;
+    border-radius: 12px;
+  }
+
+  .image {
+    width: 45px;
+    height: 45px;
+    margin-right: 15px;
+  }
+
+  .name h6 {
+    font-size: 14px;
+  }
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
-	@import '../../../styles/mouse-gradient-button';
+  @import '../../../styles/mouse-gradient-button';
 
-	.network-change-from {
-		@include mouse-gradient-button(
-			$padding: 15px,
-			$height: 470px,
-			$border-radius: 15px,
-			$background: rgba(var(--dark-bg), 0.01),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
+  .network-change-from {
+    @include mouse-gradient-button(
+      $padding: 15px,
+      $height: 470px,
+      $border-radius: 15px,
+      $background: rgba(var(--dark-bg), 0.01),
+      $backdrop-blur: 25px,
+      $include-responsive: false
+    );
 
-		position: fixed;
-		width: 330px;
-		box-sizing: border-box;
-		z-index: 10;
-		overflow: hidden;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: stretch;
-		z-index: 1000;
+    position: fixed;
+    width: 330px;
+    box-sizing: border-box;
+    z-index: 10;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+    z-index: 1000;
 
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
+    &:hover {
+      transform: none;
 
-	h3 {
-		font-size: 13px;
-	}
-	
-	button {
-		height: 15px;
-		width: 15px;
-	}
+      background: radial-gradient(
+        circle at var(--gradient-x, 50%) var(--gradient-y, 50%),
+        rgba(255, 255, 255, 0.001) 0%,
+        rgba(255, 255, 255, 0.0005) 50%,
+        transparent 100%
+      );
+    }
+  }
 
-	.search {
-		margin-top: 16px;
-		width: 300px;
-		height: 33px;
-		border-radius: 10px;
-		padding: 0 11px;
-	}
-	
-	input {
-		width: 261px;
-		height: 13px;
-		font-size: 10px;
-	}
-	
-	input::placeholder {
-		font-size: 10px;
-	}
-	
-	.search-button {
-		height: 13px;
-		width: 13px;
-	}
-	
-	.list {
-		top: 96px;
-		left: 5px;
-		width: 320px;
-		border-radius: 8px;
-	}
+  h3 {
+    font-size: 13px;
+  }
 
-	.network {
-		height: 47px;
-		padding: 7px 10px;
-		border-radius: 8px;
-	}
+  button {
+    height: 15px;
+    width: 15px;
+  }
 
-	.image {
-		width: 33px;
-		height: 33px;
-		margin-right: 10px;
-	}
+  .search {
+    margin-top: 16px;
+    width: 300px;
+    height: 33px;
+    border-radius: 10px;
+    padding: 0 11px;
+  }
 
-	.name h6 {
-		font-size: 10px;
-	}
+  input {
+    width: 261px;
+    height: 13px;
+    font-size: 10px;
+  }
+
+  input::placeholder {
+    font-size: 10px;
+  }
+
+  .search-button {
+    height: 13px;
+    width: 13px;
+  }
+
+  .list {
+    top: 96px;
+    left: 5px;
+    width: 320px;
+    border-radius: 8px;
+  }
+
+  .network {
+    height: 47px;
+    padding: 7px 10px;
+    border-radius: 8px;
+  }
+
+  .image {
+    width: 33px;
+    height: 33px;
+    margin-right: 10px;
+  }
+
+  .name h6 {
+    font-size: 10px;
+  }
 }
 @media screen and (min-width: 480px) and (max-width: 970px) {
-	@import '../../../styles/mouse-gradient-button';
+  @import '../../../styles/mouse-gradient-button';
 
-	.network-change-from {
-		@include mouse-gradient-button(
-			$padding: 20px,
-			$height: 625px,
-			$border-radius: 21px,
-			$background: rgba(var(--dark-bg), 0.01),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
+  .network-change-from {
+    @include mouse-gradient-button(
+      $padding: 20px,
+      $height: 625px,
+      $border-radius: 21px,
+      $background: rgba(var(--dark-bg), 0.01),
+      $backdrop-blur: 25px,
+      $include-responsive: false
+    );
 
-		position: fixed;
-		width: 450px;
-		box-sizing: border-box;
-		z-index: 10;
-		overflow: hidden;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: stretch;
-		z-index: 1000;
+    position: fixed;
+    width: 450px;
+    box-sizing: border-box;
+    z-index: 10;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+    z-index: 1000;
 
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
+    &:hover {
+      transform: none;
 
-	h3 {
-		font-size: 20px;
-	}
-	
-	button {
-		height: 20px;
-		width: 20px;
-	}
+      background: radial-gradient(
+        circle at var(--gradient-x, 50%) var(--gradient-y, 50%),
+        rgba(255, 255, 255, 0.001) 0%,
+        rgba(255, 255, 255, 0.0005) 50%,
+        transparent 100%
+      );
+    }
+  }
 
-	.search {
-		margin-top: 20px;
-		width: 410px;
-		height: 45px;
-		border-radius: 13px;
-		padding: 0 15px;
-	}
-	
-	input {
-		width: 357px;
-		height: 18px;
-		font-size: 14px;
-	}
-	
-	input::placeholder {
-		font-size: 14px;
-	}
-	
-	.search-button {
-		height: 18px;
-		width: 18px;
-	}
-	
-	.list {
-		top: 131px;
-		left: 10px;
-		width: 420px;
-		border-radius: 12px;
-	}
+  h3 {
+    font-size: 20px;
+  }
 
-	.network {
-		height: 65px;
-		padding: 10px 14px;
-		border-radius: 12px;
-	}
+  button {
+    height: 20px;
+    width: 20px;
+  }
 
-	.image {
-		width: 45px;
-		height: 45px;
-		margin-right: 15px;
-	}
+  .search {
+    margin-top: 20px;
+    width: 410px;
+    height: 45px;
+    border-radius: 13px;
+    padding: 0 15px;
+  }
 
-	.name h6 {
-		font-size: 14px;
-	}
+  input {
+    width: 357px;
+    height: 18px;
+    font-size: 14px;
+  }
+
+  input::placeholder {
+    font-size: 14px;
+  }
+
+  .search-button {
+    height: 18px;
+    width: 18px;
+  }
+
+  .list {
+    top: 131px;
+    left: 10px;
+    width: 420px;
+    border-radius: 12px;
+  }
+
+  .network {
+    height: 65px;
+    padding: 10px 14px;
+    border-radius: 12px;
+  }
+
+  .image {
+    width: 45px;
+    height: 45px;
+    margin-right: 15px;
+  }
+
+  .name h6 {
+    font-size: 14px;
+  }
 }
 
 @media screen and (min-width: 360px) and (max-width: 479px) {
-	@import '../../../styles/mouse-gradient-button';
+  @import '../../../styles/mouse-gradient-button';
 
-	.network-change-from {
-		@include mouse-gradient-button(
-			$padding: 15px 18px,
-			$height: 80vh,
-			$border-radius: 16px,
-			$background: rgba(var(--dark-bg), 0.01),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
+  .network-change-from {
+    @include mouse-gradient-button(
+      $padding: 15px 18px,
+      $height: 80vh,
+      $border-radius: 16px,
+      $background: rgba(var(--dark-bg), 0.01),
+      $backdrop-blur: 25px,
+      $include-responsive: false
+    );
 
-		position: fixed;
-		width: 90vw;
-		box-sizing: border-box;
-		z-index: 10;
-		overflow: hidden;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: stretch;
-		-webkit-backdrop-filter: blur(35px);
-		z-index: 1000;
+    position: fixed;
+    width: 90vw;
+    box-sizing: border-box;
+    z-index: 10;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+    -webkit-backdrop-filter: blur(35px);
+    z-index: 1000;
 
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
+    &:hover {
+      transform: none;
 
-	h3 {
-		font-size: 18px;
-	}
-	
-	button {
-		height: 20px;
-		width: 20px;
-	}
+      background: radial-gradient(
+        circle at var(--gradient-x, 50%) var(--gradient-y, 50%),
+        rgba(255, 255, 255, 0.001) 0%,
+        rgba(255, 255, 255, 0.0005) 50%,
+        transparent 100%
+      );
+    }
+  }
 
-	.search {
-		margin-top: 20px;
-		width: 100%;
-		height: 45px;
-		border-radius: 13px;
-		padding: 0 15px;
-	}
-	
-	input {
-		width: 357px;
-		height: 18px;
-		font-size: 14px;
-	}
-	
-	input::placeholder {
-		font-size: 14px;
-	}
-	
-	.search-button {
-		height: 18px;
-		width: 18px;
-	}
-	
-	.list {
-		top: 131px;
-		left: 10px;
-		width: 420px;
-		border-radius: 12px;
-	}
+  h3 {
+    font-size: 18px;
+  }
 
-	.network {
-		width: 100%;
-		height: 65px;
-		padding: 10px 14px;
-		border-radius: 12px;
-	}
+  button {
+    height: 20px;
+    width: 20px;
+  }
 
-	.image {
-		width: 45px;
-		height: 45px;
-		margin-right: 15px;
-	}
+  .search {
+    margin-top: 20px;
+    width: 100%;
+    height: 45px;
+    border-radius: 13px;
+    padding: 0 15px;
+  }
 
-	.name h6 {
-		font-size: 14px;
-	}
+  input {
+    width: 357px;
+    height: 18px;
+    font-size: 14px;
+  }
+
+  input::placeholder {
+    font-size: 14px;
+  }
+
+  .search-button {
+    height: 18px;
+    width: 18px;
+  }
+
+  .list {
+    top: 131px;
+    left: 10px;
+    width: 420px;
+    border-radius: 12px;
+  }
+
+  .network {
+    width: 100%;
+    height: 65px;
+    padding: 10px 14px;
+    border-radius: 12px;
+  }
+
+  .image {
+    width: 45px;
+    height: 45px;
+    margin-right: 15px;
+  }
+
+  .name h6 {
+    font-size: 14px;
+  }
 }

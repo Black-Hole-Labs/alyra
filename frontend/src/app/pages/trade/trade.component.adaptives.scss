@@ -1,919 +1,884 @@
-@media screen and (min-width: 1601px) and (max-width: 1920px) {
-	@import '../../styles/mouse-gradient-button';
-	.trade-window {
-		@include mouse-gradient-button(
-			$padding: 20px,
-			$border-radius: 21px,
-			$height: auto,
-			$include-responsive: false
-		);
-		align-items: stretch;
-		width: 450px;
+@media screen and (max-width: 1920px) {
+  .trade-window {
+    width: 520px;
+  }
 
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
+  h3 {
+    font-size: 24px;
+  }
 
-	h3{
-		font-size: 20px;
-	}
-	.icons{
-		gap: 5px;
-	}
+  .refresh,
+  .settings,
+  .custom-wallet-button {
+    height: 25px;
+    width: 25px;
+  }
 
-	.icon {
-		padding: 5px;
-		border-radius: 8px;
-	}
-	
-	.refresh, .settings, .custom-wallet-button {
-		height: 25px;
-		width: 25px;
-	}
+  .change-button {
+    height: 40px;
+    width: 40px;
+    top: 100px;
+    gap: 2px;
+  }
 
-	.change-button {
-		height: 40px;
-		width: 40px;
-		top: 100px;
-		gap: 2px;
-	}
-	
-	.arrow-up, .arrow-down {
-		width: 10px;
-		height: 16px;
-		margin-top: 12px;
-	}
-	
-	.change-button:hover .arrow-up {
-		margin-top: 18px;
-	}
-	
-	.change-button:hover .arrow-down {
-		margin-top: 5px;
-	}
+  .arrow-up,
+  .arrow-down {
+    width: 10px;
+    height: 16px;
+    margin-top: 12px;
+  }
 
-	@keyframes click-animation-up {
-		0% { margin-top: 15px; }
-		50% { margin-top: -80px; }
-		100% { margin-top: 15px; }
-	}
-	
-	@keyframes click-animation-down {
-		0% { margin-top: 5px; }
-		50% { margin-top: 90px; }
-		100% { margin-top: 5px; }
-	}
-	
-	.swap-container{
-		margin-top: 20px;
-	}
-	
-	.sell, .buy {
-		width: 410px;
-		height: 117px;
-		border-radius: 12px;
-		padding: 15px 20px 5px 20px;
-	}
-	
-	.sell {
-		margin-bottom: 10px;
-	}
-	
-	.sell-h6, .buy-h6 {
-		font-size: 14px;
-		margin-bottom: 2px;
-	}
+  .change-button:hover .arrow-up {
+    margin-top: 18px;
+  }
 
-	input {
-		height: 48px;
-		width: 200px;
-	}
+  .change-button:hover .arrow-down {
+    margin-top: 5px;
+  }
 
-	.buy-amount {
-		font-size: 36px;
-	}
+  @keyframes click-animation-up {
+    0% {
+      margin-top: 15px;
+    }
+    50% {
+      margin-top: -80px;
+    }
+    100% {
+      margin-top: 15px;
+    }
+  }
 
-	p {
-		font-size: 12px;
-	}
-	
-	.token {
-		margin-top: 8px;
-		gap: 10px;
-	}
-	
-	.token-icon {
-		height: 32px;
-		width: 32px;
-	}
+  @keyframes click-animation-down {
+    0% {
+      margin-top: 5px;
+    }
+    50% {
+      margin-top: 90px;
+    }
+    100% {
+      margin-top: 5px;
+    }
+  }
 
-	.network-icon {
-		top: -5px;
-		right: -5px;
-		height: 18px;
-		width: 18px;
-	}
-	
-	.token > p {
-		font-size: 15px;
-	}
-	
-	.token > button {
-		width: 10px;
-		height: 6px;
-	}
-	
-	.bottom {
-		width: 370px;
-	}
-	
-	.balance {
-		gap: 7px;
-	}
-	
-	.max {
-		font-size: 12px;
-	}
+  .swap-container {
+    margin-top: 20px;
+  }
 
-	.main-button {
-		margin-top: 20px;
-		width: 410px;
-		height: 48px;
-		border-radius: 10px;
-		font-size: 14px;
-	}
-	
-	.info {
-		gap: 10px;
-		margin-top: 20px;
-	}
-	.price {
-		gap: 4px;
-	}
-	.price > p {
-		font-size: 12px;
-	}
-	.custom-address {
-		border-radius: 10px;
-		padding: 0 15px;
-	}
+  .sell,
+  .buy {
+    height: 143px;
+    border-radius: 12px;
+    padding: 20px;
+  }
 
-	.custom-address.show {
-		max-height: 50px;
-		padding: 15px 20px;
-		margin-top: 10px;
-	}
+  .sell-h6,
+  .buy-h6 {
+    font-size: 16px;
+  }
 
-	.custom-address input {
-		font-size: 14px;
-	}
-	.address-status {
-		width: 20px;
-		height: 20px;
-	}
-}
-@media screen and (min-width: 1171px) and (max-width: 1600px) {
-	@import '../../styles/mouse-gradient-button';
-	.trade-window {
-		@include mouse-gradient-button(
-			$padding: 20px,
-			$border-radius: 21px,
-			$height: auto,
-			$include-responsive: false
-		);
-		align-items: stretch;
-		width: 450px;
+  input {
+    height: 48px;
+    width: 200px;
+  }
 
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
+  .buy-amount {
+    font-size: 36px;
+  }
 
-	h3{
-		font-size: 20px;
-	}
-	.icons{
-		gap: 5px;
-	}
+  p {
+    font-size: 12px;
+  }
 
-	.icon {
-		padding: 5px;
-		border-radius: 8px;
-	}
-	
-	.refresh, .settings, .custom-wallet-button {
-		height: 25px;
-		width: 25px;
-	}
+  .token {
+    gap: 10px;
+  }
 
-	.change-button {
-		height: 40px;
-		width: 40px;
-		top: 100px;
-		gap: 2px;
-	}
-	
-	.arrow-up, .arrow-down {
-		width: 10px;
-		height: 16px;
-		margin-top: 12px;
-	}
-	
-	.change-button:hover .arrow-up {
-		margin-top: 18px;
-	}
-	
-	.change-button:hover .arrow-down {
-		margin-top: 5px;
-	}
+  .token-icon {
+    height: 38px;
+    width: 38px;
+  }
 
-	@keyframes click-animation-up {
-		0% { margin-top: 15px; }
-		50% { margin-top: -80px; }
-		100% { margin-top: 15px; }
-	}
-	
-	@keyframes click-animation-down {
-		0% { margin-top: 5px; }
-		50% { margin-top: 90px; }
-		100% { margin-top: 5px; }
-	}
-	
-	.swap-container{
-		margin-top: 20px;
-	}
-	
-	.sell, .buy {
-		width: 410px;
-		height: 117px;
-		border-radius: 12px;
-		padding: 15px 20px 5px 20px;
-	}
-	
-	.sell {
-		margin-bottom: 10px;
-	}
-	
-	.sell-h6, .buy-h6 {
-		font-size: 14px;
-		margin-bottom: 2px;
-	}
+  .network-icon {
+    height: 13px;
+    width: 13px;
+  }
 
-	input {
-		height: 48px;
-		width: 200px;
-	}
+  .token > p {
+    font-size: 18px;
+  }
 
-	.buy-amount {
-		font-size: 36px;
-	}
+  .token > button {
+    width: 10px;
+    height: 6px;
+  }
 
-	p {
-		font-size: 12px;
-	}
-	
-	.token {
-		margin-top: 8px;
-		gap: 10px;
-	}
-	
-	.token-icon {
-		height: 32px;
-		width: 32px;
-	}
+  .bottom {
+    width: 370px;
+  }
 
-	.network-icon {
-		top: -5px;
-		right: -5px;
-		height: 18px;
-		width: 18px;
-	}
-	
-	.token > p {
-		font-size: 15px;
-	}
-	
-	.token > button {
-		width: 10px;
-		height: 6px;
-	}
-	
-	.bottom {
-		width: 370px;
-	}
-	
-	.balance {
-		gap: 7px;
-	}
-	
-	.max {
-		font-size: 12px;
-	}
+  .balance {
+    gap: 7px;
+  }
 
-	.main-button {
-		margin-top: 20px;
-		width: 410px;
-		height: 48px;
-		border-radius: 10px;
-		font-size: 14px;
-	}
-	
-	.info {
-		gap: 10px;
-		margin-top: 20px;
-	}
-	.price {
-		gap: 4px;
-	}
-	.price > p {
-		font-size: 12px;
-	}
-	.custom-address {
-		border-radius: 10px;
-		padding: 0 15px;
-	}
+  .max {
+    font-size: 12px;
+  }
 
-	.custom-address.show {
-		max-height: 50px;
-		padding: 15px 20px;
-		margin-top: 10px;
-	}
+  .main-button {
+    margin-top: 20px;
+    height: 48px;
+    border-radius: 10px;
+    font-size: 14px;
+  }
 
-	.custom-address input {
-		font-size: 14px;
-	}
-	.address-status {
-		width: 20px;
-		height: 20px;
-	}
-}
-@media screen and (min-width: 971px) and (max-width: 1170px) {
+  .info {
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .price {
+    gap: 4px;
+  }
+  .price > p {
+    font-size: 12px;
+  }
+  .custom-address {
+    border-radius: 10px;
+    padding: 0 15px;
+  }
 
-	@import '../../styles/mouse-gradient-button';
-	.trade-window {
-		@include mouse-gradient-button(
-			$padding: 15px,
-			$border-radius: 16px,
-			$height: auto,
-			$include-responsive: false
-		);
-		align-items: stretch;
-		width: 330px;
+  .custom-address.show {
+    max-height: 50px;
+    padding: 15px 20px;
+    margin-top: 10px;
+  }
 
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
-
-	h3{
-		font-size: 13px;
-	}
-	.icons{
-		gap: 7px;
-	}
-
-	.icon {
-		padding: 2px;
-		border-radius: 4px;
-	}
-	
-	.refresh, .settings, .custom-wallet-button {
-		height: 18px;
-		width: 18px;
-	}
-
-	.change-button {
-		height: 30px;
-		width: 30px;
-		top: 74px;
-		gap: 1px;
-	}
-	
-	.arrow-up, .arrow-down {
-		width: 8px;
-		height: 12px;
-		margin-top: 9px;
-	}
-	
-	.change-button:hover .arrow-up {
-		margin-top: 13px;
-	}
-	
-	.change-button:hover .arrow-down {
-		margin-top: 6px;
-	}
-
-	@keyframes click-animation-up {
-		0% { margin-top: 15px; }
-		50% { margin-top: -120px; }
-		100% { margin-top: 15px; }
-	}
-	
-	@keyframes click-animation-down {
-		0% { margin-top: 5px; }
-		50% { margin-top: 132px; }
-		100% { margin-top: 5px; }
-	}
-	
-	.swap-container{
-		margin-top: 16px;
-	}
-	
-	.sell, .buy {
-		width: 300px;
-		height: 85px;
-		border-radius: 8px;
-		padding: 10px 15px 5px 15px;
-	}
-	
-	.sell {
-		margin-bottom: 8px;
-	}
-	
-	.sell-h6, .buy-h6 {
-		font-size: 10px;
-		margin-bottom: 2px;
-	}
-
-	input {
-		height: 34px;
-		width: 147px;
-	}
-
-	.buy-amount {
-		font-size: 26px;
-	}
-
-	p {
-		font-size: 8px;
-	}
-	
-	.token {
-		gap: 7px;
-		margin-top: 8px;
-	}
-
-	.network-icon {
-		top: -5px;
-		right: -5px;
-		height: 14px;
-		width: 14px;
-	}
-	
-	.token-icon {
-		height: 23px;
-		width: 23px;
-	}
-	
-	.token > p {
-		font-size: 11px;
-	}
-	
-	.token > button {
-		width: 7px;
-		height: 3px;
-	}
-	
-	.bottom {
-		width: 270px;
-	}
-	
-	.balance {
-		gap: 5px;
-	}
-	
-	.max {
-		font-size: 8px;
-	}
-
-	.main-button {
-		margin-top: 15px;
-		width: 302px;
-		height: 35px;
-		border-radius: 8px;
-		font-size: 10px;
-	}
-	
-	.info {
-		gap: 10px;
-		margin-top: 15px;
-	}
-	.price {
-		gap: 3px;
-	}
-	.price > p {
-		font-size: 8px;
-	}
-	.custom-address {
-		border-radius: 8px;
-		padding: 0 15px;
-	}
-
-	.custom-address.show {
-		max-height: 35px;
-		padding: 10px 15px;
-		margin-top: 8px;
-	}
-
-	.custom-address input {
-		font-size: 10px;
-	}
-	.address-status {
-		width: 14px;
-		height: 14px;
-	}
-}
-@media screen and (min-width: 480px) and (max-width: 970px) {
-	@import '../../styles/mouse-gradient-button';
-	.trade-window {
-		@include mouse-gradient-button(
-			$padding: 20px,
-			$border-radius: 21px,
-			$height: auto,
-			$include-responsive: false
-		);
-		align-items: stretch;
-		width: 450px;
-
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
-
-	h3{
-		font-size: 20px;
-	}
-	.icons{
-		gap: 5px;
-	}
-
-	.icon {
-		padding: 5px;
-		border-radius: 8px;
-	}
-	
-	.refresh, .settings, .custom-wallet-button {
-		height: 25px;
-		width: 25px;
-	}
-
-	.change-button {
-		height: 40px;
-		width: 40px;
-		top: 100px;
-		gap: 2px;
-	}
-	
-	.arrow-up, .arrow-down {
-		width: 10px;
-		height: 16px;
-		margin-top: 12px;
-	}
-	
-	.change-button:hover .arrow-up {
-		margin-top: 18px;
-	}
-	
-	.change-button:hover .arrow-down {
-		margin-top: 5px;
-	}
-
-	@keyframes click-animation-up {
-		0% { margin-top: 15px; }
-		50% { margin-top: -80px; }
-		100% { margin-top: 15px; }
-	}
-	
-	@keyframes click-animation-down {
-		0% { margin-top: 5px; }
-		50% { margin-top: 90px; }
-		100% { margin-top: 5px; }
-	}
-	
-	.swap-container{
-		margin-top: 20px;
-	}
-	
-	.sell, .buy {
-		width: 410px;
-		height: 117px;
-		border-radius: 12px;
-		padding: 15px 20px 5px 20px;
-	}
-	
-	.sell {
-		margin-bottom: 10px;
-	}
-	
-	.sell-h6, .buy-h6 {
-		font-size: 14px;
-		margin-bottom: 2px;
-	}
-
-	input {
-		height: 48px;
-		width: 200px;
-	}
-
-	.buy-amount {
-		font-size: 36px;
-	}
-
-	p {
-		font-size: 12px;
-	}
-	
-	.token {
-		margin-top: 8px;
-		gap: 10px;
-	}
-	
-	.token-icon {
-		height: 32px;
-		width: 32px;
-	}
-
-	.network-icon {
-		top: -5px;
-		right: -5px;
-		height: 18px;
-		width: 18px;
-	}
-	
-	.token > p {
-		font-size: 15px;
-	}
-	
-	.token > button {
-		width: 10px;
-		height: 6px;
-	}
-	
-	.bottom {
-		width: 370px;
-	}
-	
-	.balance {
-		gap: 7px;
-	}
-	
-	.max {
-		font-size: 12px;
-	}
-
-	.main-button {
-		margin-top: 20px;
-		width: 410px;
-		height: 48px;
-		border-radius: 10px;
-		font-size: 14px;
-	}
-	
-	.info {
-		gap: 10px;
-		margin-top: 20px;
-	}
-	.price {
-		gap: 4px;
-	}
-	.price > p {
-		font-size: 12px;
-	}
-	.custom-address {
-		border-radius: 10px;
-		padding: 0 15px;
-	}
-
-	.custom-address.show {
-		max-height: 50px;
-		padding: 15px 20px;
-		margin-top: 10px;
-	}
-
-	.custom-address input {
-		font-size: 14px;
-	}
-	.address-status {
-		width: 20px;
-		height: 20px;
-	}
+  .custom-address input {
+    font-size: 14px;
+  }
+  .address-status {
+    width: 20px;
+    height: 20px;
+  }
 }
 
-@media screen and (min-width: 360px) and (max-width: 479px) {
+@media screen and (max-width: 1600px) {
+  .trade-window {
+    padding: 15px;
+    width: 400px;
+  }
 
-	@import '../../styles/mouse-gradient-button';
-	.trade-window {
-		@include mouse-gradient-button(
-			$padding: 15px,
-			$border-radius: 16px,
-			$height: auto,
-			$include-responsive: false
-		);
+  h3 {
+    font-size: 16px;
+  }
 
-		position: fixed;
-		left: 50%;
-		transform: translate(-50%, 0%);
-		align-items: stretch;
-		width: 90%;
+  .refresh,
+  .settings,
+  .custom-wallet-button {
+    height: 20px;
+    width: 20px;
+  }
 
-		&:hover {
-			transform: translate(-50%, 0%);
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.00000001) 0%, 
-				rgba(255, 255, 255, 0.00000005) 50%, 
-				transparent 1%
-			);
-		}
-	}
+  .change-button {
+    height: 40px;
+    width: 40px;
+    top: 100px;
+    gap: 2px;
+  }
 
-	h3{
-		font-size: 18px;
-	}
-	.icons{
-		gap: 5px;
-	}
+  .arrow-up,
+  .arrow-down {
+    width: 10px;
+    height: 16px;
+    margin-top: 12px;
+  }
 
-	.icon {
-		padding: 5px;
-		border-radius: 8px;
-	}
-	
-	.refresh, .settings, .custom-wallet-button {
-		height: 25px;
-		width: 25px;
-	}
+  .change-button:hover .arrow-up {
+    margin-top: 18px;
+  }
 
-	.change-button {
-		height: 40px;
-		width: 40px;
-		top: 100px;
-		gap: 2px;
-		z-index: 1;
-	}
-	
-	.arrow-up, .arrow-down {
-		width: 10px;
-		height: 16px;
-		margin-top: 12px;
-	}
-	
-	.change-button:hover .arrow-up {
-		margin-top: 18px;
-	}
-	
-	.change-button:hover .arrow-down {
-		margin-top: 5px;
-	}
+  .change-button:hover .arrow-down {
+    margin-top: 5px;
+  }
 
-	@keyframes click-animation-up {
-		0% { margin-top: 15px; }
-		50% { margin-top: -120px; }
-		100% { margin-top: 15px; }
-	}
-	
-	@keyframes click-animation-down {
-		0% { margin-top: 5px; }
-		50% { margin-top: 132px; }
-		100% { margin-top: 5px; }
-	}
-	
-	.swap-container{
-		margin-top: 15px;
-	}
-	
-	.sell, .buy {
-		width: 100%;
-		height: 117px;
-		border-radius: 12px;
-		padding: 15px 20px 5px 20px;
-		position: relative;
-	}
-	
-	.sell {
-		margin-bottom: 10px;
-	}
-	
-	.sell-h6, .buy-h6 {
-		font-size: 14px;
-		margin-bottom: 2px;
-	}
+  @keyframes click-animation-up {
+    0% {
+      margin-top: 15px;
+    }
+    50% {
+      margin-top: -80px;
+    }
+    100% {
+      margin-top: 15px;
+    }
+  }
 
-	input {
-		height: 48px;
-		width: 200px;
-	}
+  @keyframes click-animation-down {
+    0% {
+      margin-top: 5px;
+    }
+    50% {
+      margin-top: 90px;
+    }
+    100% {
+      margin-top: 5px;
+    }
+  }
 
-	.buy-amount {
-		font-size: 36px;
-	}
+  .swap-container {
+    margin-top: 15px;
+  }
 
-	p {
-		font-size: 12px;
-	}
-	
-	.token {
-		margin-top: 8px;
-		gap: 10px;
-	}
-	
-	.token-icon {
-		height: 32px;
-		width: 32px;
-	}
+  .sell,
+  .buy {
+    height: 123px;
+    border-radius: 12px;
+    padding: 15px;
+  }
 
-	.network-icon {
-		top: -5px;
-		right: -5px;
-		height: 18px;
-		width: 18px;
-	}
-	
-	.token > p {
-		font-size: 15px;
-	}
-	
-	.token > button {
-		width: 10px;
-		height: 6px;
-	}
-	
-	.bottom {
-		width: 370px;
-	}
-	
-	.balance {
-		gap: 7px;
-	}
-	
-	.max {
-		font-size: 12px;
-	}
+  .sell-h6,
+  .buy-h6 {
+    font-size: 12px;
+  }
 
-	.main-button {
-		margin-top: 20px;
-		width: 100%;
-		height: 48px;
-		border-radius: 10px;
-		font-size: 14px;
-	}
-	
-	.info {
-		gap: 10px;
-		margin-top: 20px;
-	}
-	.price {
-		gap: 4px;
-	}
-	.price > p {
-		font-size: 12px;
-	}
-	.custom-address {
-		border-radius: 10px;
-		padding: 0 15px;
-	}
+  input {
+    height: 48px;
+    width: 200px;
+  }
 
-	.custom-address.show {
-		max-height: 50px;
-		padding: 15px 20px;
-		margin-top: 10px;
-	}
+  .buy-amount {
+    font-size: 36px;
+  }
 
-	.custom-address input {
-		font-size: 14px;
-	}
-	.address-status {
-		width: 20px;
-		height: 20px;
-	}
+  p {
+    font-size: 12px;
+  }
+
+  .token {
+    gap: 10px;
+  }
+
+  .token-icon {
+    height: 35px;
+    width: 35px;
+  }
+
+  .network-icon {
+    height: 13px;
+    width: 13px;
+  }
+
+  .token > p {
+    font-size: 14px;
+  }
+
+  .token > button {
+    width: 10px;
+    height: 6px;
+  }
+
+  .bottom {
+    width: 370px;
+  }
+
+  .balance {
+    gap: 7px;
+  }
+
+  .max {
+    font-size: 12px;
+  }
+
+  .main-button {
+    margin-top: 15px;
+    height: 48px;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+
+  .info {
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .price {
+    gap: 4px;
+  }
+  .price > p {
+    font-size: 12px;
+  }
+  .custom-address {
+    border-radius: 10px;
+    padding: 0 15px;
+  }
+
+  .custom-address.show {
+    max-height: 50px;
+    padding: 15px 20px;
+    margin-top: 10px;
+  }
+
+  .custom-address input {
+    font-size: 14px;
+  }
+  .address-status {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media screen and (max-width: 1170px) {
+  .trade-window {
+    width: 350px;
+  }
+
+  h3 {
+    font-size: 14px;
+  }
+  .icons {
+    gap: 6px;
+
+    .icon {
+      padding: 2px;
+      border-radius: 4px;
+    }
+
+    .refresh,
+    .settings,
+    .custom-wallet-button {
+      height: 18px;
+      width: 18px;
+    }
+  }
+
+  .change-button {
+    height: 30px;
+    width: 30px;
+    top: 74px;
+    gap: 1px;
+  }
+
+  .arrow-up,
+  .arrow-down {
+    width: 8px;
+    height: 12px;
+    margin-top: 9px;
+  }
+
+  .change-button:hover .arrow-up {
+    margin-top: 13px;
+  }
+
+  .change-button:hover .arrow-down {
+    margin-top: 6px;
+  }
+
+  @keyframes click-animation-up {
+    0% {
+      margin-top: 15px;
+    }
+    50% {
+      margin-top: -120px;
+    }
+    100% {
+      margin-top: 15px;
+    }
+  }
+
+  @keyframes click-animation-down {
+    0% {
+      margin-top: 5px;
+    }
+    50% {
+      margin-top: 132px;
+    }
+    100% {
+      margin-top: 5px;
+    }
+  }
+
+  .swap-container {
+    margin-top: 10px;
+  }
+
+  .sell,
+  .buy {
+    height: 106px;
+    border-radius: 8px;
+    padding: 10px;
+  }
+
+  .sell-h6,
+  .buy-h6 {
+    font-size: 10px;
+  }
+
+  input {
+    height: 34px;
+    width: 147px;
+  }
+
+  .buy-amount {
+    font-size: 26px;
+  }
+
+  p {
+    font-size: 8px;
+  }
+
+  .token {
+    gap: 7px;
+  }
+
+  .network-icon {
+    height: 12px;
+    width: 12px;
+  }
+
+  .token-icon {
+    height: 30px;
+    width: 30px;
+  }
+
+  .token > p {
+    font-size: 12px;
+  }
+
+  .token > button {
+    width: 7px;
+    height: 3px;
+  }
+
+  .bottom {
+    width: 270px;
+  }
+
+  .balance {
+    gap: 5px;
+  }
+
+  .max {
+    font-size: 8px;
+  }
+
+  .main-button {
+    margin-top: 10px;
+    height: 35px;
+    border-radius: 8px;
+    font-size: 10px;
+  }
+
+  .info {
+    gap: 10px;
+    margin-top: 15px;
+  }
+  .price {
+    gap: 3px;
+  }
+  .price > p {
+    font-size: 8px;
+  }
+  .custom-address {
+    border-radius: 8px;
+    padding: 0 15px;
+  }
+
+  .custom-address.show {
+    max-height: 35px;
+    padding: 10px 15px;
+    margin-top: 8px;
+  }
+
+  .custom-address input {
+    font-size: 10px;
+  }
+  .address-status {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media screen and (max-width: 970px) {
+  .trade-window {
+    width: 550px;
+  }
+
+  h3 {
+    font-size: 28px;
+  }
+
+  .icons {
+    gap: 5px;
+
+    .icon {
+      padding: 5px;
+      border-radius: 8px;
+    }
+
+    .refresh,
+    .settings,
+    .custom-wallet-button {
+      height: 30px;
+      width: 30px;
+    }
+  }
+
+  .change-button {
+    height: 40px;
+    width: 40px;
+    top: 100px;
+    gap: 2px;
+  }
+
+  .arrow-up,
+  .arrow-down {
+    width: 10px;
+    height: 16px;
+    margin-top: 12px;
+  }
+
+  .change-button:hover .arrow-up {
+    margin-top: 18px;
+  }
+
+  .change-button:hover .arrow-down {
+    margin-top: 5px;
+  }
+
+  @keyframes click-animation-up {
+    0% {
+      margin-top: 15px;
+    }
+    50% {
+      margin-top: -80px;
+    }
+    100% {
+      margin-top: 15px;
+    }
+  }
+
+  @keyframes click-animation-down {
+    0% {
+      margin-top: 5px;
+    }
+    50% {
+      margin-top: 90px;
+    }
+    100% {
+      margin-top: 5px;
+    }
+  }
+
+  .swap-container {
+    margin-top: 20px;
+  }
+
+  .sell,
+  .buy {
+    height: 157px;
+    border-radius: 16px;
+    padding: 20px;
+  }
+
+  .sell-h6,
+  .buy-h6 {
+    font-size: 18px;
+  }
+
+  input {
+    height: 48px;
+    width: 200px;
+  }
+
+  .buy-amount {
+    font-size: 36px;
+  }
+
+  p {
+    font-size: 12px;
+  }
+
+  .token {
+    gap: 10px;
+  }
+
+  .token-icon {
+    height: 45px;
+    width: 45px;
+  }
+
+  .network-icon {
+    height: 15px;
+    width: 15px;
+  }
+
+  .token > p {
+    font-size: 20px;
+  }
+
+  .token > button {
+    width: 10px;
+    height: 6px;
+  }
+
+  .bottom {
+    width: 370px;
+  }
+
+  .balance {
+    gap: 7px;
+  }
+
+  .max {
+    font-size: 12px;
+  }
+
+  .main-button {
+    margin-top: 20px;
+    height: 48px;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+
+  .info {
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .price {
+    gap: 4px;
+  }
+  .price > p {
+    font-size: 12px;
+  }
+  .custom-address {
+    border-radius: 10px;
+    padding: 0 15px;
+  }
+
+  .custom-address.show {
+    max-height: 50px;
+    padding: 15px 20px;
+    margin-top: 10px;
+  }
+
+  .custom-address input {
+    font-size: 14px;
+  }
+  .address-status {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .trade-window {
+    width: 400px;
+    padding: 10px;
+  }
+
+  h3 {
+    font-size: 16px;
+  }
+  .icons {
+    gap: 6px;
+
+    .icon {
+      padding: 2px;
+      border-radius: 4px;
+    }
+
+    .refresh,
+    .settings,
+    .custom-wallet-button {
+      height: 25px;
+      width: 25px;
+    }
+  }
+
+  .change-button {
+    height: 40px;
+    width: 40px;
+    top: 100px;
+    gap: 2px;
+    z-index: 1;
+  }
+
+  .arrow-up,
+  .arrow-down {
+    width: 10px;
+    height: 16px;
+    margin-top: 12px;
+  }
+
+  .change-button:hover .arrow-up {
+    margin-top: 18px;
+  }
+
+  .change-button:hover .arrow-down {
+    margin-top: 5px;
+  }
+
+  @keyframes click-animation-up {
+    0% {
+      margin-top: 15px;
+    }
+    50% {
+      margin-top: -120px;
+    }
+    100% {
+      margin-top: 15px;
+    }
+  }
+
+  @keyframes click-animation-down {
+    0% {
+      margin-top: 5px;
+    }
+    50% {
+      margin-top: 132px;
+    }
+    100% {
+      margin-top: 5px;
+    }
+  }
+
+  .swap-container {
+    margin-top: 15px;
+  }
+
+  .sell,
+  .buy {
+    height: 125px;
+    border-radius: 10px;
+    padding: 15px;
+    position: relative;
+  }
+
+  .sell-h6,
+  .buy-h6 {
+    font-size: 12px;
+  }
+
+  input {
+    height: 48px;
+    width: 200px;
+  }
+
+  .buy-amount {
+    font-size: 36px;
+  }
+
+  p {
+    font-size: 12px;
+  }
+
+  .token {
+    gap: 10px;
+  }
+
+  .token-icon {
+    height: 35px;
+    width: 35px;
+  }
+
+  .network-icon {
+    height: 13px;
+    width: 13px;
+  }
+
+  .token > p {
+    font-size: 14px;
+  }
+
+  .token > button {
+    width: 10px;
+    height: 6px;
+  }
+
+  .bottom {
+    width: 370px;
+  }
+
+  .balance {
+    gap: 7px;
+  }
+
+  .max {
+    font-size: 12px;
+  }
+
+  .main-button {
+    margin-top: 15px;
+    height: 48px;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+
+  .info {
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .price {
+    gap: 4px;
+  }
+  .price > p {
+    font-size: 12px;
+  }
+  .custom-address {
+    border-radius: 10px;
+    padding: 0 15px;
+  }
+
+  .custom-address.show {
+    max-height: 50px;
+    padding: 15px 20px;
+    margin-top: 10px;
+  }
+
+  .custom-address input {
+    font-size: 14px;
+  }
+  .address-status {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .trade-window {
+    width: 320px;
+    padding: 0;
+  }
+
+  .swap-container {
+    margin-top: 10px;
+  }
+
+  .sell,
+  .buy {
+    height: 108px;
+    border-radius: 10px;
+    padding: 10px;
+  }
+
+  .sell-h6,
+  .buy-h6 {
+    font-size: 10px;
+  }
+
+  .token-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .token > p {
+    font-size: 12px;
+  }
+
+  .main-button {
+    margin-top: 10px;
+  }
+
+  .network-icon {
+    height: 12px;
+    width: 12px;
+  }
 }

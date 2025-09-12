@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Token } from '../../../pages/trade/trade.component';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+
 import { Network } from '../../../models/wallet-provider.interface';
+import { Token } from '../../../pages/trade/trade.component';
 import { BlockchainStateService } from '../../../services/blockchain-state.service';
 import { TransactionsService } from '../../../services/transactions.service';
 
@@ -10,10 +11,7 @@ import { TransactionsService } from '../../../services/transactions.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './bridge-tx.component.html',
-  styleUrls: [
-		'./bridge-tx.component.scss', 
-		'./bridge-tx.component.adaptives.scss'
-	]
+  styleUrls: ['./bridge-tx.component.scss', './bridge-tx.component.adaptives.scss'],
 })
 export class BridgeTxComponent implements OnInit {
   @Input() selectedNetwork: Network | undefined = undefined; //??
@@ -30,20 +28,17 @@ export class BridgeTxComponent implements OnInit {
   isLoading: boolean = true;
 
   constructor(
-      private blockchainStateService: BlockchainStateService,
-      private transactionsService: TransactionsService
-  )
-  {
-    
-  }
+    private blockchainStateService: BlockchainStateService,
+    private transactionsService: TransactionsService,
+  ) {}
 
   async ngOnInit() {
     // console.log('BridgeTx initialized with amount:', this.inputAmount);
-    
+
     try {
       const initialStatus = await this.transactionsService.getInitialStatus(this.txHash);
       this.updateLinkState(initialStatus);
-      
+
       if (initialStatus.status !== 'DONE' && initialStatus.status !== 'FAILED') {
         const finalStatus = await this.transactionsService.waitForCompletion(this.txHash);
         this.updateLinkState(finalStatus);
@@ -63,18 +58,18 @@ export class BridgeTxComponent implements OnInit {
     if (status?.sending?.txLink) {
       this.sendingTxLink = status.sending.txLink;
     }
-    
+
     if (status?.receiving?.txLink) {
       this.receivingTxLink = status.receiving.txLink;
     }
   }
-  
+
   navigateTo(url: string | null): void {
     if (url) {
       window.open(url, '_blank', 'noopener,noreferrer');
     }
   }
-  
+
   closePopup(): void {
     this.close.emit();
   }

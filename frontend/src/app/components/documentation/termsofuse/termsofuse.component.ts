@@ -5,11 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './termsofuse.component.html',
-  styleUrls: [
-		'./termsofuse.component.scss',
-		'./termsofuse.component.adaptives.scss'
-	]
+  styleUrls: ['./termsofuse.component.scss', './termsofuse.component.adaptives.scss'],
 })
-export class TermsofuseComponent {
-
-}
+export class TermsofuseComponent {}

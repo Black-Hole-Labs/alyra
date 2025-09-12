@@ -1,48 +1,48 @@
 :host {
-	height: 100vh;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	padding: 40px 40px 20px 40px;
-	box-sizing: border-box;
-	@supports (-webkit-touch-callout: none) {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 40px 40px 20px 40px;
+  box-sizing: border-box;
+  @supports (-webkit-touch-callout: none) {
     height: -webkit-fill-available;
   }
 }
 
-.upper{
-	display: flex;
-	flex-direction: column;
-	overflow: visible;
+.upper {
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
 }
 
 :host-context(.form-page) {
-	padding: 0;
+  padding: 0;
 }
 
-@media screen and (min-width: 1601px) and (max-width: 1920px) {
-	:host {
-		padding: 30px 30px 20px 30px;
-	}
+@media screen and (max-width: 1920px) {
+  :host {
+    padding: 30px 30px 30px 30px;
+  }
 }
-@media screen and (min-width: 1171px) and (max-width: 1600px) {
-	:host {
-		padding: 20px 20px 10px 20px;
-	}
+@media screen and (max-width: 1600px) {
+  :host {
+    padding: 20px 20px 10px 20px;
+  }
 }
-@media screen and (min-width: 971px) and (max-width: 1170px) {
-	:host {
-		padding: 20px 20px 10px 20px;
-	}
+@media screen and (max-width: 1170px) {
+  :host {
+    padding: 20px 20px 20px 20px;
+  }
 }
-@media screen and (min-width: 480px) and (max-width: 970px) {
-	:host {
-		padding: 20px 20px 10px 20px;
-	}
+@media screen and (max-width: 970px) {
+  :host {
+    padding: 20px 20px 30px 20px;
+  }
 }
 
-@media screen and (min-width: 360px) and (max-width: 479px) {
-	:host {
-		padding: 30px 10px 10px 10px;
-	}
+@media screen and (max-width: 479px) {
+  :host {
+    padding: 30px 10px 20px 10px;
+  }
 }

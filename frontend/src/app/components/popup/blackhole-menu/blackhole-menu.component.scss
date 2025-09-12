@@ -1,29 +1,21 @@
 @import '../../../styles/mouse-gradient-button';
 
 .blackhole-menu {
-  @include mouse-gradient-button(
-    $padding: 25px 30px,
-    $height: auto,
-    $border-radius: 28px,
-    $background: rgba(var(--dark-bg), 0.3),
-    $backdrop-blur: 25px,
-    $include-responsive: false
-  );
-
-	position: fixed;
-	
+  position: fixed;
+  top: 130px;
+  left: 40px;
   flex-direction: column;
   align-items: stretch;
-  
-  &:hover {
-    transform: none;
-    
-    background: radial-gradient(
-      circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-      rgba(255, 255, 255, 0.001) 0%, 
-      rgba(255, 255, 255, 0.0005) 50%, 
-      transparent 100%
-    );
+  background-color: rgba(var(--black), 0.5);
+  border-radius: 20px;
+  padding: 25px;
+
+  &::before {
+    border-radius: 22px;
+  }
+
+  &::after {
+    border-radius: 22px;
   }
 }
 
@@ -34,15 +26,14 @@
 }
 
 h6 {
-  font-family: "JetBrains Mono", monospace;
-  font-weight: 500;
-  font-size: 21px;
+  font-weight: 700;
+  font-size: 18px;
   color: white;
 }
 
 button {
-  height: 15px;
-  width: 15px;
+  height: 12px;
+  width: 12px;
   background: url(/img/header/popup-menu/close-icon.png);
   opacity: 0.3;
   background-size: cover;
@@ -56,19 +47,23 @@ button:hover {
 }
 
 .devider {
-	padding: 2px 10px;
-	box-sizing: border-box;
-	background-color: rgba(var(--white), 0.1);
-	width: fit-content;
-	border-radius: 8px;
+  padding: 2px 8px;
+  box-sizing: border-box;
+  background-color: rgba(var(--white), 0.15);
+  width: fit-content;
+  border-radius: 5px;
   margin-top: 25px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  p {
+    font-size: 12px;
+    font-weight: 700;
+  }
 }
 
 p {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 400;
   font-size: 18px;
   color: white;
@@ -100,27 +95,30 @@ p {
 }
 
 .menu-item {
-	margin-top: 10px;
+  margin-top: 8px;
   display: flex;
   align-items: center;
-  gap: 10px;
-	padding: 8px 12px;
-	box-sizing: border-box;
-	background-color: transparent;
-	border: 1px solid rgba(var(--white), 0);
-	border-radius: 12px;
-	transition: 0.2s ease-in-out;
-	cursor: pointer;
-	&:hover {
-		background-color: rgba(var(--dark-select), 0.5);
-		border: 1px solid rgba(var(--white), 0.2);
-	}
+  gap: 8px;
+  padding: 10px 5px;
+  box-sizing: border-box;
+  background-color: transparent;
+  border: 1px solid rgba(var(--white), 0);
+  border-radius: 5px;
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(var(--dark-select), 0.5);
+    border: 1px solid rgba(var(--white), 0.2);
+  }
+}
+
+.menu-item.active {
+  background-color: rgba(var(--white), 0.15);
 }
 
 .menu-text {
-  font-family: "JetBrains Mono", monospace;
-  font-weight: 400;
-  font-size: 18px;
+  font-weight: 700;
+  font-size: 16px;
   color: white;
   display: flex;
 }
@@ -130,8 +128,8 @@ a:hover {
 }
 
 .social-img {
-  width: 25px;
-  height: 25px;
+  width: 16px;
+  height: 16px;
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -155,12 +153,12 @@ a:hover {
 :host-context(.light-theme) {
   .blackhole-menu {
     background: rgba(0, 0, 0, 0.05);
-    
+
     &:hover {
       background: radial-gradient(
-        circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-        rgba(0, 0, 0, 0.03) 0%, 
-        rgba(0, 0, 0, 0.01) 50%, 
+        circle at var(--gradient-x, 50%) var(--gradient-y, 50%),
+        rgba(0, 0, 0, 0.03) 0%,
+        rgba(0, 0, 0, 0.01) 50%,
         transparent 100%
       );
     }
@@ -171,11 +169,11 @@ a:hover {
 
     &::after {
       background: radial-gradient(
-        circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-        rgba(0, 0, 0, 1) 0%, 
-        rgba(0, 0, 0, 0.8) 20%, 
-        rgba(0, 0, 0, 0.4) 40%, 
-        rgba(0, 0, 0, 0.2) 60%, 
+        circle at var(--gradient-x, 50%) var(--gradient-y, 50%),
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0.8) 20%,
+        rgba(0, 0, 0, 0.4) 40%,
+        rgba(0, 0, 0, 0.2) 60%,
         transparent 80%
       );
     }

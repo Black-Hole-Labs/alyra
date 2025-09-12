@@ -1,15 +1,13 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+
 import { PopupService } from '../../../services/popup.service';
 
 @Component({
   selector: 'app-settings-bridge',
   standalone: true,
   templateUrl: './settings-bridge.component.html',
-  styleUrls: [
-		'./settings-bridge.component.scss', 
-		'./settings-bridge.component.adaptives.scss'
-	],
+  styleUrls: ['./settings-bridge.component.scss', './settings-bridge.component.adaptives.scss'],
   imports: [CommonModule],
 })
 export class SettingsBridgeComponent implements OnInit {
@@ -58,10 +56,7 @@ export class SettingsBridgeComponent implements OnInit {
   restrictInput(event: KeyboardEvent): void {
     const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', '.', ','];
 
-    if (
-      (event.key >= '0' && event.key <= '9') || 
-      allowedKeys.includes(event.key)
-    ) {
+    if ((event.key >= '0' && event.key <= '9') || allowedKeys.includes(event.key)) {
       return;
     }
 
@@ -82,8 +77,7 @@ export class SettingsBridgeComponent implements OnInit {
 
     const firstDotIndex = value.indexOf('.');
     if (firstDotIndex !== -1) {
-      value = value.slice(0, firstDotIndex + 1) +
-        value.slice(firstDotIndex + 1).replace(/\./g, '');
+      value = value.slice(0, firstDotIndex + 1) + value.slice(firstDotIndex + 1).replace(/\./g, '');
     }
 
     value = value.slice(0, 4);
@@ -104,12 +98,12 @@ export class SettingsBridgeComponent implements OnInit {
     } else if (this.customValue) {
       value = this.customValue + '%';
     }
-    
+
     if (value) {
       localStorage.setItem('slippageValue', value);
       this.save.emit(value);
     }
-    
+
     this.popupService.closePopup('settingsBridge');
     this.close.emit();
   }

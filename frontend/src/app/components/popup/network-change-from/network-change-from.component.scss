@@ -10,22 +10,22 @@
     $include-responsive: false
   );
 
-	position: fixed;
-	width: 600px;
+  position: fixed;
+  width: 600px;
   box-sizing: border-box;
   z-index: 10;
-	overflow: hidden;
+  overflow: hidden;
   flex-direction: column;
   align-items: stretch;
   justify-content: stretch;
-  
+
   &:hover {
     transform: none;
-    
+
     background: radial-gradient(
-      circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-      rgba(255, 255, 255, 0.001) 0%, 
-      rgba(255, 255, 255, 0.0005) 50%, 
+      circle at var(--gradient-x, 50%) var(--gradient-y, 50%),
+      rgba(255, 255, 255, 0.001) 0%,
+      rgba(255, 255, 255, 0.0005) 50%,
       transparent 100%
     );
   }
@@ -38,7 +38,6 @@
 }
 
 h3 {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 28px;
   color: white;
@@ -66,7 +65,7 @@ button:hover {
   width: 540px;
   height: 60px;
   background-color: rgba(var(--dark-select), 0.7);
-	border: 1px solid rgba(var(--white), 0.1);
+  border: 1px solid rgba(var(--white), 0.1);
   border-radius: 18px;
   padding: 0 20px;
   box-sizing: border-box;
@@ -75,7 +74,7 @@ button:hover {
 input {
   width: 476px;
   height: 24px;
-  font-family: "JetBrains Mono", monospace;
+
   font-weight: 400;
   font-size: 18px;
   color: white;
@@ -86,7 +85,7 @@ input {
 
 input::placeholder {
   color: var(--elem-nonactive);
-  font-family: "JetBrains Mono", monospace;
+
   font-weight: 400;
   font-size: 18px;
 }
@@ -107,9 +106,9 @@ input::placeholder {
 }
 
 .list {
-	position: absolute;
-	top: 197px;
-	left: 16px;
+  position: absolute;
+  top: 197px;
+  left: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -122,7 +121,7 @@ input::placeholder {
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
-	padding-bottom: 35%;
+  padding-bottom: 35%;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -136,7 +135,7 @@ input::placeholder {
   width: 50%;
   height: 84px;
   background-color: rgba(var(--dark-bg), 0.01);
-	border: 1px solid rgba(var(--white), 0);
+  border: 1px solid rgba(var(--white), 0);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -149,7 +148,7 @@ input::placeholder {
 
 .network:hover {
   background-color: rgba(var(--dark-select), 0.5);
-	border: 1px solid rgba(var(--white), 0.2);
+  border: 1px solid rgba(var(--white), 0.2);
 }
 
 .left {
@@ -174,7 +173,6 @@ input::placeholder {
 }
 
 .name h6 {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 700;
   font-size: 20px;
   color: white;

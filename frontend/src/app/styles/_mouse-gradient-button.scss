@@ -28,7 +28,9 @@
     border-radius: $border-radius;
     padding: 1px;
     background: linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
@@ -42,14 +44,16 @@
     border-radius: $border-radius;
     padding: 1px;
     background: radial-gradient(
-      circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-      rgba(255, 255, 255, 1) 0%, 
-      rgba(255, 255, 255, 0.8) 20%, 
-      rgba(255, 255, 255, 0.4) 40%, 
-      rgba(255, 255, 255, 0.2) 60%, 
+      circle at var(--gradient-x, 50%) var(--gradient-y, 50%),
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.8) 20%,
+      rgba(255, 255, 255, 0.4) 40%,
+      rgba(255, 255, 255, 0.2) 60%,
       transparent 80%
     );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     opacity: 0;
@@ -62,9 +66,9 @@
   &:hover {
     transform: translateY(-2px);
     background: radial-gradient(
-      circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-      rgba(255, 255, 255, 0.15) 0%, 
-      rgba(255, 255, 255, 0.05) 50%, 
+      circle at var(--gradient-x, 50%) var(--gradient-y, 50%),
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.05) 50%,
       transparent 100%
     );
 
@@ -74,9 +78,9 @@
 
     &::before {
       background: radial-gradient(
-        circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-        rgba(255, 255, 255, 0.15) 0%, 
-        rgba(255, 255, 255, 0.05) 50%, 
+        circle at var(--gradient-x, 50%) var(--gradient-y, 50%),
+        rgba(255, 255, 255, 0.15) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
         transparent 100%
       );
       filter: blur(30px);
@@ -162,17 +166,9 @@
 
 // Вариации с разными параметрами
 .mouse-gradient-button-small {
-  @include mouse-gradient-button(
-    $padding: 8px 16px,
-    $height: 40px,
-    $border-radius: 10px
-  );
+  @include mouse-gradient-button($padding: 8px 16px, $height: 40px, $border-radius: 10px);
 }
 
 .mouse-gradient-button-large {
-  @include mouse-gradient-button(
-    $padding: 16px 24px,
-    $height: 64px,
-    $border-radius: 16px
-  );
-} 
+  @include mouse-gradient-button($padding: 16px 24px, $height: 64px, $border-radius: 16px);
+}

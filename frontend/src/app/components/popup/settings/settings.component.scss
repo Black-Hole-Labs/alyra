@@ -1,32 +1,9 @@
-@import '../../../styles/mouse-gradient-button';
 .settings-popup {
-	@include mouse-gradient-button(
-    $padding: 30px,
-    $height: auto,
-    $border-radius: 28px,
-    $background: rgba(var(--dark-bg), 0.3),
-    $backdrop-blur: 25px,
-    $include-responsive: false
-  );
-
   box-sizing: border-box;
-	z-index: 10;
-
-	position: fixed;
-	
+  z-index: 10;
+  position: fixed;
   flex-direction: column;
   align-items: stretch;
-  
-  &:hover {
-    transform: none;
-    
-    background: radial-gradient(
-      circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-      rgba(255, 255, 255, 0.03) 0%, 
-      rgba(255, 255, 255, 0.01) 50%, 
-      transparent 100%
-    );
-  }
 }
 
 .settings-header {
@@ -36,7 +13,6 @@
 }
 
 .settings-header h3 {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 21px;
   color: white;
@@ -79,7 +55,6 @@
 }
 
 .limit > p {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 400;
   font-size: 18px;
   color: rgba(var(--white), 1);
@@ -93,14 +68,13 @@
 }
 
 .buttons > button {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 14px;
   color: rgba(var(--white), 0.4);
   padding: 6px 20px;
   border: 1px solid var(--elem-nonactive);
   border-radius: 16px;
-	box-sizing: border-box;
+  box-sizing: border-box;
   cursor: pointer;
   transition: 0.2s ease-in-out;
 }
@@ -112,7 +86,7 @@
 
 .buttons > button.selected {
   background-color: rgba(var(--white), 0.4);
-	border: 1px solid rgba(var(--white), 0.1);
+  border: 1px solid rgba(var(--white), 0.1);
   color: rgba(var(--white), 1);
   border-color: rgba(var(--white), 0.1);
 }
@@ -129,7 +103,6 @@
 }
 
 .custom input {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 14px;
   color: rgba(var(--white), 1);
@@ -142,14 +115,12 @@
 }
 
 .custom input::placeholder {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 14px;
   color: var(--elem-nonactive);
 }
 
 .custom span {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 14px;
   color: rgba(var(--white), 1);
@@ -181,9 +152,8 @@
   height: 50px;
   margin-top: 30px;
   background-color: rgba(var(--white), 0.1);
-	border: 1px solid rgba(var(--white), 0.1);
+  border: 1px solid rgba(var(--white), 0.1);
   border-radius: 16px;
-  font-family: "JetBrains Mono", monospace;
   font-weight: 500;
   font-size: 18px;
   color: rgba(var(--white), 1);

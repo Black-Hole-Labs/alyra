@@ -1,98 +1,93 @@
-@import '../../styles/mouse-gradient-button';
 .trade-window {
-	@include mouse-gradient-button(
-    $padding: 30px,
-		$height: auto,
-    $border-radius: 28px,
-    $background: rgba(var(--dark-bg), 0.3),
-    $backdrop-blur: 25px,
-    $include-responsive: false
-  );
-
-	width: 600px;
-	flex-direction: column;
-	align-items: stretch;
+  width: 550px;
+  flex-direction: column;
+  align-items: stretch;
   box-sizing: border-box;
-  
-  &:hover {
-    transform: none;
-    
-    background: radial-gradient(
-      circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-      rgba(255, 255, 255, 0.001) 0%, 
-      rgba(255, 255, 255, 0.0005) 50%, 
-      transparent 100%
-    );
+  padding: 20px;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+h3 {
+  font-weight: 500;
+  font-size: 28px;
+  color: white;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+
+  .icon {
+    padding: 5px;
+    border-radius: 8px;
+    background-color: transparent;
+    transition: 0.2s ease-in-out;
   }
-}
-.header{
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-h3{
-	font-family: "JetBrains Mono", monospace;
-	font-weight: 500;
-	font-size: 28px;
-	color: white;
-}
-.icons{
-	display: flex;
-	gap: 5px;
-	position: relative;
-}
 
-.icon {
-	padding: 5px;
-	border-radius: 8px;
-	background-color: transparent;
-	transition: 0.2s ease-in-out;
-}
+  .icon:hover {
+    cursor: pointer;
+    background-color: rgba(var(--dark-select), 1);
 
-.icon:hover {
-	cursor: pointer;
-	background-color: rgba(var(--dark-select), 1);
-	.refresh, .settings, .custom-wallet-button{
-		opacity: 1;
-	}
-}
+    .refresh,
+    .settings,
+    .custom-wallet-button {
+      opacity: 1;
+    }
+  }
 
-.icon.active {
-	background-color: rgba(var(--dark-select), 1);
-	.refresh, .settings, .custom-wallet-button{
-		opacity: 1;
-	}
-}
+  .icon.active {
+    background-color: rgba(var(--dark-select), 1);
 
-.refresh, .settings, .custom-wallet-button {
-  background-size: cover;
-  background-repeat: no-repeat;
-  height: 35px;
-  width: 35px;
-  cursor: pointer;
-  opacity: 0.3;
-  transition: opacity 0.2s ease-in-out;
-}
+    .refresh,
+    .settings,
+    .custom-wallet-button {
+      opacity: 1;
+    }
+  }
 
-.refresh {
-  background-image: url(/img/trade/refresh.png);
-  transform: rotate(0deg);
-  transform-origin: center;
-  transition: opacity 0.1s ease-in-out, transform 1s ease-in-out;
-}
+  .refresh,
+  .settings,
+  .custom-wallet-button {
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+    opacity: 0.3;
+    transition: opacity 0.2s ease-in-out;
+  }
 
-.settings {
-  background-image: url(/img/trade/settings.png);
-}
+  .refresh {
+    background-image: url(/img/trade/refresh.png);
+    transform: rotate(0deg);
+    transform-origin: center;
+    transition:
+      opacity 0.1s ease-in-out,
+      transform 1s ease-in-out;
+  }
 
-.rotate {
-  transform: rotate(-720deg);
+  .settings {
+    background-image: url(/img/trade/settings.png);
+  }
+
+  .rotate {
+    transform: rotate(-720deg);
+  }
 }
 
 .change-button {
-  background-image: url(/img/trade/change.png);
-  background-size: cover;
-  background-repeat: no-repeat;
   height: 54px;
   width: 54px;
   position: absolute;
@@ -101,14 +96,15 @@ h3{
   transform: translate(-50%, 0%);
   display: flex;
   justify-content: center;
-	gap: 4px;
+  gap: 4px;
   cursor: pointer;
   border-radius: 1000px;
   overflow: hidden;
-	z-index: 1;
+  z-index: 1;
 }
 
-.arrow-up, .arrow-down {
+.arrow-up,
+.arrow-down {
   background-image: url(/img/trade/change-arrow.png);
   background-size: cover;
   background-repeat: no-repeat;
@@ -131,37 +127,34 @@ h3{
   margin-top: 12px;
 }
 
-.swap-container{
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: space-between;
-	margin-top: 30px;
-	position: relative;
+.swap-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 25px;
+  position: relative;
 }
 
-.sell, .buy {
+.sell,
+.buy {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  width: 540px;
+  width: 100%;
   height: 157px;
-  background-color: rgba(var(--dark-bg), 0.5);
   border-radius: 16px;
-  padding: 15px 25px 10px 25px;
+  padding: 20px;
   box-sizing: border-box;
-	position: relative;
+  position: relative;
+  background: rgba(var(--black), 0.3);
 }
 
-.sell {
-  margin-bottom: 20px;
-}
-
-.sell-h6, .buy-h6 {
-  font-family: "JetBrains Mono", monospace;
-  font-weight: 700;
+.sell-h6,
+.buy-h6 {
+  font-weight: 500;
   font-size: 18px;
-  margin-bottom: 5px;
 }
 
 .sell-h6 {
@@ -176,6 +169,7 @@ h3{
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: 15px;
 }
 
 .right {
@@ -185,15 +179,14 @@ h3{
 }
 
 input {
-	position: absolute;
+  position: absolute;
   height: 63px;
   width: 290px;
-	top: 50%;
-	transform: translate(0%, -50%);
-  font-family: "JetBrains Mono", monospace;
+  top: 50%;
+  transform: translate(0%, -50%);
   font-weight: 400;
   color: white;
-	text-align: right;
+  text-align: right;
   background-color: var(--dark-bg);
 }
 
@@ -204,13 +197,12 @@ input::placeholder {
 .buy-amount-container {
   display: flex;
   align-items: center;
-	position: absolute;
-	top: 50%;
-	transform: translate(0%, -50%);
+  position: absolute;
+  top: 50%;
+  transform: translate(0%, -50%);
 }
 
 .buy-amount {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 400;
   font-size: 48px;
   color: white;
@@ -222,20 +214,18 @@ input::placeholder {
 }
 
 p {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 600;
   font-size: 15px;
   color: var(--elem-nonactive);
 }
 
 .token {
-	margin-top: 10px;
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-	gap: 15px;
+  gap: 15px;
 }
 
 .token-icon {
@@ -245,7 +235,7 @@ p {
   height: 45px;
   width: 45px;
   border-radius: 100%;
-	position: relative;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -256,8 +246,7 @@ p {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-.token-icon .token-letter {
-  font-family: "JetBrains Mono", monospace;
+.token-letter {
   font-size: 14px;
   font-weight: bold;
   color: white;
@@ -266,18 +255,17 @@ p {
 }
 
 .network-icon {
-	position: absolute;
-	top: -10px;
-	right: -10px;
+  position: absolute;
+  top: -2px;
+  right: -2px;
   background-size: cover;
   background-repeat: no-repeat;
-  height: 25px;
-  width: 25px;
-  border-radius: 100%;
+  height: 15px;
+  width: 15px;
+  border-radius: 3px;
 }
 
 .token > p {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 800;
   font-size: 20px;
   color: white;
@@ -300,11 +288,10 @@ p {
 
 .balance {
   display: flex;
-	gap: 10px;
+  gap: 10px;
 }
 
 .max {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 700;
   font-size: 15px;
   color: white;
@@ -317,13 +304,12 @@ p {
 }
 
 .main-button {
-  margin-top: 30px;
-	width: 540px;
+  margin-top: 25px;
+  width: 100%;
   height: 62px;
-  background-color: rgba(var(--white), 0.1);
+  background-color: rgba(#2f2f2f, 0.3);
   border-radius: 16px;
-	border: 1px solid rgba(var(--white), 0.1);
-  font-family: "JetBrains Mono", monospace;
+  border: 1px solid rgba(#2f2f2f, 0.3);
   font-weight: 500;
   font-size: 18px;
   color: rgba(var(--white), 1);
@@ -346,13 +332,15 @@ p {
   background-color: rgba(var(--dark-select), 1);
 }
 
-.main-button.finding, .main-button.wallet {
+.main-button.finding,
+.main-button.wallet {
   background-color: rgba(var(--dark-select), 1);
   color: var(--elem-nonactive);
   cursor: wait;
 }
 
-.main-button.finding:hover, .main-button.wallet:hover {
+.main-button.finding:hover,
+.main-button.wallet:hover {
   background-color: rgba(var(--dark-select), 1);
 }
 
@@ -388,14 +376,17 @@ p {
   max-height: 0;
   overflow: hidden;
   opacity: 0;
-  transition: max-height 0.3s ease, opacity 0.2s ease, margin-top 0.3s ease, padding 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.2s ease,
+    margin-top 0.3s ease,
+    padding 0.3s ease;
 }
 
 .info.show {
   max-height: 400px;
   opacity: 1;
 }
-
 
 .info-item-main {
   display: flex;
@@ -406,7 +397,11 @@ p {
   padding: 0;
   overflow: hidden;
   opacity: 0;
-  transition: max-height 0.3s ease, opacity 0.2s ease, margin-top 0.3s ease, padding 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.2s ease,
+    margin-top 0.3s ease,
+    padding 0.3s ease;
 }
 
 .info-item-main.show {
@@ -414,37 +409,47 @@ p {
   opacity: 1;
 }
 
-.info p{
-	color: white;
+.info p {
+  color: white;
 }
 
 .info p span {
-	color: var(--elem-nonactive);
+  color: var(--elem-nonactive);
 }
 
 .info .slippage-value {
-	color: var(--red);
+  color: var(--red);
 }
 
 .custom-address {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-	height: 63px;
+  width: 0;
+  height: 0;
   max-height: 0;
   background-color: rgba(var(--dark-bg), 0.5);
   border-radius: 14px;
-  padding: 0 20px;
+  padding: 0;
   box-sizing: border-box;
   margin-top: 0;
   margin-bottom: 0;
   overflow: hidden;
   opacity: 0;
-  transition: max-height 0.3s ease, opacity 0.2s ease, margin-top 0.3s ease, padding 0.3s ease;
+  visibility: hidden;
+  position: absolute;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.2s ease,
+    margin-top 0.3s ease,
+    padding 0.3s ease;
 }
 
 .custom-address.show {
+  position: static;
+  visibility: visible;
+  width: 100%;
+  height: 63px;
   max-height: 100px;
   padding: 15px 20px;
   margin-top: 20px;
@@ -454,7 +459,6 @@ p {
 .custom-address input {
   position: static;
   width: 90%;
-  font-family: "JetBrains Mono", monospace;
   font-weight: 400;
   font-size: 18px;
   color: white;
@@ -464,6 +468,7 @@ p {
   transform: none;
   text-align: left;
 }
+
 .custom-address input::placeholder {
   color: var(--elem-nonactive);
 }
@@ -509,7 +514,11 @@ p {
   padding: 0;
   overflow: hidden;
   opacity: 0;
-  transition: max-height 0.3s ease, opacity 0.2s ease, margin-top 0.3s ease, padding 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.2s ease,
+    margin-top 0.3s ease,
+    padding 0.3s ease;
 }
 
 // .trade-info.show {
@@ -534,11 +543,10 @@ p {
 
 .price {
   display: flex;
-	gap: 5px;
+  gap: 5px;
 }
 
 .price > p {
-  font-family: "JetBrains Mono", monospace;
   font-weight: 400;
   font-size: 15px;
   color: white;
@@ -563,7 +571,6 @@ p {
 // }
 
 // .gas-text {
-//   font-family: "JetBrains Mono", monospace;
 //   font-weight: 400;
 //   font-size: 15px;
 //   color: var(--elem-nonactive);

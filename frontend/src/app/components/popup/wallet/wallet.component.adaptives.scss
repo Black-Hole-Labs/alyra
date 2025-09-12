@@ -1,912 +1,815 @@
-@media screen and (min-width: 1601px) and (max-width: 1920px) {
-
-	@import '../../../styles/mouse-gradient-button';
-
-	.wallet-popup {
-		@include mouse-gradient-button(
-			$padding: 20px,
-			$height: auto,
-			$border-radius: 22px,
-			$background: rgba(var(--dark-bg), 0.1),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
-
-		display: flex;
-		position: fixed;
-		width: 416px;
-		box-sizing: border-box;
-		z-index: 10;
-		overflow: hidden;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: stretch;
-		
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
-
-	.header p {
-		font-size: 14px;
-	}
-	
-	.header p span {
-		font-size: 14px;
-	}
-
-	.header button {
-		height: 13px;
-		width: 13px;
-	}
-
-	.left-wallet {
-		gap: 10px;
-	}
-	
-	.right-wallet {
-		gap: 10px;
-	}
-	
-	.wallet {
-		margin-top: 15px;
-	}
-
-	.wallet p {
-		font-size: 14px;
-	}
-
-	.avatar {
-		width: 45px;
-		height: 45px;
-		border-radius: 10px;
-	}
-
-	.wallet-name {
-		gap: 4px;
-	}
-
-	.wallet-name h3 {
-		font-size: 16px;
-	}
-
-	.wallet-address {
-		gap: 4px;
-	}
-
-	.wallet-address p {
-		font-size: 14px;
-	}
-
-	.copy {
-		width: 17px;
-		height: 17px;
-	}
-
-	.disconnect {
-		padding: 5px 12px;
-		border-radius: 8px;
-	}
-
-	.disconnect p {
-		font-size: 12px;
-	}
-
-	.button-connect {
-		margin-top: 20px;
-		height: 45px;
-		border-radius: 12px;
-		font-size: 16px;
-	}
-
-	//TODO!!!
-
-	// .devider {
-	// 	margin-top: 27px;
-	// }
-
-	// .devider p {
-	// 	font-size: 18px;
-	// 	margin-right: 17px;
-	// }
-
-	// .hr1 {
-	// 	width: 332px;
-	// 	border: 1px solid var(--elem-nonactive);
-	// }
-
-	// .hr2 {
-	// 	width: 304px;
-	// 	border: 1px solid var(--elem-nonactive);
-	// }
-
-	// .balance {
-	// 	margin: 20px 0 13px;
-	// 	gap: 5px;
-	// }
-
-	// .balance h2 {
-	// 	font-size: 45px;
-	// }
-
-	// .grow {
-	// 	gap: 5px;
-	// }
-
-	// .grow p {
-	// 	font-size: 22px;
-	// }
-
-	// .token-portfolio {
-	// 	width: 100%;
-	// 	height: 432px;
-	// 	margin-top: 30px;
-	// 	gap: 25px;
-	// }
-	
-	// .token-left {
-	// 	gap: 15px;
-	// }
-
-	// .token-img {
-	// 	width: 60px;
-	// 	height: 60px;
-	// }
-	
-	// .token-info p {
-	// 	font-size: 20px;
-	// }
-
-	// .token-right {
-	// 	gap: 3px;
-	// }
-
-	// .token-right h5 {
-	// 	font-size: 24px;
-	// }
-
-	// .token-price-change {
-	// 	gap: 5px;
-	// }
-
-	// .token-price-change p {
-	// 	font-size: 16px;
-	// }
-}
-@media screen and (min-width: 1171px) and (max-width: 1600px) {
-	@import '../../../styles/mouse-gradient-button';
-
-	.wallet-popup {
-		@include mouse-gradient-button(
-			$padding: 20px,
-			$height: auto,
-			$border-radius: 22px,
-			$background: rgba(var(--dark-bg), 0.1),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
-
-		display: flex;
-		position: fixed;
-		width: 416px;
-		box-sizing: border-box;
-		z-index: 10;
-		overflow: hidden;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: stretch;
-		
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
-
-	.header p {
-		font-size: 14px;
-	}
-	
-	.header p span {
-		font-size: 14px;
-	}
-
-	.header button {
-		height: 13px;
-		width: 13px;
-	}
-
-	.left-wallet {
-		gap: 10px;
-	}
-	
-	.right-wallet {
-		gap: 10px;
-	}
-	
-	.wallet {
-		margin-top: 15px;
-	}
-
-	.wallet p {
-		font-size: 14px;
-	}
-
-	.avatar {
-		width: 45px;
-		height: 45px;
-		border-radius: 10px;
-	}
-
-	.wallet-name {
-		gap: 4px;
-	}
-
-	.wallet-name h3 {
-		font-size: 16px;
-	}
-
-	.wallet-address {
-		gap: 4px;
-	}
-
-	.wallet-address p {
-		font-size: 14px;
-	}
-
-	.copy {
-		width: 17px;
-		height: 17px;
-	}
-
-	.disconnect {
-		padding: 5px 12px;
-		border-radius: 8px;
-	}
-
-	.disconnect p {
-		font-size: 12px;
-	}
-
-	.button-connect {
-		margin-top: 20px;
-		height: 45px;
-		border-radius: 12px;
-		font-size: 16px;
-	}
-
-	//TODO!!!
-
-	// .devider {
-	// 	margin-top: 27px;
-	// }
-
-	// .devider p {
-	// 	font-size: 18px;
-	// 	margin-right: 17px;
-	// }
-
-	// .hr1 {
-	// 	width: 332px;
-	// 	border: 1px solid var(--elem-nonactive);
-	// }
-
-	// .hr2 {
-	// 	width: 304px;
-	// 	border: 1px solid var(--elem-nonactive);
-	// }
-
-	// .balance {
-	// 	margin: 20px 0 13px;
-	// 	gap: 5px;
-	// }
-
-	// .balance h2 {
-	// 	font-size: 45px;
-	// }
-
-	// .grow {
-	// 	gap: 5px;
-	// }
-
-	// .grow p {
-	// 	font-size: 22px;
-	// }
-
-	// .token-portfolio {
-	// 	width: 100%;
-	// 	height: 432px;
-	// 	margin-top: 30px;
-	// 	gap: 25px;
-	// }
-	
-	// .token-left {
-	// 	gap: 15px;
-	// }
-
-	// .token-img {
-	// 	width: 60px;
-	// 	height: 60px;
-	// }
-	
-	// .token-info p {
-	// 	font-size: 20px;
-	// }
-
-	// .token-right {
-	// 	gap: 3px;
-	// }
-
-	// .token-right h5 {
-	// 	font-size: 24px;
-	// }
-
-	// .token-price-change {
-	// 	gap: 5px;
-	// }
-
-	// .token-price-change p {
-	// 	font-size: 16px;
-	// }
-}
-@media screen and (min-width: 971px) and (max-width: 1170px) {
-	@import '../../../styles/mouse-gradient-button';
-
-	.wallet-popup {
-		@include mouse-gradient-button(
-			$padding: 15px,
-			$height: auto,
-			$border-radius: 16px,
-			$background: rgba(var(--dark-bg), 0.1),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
-
-		display: flex;
-		position: fixed;
-		width: 304px;
-		box-sizing: border-box;
-		z-index: 10;
-		overflow: hidden;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: stretch;
-		
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
-	
-	.header p {
-		font-size: 12px;
-	}
-	
-	.header p span {
-		font-size: 12px;
-	}
-
-	.header button {
-		height: 10px;
-		width: 10px;
-	}
-
-	.left-wallet {
-		gap: 10px;
-	}
-	
-	.right-wallet {
-		gap: 10px;
-	}
-	
-	.wallet {
-		margin-top: 15px;
-	}
-
-	.wallet p {
-		font-size: 12px;
-	}
-
-	.avatar {
-		width: 37px;
-		height: 37px;
-		border-radius: 10px;
-	}
-
-	.wallet-name {
-		gap: 3px;
-	}
-
-	.wallet-name h3 {
-		font-size: 13px;
-	}
-
-	.wallet-address {
-		gap: 3px;
-	}
-
-	.wallet-address p {
-		font-size: 10px;
-	}
-
-	.copy {
-		width: 12px;
-		height: 12px;
-	}
-
-	.disconnect {
-		padding: 3px 8px;
-		border-radius: 5px;
-	}
-
-	.disconnect p {
-		font-size: 8px;
-	}
-
-	.right-header button {
-		height: 10px;
-		width: 10px;
-	}
-
-	.button-connect {
-		margin-top: 20px;
-		height: 35px;
-		border-radius: 10px;
-		font-size: 12px;
-	}
-
-	//TODO!!!
-
-	// .devider {
-	// 	margin-top: 27px;
-	// }
-
-	// .devider p {
-	// 	font-size: 18px;
-	// 	margin-right: 17px;
-	// }
-
-	// .hr1 {
-	// 	width: 332px;
-	// 	border: 1px solid var(--elem-nonactive);
-	// }
-
-	// .hr2 {
-	// 	width: 304px;
-	// 	border: 1px solid var(--elem-nonactive);
-	// }
-
-	// .balance {
-	// 	margin: 20px 0 13px;
-	// 	gap: 5px;
-	// }
-
-	// .balance h2 {
-	// 	font-size: 45px;
-	// }
-
-	// .grow {
-	// 	gap: 5px;
-	// }
-
-	// .grow p {
-	// 	font-size: 22px;
-	// }
-
-	// .token-portfolio {
-	// 	width: 100%;
-	// 	height: 432px;
-	// 	margin-top: 30px;
-	// 	gap: 25px;
-	// }
-	
-	// .token-left {
-	// 	gap: 15px;
-	// }
-
-	// .token-img {
-	// 	width: 60px;
-	// 	height: 60px;
-	// }
-	
-	// .token-info p {
-	// 	font-size: 20px;
-	// }
-
-	// .token-right {
-	// 	gap: 3px;
-	// }
-
-	// .token-right h5 {
-	// 	font-size: 24px;
-	// }
-
-	// .token-price-change {
-	// 	gap: 5px;
-	// }
-
-	// .token-price-change p {
-	// 	font-size: 16px;
-	// }
-}
-@media screen and (min-width: 480px) and (max-width: 970px) {
-	@import '../../../styles/mouse-gradient-button';
-
-	.wallet-popup {
-		@include mouse-gradient-button(
-			$padding: 20px,
-			$height: auto,
-			$border-radius: 22px,
-			$background: rgba(var(--dark-bg), 0.1),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
-
-		display: flex;
-		position: fixed;
-		width: 416px;
-		box-sizing: border-box;
-		z-index: 10;
-		overflow: hidden;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: stretch;
-		
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
-
-	.header p {
-		font-size: 14px;
-	}
-	
-	.header p span {
-		font-size: 14px;
-	}
-
-	.header button {
-		height: 13px;
-		width: 13px;
-	}
-
-	.left-wallet {
-		gap: 10px;
-	}
-	
-	.right-wallet {
-		gap: 10px;
-	}
-	
-	.wallet {
-		margin-top: 15px;
-	}
-
-	.wallet p {
-		font-size: 14px;
-	}
-
-	.avatar {
-		width: 45px;
-		height: 45px;
-		border-radius: 10px;
-	}
-
-	.wallet-name {
-		gap: 4px;
-	}
-
-	.wallet-name h3 {
-		font-size: 16px;
-	}
-
-	.wallet-address {
-		gap: 4px;
-	}
-
-	.wallet-address p {
-		font-size: 14px;
-	}
-
-	.copy {
-		width: 17px;
-		height: 17px;
-	}
-
-	.disconnect {
-		padding: 5px 12px;
-		border-radius: 8px;
-	}
-
-	.disconnect p {
-		font-size: 12px;
-	}
-
-	.button-connect {
-		margin-top: 20px;
-		height: 45px;
-		border-radius: 12px;
-		font-size: 16px;
-	}
-
-	//TODO!!!
-
-	// .devider {
-	// 	margin-top: 27px;
-	// }
-
-	// .devider p {
-	// 	font-size: 18px;
-	// 	margin-right: 17px;
-	// }
-
-	// .hr1 {
-	// 	width: 332px;
-	// 	border: 1px solid var(--elem-nonactive);
-	// }
-
-	// .hr2 {
-	// 	width: 304px;
-	// 	border: 1px solid var(--elem-nonactive);
-	// }
-
-	// .balance {
-	// 	margin: 20px 0 13px;
-	// 	gap: 5px;
-	// }
-
-	// .balance h2 {
-	// 	font-size: 45px;
-	// }
-
-	// .grow {
-	// 	gap: 5px;
-	// }
-
-	// .grow p {
-	// 	font-size: 22px;
-	// }
-
-	// .token-portfolio {
-	// 	width: 100%;
-	// 	height: 432px;
-	// 	margin-top: 30px;
-	// 	gap: 25px;
-	// }
-	
-	// .token-left {
-	// 	gap: 15px;
-	// }
-
-	// .token-img {
-	// 	width: 60px;
-	// 	height: 60px;
-	// }
-	
-	// .token-info p {
-	// 	font-size: 20px;
-	// }
-
-	// .token-right {
-	// 	gap: 3px;
-	// }
-
-	// .token-right h5 {
-	// 	font-size: 24px;
-	// }
-
-	// .token-price-change {
-	// 	gap: 5px;
-	// }
-
-	// .token-price-change p {
-	// 	font-size: 16px;
-	// }
+@media screen and (max-width: 1920px) {
+  .wallet-popup {
+    display: flex;
+    position: fixed;
+    width: 360px;
+    box-sizing: border-box;
+    z-index: 10;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .header p {
+    font-size: 14px;
+  }
+
+  .header p span {
+    font-size: 14px;
+  }
+
+  .header button {
+    height: 13px;
+    width: 13px;
+  }
+
+  .left-wallet {
+    gap: 10px;
+  }
+
+  .right-wallet {
+    gap: 10px;
+  }
+
+  .wallet {
+    margin-top: 15px;
+  }
+
+  .wallet p {
+    font-size: 14px;
+  }
+
+  .avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+  }
+
+  .wallet-name {
+    gap: 4px;
+  }
+
+  .wallet-name h3 {
+    font-size: 16px;
+  }
+
+  .wallet-address {
+    gap: 4px;
+  }
+
+  .wallet-address p {
+    font-size: 14px;
+  }
+
+  .copy {
+    width: 17px;
+    height: 17px;
+  }
+
+  .disconnect {
+    padding: 5px 12px;
+    border-radius: 8px;
+  }
+
+  .disconnect p {
+    font-size: 12px;
+  }
+
+  .button-connect {
+    margin-top: 20px;
+    height: 45px;
+    border-radius: 12px;
+    font-size: 16px;
+  }
+
+  //TODO!!!
+
+  // .devider {
+  // 	margin-top: 27px;
+  // }
+
+  // .devider p {
+  // 	font-size: 18px;
+  // 	margin-right: 17px;
+  // }
+
+  // .hr1 {
+  // 	width: 332px;
+  // 	border: 1px solid var(--elem-nonactive);
+  // }
+
+  // .hr2 {
+  // 	width: 304px;
+  // 	border: 1px solid var(--elem-nonactive);
+  // }
+
+  // .balance {
+  // 	margin: 20px 0 13px;
+  // 	gap: 5px;
+  // }
+
+  // .balance h2 {
+  // 	font-size: 45px;
+  // }
+
+  // .grow {
+  // 	gap: 5px;
+  // }
+
+  // .grow p {
+  // 	font-size: 22px;
+  // }
+
+  // .token-portfolio {
+  // 	width: 100%;
+  // 	height: 432px;
+  // 	margin-top: 30px;
+  // 	gap: 25px;
+  // }
+
+  // .token-left {
+  // 	gap: 15px;
+  // }
+
+  // .token-img {
+  // 	width: 60px;
+  // 	height: 60px;
+  // }
+
+  // .token-info p {
+  // 	font-size: 20px;
+  // }
+
+  // .token-right {
+  // 	gap: 3px;
+  // }
+
+  // .token-right h5 {
+  // 	font-size: 24px;
+  // }
+
+  // .token-price-change {
+  // 	gap: 5px;
+  // }
+
+  // .token-price-change p {
+  // 	font-size: 16px;
+  // }
 }
 
-@media screen and (min-width: 360px) and (max-width: 479px) {
-	@import '../../../styles/mouse-gradient-button';
+@media screen and (max-width: 1600px) {
+  .wallet-popup {
+    display: flex;
+    position: fixed;
+    width: 300px;
+    box-sizing: border-box;
+    z-index: 10;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+  }
 
-	.wallet-popup {
-		@include mouse-gradient-button(
-			$padding: 15px,
-			$height: auto,
-			$border-radius: 16px,
-			$background: rgba(var(--dark-bg), 0.1),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
+  .header p {
+    font-size: 14px;
+  }
 
-		display: flex;
-		position: fixed;
-		width: 90vw;
-		box-sizing: border-box;
-		z-index: 10;
-		overflow: hidden;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: stretch;
-		
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
-	
-	.header p {
-		font-size: 14px;
-	}
-	
-	.header p span {
-		font-size: 14px;
-	}
+  .header p span {
+    font-size: 14px;
+  }
 
-	.header button {
-		height: 13px;
-		width: 13px;
-	}
+  .header button {
+    height: 13px;
+    width: 13px;
+  }
 
-	.left-wallet {
-		gap: 10px;
-	}
-	
-	.right-wallet {
-		gap: 10px;
-	}
-	
-	.wallet {
-		margin-top: 15px;
-	}
+  .left-wallet {
+    gap: 10px;
+  }
 
-	.wallet p {
-		font-size: 14px;
-	}
+  .right-wallet {
+    gap: 10px;
+  }
 
-	.avatar {
-		width: 45px;
-		height: 45px;
-		border-radius: 10px;
-	}
+  .wallet {
+    margin-top: 15px;
+  }
 
-	.wallet-name {
-		gap: 4px;
-	}
+  .wallet p {
+    font-size: 14px;
+  }
 
-	.wallet-name h3 {
-		font-size: 16px;
-	}
+  .avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+  }
 
-	.wallet-address {
-		gap: 4px;
-	}
+  .wallet-name {
+    gap: 4px;
+  }
 
-	.wallet-address p {
-		font-size: 14px;
-	}
+  .wallet-name h3 {
+    font-size: 16px;
+  }
 
-	.copy {
-		width: 17px;
-		height: 17px;
-	}
+  .wallet-address {
+    gap: 4px;
+  }
 
-	.disconnect {
-		padding: 5px 12px;
-		border-radius: 8px;
-	}
+  .wallet-address p {
+    font-size: 14px;
+  }
 
-	.disconnect p {
-		font-size: 12px;
-	}
+  .copy {
+    width: 17px;
+    height: 17px;
+  }
 
-	.button-connect {
-		margin-top: 20px;
-		height: 45px;
-		border-radius: 12px;
-		font-size: 16px;
-	}
+  .disconnect {
+    padding: 5px 12px;
+    border-radius: 8px;
+  }
 
-	//TODO!!!
+  .disconnect p {
+    font-size: 12px;
+  }
 
-	// .devider {
-	// 	margin-top: 27px;
-	// }
+  .button-connect {
+    margin-top: 20px;
+    height: 45px;
+    border-radius: 12px;
+    font-size: 16px;
+  }
 
-	// .devider p {
-	// 	font-size: 18px;
-	// 	margin-right: 17px;
-	// }
+  //TODO!!!
 
-	// .hr1 {
-	// 	width: 332px;
-	// 	border: 1px solid var(--elem-nonactive);
-	// }
+  // .devider {
+  // 	margin-top: 27px;
+  // }
 
-	// .hr2 {
-	// 	width: 304px;
-	// 	border: 1px solid var(--elem-nonactive);
-	// }
+  // .devider p {
+  // 	font-size: 18px;
+  // 	margin-right: 17px;
+  // }
 
-	// .balance {
-	// 	margin: 20px 0 13px;
-	// 	gap: 5px;
-	// }
+  // .hr1 {
+  // 	width: 332px;
+  // 	border: 1px solid var(--elem-nonactive);
+  // }
 
-	// .balance h2 {
-	// 	font-size: 45px;
-	// }
+  // .hr2 {
+  // 	width: 304px;
+  // 	border: 1px solid var(--elem-nonactive);
+  // }
 
-	// .grow {
-	// 	gap: 5px;
-	// }
+  // .balance {
+  // 	margin: 20px 0 13px;
+  // 	gap: 5px;
+  // }
 
-	// .grow p {
-	// 	font-size: 22px;
-	// }
+  // .balance h2 {
+  // 	font-size: 45px;
+  // }
 
-	// .token-portfolio {
-	// 	width: 100%;
-	// 	height: 432px;
-	// 	margin-top: 30px;
-	// 	gap: 25px;
-	// }
-	
-	// .token-left {
-	// 	gap: 15px;
-	// }
+  // .grow {
+  // 	gap: 5px;
+  // }
 
-	// .token-img {
-	// 	width: 60px;
-	// 	height: 60px;
-	// }
-	
-	// .token-info p {
-	// 	font-size: 20px;
-	// }
+  // .grow p {
+  // 	font-size: 22px;
+  // }
 
-	// .token-right {
-	// 	gap: 3px;
-	// }
+  // .token-portfolio {
+  // 	width: 100%;
+  // 	height: 432px;
+  // 	margin-top: 30px;
+  // 	gap: 25px;
+  // }
 
-	// .token-right h5 {
-	// 	font-size: 24px;
-	// }
+  // .token-left {
+  // 	gap: 15px;
+  // }
 
-	// .token-price-change {
-	// 	gap: 5px;
-	// }
+  // .token-img {
+  // 	width: 60px;
+  // 	height: 60px;
+  // }
 
-	// .token-price-change p {
-	// 	font-size: 16px;
-	// }
+  // .token-info p {
+  // 	font-size: 20px;
+  // }
+
+  // .token-right {
+  // 	gap: 3px;
+  // }
+
+  // .token-right h5 {
+  // 	font-size: 24px;
+  // }
+
+  // .token-price-change {
+  // 	gap: 5px;
+  // }
+
+  // .token-price-change p {
+  // 	font-size: 16px;
+  // }
+}
+
+@media screen and (max-width: 1170px) {
+  .wallet-popup {
+    display: flex;
+    position: fixed;
+    width: 250px;
+    box-sizing: border-box;
+    z-index: 10;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .header p {
+    font-size: 12px;
+  }
+
+  .header p span {
+    font-size: 12px;
+  }
+
+  .header button {
+    height: 10px;
+    width: 10px;
+  }
+
+  .left-wallet {
+    gap: 10px;
+  }
+
+  .right-wallet {
+    gap: 10px;
+  }
+
+  .wallet {
+    margin-top: 15px;
+  }
+
+  .wallet p {
+    font-size: 12px;
+  }
+
+  .avatar {
+    width: 37px;
+    height: 37px;
+    border-radius: 10px;
+  }
+
+  .wallet-name {
+    gap: 3px;
+  }
+
+  .wallet-name h3 {
+    font-size: 13px;
+  }
+
+  .wallet-address {
+    gap: 3px;
+  }
+
+  .wallet-address p {
+    font-size: 10px;
+  }
+
+  .copy {
+    width: 12px;
+    height: 12px;
+  }
+
+  .disconnect {
+    padding: 3px 8px;
+    border-radius: 5px;
+  }
+
+  .disconnect p {
+    font-size: 8px;
+  }
+
+  .right-header button {
+    height: 10px;
+    width: 10px;
+  }
+
+  .button-connect {
+    margin-top: 20px;
+    height: 35px;
+    border-radius: 10px;
+    font-size: 12px;
+  }
+
+  //TODO!!!
+
+  // .devider {
+  // 	margin-top: 27px;
+  // }
+
+  // .devider p {
+  // 	font-size: 18px;
+  // 	margin-right: 17px;
+  // }
+
+  // .hr1 {
+  // 	width: 332px;
+  // 	border: 1px solid var(--elem-nonactive);
+  // }
+
+  // .hr2 {
+  // 	width: 304px;
+  // 	border: 1px solid var(--elem-nonactive);
+  // }
+
+  // .balance {
+  // 	margin: 20px 0 13px;
+  // 	gap: 5px;
+  // }
+
+  // .balance h2 {
+  // 	font-size: 45px;
+  // }
+
+  // .grow {
+  // 	gap: 5px;
+  // }
+
+  // .grow p {
+  // 	font-size: 22px;
+  // }
+
+  // .token-portfolio {
+  // 	width: 100%;
+  // 	height: 432px;
+  // 	margin-top: 30px;
+  // 	gap: 25px;
+  // }
+
+  // .token-left {
+  // 	gap: 15px;
+  // }
+
+  // .token-img {
+  // 	width: 60px;
+  // 	height: 60px;
+  // }
+
+  // .token-info p {
+  // 	font-size: 20px;
+  // }
+
+  // .token-right {
+  // 	gap: 3px;
+  // }
+
+  // .token-right h5 {
+  // 	font-size: 24px;
+  // }
+
+  // .token-price-change {
+  // 	gap: 5px;
+  // }
+
+  // .token-price-change p {
+  // 	font-size: 16px;
+  // }
+}
+
+@media screen and (max-width: 970px) {
+  :host {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+  }
+
+  .wallet-popup {
+    position: static;
+    margin-top: 140px;
+    width: 550px;
+  }
+
+  .header p {
+    font-size: 14px;
+  }
+
+  .header p span {
+    font-size: 14px;
+  }
+
+  .header button {
+    height: 13px;
+    width: 13px;
+  }
+
+  .left-wallet {
+    gap: 10px;
+  }
+
+  .right-wallet {
+    gap: 10px;
+  }
+
+  .wallet {
+    margin-top: 15px;
+  }
+
+  .wallet p {
+    font-size: 14px;
+  }
+
+  .avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+  }
+
+  .wallet-name {
+    gap: 4px;
+  }
+
+  .wallet-name h3 {
+    font-size: 16px;
+  }
+
+  .wallet-address {
+    gap: 4px;
+  }
+
+  .wallet-address p {
+    font-size: 14px;
+  }
+
+  .copy {
+    width: 17px;
+    height: 17px;
+  }
+
+  .disconnect {
+    padding: 5px 12px;
+    border-radius: 8px;
+  }
+
+  .disconnect p {
+    font-size: 12px;
+  }
+
+  .button-connect {
+    margin-top: 20px;
+    height: 45px;
+    border-radius: 12px;
+    font-size: 16px;
+  }
+
+  //TODO!!!
+
+  // .devider {
+  // 	margin-top: 27px;
+  // }
+
+  // .devider p {
+  // 	font-size: 18px;
+  // 	margin-right: 17px;
+  // }
+
+  // .hr1 {
+  // 	width: 332px;
+  // 	border: 1px solid var(--elem-nonactive);
+  // }
+
+  // .hr2 {
+  // 	width: 304px;
+  // 	border: 1px solid var(--elem-nonactive);
+  // }
+
+  // .balance {
+  // 	margin: 20px 0 13px;
+  // 	gap: 5px;
+  // }
+
+  // .balance h2 {
+  // 	font-size: 45px;
+  // }
+
+  // .grow {
+  // 	gap: 5px;
+  // }
+
+  // .grow p {
+  // 	font-size: 22px;
+  // }
+
+  // .token-portfolio {
+  // 	width: 100%;
+  // 	height: 432px;
+  // 	margin-top: 30px;
+  // 	gap: 25px;
+  // }
+
+  // .token-left {
+  // 	gap: 15px;
+  // }
+
+  // .token-img {
+  // 	width: 60px;
+  // 	height: 60px;
+  // }
+
+  // .token-info p {
+  // 	font-size: 20px;
+  // }
+
+  // .token-right {
+  // 	gap: 3px;
+  // }
+
+  // .token-right h5 {
+  // 	font-size: 24px;
+  // }
+
+  // .token-price-change {
+  // 	gap: 5px;
+  // }
+
+  // .token-price-change p {
+  // 	font-size: 16px;
+  // }
+}
+
+@media screen and (max-width: 768px) {
+  .wallet-popup {
+    width: 400px;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .wallet-popup {
+    display: flex;
+    position: fixed;
+    width: 320px;
+    box-sizing: border-box;
+    z-index: 10;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .header p {
+    font-size: 14px;
+  }
+
+  .header p span {
+    font-size: 14px;
+  }
+
+  .header button {
+    height: 13px;
+    width: 13px;
+  }
+
+  .left-wallet {
+    gap: 10px;
+  }
+
+  .right-wallet {
+    gap: 10px;
+  }
+
+  .wallet {
+    margin-top: 15px;
+  }
+
+  .wallet p {
+    font-size: 14px;
+  }
+
+  .avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+  }
+
+  .wallet-name {
+    gap: 4px;
+  }
+
+  .wallet-name h3 {
+    font-size: 16px;
+  }
+
+  .wallet-address {
+    gap: 4px;
+  }
+
+  .wallet-address p {
+    font-size: 14px;
+  }
+
+  .copy {
+    width: 17px;
+    height: 17px;
+  }
+
+  .disconnect {
+    padding: 5px 12px;
+    border-radius: 8px;
+  }
+
+  .disconnect p {
+    font-size: 12px;
+  }
+
+  .button-connect {
+    margin-top: 20px;
+    height: 45px;
+    border-radius: 12px;
+    font-size: 16px;
+  }
+
+  //TODO!!!
+
+  // .devider {
+  // 	margin-top: 27px;
+  // }
+
+  // .devider p {
+  // 	font-size: 18px;
+  // 	margin-right: 17px;
+  // }
+
+  // .hr1 {
+  // 	width: 332px;
+  // 	border: 1px solid var(--elem-nonactive);
+  // }
+
+  // .hr2 {
+  // 	width: 304px;
+  // 	border: 1px solid var(--elem-nonactive);
+  // }
+
+  // .balance {
+  // 	margin: 20px 0 13px;
+  // 	gap: 5px;
+  // }
+
+  // .balance h2 {
+  // 	font-size: 45px;
+  // }
+
+  // .grow {
+  // 	gap: 5px;
+  // }
+
+  // .grow p {
+  // 	font-size: 22px;
+  // }
+
+  // .token-portfolio {
+  // 	width: 100%;
+  // 	height: 432px;
+  // 	margin-top: 30px;
+  // 	gap: 25px;
+  // }
+
+  // .token-left {
+  // 	gap: 15px;
+  // }
+
+  // .token-img {
+  // 	width: 60px;
+  // 	height: 60px;
+  // }
+
+  // .token-info p {
+  // 	font-size: 20px;
+  // }
+
+  // .token-right {
+  // 	gap: 3px;
+  // }
+
+  // .token-right h5 {
+  // 	font-size: 24px;
+  // }
+
+  // .token-price-change {
+  // 	gap: 5px;
+  // }
+
+  // .token-price-change p {
+  // 	font-size: 16px;
+  // }
 }

@@ -1,46 +1,46 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Text:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
 :root {
-	--white: 255, 255, 255;
-	--black: 0, 0, 0;
+  --white: 255, 255, 255;
+  --black: 0, 0, 0;
 
-	--dark-bg: 47, 47, 47;
-  --elem-nonactive: #5D5D5D;
-	--dark-select: 27, 27, 27;
-	--btn-dark: #2F2F2F;
+  --dark-bg: 47, 47, 47;
+  --elem-nonactive: #5d5d5d;
+  --dark-select: 27, 27, 27;
+  --btn-dark: #2f2f2f;
 
-	--blue: 92, 148, 252;
-	--dark-blue: 30, 0, 255;
+  --blue: 92, 148, 252;
+  --dark-blue: 30, 0, 255;
 
-	--dark-violet: #39174F;
-	--violet: #BF57FF;
+  --dark-violet: #39174f;
+  --violet: #bf57ff;
 
-	--dark-pink: 255, 0, 221;
-	--pink: #FF00DD;
-	
-	--red: #FF7E7E;
-	--dark-red: 54, 24, 24;
-	--dark-red-hover: #723A3A;
+  --dark-pink: 255, 0, 221;
+  --pink: #ff00dd;
 
-	--green: 151, 255, 123;
-	--dark-green: 26, 36, 23;
+  --red: #ff7e7e;
+  --dark-red: 54, 24, 24;
+  --dark-red-hover: #723a3a;
 
-	--yellow: #FFBB00;
-	--dark-yellow: #4A3703;
-  
-	--gradient: linear-gradient(135deg, rgb(var(--blue)) 0%, rgb(var(--dark-blue)) 100%);
+  --green: 151, 255, 123;
+  --dark-green: 26, 36, 23;
 
-	--quest-uncommon: 120, 255, 174;
-	--quest-uncommon-bg: 43, 111, 34;
+  --yellow: #ffbb00;
+  --dark-yellow: #4a3703;
 
+  --gradient: linear-gradient(135deg, rgb(var(--blue)) 0%, rgb(var(--dark-blue)) 100%);
+
+  --quest-uncommon: 120, 255, 174;
+  --quest-uncommon-bg: 43, 111, 34;
 }
 
 .light-theme {
   --dark-select: 245, 245, 245;
   --elem-nonactive: rgba(0, 0, 0, 0.2);
   --green: #00cc00;
-  
+
   background-color: #ffffff;
   color: #000000;
 
@@ -48,13 +48,17 @@
     background-color: #ffffff;
   }
 
-  h1, p, a {
+  h1,
+  p,
+  a {
     color: #000000;
   }
 
-  .link, .button, .input-container {
+  .link,
+  .button,
+  .input-container {
     background: rgba(0, 0, 0, 0.05);
-    
+
     &::before {
       background: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
     }
@@ -69,7 +73,6 @@
 }
 
 html {
-  background-color: black;
   overflow: hidden;
 }
 
@@ -77,167 +80,124 @@ html.documentation-page {
   overflow: auto;
 }
 
-html.form-page::before,
-html.form-page::after {
-  display: none;
-}
-
-html::before,
-html::after {
-  content: '';
-  position: fixed;
-  width: 60vmax;
-  height: 60vmax;
-  border-radius: 50%;
-  opacity: 0.15;
-  filter: blur(60px);
-  z-index: -1;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-html::before {
-  background-image: var(--current-network-icon-1);
-  top: -20%;
-  left: -20%;
-  animation: moveGradient 35s linear infinite;
-  animation-delay: -5s;
-}
-
-html::after {
-  background-image: var(--current-network-icon-2);
-  bottom: -20%;
-  right: -20%;
-  animation: moveGradient 30s linear infinite;
-  animation-delay: 0s;
-}
-
-html.documentation-page::before,
-html.documentation-page::after {
-  display: none;
-}
-
-@keyframes moveGradient {
-  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-  25% { transform: translate(10%, 15%) rotate(90deg) scale(0.9); }
-  50% { transform: translate(-5%, -10%) rotate(180deg) scale(1.1); }
-  75% { transform: translate(-15%, 5%) rotate(270deg) scale(0.9); }
-  100% { transform: translate(0, 0) rotate(360deg) scale(1); }
-}
-
 @keyframes colorChange {
-  0% { filter: blur(60px) hue-rotate(0deg); }
-  50% { filter: blur(60px) hue-rotate(180deg); }
-  100% { filter: blur(60px) hue-rotate(360deg); }
+  0% {
+    filter: blur(60px) hue-rotate(0deg);
+  }
+  50% {
+    filter: blur(60px) hue-rotate(180deg);
+  }
+  100% {
+    filter: blur(60px) hue-rotate(360deg);
+  }
 }
 
 @keyframes popupFadeIn {
-  from { 
-    opacity: 0; 
+  from {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
-  to { 
-    opacity: 1; 
+  to {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
 }
 
 @keyframes popupFadeOut {
-  from { 
-    opacity: 1; 
+  from {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
-  to { 
-    opacity: 0; 
+  to {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
 }
 
 @keyframes popupFadeInSide {
-  from { 
-    opacity: 0; 
+  from {
+    opacity: 0;
     transform: translateY(-20px) scale(0.95);
   }
-  to { 
-    opacity: 1; 
+  to {
+    opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
 
 @keyframes popupFadeOutSide {
-  from { 
-    opacity: 1; 
+  from {
+    opacity: 1;
     transform: translateY(0) scale(1);
   }
-  to { 
-    opacity: 0; 
+  to {
+    opacity: 0;
     transform: translateY(-20px) scale(0.95);
   }
 }
 
 @keyframes popupFadeInCenter {
-  from { 
-    opacity: 0; 
+  from {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
-  to { 
-    opacity: 1; 
+  to {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
 }
 
 @keyframes popupFadeOutCenter {
-  from { 
-    opacity: 1; 
+  from {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
-  to { 
-    opacity: 0; 
+  to {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
 }
 
 @keyframes popupFadeInMobile {
-  from { 
-    opacity: 0; 
+  from {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
-  to { 
-    opacity: 1; 
+  to {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
 }
 
 @keyframes popupFadeOutMobile {
-  from { 
-    opacity: 1; 
+  from {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
-  to { 
-    opacity: 0; 
+  to {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
 }
 
 @keyframes popupFadeInMobileSide {
-  from { 
-    opacity: 0; 
+  from {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
-  to { 
-    opacity: 1; 
+  to {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
 }
 
 @keyframes popupFadeOutMobileSide {
-  from { 
-    opacity: 1; 
+  from {
+    opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
-  to { 
-    opacity: 0; 
+  to {
+    opacity: 0;
     transform: translate(-50%, -20px) scale(0.95);
   }
 }
@@ -318,23 +278,17 @@ app-settings-bridge {
   position: absolute;
   top: 155px;
   left: calc(50% + 320px);
-	z-index: 10;
+  z-index: 10;
 }
 
 .wallet-popup {
-	position: fixed;
+  position: fixed;
   top: 130px;
   right: 40px;
 }
 
-.blackhole-menu {
-	position: fixed;
-  top: 130px;
-  left: 40px;
-}
-
 .popup-network {
-	position: fixed;
+  position: fixed;
   top: 155px;
   right: 130px;
 }
@@ -343,128 +297,105 @@ app-settings-bridge {
 .network-change-from,
 .network-change-to,
 .token-change {
-	position: fixed;
+  position: fixed;
   top: 156px;
   left: 50%;
   transform: translate(-50%, 0%);
-	z-index: 100;
+  z-index: 100;
 }
 
 @media screen and (min-width: 1601px) and (max-width: 1920px) {
+  app-settings {
+    top: 108px;
+    left: calc(50% + 280px);
+  }
 
-	app-settings {
-		top: 108px;
-		left: calc(50% + 240px);
-	}
+  .wallet-popup {
+    top: 100px;
+    right: 30px;
+  }
 
-	.wallet-popup {
-		top: 100px;
-		right: 30px;
-	}
+  .popup-network {
+    top: 108px;
+    right: 55px;
+  }
 
-	.blackhole-menu {
-		top: 100px;
-		left: 30px;
-	}
-
-	.popup-network {
-		top: 108px;
-		right: 55px;
-	}
-
-	.bridge-tx,
-	.network-change-from,
-	.network-change-to,
-	.token-change {
-		top: 108px;
-	}
+  .bridge-tx,
+  .network-change-from,
+  .network-change-to,
+  .token-change {
+    top: 108px;
+  }
 }
 @media screen and (min-width: 1171px) and (max-width: 1600px) {
+  app-settings {
+    top: 88px;
+    left: calc(50% + 280px);
+  }
 
-	app-settings {
-		top: 88px;
-		left: calc(50% + 240px);
-	}
+  .wallet-popup {
+    top: 80px;
+    right: 20px;
+  }
 
-	.wallet-popup {
-		top: 80px;
-		right: 20px;
-	}
+  .popup-network {
+    top: 88px;
+    right: 55px;
+  }
 
-	.blackhole-menu {
-		top: 80px;
-		left: 20px;
-	}
-
-	.popup-network {
-		top: 88px;
-		right: 55px;
-	}
-
-	.bridge-tx,
-	.network-change-from,
-	.network-change-to,
-	.token-change {
-		top: 88px;
-	}
+  .bridge-tx,
+  .network-change-from,
+  .network-change-to,
+  .token-change {
+    top: 88px;
+  }
 }
 @media screen and (min-width: 971px) and (max-width: 1170px) {
+  app-settings {
+    top: 75px;
+    left: calc(50% + 175px);
+  }
 
-	app-settings {
-		top: 75px;
-		left: calc(50% + 175px);
-	}
+  .wallet-popup {
+    top: 65px;
+    right: 20px;
+  }
 
-	.wallet-popup {
-		top: 65px;
-		right: 20px;
-	}
+  .popup-network {
+    top: 75px;
+    right: 36px;
+  }
 
-	.blackhole-menu {
-		top: 65px;
-		left: 20px;
-	}
-
-	.popup-network {
-		top: 75px;
-		right: 36px;
-	}
-
-	.bridge-tx,
-	.network-change-from,
-	.network-change-to,
-	.token-change {
-		top: 75px;
-	}
+  .bridge-tx,
+  .network-change-from,
+  .network-change-to,
+  .token-change {
+    top: 75px;
+  }
 }
 @media screen and (min-width: 768px) and (max-width: 970px) {
   app-settings {
     top: 200px;
-		left: calc(50% - 130px);
-		z-index: 1;
-	}
+    left: calc(50% - 130px);
+    z-index: 1;
+  }
 
-	.wallet-popup {
-		top: 80px;
-		right: 20px;
-	}
+  .wallet-popup {
+    top: 80px;
+    right: 20px;
+  }
 
-	.blackhole-menu {
-		top: 80px;
-		left: 20px;
-	}
+  .popup-network {
+    top: 88px;
+    right: 55px;
+  }
 
-	.popup-network {
-		top: 88px;
-		right: 55px;
-	}
-
-	.bridge-tx,
-	.network-change-from,
-	.network-change-to,
-	.token-change {
-		top: 88px;
-	}
+  .bridge-tx,
+  .network-change-from,
+  .network-change-to,
+  .token-change {
+    top: 88px;
+  }
 }
 @media screen and (min-width: 480px) and (max-width: 767px) {
   app-settings {
@@ -473,27 +404,27 @@ app-settings-bridge {
     z-index: 1;
   }
 
-	.wallet-popup {
-		top: 90px;
-		right: 20px;
-	}
+  .wallet-popup {
+    top: 90px;
+    right: 20px;
+  }
 
-	.blackhole-menu {
-		top: 80px;
-		left: 20px;
-	}
+  .blackhole-menu {
+    top: 80px;
+    left: 20px;
+  }
 
-	.popup-network {
-		top: 138px;
-		right: 55px;
-	}
+  .popup-network {
+    top: 138px;
+    right: 55px;
+  }
 
-	.bridge-tx,
-	.network-change-from,
-	.network-change-to,
-	.token-change {
-		top: 118px;
-	}
+  .bridge-tx,
+  .network-change-from,
+  .network-change-to,
+  .token-change {
+    top: 118px;
+  }
 }
 
 @media screen and (min-width: 360px) and (max-width: 479px) {
@@ -507,11 +438,10 @@ app-settings-bridge {
   .wallet-popup,
   .connect-wallet,
   .popup-network,
-  .blackhole-menu,
   .bridge-tx,
   .network-change-from,
   .network-change-to,
-  .token-change{
+  .token-change {
     position: fixed;
     top: 108px;
     left: 50%;
@@ -519,10 +449,10 @@ app-settings-bridge {
     z-index: 1;
   }
 
-	.ecosystem-change {
-		left: 45%;
-	}
-  
+  .ecosystem-change {
+    left: 45%;
+  }
+
   /* Для попапов, которые обычно используют popupFadeInSide */
   .popup-opening .connect-wallet,
   .popup-opening .wallet-popup,
@@ -535,7 +465,7 @@ app-settings-bridge {
   .popup-opening .popup-menu {
     animation: popupFadeInMobileSide 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
-  
+
   .popup-closing .connect-wallet,
   .popup-closing .wallet-popup,
   .popup-closing .popup-network,
@@ -547,7 +477,7 @@ app-settings-bridge {
   .popup-closing .popup-menu {
     animation: popupFadeOutMobileSide 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
-  
+
   /* Для попапов, которые обычно используют popupFadeIn */
   .popup-opening .bridge-tx,
   .popup-opening .network-change-from,
@@ -557,7 +487,7 @@ app-settings-bridge {
   .popup-opening app-token-change-buy .token-change {
     animation: popupFadeInMobile 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
-  
+
   .popup-closing .bridge-tx,
   .popup-closing .network-change-from,
   .popup-closing .network-change-to,

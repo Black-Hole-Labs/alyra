@@ -3,14 +3,20 @@
     <div class="pending-icon"></div>
     <div class="info">
       <h3>Claiming Rewards...</h3>
-      <p>Processing claim for <strong>{{ amount | number:'1.0-6' }}$</strong> in rewards.</p>
+      <p>
+        Processing claim for <strong>{{ amount | number: '1.0-6' }}$</strong> in rewards.
+      </p>
       <div *ngIf="transactionHash" class="transaction-info">
         <p>Transaction Hash:</p>
-        <a [href]="'https://sepolia.etherscan.io/tx/' + transactionHash" target="_blank" class="tx-link">
-          {{transactionHash}}
+        <a
+          [href]="'https://sepolia.etherscan.io/tx/' + transactionHash"
+          target="_blank"
+          class="tx-link"
+        >
+          {{ transactionHash }}
         </a>
       </div>
     </div>
   </div>
   <button class="close-button" (click)="startClosing()">×</button>
-</div> 
+</div>

@@ -1,9 +1,9 @@
-import { Component, Output, EventEmitter, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PopupService } from '../../../services/popup.service';
-import { BlockchainStateService, Ecosystem } from '../../../services/blockchain-state.service';
-import { MouseGradientService } from '../../../services/mouse-gradient.service';
+import { Component, effect, EventEmitter, Output, signal } from '@angular/core';
+
 import { ProviderType, Wallets } from '../../../models/wallet-provider.interface';
+import { BlockchainStateService, Ecosystem } from '../../../services/blockchain-state.service';
+import { PopupService } from '../../../services/popup.service';
 
 interface Token {
   name: string;
@@ -19,10 +19,7 @@ interface Token {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './wallet.component.html',
-  styleUrls: [
-		'./wallet.component.scss',
-		'./wallet.component.adaptives.scss'
-	],
+  styleUrls: ['./wallet.component.scss', './wallet.component.adaptives.scss'],
 })
 export class WalletComponent {
   @Output() close = new EventEmitter<void>();
@@ -31,7 +28,7 @@ export class WalletComponent {
   walletIcon = signal<string>('/img/wallet-icns/profile.png');
   private providers: Wallets[] = [];
   copiedAddresses = signal<Set<string>>(new Set<string>());
-  
+
   tokens: Token[] = [
     {
       name: 'Ethereum',
@@ -39,7 +36,7 @@ export class WalletComponent {
       usdBalance: 450.45,
       usdChange: '-$1.4',
       percentChange: '(-0.34%)',
-      image: '/img/trade/eth.png'
+      image: '/img/trade/eth.png',
     },
     {
       name: 'Arbitrum',
@@ -47,14 +44,13 @@ export class WalletComponent {
       usdBalance: 1130.12,
       usdChange: '-$20.1',
       percentChange: '(-1.28%)',
-      image: '/img/trade/arbitrum.png'
+      image: '/img/trade/arbitrum.png',
     },
   ];
 
   constructor(
-    public blockchainStateService: BlockchainStateService, 
+    public blockchainStateService: BlockchainStateService,
     private popupService: PopupService,
-    private mouseGradientService: MouseGradientService
   ) {
     this.walletName.set(this.blockchainStateService.getCurrentWalletAddress()!);
     this.loadProviders();
@@ -87,7 +83,7 @@ export class WalletComponent {
 
   getIconUrl(type: string): string {
     const providerId = this.blockchainStateService.getCurrentProviderIdByType(type as Ecosystem);
-    const provider = this.providers.find(p => p.id === providerId);
+    const provider = this.providers.find((p) => p.id === providerId);
     return provider?.iconUrl || '/img/wallet-icns/profile.png';
   }
 
@@ -148,7 +144,7 @@ export class WalletComponent {
       const percent = parseFloat(token.percentChange.replace('(', '').replace('%)', ''));
       return sum + percent;
     }, 0);
-    
+
     return total / this.tokens.length;
   }
 
@@ -167,18 +163,14 @@ export class WalletComponent {
 
   // onDisconnect(): void {
   //   this.blockchainStateService.disconnect();
-  //   this.popupService.closeAllPopups(); 
+  //   this.popupService.closeAllPopups();
   //   this.disconnect.emit();
   // }
 
   formatAddress(addr: string): string {
-    return addr.length > 20 ? addr.slice(0,6) + '...' + addr.slice(-4) : addr;
+    return addr.length > 20 ? addr.slice(0, 6) + '...' + addr.slice(-4) : addr;
   }
 
-
-  onWalletMouseMove(event: MouseEvent): void {
-    this.mouseGradientService.onMouseMove(event);
-  }
   async loadProviders() {
     this.providers = await this.blockchainStateService.loadProviders();
     return this.updateWalletIcon();

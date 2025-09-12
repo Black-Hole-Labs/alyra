@@ -1,864 +1,753 @@
-@media screen and (min-width: 1601px) and (max-width: 1920px) {
+@media screen and (max-width: 1920px) {
+  .token-change {
+    position: fixed;
+    width: 520px;
+    box-sizing: border-box;
+    z-index: 10;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+  }
 
-	@import '../../../styles/mouse-gradient-button';
-	.token-change {
-		@include mouse-gradient-button(
-			$padding: 20px 20px 0 20px,
-			$height: 625px,
-			$border-radius: 22px,
-			$background: rgba(var(--dark-bg), 0.1),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
+  h3 {
+    font-size: 20px;
+  }
 
-		position: fixed;
-		width: 450px;
-		box-sizing: border-box;
-		z-index: 10;
-		overflow: hidden;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: stretch;
-		
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
-	
-	h3 {
-		font-size: 20px;
-	}
-	
-	button {
-		height: 20px;
-		width: 20px;
-	}
+  button {
+    height: 20px;
+    width: 20px;
+  }
 
-	.network-select {
-		margin-top: 20px;
-	}
-	
-	.network {
-		width: 50px;
-		height: 50px;
-		border-radius: 12px;
-	}
-	
-	.network-icon {
-		width: 40px;
-		height: 40px;
-	}
+  .network-select {
+    margin-top: 20px;
+  }
 
-	.more {
-		width: 50px;
-		height: 50px;
-		border-radius: 12px;
-	}
+  .network {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+  }
 
-	.more p {
-		font-size: 18px;
-	}
-	
-	.search {
-		margin-top: 15px;
-		width: 410px;
-		height: 45px;
-		border-radius: 13px;
-		padding: 0 15px;
-	}
-	
-	input {
-		width: 357px;
-		height: 18px;
-		font-size: 14px;
-	}
-	
-	input::placeholder {
-		font-size: 14px;
-	}
-	
-	.search-button {
-		height: 18px;
-		width: 18px;
-	}
-	
-	.desc {
-		margin-top: 15px;
-	}
-	
-	.desc > p {
-		font-size: 12px;
-	}
-	
-	.list {
-		left: 10px;
-		width: 430px;
-		height: 400px;
-		border-radius: 12px;
-	}
-	
-	.token {
-		width: 430px;
-		height: 65px;
-		padding: 10px 15px;
-		border-radius: 12px;
-	}
-	
-	.image {
-		height: 45px;
-		width: 45px;
-		margin-right: 14px;
-	}
-	
-	.token .image .token-image {
-		height: 45px;
-		width: 45px;
-	}
-	
-	.token .image .network-image {
-		height: 18px;
-		width: 18px;
-	}
-	
-	.token .name h6 {
-		font-size: 14px;
-	}
-	
-	.token .name p {
-		margin-top: 0px;
-		font-size: 14px;
-	}
+  .network-icon {
+    width: 40px;
+    height: 40px;
+  }
 
-	.right {
-		gap: 8px;
-	}
-	
-	.token-balance p{
-		font-size: 14px;
-	}
-	
-	.contract {
-		gap: 8px;
-	}
+  .more {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+  }
 
-	.contract .image-copy {
-		height: 14px;
-		width: 14px;
-	}
-	
-	.token-change .contract p {
-		font-size: 12px;
-	}
-	
-	.contract .image-link {
-		height: 14px;
-		width: 5px;
-		margin-left: 8px;
-	}
-	
-	.verified-icon {
-		width: 18px;
-		height: 18px;
-	}
-	
-	.symbol-container {
-		gap: 5px;
-	}
-}
-@media screen and (min-width: 1171px) and (max-width: 1600px) {
-	@import '../../../styles/mouse-gradient-button';
-	.token-change {
-		@include mouse-gradient-button(
-			$padding: 20px 20px 0 20px,
-			$height: 625px,
-			$border-radius: 22px,
-			$background: rgba(var(--dark-bg), 0.1),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
+  .more p {
+    font-size: 18px;
+  }
 
-		position: fixed;
-		width: 450px;
-		box-sizing: border-box;
-		z-index: 10;
-		overflow: hidden;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: stretch;
-		
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
-	
-	h3 {
-		font-size: 20px;
-	}
-	
-	button {
-		height: 20px;
-		width: 20px;
-	}
+  .search {
+    margin-top: 15px;
+    height: 45px;
+    border-radius: 13px;
+    padding: 0 15px;
+  }
 
-	.network-select {
-		margin-top: 20px;
-	}
-	
-	.network {
-		width: 50px;
-		height: 50px;
-		border-radius: 12px;
-	}
-	
-	.network-icon {
-		width: 40px;
-		height: 40px;
-	}
+  input {
+    width: 357px;
+    height: 18px;
+    font-size: 14px;
+  }
 
-	.more {
-		width: 50px;
-		height: 50px;
-		border-radius: 12px;
-	}
+  input::placeholder {
+    font-size: 14px;
+  }
 
-	.more p {
-		font-size: 18px;
-	}
-	
-	.search {
-		margin-top: 15px;
-		width: 410px;
-		height: 45px;
-		border-radius: 13px;
-		padding: 0 15px;
-	}
-	
-	input {
-		width: 357px;
-		height: 18px;
-		font-size: 14px;
-	}
-	
-	input::placeholder {
-		font-size: 14px;
-	}
-	
-	.search-button {
-		height: 18px;
-		width: 18px;
-	}
-	
-	.desc {
-		margin-top: 15px;
-	}
-	
-	.desc > p {
-		font-size: 12px;
-	}
-	
-	.list {
-		left: 10px;
-		width: 430px;
-		height: 400px;
-		border-radius: 12px;
-	}
-	
-	.token {
-		width: 430px;
-		height: 65px;
-		padding: 10px 15px;
-		border-radius: 12px;
-	}
-	
-	.image {
-		height: 45px;
-		width: 45px;
-		margin-right: 14px;
-	}
-	
-	.token .image .token-image {
-		height: 45px;
-		width: 45px;
-	}
-	
-	.token .image .network-image {
-		height: 18px;
-		width: 18px;
-	}
-	
-	.token .name h6 {
-		font-size: 14px;
-	}
-	
-	.token .name p {
-		margin-top: 0px;
-		font-size: 14px;
-	}
+  .search-button {
+    height: 18px;
+    width: 18px;
+  }
 
-	.right {
-		gap: 8px;
-	}
-	
-	.token-balance p{
-		font-size: 14px;
-	}
-	
-	.contract {
-		gap: 8px;
-	}
+  .desc {
+    margin-top: 15px;
+  }
 
-	.contract .image-copy {
-		height: 14px;
-		width: 14px;
-	}
-	
-	.token-change .contract p {
-		font-size: 12px;
-	}
-	
-	.contract .image-link {
-		height: 14px;
-		width: 5px;
-		margin-left: 8px;
-	}
-	
-	.verified-icon {
-		width: 18px;
-		height: 18px;
-	}
-	
-	.symbol-container {
-		gap: 5px;
-	}
-}
-@media screen and (min-width: 971px) and (max-width: 1170px) {
-	@import '../../../styles/mouse-gradient-button';
-	.token-change {
-		@include mouse-gradient-button(
-			$padding: 15px,
-			$height: 470px,
-			$border-radius: 15px,
-			$background: rgba(var(--dark-bg), 0.1),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
+  .desc > p {
+    font-size: 12px;
+  }
 
-		position: fixed;
-		width: 330px;
-		box-sizing: border-box;
-		z-index: 10;
-		overflow: hidden;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: stretch;
-		
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
-	
-	h3 {
-		font-size: 13px;
-	}
-	
-	button {
-		height: 15px;
-		width: 15px;
-	}
+  .list {
+    left: 10px;
+    height: 400px;
+    border-radius: 12px;
+  }
 
-	.network-select {
-		margin-top: 10px;
-	}
-	
-	.network {
-		width: 35px;
-		height: 35px;
-		border-radius: 8px;
-	}
-	
-	.network-icon {
-		width: 30px;
-		height: 30px;
-	}
+  .token {
+    height: 65px;
+    padding: 10px 15px;
+    border-radius: 12px;
+  }
 
-	.more {
-		width: 35px;
-		height: 35px;
-		border-radius: 8px;
-	}
+  .image {
+    height: 45px;
+    width: 45px;
+    margin-right: 14px;
+  }
 
-	.more p {
-		font-size: 14px;
-	}
-	
-	.search {
-		margin-top: 10px;
-		width: 300px;
-		height: 33px;
-		border-radius: 10px;
-		padding: 0 11px;
-	}
-	
-	input {
-		width: 261px;
-		height: 13px;
-		font-size: 10px;
-	}
-	
-	input::placeholder {
-		font-size: 10px;
-	}
-	
-	.search-button {
-		height: 13px;
-		width: 13px;
-	}
-	
-	.desc {
-		margin-top: 10px;
-	}
-	
-	.desc > p {
-		font-size: 8px;
-	}
-	
-	.list {
-		left: 5px;
-		width: 320px;
-		height: 315px;
-		border-radius: 8px;
-	}
-	.token {
-		width: 320px;
-		height: 47px;
-		padding: 7px 10px;
-		border-radius: 8px;
-	}
-	
-	.image {
-		height: 33px;
-		width: 33px;
-		margin-right: 10px;
-	}
-	
-	.token .image .token-image {
-		height: 33px;
-		width: 33px;
-	}
-	
-	.token .image .network-image {
-		height: 13px;
-		width: 13px;
-	}
-	
-	.token .name h6 {
-		font-size: 10px;
-	}
-	
-	.token .name p {
-		margin-top: 0px;
-		font-size: 10px;
-	}
+  .token .image .token-image {
+    height: 45px;
+    width: 45px;
+  }
 
-	.right {
-		gap: 6px;
-	}
-	
-	.token-balance p{
-		font-size: 10px;
-	}
-	
-	.contract {
-		gap: 6px;
-	}
+  .token .image .network-image {
+    height: 18px;
+    width: 18px;
+  }
 
-	.contract .image-copy {
-		height: 10px;
-		width: 10px;
-	}
-	
-	.token-change .contract p {
-		font-size: 8px;
-	}
-	
-	.contract .image-link {
-		height: 10px;
-		width: 4px;
-		margin-left: 6px;
-	}
-	
-	.verified-icon {
-		width: 13px;
-		height: 13px;
-	}
-	
-	.symbol-container {
-		gap: 4px;
-	}
-}
-@media screen and (min-width: 480px) and (max-width: 970px) {
-	@import '../../../styles/mouse-gradient-button';
-	.token-change {
-		@include mouse-gradient-button(
-			$padding: 20px 20px 0 20px,
-			$height: 625px,
-			$border-radius: 22px,
-			$background: rgba(var(--dark-bg), 0.1),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
+  .token .name h6 {
+    font-size: 14px;
+  }
 
-		position: fixed;
-		width: 450px;
-		box-sizing: border-box;
-		z-index: 10;
-		overflow: hidden;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: stretch;
-		
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
-	
-	h3 {
-		font-size: 20px;
-	}
-	
-	button {
-		height: 20px;
-		width: 20px;
-	}
+  .token .name p {
+    margin-top: 0px;
+    font-size: 14px;
+  }
 
-	.network-select {
-		margin-top: 15px;
-	}
-	
-	.network {
-		width: 50px;
-		height: 50px;
-		border-radius: 12px;
-	}
-	
-	.network-icon {
-		width: 40px;
-		height: 40px;
-	}
+  .right {
+    gap: 8px;
+  }
 
-	.more {
-		width: 50px;
-		height: 50px;
-		border-radius: 12px;
-	}
+  .token-balance p {
+    font-size: 14px;
+  }
 
-	.more p {
-		font-size: 18px;
-	}
-	
-	.search {
-		margin-top: 15px;
-		width: 410px;
-		height: 45px;
-		border-radius: 13px;
-		padding: 0 15px;
-	}
-	
-	input {
-		width: 357px;
-		height: 18px;
-		font-size: 14px;
-	}
-	
-	input::placeholder {
-		font-size: 14px;
-	}
-	
-	.search-button {
-		height: 18px;
-		width: 18px;
-	}
-	
-	.desc {
-		margin-top: 15px;
-	}
-	
-	.desc > p {
-		font-size: 12px;
-	}
-	
-	.list {
-		left: 10px;
-		width: 430px;
-		height: 400px;
-		border-radius: 12px;
-	}
-	.token {
-		width: 430px;
-		height: 65px;
-		padding: 10px 15px;
-		border-radius: 12px;
-	}
-	
-	.image {
-		height: 45px;
-		width: 45px;
-		margin-right: 14px;
-	}
-	
-	.token .image .token-image {
-		height: 45px;
-		width: 45px;
-	}
-	
-	.token .image .network-image {
-		height: 18px;
-		width: 18px;
-	}
-	
-	.token .name h6 {
-		font-size: 14px;
-	}
-	
-	.token .name p {
-		margin-top: 0px;
-		font-size: 14px;
-	}
+  .contract {
+    gap: 8px;
+  }
 
-	.right {
-		gap: 8px;
-	}
-	
-	.token-balance p{
-		font-size: 14px;
-	}
-	
-	.contract {
-		gap: 8px;
-	}
+  .contract .image-copy {
+    height: 14px;
+    width: 14px;
+  }
 
-	.contract .image-copy {
-		height: 14px;
-		width: 14px;
-	}
-	
-	.token-change .contract p {
-		font-size: 12px;
-	}
-	
-	.contract .image-link {
-		height: 14px;
-		width: 5px;
-		margin-left: 8px;
-	}
-	
-	.verified-icon {
-		width: 18px;
-		height: 18px;
-	}
-	
-	.symbol-container {
-		gap: 5px;
-	}
+  .token-change .contract p {
+    font-size: 12px;
+  }
+
+  .contract .image-link {
+    height: 14px;
+    width: 5px;
+    margin-left: 8px;
+  }
+
+  .verified-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .symbol-container {
+    gap: 5px;
+  }
 }
 
-@media screen and (min-width: 360px) and (max-width: 479px) {
-	@import '../../../styles/mouse-gradient-button';
-	.token-change {
-		@include mouse-gradient-button(
-			$padding: 15px,
-			$height: 80vh,
-			$border-radius: 16px,
-			$background: rgba(var(--dark-bg), 0.1),
-			$backdrop-blur: 25px,
-			$include-responsive: false
-		);
+@media screen and (max-width: 1600px) {
+  .token-change {
+    position: fixed;
+    width: 400px;
+    box-sizing: border-box;
+    z-index: 10;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+  }
 
-		position: fixed;
-		width: 90vw;
-		box-sizing: border-box;
-		z-index: 10;
-		overflow: hidden;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: stretch;
-		
-		&:hover {
-			transform: none;
-			
-			background: radial-gradient(
-				circle at var(--gradient-x, 50%) var(--gradient-y, 50%), 
-				rgba(255, 255, 255, 0.001) 0%, 
-				rgba(255, 255, 255, 0.0005) 50%, 
-				transparent 100%
-			);
-		}
-	}
-	
-	h3 {
-		font-size: 18px;
-	}
-	
-	button {
-		height: 20px;
-		width: 20px;
-	}
+  h3 {
+    font-size: 20px;
+  }
 
-	.network-select {
-		margin-top: 15px;
-	}
-	
-	.network {
-		width: 40px;
-		height: 40px;
-		border-radius: 10px;
-	}
-	
-	.network-icon {
-		width: 35px;
-		height: 35px;
-	}
+  button {
+    height: 20px;
+    width: 20px;
+  }
 
-	.more {
-		width: 40px;
-		height: 40px;
-		border-radius: 10px;
-	}
+  .network-select {
+    margin-top: 20px;
+  }
 
-	.more p {
-		font-size: 14px;
-	}
-	
-	.search {
-		margin-top: 15px;
-		width: 100%;
-		height: 45px;
-		border-radius: 13px;
-		padding: 0 15px;
-	}
-	
-	input {
-		width: 100%;
-		height: 18px;
-		font-size: 14px;
-	}
-	
-	input::placeholder {
-		font-size: 14px;
-	}
-	
-	.search-button {
-		height: 18px;
-		width: 18px;
-	}
-	
-	.desc {
-		margin-top: 15px;
-	}
-	
-	.desc > p {
-		font-size: 12px;
-	}
-	
-	.list {
-		left: 5px;
-		width: 100%;
-		height: calc(100% - 200px);
-		border-radius: 12px;
-	}
-	.token {
-		width: 95%;
-		height: 65px;
-		padding: 10px 15px;
-		border-radius: 12px;
-	}
-	
-	.image {
-		height: 45px;
-		width: 45px;
-		margin-right: 14px;
-	}
-	
-	.token .image .token-image {
-		height: 45px;
-		width: 45px;
-	}
-	
-	.token .image .network-image {
-		height: 18px;
-		width: 18px;
-	}
-	
-	.token .name h6 {
-		font-size: 14px;
-	}
-	
-	.token .name p {
-		margin-top: 0px;
-		font-size: 14px;
-	}
-	
-	.right {
-		gap: 8px;
-	}
-	
-	.token-balance p{
-		font-size: 14px;
-	}
-	
-	.contract {
-		gap: 8px;
-	}
+  .network {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+  }
 
-	.contract .image-copy {
-		height: 14px;
-		width: 14px;
-	}
-	
-	.token-change .contract p {
-		font-size: 12px;
-	}
-	
-	.contract .image-link {
-		height: 14px;
-		width: 5px;
-		margin-left: 8px;
-	}
-	
-	.verified-icon {
-		width: 18px;
-		height: 18px;
-	}
-	
-	.symbol-container {
-		gap: 5px;
-	}
+  .network-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .more {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+  }
+
+  .more p {
+    font-size: 18px;
+  }
+
+  .search {
+    margin-top: 15px;
+    height: 45px;
+    border-radius: 13px;
+    padding: 0 15px;
+  }
+
+  input {
+    width: 357px;
+    height: 18px;
+    font-size: 14px;
+  }
+
+  input::placeholder {
+    font-size: 14px;
+  }
+
+  .search-button {
+    height: 18px;
+    width: 18px;
+  }
+
+  .desc {
+    margin-top: 15px;
+  }
+
+  .desc > p {
+    font-size: 12px;
+  }
+
+  .list {
+    left: 10px;
+    height: 400px;
+    border-radius: 12px;
+  }
+
+  .token {
+    height: 65px;
+    padding: 10px 15px;
+    border-radius: 12px;
+  }
+
+  .image {
+    height: 45px;
+    width: 45px;
+    margin-right: 14px;
+  }
+
+  .token .image .token-image {
+    height: 45px;
+    width: 45px;
+  }
+
+  .token .image .network-image {
+    height: 18px;
+    width: 18px;
+  }
+
+  .token .name h6 {
+    font-size: 14px;
+  }
+
+  .token .name p {
+    margin-top: 0px;
+    font-size: 14px;
+  }
+
+  .right {
+    gap: 8px;
+  }
+
+  .token-balance p {
+    font-size: 14px;
+  }
+
+  .contract {
+    gap: 8px;
+  }
+
+  .contract .image-copy {
+    height: 14px;
+    width: 14px;
+  }
+
+  .token-change .contract p {
+    font-size: 12px;
+  }
+
+  .contract .image-link {
+    height: 14px;
+    width: 5px;
+    margin-left: 8px;
+  }
+
+  .verified-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .symbol-container {
+    gap: 5px;
+  }
+}
+
+@media screen and (max-width: 1170px) {
+  .token-change {
+    position: fixed;
+    width: 350px;
+    box-sizing: border-box;
+    z-index: 10;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  h3 {
+    font-size: 13px;
+  }
+
+  button {
+    height: 15px;
+    width: 15px;
+  }
+
+  .network-select {
+    margin-top: 10px;
+  }
+
+  .network {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+  }
+
+  .network-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .more {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+  }
+
+  .more p {
+    font-size: 14px;
+  }
+
+  .search {
+    margin-top: 10px;
+    height: 33px;
+    border-radius: 10px;
+    padding: 0 11px;
+  }
+
+  input {
+    width: 261px;
+    height: 13px;
+    font-size: 10px;
+  }
+
+  input::placeholder {
+    font-size: 10px;
+  }
+
+  .search-button {
+    height: 13px;
+    width: 13px;
+  }
+
+  .desc {
+    margin-top: 10px;
+  }
+
+  .desc > p {
+    font-size: 8px;
+  }
+
+  .list {
+    left: 5px;
+    height: 315px;
+    border-radius: 8px;
+  }
+  .token {
+    height: 47px;
+    padding: 7px 10px;
+    border-radius: 8px;
+  }
+
+  .image {
+    height: 33px;
+    width: 33px;
+    margin-right: 10px;
+  }
+
+  .token .image .token-image {
+    height: 33px;
+    width: 33px;
+  }
+
+  .token .image .network-image {
+    height: 13px;
+    width: 13px;
+  }
+
+  .token .name h6 {
+    font-size: 10px;
+  }
+
+  .token .name p {
+    margin-top: 0px;
+    font-size: 10px;
+  }
+
+  .right {
+    gap: 6px;
+  }
+
+  .token-balance p {
+    font-size: 10px;
+  }
+
+  .contract {
+    gap: 6px;
+  }
+
+  .contract .image-copy {
+    height: 10px;
+    width: 10px;
+  }
+
+  .token-change .contract p {
+    font-size: 8px;
+  }
+
+  .contract .image-link {
+    height: 10px;
+    width: 4px;
+    margin-left: 6px;
+  }
+
+  .verified-icon {
+    width: 13px;
+    height: 13px;
+  }
+
+  .symbol-container {
+    gap: 4px;
+  }
+}
+
+@media screen and (max-width: 970px) {
+  .token-change {
+    position: fixed;
+    width: 550px;
+    box-sizing: border-box;
+    z-index: 10;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  button {
+    height: 20px;
+    width: 20px;
+  }
+
+  .network-select {
+    margin-top: 15px;
+  }
+
+  .network {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+  }
+
+  .network-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .more {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+  }
+
+  .more p {
+    font-size: 18px;
+  }
+
+  .search {
+    margin-top: 15px;
+    height: 45px;
+    border-radius: 13px;
+    padding: 0 15px;
+  }
+
+  input {
+    width: 357px;
+    height: 18px;
+    font-size: 14px;
+  }
+
+  input::placeholder {
+    font-size: 14px;
+  }
+
+  .search-button {
+    height: 18px;
+    width: 18px;
+  }
+
+  .desc {
+    margin-top: 15px;
+  }
+
+  .desc > p {
+    font-size: 12px;
+  }
+
+  .list {
+    left: 10px;
+    height: 400px;
+    border-radius: 12px;
+  }
+  .token {
+    height: 65px;
+    padding: 10px 15px;
+    border-radius: 12px;
+  }
+
+  .image {
+    height: 45px;
+    width: 45px;
+    margin-right: 14px;
+  }
+
+  .token .image .token-image {
+    height: 45px;
+    width: 45px;
+  }
+
+  .token .image .network-image {
+    height: 18px;
+    width: 18px;
+  }
+
+  .token .name h6 {
+    font-size: 14px;
+  }
+
+  .token .name p {
+    margin-top: 0px;
+    font-size: 14px;
+  }
+
+  .right {
+    gap: 8px;
+  }
+
+  .token-balance p {
+    font-size: 14px;
+  }
+
+  .contract {
+    gap: 8px;
+  }
+
+  .contract .image-copy {
+    height: 14px;
+    width: 14px;
+  }
+
+  .token-change .contract p {
+    font-size: 12px;
+  }
+
+  .contract .image-link {
+    height: 14px;
+    width: 5px;
+    margin-left: 8px;
+  }
+
+  .verified-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .symbol-container {
+    gap: 5px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .token-change {
+    width: 400px;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .token-change {
+    position: fixed;
+    width: 90vw;
+    box-sizing: border-box;
+    z-index: 10;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  h3 {
+    font-size: 18px;
+  }
+
+  button {
+    height: 20px;
+    width: 20px;
+  }
+
+  .network-select {
+    margin-top: 15px;
+  }
+
+  .network {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .network-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .more {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .more p {
+    font-size: 14px;
+  }
+
+  .search {
+    margin-top: 15px;
+    height: 45px;
+    border-radius: 13px;
+    padding: 0 15px;
+  }
+
+  input {
+    width: 100%;
+    height: 18px;
+    font-size: 14px;
+  }
+
+  input::placeholder {
+    font-size: 14px;
+  }
+
+  .search-button {
+    height: 18px;
+    width: 18px;
+  }
+
+  .desc {
+    margin-top: 15px;
+  }
+
+  .desc > p {
+    font-size: 12px;
+  }
+
+  .list {
+    left: 5px;
+    width: 100%;
+    height: calc(100% - 200px);
+    border-radius: 12px;
+  }
+  .token {
+    height: 65px;
+    padding: 10px 15px;
+    border-radius: 12px;
+  }
+
+  .image {
+    height: 45px;
+    width: 45px;
+    margin-right: 14px;
+  }
+
+  .token .image .token-image {
+    height: 45px;
+    width: 45px;
+  }
+
+  .token .image .network-image {
+    height: 18px;
+    width: 18px;
+  }
+
+  .token .name h6 {
+    font-size: 14px;
+  }
+
+  .token .name p {
+    margin-top: 0px;
+    font-size: 14px;
+  }
+
+  .right {
+    gap: 8px;
+  }
+
+  .token-balance p {
+    font-size: 14px;
+  }
+
+  .contract {
+    gap: 8px;
+  }
+
+  .contract .image-copy {
+    height: 14px;
+    width: 14px;
+  }
+
+  .token-change .contract p {
+    font-size: 12px;
+  }
+
+  .contract .image-link {
+    height: 14px;
+    width: 5px;
+    margin-left: 8px;
+  }
+
+  .verified-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .symbol-container {
+    gap: 5px;
+  }
 }

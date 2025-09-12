@@ -1,12 +1,12 @@
-import { Component, inject, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Component, inject, Renderer2 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { AppContentComponent } from './components/app-content/app-content.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { HeaderComponent } from './components/header/header.component';
 import { ClosePopupsDirective } from './directives/close-popups.directive';
 import { PopupService } from './services/popup.service';
 import { ThemeService } from './services/theme.service';
@@ -53,7 +53,7 @@ export class AppComponent {
       )
       .subscribe((/*data*/) => {
         // const pageTitle = data['title'] ? `Alyra | ${data['title']}` : 'Alyra';
-        const pageTitle = "Alyra | Swap anything, across any chain.";
+        const pageTitle = 'Alyra | Swap anything, across any chain.';
         this.titleService.setTitle(pageTitle);
       });
   }
