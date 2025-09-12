@@ -6,10 +6,8 @@ import { Component } from '@angular/core';
   imports: [],
   templateUrl: './documentation-footer.component.html',
   styleUrls: [
-		'./documentation-footer.component.scss',
-		'./documentation-footer.component.adaptives.scss'
-	]
+    './documentation-footer.component.scss',
+    './documentation-footer.component.adaptives.scss',
+  ],
 })
-export class DocumentationFooterComponent {
-
-}
+export class DocumentationFooterComponent {}

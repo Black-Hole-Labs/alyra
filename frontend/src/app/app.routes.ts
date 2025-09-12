@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { TradeComponent } from './pages/trade/trade.component';
-import { RewardsComponent } from './pages/rewards/rewards.component';
-import { QuestsComponent } from './pages/quests/quests.component';
-import { FormPageComponent } from './pages/form-page/form-page.component';
-import { DocumentationPageComponent } from './components/documentation/documentation-page/documentation-page.component';
+import type { Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
+
 import { documentationRoutes } from './components/documentation/documentation.routes';
+import { DocumentationPageComponent } from './components/documentation/documentation-page/documentation-page.component';
+import { FormPageComponent } from './pages/form-page/form-page.component';
+import { QuestsComponent } from './pages/quests/quests.component';
+import { RewardsComponent } from './pages/rewards/rewards.component';
+import { TradeComponent } from './pages/trade/trade.component';
 
 export const routes: Routes = [
   { path: '', component: TradeComponent, data: { title: 'Trade' } },
@@ -13,7 +15,7 @@ export const routes: Routes = [
   { path: 'rewards', component: RewardsComponent, data: { title: 'Rewards' } },
   { path: 'quests', component: QuestsComponent, data: { title: 'Quests' } },
   { path: 'pro', component: FormPageComponent, data: { title: 'Pro' } },
-	{
+  {
     path: 'documentation',
     component: DocumentationPageComponent,
     children: documentationRoutes,

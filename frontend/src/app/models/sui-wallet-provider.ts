@@ -1,9 +1,11 @@
-import { NetworkId, TransactionRequestMVM, WalletProvider } from './wallet-provider.interface';
-import { BlockchainStateService } from '../services/blockchain-state.service';
-import { Injector } from '@angular/core';
-import { Transaction } from '@mysten/sui/transactions';
+import type { Injector } from '@angular/core';
 import { registerSlushWallet } from '@mysten/slush-wallet';
+import { Transaction } from '@mysten/sui/transactions';
 import { getWallets, type Wallet } from '@mysten/wallet-standard';
+
+import { BlockchainStateService } from '../services/blockchain-state.service';
+import type { TransactionRequestMVM, WalletProvider } from './wallet-provider.interface';
+import { NetworkId } from './wallet-provider.interface';
 
 export class SuiWalletProvider implements WalletProvider {
   private address: string = '';
@@ -18,7 +20,9 @@ export class SuiWalletProvider implements WalletProvider {
   }
 
   isAvailable(): boolean {
-    const wallets = getWallets().get().filter(w => w.chains.includes('sui:mainnet'));
+    const wallets = getWallets()
+      .get()
+      .filter((w) => w.chains.includes('sui:mainnet'));
     return wallets.length > 0;
   }
 
@@ -31,18 +35,21 @@ export class SuiWalletProvider implements WalletProvider {
     if (String(this.provider).toLowerCase().includes('slush')) {
       registerSlushWallet(this.appName);
     }
-    
+
     const walletsList = getWallets().get();
-    const wanted = (this.provider && typeof this.provider === 'string')
-      ? this.provider
-      : (this.provider && (this.provider as any).name) || 'slush';
+    const wanted =
+      this.provider && typeof this.provider === 'string'
+        ? this.provider
+        : (this.provider && (this.provider as any).name) || 'slush';
     const wantedLower = String(wanted).toLowerCase();
 
     let found: any = walletsList.find((w: any) => {
       if ((this.provider as any)?.isPhantom) {
         return Array.isArray(w.chains) && w.chains.includes('sui:mainnet');
       }
-      const name = (w.name || w.id || w.constructor?.name || w.client?.name || '').toString().toLowerCase();
+      const name = (w.name || w.id || w.constructor?.name || w.client?.name || '')
+        .toString()
+        .toLowerCase();
       const supportsSui = Array.isArray(w.chains) && w.chains.includes('sui:mainnet');
       return supportsSui && name.includes(wantedLower);
     });
@@ -75,7 +82,7 @@ export class SuiWalletProvider implements WalletProvider {
     const res = await connectFE.connect({ chains: ['sui:mainnet'] });
     const accounts = res?.accounts || (this.wallet as any).accounts;
     if (!accounts || !accounts.length) throw new Error('No accounts returned by wallet.connect()');
-    
+
     this.address = accounts[0].address;
 
     return { address: this.address, nameService: null };
@@ -87,7 +94,7 @@ export class SuiWalletProvider implements WalletProvider {
 
   async sendTx(txData: TransactionRequestMVM): Promise<string> {
     if (!this.wallet) throw new Error('Wallet not connected');
-    const txBytes = Uint8Array.from(atob(txData.data), c => c.charCodeAt(0));
+    const txBytes = Uint8Array.from(atob(txData.data), (c) => c.charCodeAt(0));
     const txBlock = Transaction.from(txBytes);
 
     const feat = this.wallet.features['sui:signAndExecuteTransaction'] as any;
@@ -107,7 +114,7 @@ export class SuiWalletProvider implements WalletProvider {
     return result.digest;
   }
 
-  async switchNetwork(selectedNetwork: any): Promise<void> {
+  async switchNetwork(): Promise<void> {
     throw new Error('Network switching not supported');
   }
 }

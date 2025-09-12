@@ -1,33 +1,39 @@
-import { Component, Output, EventEmitter, OnInit, Input } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { trigger, state, style, animate, transition } from '@angular/animations';
-import { Token } from '../../../pages/trade/trade.component';
+import type { OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+import type { Token } from '../../../pages/trade/trade.component';
 
 @Component({
   selector: 'app-pending-notification',
   standalone: true,
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   templateUrl: './pending-notification.component.html',
   styleUrls: [
-		'./pending-notification.component.scss',
-		'./pending-notification.component.adaptives.scss'
-	],
+    './pending-notification.component.scss',
+    './pending-notification.component.adaptives.scss',
+  ],
   animations: [
     trigger('slideInOut', [
-      state('void', style({
-        transform: 'translateX(100%)',
-        opacity: 0
-      })),
-      state('*', style({
-        transform: 'translateX(0)',
-        opacity: 1
-      })),
+      state(
+        'void',
+        style({
+          transform: 'translateX(100%)',
+          opacity: 0,
+        }),
+      ),
+      state(
+        '*',
+        style({
+          transform: 'translateX(0)',
+          opacity: 1,
+        }),
+      ),
       transition('void => *', animate('300ms ease-out')),
-      transition('* => void', animate('300ms ease-in'))
-    ])
-  ]
+      transition('* => void', animate('300ms ease-in')),
+    ]),
+  ],
 })
 export class PendingNotificationComponent implements OnInit {
   @Output() close = new EventEmitter<void>();

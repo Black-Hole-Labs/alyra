@@ -1,6 +1,8 @@
-import { AfterViewInit, Directive, ElementRef, HostListener, Input, OnDestroy, Renderer2 } from '@angular/core';
+import type { AfterViewInit, ElementRef, OnDestroy, Renderer2 } from '@angular/core';
+import { Directive, HostListener } from '@angular/core';
 
-const POSSIBLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}:"<>?|';
+const POSSIBLE =
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}:"<>?|';
 const GLITCH = '!@#$%^&*()_+{}:"<>?|\\';
 const CYBER = '01010101110010101010101110101010';
 const FRAMES = 20;

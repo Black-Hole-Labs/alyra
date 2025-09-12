@@ -1,56 +1,62 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
+import type { OnInit } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { trigger, style, transition, animate } from '@angular/animations';
-import { PopupService } from '../../../services/popup.service';
-import { BlockchainStateService } from '../../../services/blockchain-state.service';
-import { MouseGradientService } from '../../../services/mouse-gradient.service';
-import { ProviderType, Wallets } from '../../../models/wallet-provider.interface';
+
+import type { Wallets } from '../../../models/wallet-provider.interface';
+import { ProviderType } from '../../../models/wallet-provider.interface';
+import type { BlockchainStateService } from '../../../services/blockchain-state.service';
+import type { MouseGradientService } from '../../../services/mouse-gradient.service';
+import type { PopupService } from '../../../services/popup.service';
 
 @Component({
   selector: 'app-connect-wallet',
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './connect-wallet.component.html',
-  styleUrls: [
-		'./connect-wallet.component.scss',
-		'./connect-wallet.component.adaptives.scss'
-  ],
+  styleUrls: ['./connect-wallet.component.scss', './connect-wallet.component.adaptives.scss'],
   animations: [
     trigger('popupAnimation', [
       transition(':enter', [
-        style({ 
-          opacity: 0, 
+        style({
+          opacity: 0,
           transform: 'scale(0.9)',
           backgroundColor: 'rgba(var(--black), 0)',
-          backdropFilter: 'blur(0px)'
+          backdropFilter: 'blur(0px)',
         }),
-        animate('150ms ease-out', style({ 
-          opacity: 1, 
-          transform: 'scale(1)',
-          backgroundColor: 'rgba(var(--black), 0.3)',
-          backdropFilter: 'blur(35px)'
-        }))
+        animate(
+          '150ms ease-out',
+          style({
+            opacity: 1,
+            transform: 'scale(1)',
+            backgroundColor: 'rgba(var(--black), 0.3)',
+            backdropFilter: 'blur(35px)',
+          }),
+        ),
       ]),
       transition(':leave', [
-        animate('150ms ease-in', style({ 
-          opacity: 0, 
-          transform: 'scale(0.9)',
-          backgroundColor: 'rgba(var(--black), 0)',
-          backdropFilter: 'blur(0px)'
-        }))
-      ])
+        animate(
+          '150ms ease-in',
+          style({
+            opacity: 0,
+            transform: 'scale(0.9)',
+            backgroundColor: 'rgba(var(--black), 0)',
+            backdropFilter: 'blur(0px)',
+          }),
+        ),
+      ]),
     ]),
     trigger('modalAnimation', [
       transition(':enter', [
         style({ opacity: 0, transform: 'scale(0.9)' }),
-        animate('150ms ease-out', style({ opacity: 1, transform: 'scale(1)' }))
+        animate('150ms ease-out', style({ opacity: 1, transform: 'scale(1)' })),
       ]),
       transition(':leave', [
-        animate('150ms ease-in', style({ opacity: 0, transform: 'scale(0.9)' }))
-      ])
-    ])
-  ]
+        animate('150ms ease-in', style({ opacity: 0, transform: 'scale(0.9)' })),
+      ]),
+    ]),
+  ],
 })
 export class ConnectWalletComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
@@ -66,20 +72,19 @@ export class ConnectWalletComponent implements OnInit {
   constructor(
     private popupService: PopupService,
     private blockchainStateService: BlockchainStateService,
-    private mouseGradientService: MouseGradientService
-  ) {
-   }
+    private mouseGradientService: MouseGradientService,
+  ) {}
 
   async ngOnInit(): Promise<void> {
     this.blockchainStateService.registerProviders();
 
     this.allWallets = await this.blockchainStateService.loadProviders();
-    this.allProviders = this.allWallets.map(wallet => wallet.id);
+    this.allProviders = this.allWallets.map((wallet) => wallet.id);
 
     const ecosystem = this.blockchainStateService.getEcosystemForPopup();
 
     if (ecosystem) {
-      this.allWallets = this.allWallets.filter(wallet => {
+      this.allWallets = this.allWallets.filter((wallet) => {
         const type = this.blockchainStateService.getType(wallet.id);
         return type === ProviderType.MULTICHAIN || type === ecosystem;
       });
@@ -88,7 +93,7 @@ export class ConnectWalletComponent implements OnInit {
     this.availableWallets = [];
     this.otherWallets = [];
 
-    this.allWallets.forEach(wallet => {
+    this.allWallets.forEach((wallet) => {
       if (['walletconnect'].includes(wallet.id)) {
         wallet.status = 'connect';
         this.availableWallets.push(wallet);
@@ -123,7 +128,7 @@ export class ConnectWalletComponent implements OnInit {
 
   async onWalletClick(providerId: string): Promise<void> {
     // console.log('Starting wallet connection for provider:', providerId);
-    
+
     if (!this.allProviders.includes(providerId)) {
       console.error('Provider not supported:', providerId);
       alert('Provider not supported');
@@ -142,13 +147,13 @@ export class ConnectWalletComponent implements OnInit {
     if (type === ProviderType.MULTICHAIN) {
       this.blockchainStateService.pendingProviderId = providerId;
       this.popupService.openPopup('ecosystemChange');
-      return; 
+      return;
     }
 
     this.closePopup();
     const { address, nameService } = await provider.connect();
     this.popupService.openPopup('wallet');
-    
+
     try {
       // console.log('Attempting to connect to provider...');
 
@@ -175,7 +180,7 @@ export class ConnectWalletComponent implements OnInit {
       // console.log('Successfully connected, address:', address);
 
       // sessionStorage.setItem('currentProvider', providerId);
-      sessionStorage.setItem('networkId', (this.blockchainStateService.networkSell()!.id).toString());
+      sessionStorage.setItem('networkId', this.blockchainStateService.networkSell()!.id.toString());
     } catch (error) {
       console.error('Connection error:', error);
     }

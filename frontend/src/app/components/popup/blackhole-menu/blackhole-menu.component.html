@@ -1,8 +1,10 @@
 <div class="popup-wrapper">
-  <div class="popup-container blackhole-menu"
-       (mousemove)="onMenuMouseMove($event)"
-       (mouseenter)="onPopupMouseEnter()"
-       (mouseleave)="onPopupMouseLeave()">
+  <div
+    class="popup-container blackhole-menu"
+    (mousemove)="onMenuMouseMove($event)"
+    (mouseenter)="onPopupMouseEnter()"
+    (mouseleave)="onPopupMouseLeave()"
+  >
     <div class="upper">
       <h6>Menu</h6>
       <button (click)="closePopup()"></button>
@@ -13,8 +15,13 @@
     </div>
 
     <div class="overview">
-      <div class="menu-item" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-           (click)="closePopup()">
+      <div
+        class="menu-item"
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closePopup()"
+      >
         <div class="social-img trade"></div>
         <p class="menu-text">Trade</p>
       </div>
@@ -33,7 +40,12 @@
         <div class="social-img twitter"></div>
         <p class="menu-text">Twitter</p>
       </a>
-      <a class="menu-item" href="https://blackholelabs.gitbook.io/blackholelabs" target="_blank" (click)="closePopup()">
+      <a
+        class="menu-item"
+        href="https://blackholelabs.gitbook.io/blackholelabs"
+        target="_blank"
+        (click)="closePopup()"
+      >
         <div class="social-img documentation"></div>
         <p class="menu-text">Documentation</p>
       </a>
@@ -43,7 +55,12 @@
       <p>Need help?</p>
     </div>
 
-    <a class="menu-item" href="https://t.me/blackhole_support" target="_blank" (click)="closePopup()">
+    <a
+      class="menu-item"
+      href="https://t.me/blackhole_support"
+      target="_blank"
+      (click)="closePopup()"
+    >
       <div class="social-img contact"></div>
       <p class="menu-text">Contact us</p>
     </a>

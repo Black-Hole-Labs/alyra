@@ -1,14 +1,18 @@
-import { Component, EventEmitter, Output, inject, Input, Signal, computed, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import type { Signal } from '@angular/core';
+import { Component, computed, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BlockchainStateService, Ecosystem } from '../../../services/blockchain-state.service';
-import { WalletBalanceService } from '../../../services/wallet-balance.service';
-import { Token } from '../../../pages/trade/trade.component';
-import { Network, ProviderType } from '../../../models/wallet-provider.interface';
 import { ethers } from 'ethers';
+
+import type { Network } from '../../../models/wallet-provider.interface';
+import { ProviderType } from '../../../models/wallet-provider.interface';
+import type { Token } from '../../../pages/trade/trade.component';
+import type { Ecosystem } from '../../../services/blockchain-state.service';
+import { BlockchainStateService } from '../../../services/blockchain-state.service';
+import type { PopupService } from '../../../services/popup.service';
+import type { TokenService } from '../../../services/token.service';
+import { WalletBalanceService } from '../../../services/wallet-balance.service';
 import { NetworkChangeFromPopupComponent } from '../network-change-from/network-change-from.component';
-import { TokenService } from '../../../services/token.service';
-import { PopupService } from '../../../services/popup.service';
 
 export interface TokenDisplay extends Token {
   name?: string;
@@ -78,16 +82,16 @@ export class TokenChangePopupComponent {
   tokenList: Signal<TokenDisplay[]> = computed(() => {
     const search = this.searchText().toLowerCase().trim();
 
-      if (!search) {
-          const tokens = this.getBaseTokens();
-          const filteredByExclude = this.filterByExcludeToken(tokens);
-          return filteredByExclude as TokenDisplay[];
-      }
-      const networkId = this.selectedNetworkId();
-      const allTokens = this.blockchainStateService.getAllTokensForNetwork(networkId!);
-      const filteredBySearch = this.filterBySearch(allTokens, search);
-      const filteredByExclude = this.filterByExcludeToken(filteredBySearch);
+    if (!search) {
+      const tokens = this.getBaseTokens();
+      const filteredByExclude = this.filterByExcludeToken(tokens);
       return filteredByExclude as TokenDisplay[];
+    }
+    const networkId = this.selectedNetworkId();
+    const allTokens = this.blockchainStateService.getAllTokensForNetwork(networkId!);
+    const filteredBySearch = this.filterBySearch(allTokens, search);
+    const filteredByExclude = this.filterByExcludeToken(filteredBySearch);
+    return filteredByExclude as TokenDisplay[];
   });
 
   displayedTokens: Signal<TokenDisplay[]> = computed(() => {
@@ -104,9 +108,13 @@ export class TokenChangePopupComponent {
     let networkToUse: number | undefined;
 
     if (this.mode === 'sell') {
-      networkToUse = this.blockchainStateService.networkSell()?.id || this.blockchainStateService.networkSell()?.id;
+      networkToUse =
+        this.blockchainStateService.networkSell()?.id ||
+        this.blockchainStateService.networkSell()?.id;
     } else {
-      networkToUse = this.blockchainStateService.networkBuy()?.id || this.blockchainStateService.networkSell()?.id;
+      networkToUse =
+        this.blockchainStateService.networkBuy()?.id ||
+        this.blockchainStateService.networkSell()?.id;
     }
 
     if (networkToUse) {
@@ -134,7 +142,10 @@ export class TokenChangePopupComponent {
     const list = this.getBaseTokens();
 
     try {
-      const balancesForThisNetwork = await this.walletBalanceService.getBalancesForNetwork(networkId, list);
+      const balancesForThisNetwork = await this.walletBalanceService.getBalancesForNetwork(
+        networkId,
+        list,
+      );
       this.tokenBalances.set(balancesForThisNetwork);
     } catch (err) {
       console.error('Unable to get cached balances:', err);
@@ -218,7 +229,7 @@ export class TokenChangePopupComponent {
     return token.contractAddress === ethers.ZeroAddress;
   }
 
-  isVerifiedToken(token: TokenDisplay): boolean {
+  isVerifiedToken(): boolean {
     return true;
   }
 
@@ -280,7 +291,10 @@ export class TokenChangePopupComponent {
       try {
         await provider.switchNetwork(network);
       } catch (error) {
-        if ((error as any).message.includes('User rejected the request') || (error as any).code === 4001) {
+        if (
+          (error as any).message.includes('User rejected the request') ||
+          (error as any).code === 4001
+        ) {
           this.selectedNetworkId.set(prevNetworkId);
           this.selectedNetworkTokens.set(prevTokens);
           this.blockchainStateService.updateNetworkSell(prevNetworkId!);
@@ -338,7 +352,9 @@ export class TokenChangePopupComponent {
     if (!search) return tokens;
 
     return tokens.filter(
-      (token) => token.symbol.toLowerCase().includes(search) || token.contractAddress.toLowerCase().includes(search),
+      (token) =>
+        token.symbol.toLowerCase().includes(search) ||
+        token.contractAddress.toLowerCase().includes(search),
     );
   }
 

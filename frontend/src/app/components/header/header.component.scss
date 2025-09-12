@@ -110,7 +110,8 @@ nav a.active-link {
 }
 
 @keyframes character-shuffle {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: translateY(0);
   }
@@ -122,12 +123,9 @@ nav a.active-link {
 
 .xp {
   padding: 6px 20px;
-  background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.28) 0%,
-      rgba(0, 0, 0, 0.28) 100%
-  ),
-  linear-gradient(
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0.28) 100%),
+    linear-gradient(
       101deg,
       #e5e5e5 0%,
       #e9cf5c 16%,
@@ -136,7 +134,7 @@ nav a.active-link {
       #3027f7 69%,
       #0198fe 93%,
       #0ab756 100%
-  );
+    );
   border-radius: 8px;
   display: flex;
   align-items: center;

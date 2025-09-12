@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
+import type { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ThemeService {
   private isDarkTheme = new BehaviorSubject<boolean>(true);
@@ -29,7 +29,10 @@ export class ThemeService {
   }
 
   private applyTheme(isDark: boolean) {
-    document.documentElement.className = document.documentElement.className.replace(/\b(dark|light)-theme\b/g, '');
+    document.documentElement.className = document.documentElement.className.replace(
+      /\b(dark|light)-theme\b/g,
+      '',
+    );
     document.documentElement.classList.add(isDark ? 'dark-theme' : 'light-theme');
   }
 
@@ -67,4 +70,4 @@ export class ThemeService {
   getCurrentTheme(): boolean {
     return this.isDarkTheme.value;
   }
-} 
+}

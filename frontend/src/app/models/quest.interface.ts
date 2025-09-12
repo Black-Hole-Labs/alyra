@@ -15,14 +15,14 @@ export enum QuestRank {
   UNCOMMON = 'uncommon',
   RARE = 'rare',
   EPIC = 'epic',
-  LEGENDARY = 'legendary'
+  LEGENDARY = 'legendary',
 }
 
 export enum QuestStatus {
   AVAILABLE = 'available',
   IN_PROGRESS = 'in_progress',
   COMPLETED = 'completed',
-  ENDED = 'ended'
+  ENDED = 'ended',
 }
 
 export interface CreateQuestDto {

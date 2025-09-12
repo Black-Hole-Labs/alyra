@@ -1,40 +1,36 @@
-import {
-  Component,
-  Renderer2,
-  ChangeDetectorRef,
-  computed,
-  signal,
-  effect,
-  ViewChild,
-  ElementRef,
+import type { BreakpointObserver } from '@angular/cdk/layout';
+import { CommonModule } from '@angular/common';
+import type { HttpErrorResponse } from '@angular/common/http';
+import type {
   AfterViewChecked,
+  ChangeDetectorRef,
+  ElementRef,
+  Renderer2,
   Signal,
 } from '@angular/core';
+import { Component, computed, effect, signal, ViewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { TokenChangePopupComponent } from '../../components/popup/token-change/token-selector.component';
-import { SettingsComponent } from '../../components/popup/settings/settings.component';
-import { BlockchainStateService, Ecosystem } from '../../services/blockchain-state.service';
-import { WalletBalanceService } from '../../services/wallet-balance.service';
-import { TransactionsService } from '../../services/transactions.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import {
-  NetworkId,
-  TransactionRequestEVM,
-  TransactionRequestSVM,
-  TransactionRequestMVM,
-  ProviderType,
-} from '../../models/wallet-provider.interface';
+import { PublicKey } from '@solana/web3.js';
 import { ethers, parseUnits } from 'ethers';
-import { PopupService } from '../../services/popup.service';
-import { SuccessNotificationComponent } from '../../components/notification/success-notification/success-notification.component';
+import { map } from 'rxjs';
+
 import { FailedNotificationComponent } from '../../components/notification/failed-notification/failed-notification.component';
 import { PendingNotificationComponent } from '../../components/notification/pending-notification/pending-notification.component';
-import { PublicKey } from '@solana/web3.js';
-import { TokenService } from '../../services/token.service';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { map } from 'rxjs';
+import { SuccessNotificationComponent } from '../../components/notification/success-notification/success-notification.component';
+import { SettingsComponent } from '../../components/popup/settings/settings.component';
+import { TokenChangePopupComponent } from '../../components/popup/token-change/token-selector.component';
+import type {
+  TransactionRequestEVM,
+  TransactionRequestMVM,
+  TransactionRequestSVM,
+} from '../../models/wallet-provider.interface';
+import { NetworkId, ProviderType } from '../../models/wallet-provider.interface';
+import type { BlockchainStateService, Ecosystem } from '../../services/blockchain-state.service';
+import type { PopupService } from '../../services/popup.service';
+import type { TokenService } from '../../services/token.service';
+import type { TransactionsService } from '../../services/transactions.service';
+import type { WalletBalanceService } from '../../services/wallet-balance.service';
 
 export interface Token {
   symbol: string;
@@ -86,7 +82,9 @@ export class TradeComponent implements AfterViewChecked {
   gasPriceUSD: number | undefined;
 
   //showConnectWalletPopup: boolean = false;
-  txData = signal<TransactionRequestEVM | TransactionRequestSVM | TransactionRequestMVM | undefined>(undefined);
+  txData = signal<
+    TransactionRequestEVM | TransactionRequestSVM | TransactionRequestMVM | undefined
+  >(undefined);
 
   walletTimer: any = null;
   findingRoutesTimer: any = null;
@@ -125,7 +123,8 @@ export class TradeComponent implements AfterViewChecked {
   @ViewChild('buyAmountText') buyAmountTextElement: ElementRef | null = null;
   private buyAmountTextAnimated = false;
 
-  private possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}:"<>?|';
+  private possibleChars =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}:"<>?|';
   private glitchChars = '!@#$%^&*()_+{}:"<>?|\\';
   private cyberChars = '01010101110010101010101110101010';
   private animationFrames = 60;
@@ -155,7 +154,9 @@ export class TradeComponent implements AfterViewChecked {
     this.inputFontSize.set(this.defaultFontSizeByScreenWidth());
     this.initializeNetworks();
 
-    this.isMobile = toSignal(bp.observe('(max-width: 970px)').pipe(map((r) => r.matches)), { initialValue: false });
+    this.isMobile = toSignal(bp.observe('(max-width: 970px)').pipe(map((r) => r.matches)), {
+      initialValue: false,
+    });
     this.activePopup = toSignal(this.popupService.activePopup$, { initialValue: null });
 
     this.showTrade = computed(() => {
@@ -176,7 +177,7 @@ export class TradeComponent implements AfterViewChecked {
           //   console.log("Show price rate");
           //   this.loadInitialPriceRate();
           // }
-        } catch (error) {
+        } catch {
           // this.updateBuyAmount('0.0');
           // update gas = 0.0
           // console.log("error",error);
@@ -241,16 +242,26 @@ export class TradeComponent implements AfterViewChecked {
         const sellNetwork = this.blockchainStateService.networkSell();
         if (isConnected && buyNetwork !== undefined && sellNetwork !== undefined) {
           if (
-            (buyNetwork?.id == NetworkId.SOLANA_MAINNET || sellNetwork?.id == NetworkId.SOLANA_MAINNET) &&
-            !(buyNetwork?.id == NetworkId.SOLANA_MAINNET && sellNetwork?.id == NetworkId.SOLANA_MAINNET)
+            (buyNetwork?.id == NetworkId.SOLANA_MAINNET ||
+              sellNetwork?.id == NetworkId.SOLANA_MAINNET) &&
+            !(
+              buyNetwork?.id == NetworkId.SOLANA_MAINNET &&
+              sellNetwork?.id == NetworkId.SOLANA_MAINNET
+            )
           ) {
             this.showCustomAddress = true;
             if (buyNetwork.chainType == ProviderType.EVM) {
-              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.EVM].address!);
+              this.customAddress.set(
+                this.blockchainStateService.currentProviderIds()[ProviderType.EVM].address!,
+              );
             } else if (buyNetwork.chainType == ProviderType.MVM) {
-              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.MVM].address!);
+              this.customAddress.set(
+                this.blockchainStateService.currentProviderIds()[ProviderType.MVM].address!,
+              );
             } else {
-              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.SVM].address!);
+              this.customAddress.set(
+                this.blockchainStateService.currentProviderIds()[ProviderType.SVM].address!,
+              );
             }
           } else if (
             (buyNetwork?.id == NetworkId.SUI_MAINNET || sellNetwork?.id == NetworkId.SUI_MAINNET) &&
@@ -258,11 +269,17 @@ export class TradeComponent implements AfterViewChecked {
           ) {
             this.showCustomAddress = true;
             if (buyNetwork.chainType == ProviderType.EVM) {
-              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.EVM].address!);
+              this.customAddress.set(
+                this.blockchainStateService.currentProviderIds()[ProviderType.EVM].address!,
+              );
             } else if (buyNetwork.chainType == ProviderType.MVM) {
-              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.MVM].address!);
+              this.customAddress.set(
+                this.blockchainStateService.currentProviderIds()[ProviderType.MVM].address!,
+              );
             } else {
-              this.customAddress.set(this.blockchainStateService.currentProviderIds()[ProviderType.SVM].address!);
+              this.customAddress.set(
+                this.blockchainStateService.currentProviderIds()[ProviderType.SVM].address!,
+              );
             }
           } else {
             this.showCustomAddress = false;
@@ -325,7 +342,8 @@ export class TradeComponent implements AfterViewChecked {
 
       if (inputElement.value.includes('.')) return;
 
-      inputElement.value = inputElement.value.slice(0, cursorPos) + '.' + inputElement.value.slice(cursorPos);
+      inputElement.value =
+        inputElement.value.slice(0, cursorPos) + '.' + inputElement.value.slice(cursorPos);
 
       setTimeout(() => inputElement.setSelectionRange(cursorPos + 1, cursorPos + 1), 0);
     }
@@ -340,10 +358,10 @@ export class TradeComponent implements AfterViewChecked {
       .replace(/^(\.)/g, '');
 
     if (isSell) {
-      this.isProcessingInput.update((value) => true);
+      this.isProcessingInput.update(() => true);
 
       this.sellAmount = inputElement.value;
-      this.validatedSellAmount.update((value) => Number(inputElement.value));
+      this.validatedSellAmount.update(() => Number(inputElement.value));
 
       this.adjustFontSize(inputElement);
 
@@ -429,7 +447,7 @@ export class TradeComponent implements AfterViewChecked {
 
   setMaxSellAmount(): void {
     this.updateSellAmount(this.balance().toString());
-    this.validatedSellAmount.update((value) => this.balance());
+    this.validatedSellAmount.update(() => this.balance());
     if (Number(this.validatedSellAmount()) > this.balance()) {
       this.buttonState = 'insufficient';
     } else {
@@ -443,7 +461,11 @@ export class TradeComponent implements AfterViewChecked {
     const refreshElement = document.querySelector('.refresh');
     if (refreshElement) {
       this.rotationCount += 1;
-      this.renderer.setStyle(refreshElement, 'transform', `rotate(${this.rotationCount * -720}deg)`);
+      this.renderer.setStyle(
+        refreshElement,
+        'transform',
+        `rotate(${this.rotationCount * -720}deg)`,
+      );
     }
   }
 
@@ -551,7 +573,9 @@ export class TradeComponent implements AfterViewChecked {
   async onBuyTokenSelected(token: Token): Promise<void> {
     this.txData.set(undefined);
     this.tokenService.setSelectedBuyToken(token);
-    this.balanceBuy.set(Number(parseFloat(await this.walletBalanceService.getBalanceForToken(token)).toFixed(6)));
+    this.balanceBuy.set(
+      Number(parseFloat(await this.walletBalanceService.getBalanceForToken(token)).toFixed(6)),
+    );
     this.closeTokenBuyPopup();
     this.popupService.closeAllPopups();
   }
@@ -603,7 +627,7 @@ export class TradeComponent implements AfterViewChecked {
       } else {
         txHash = await this.evmSwap();
       }
-    } catch (error: any) {
+    } catch {
       this.showFailedNotification = true;
 
       this.loading.set(false);
@@ -631,12 +655,20 @@ export class TradeComponent implements AfterViewChecked {
         const rpcUrl = await this.blockchainStateService.getWorkingRpcUrlForNetwork(
           this.blockchainStateService.networkSell()!.id,
         );
-        const receiptResult = await this.transactionsService.pollTransactionReceiptSvm(txHash, rpcUrl, 60, 5000);
+        const receiptResult = await this.transactionsService.pollTransactionReceiptSvm(
+          txHash,
+          rpcUrl,
+          60,
+          5000,
+        );
 
         if (receiptResult.success) {
           finalStatus = { status: 'DONE', receipt: receiptResult.transaction };
         } else {
-          finalStatus = { status: 'FAILED', error: receiptResult.error || receiptResult.status || 'Unknown' };
+          finalStatus = {
+            status: 'FAILED',
+            error: receiptResult.error || receiptResult.status || 'Unknown',
+          };
         }
       } else if (sellNetworkId === NetworkId.SUI_MAINNET) {
         finalStatus = await this.transactionsService.pollStatus(txHash);
@@ -650,7 +682,10 @@ export class TradeComponent implements AfterViewChecked {
         if (evmResult.success) {
           finalStatus = { status: 'DONE', receipt: evmResult.receipt };
         } else {
-          finalStatus = { status: 'FAILED', error: evmResult.error || evmResult.receipt || 'Unknown' };
+          finalStatus = {
+            status: 'FAILED',
+            error: evmResult.error || evmResult.receipt || 'Unknown',
+          };
         }
       }
     } catch (err) {
@@ -674,10 +709,22 @@ export class TradeComponent implements AfterViewChecked {
 
     try {
       this.balance.set(
-        Number(parseFloat(await this.walletBalanceService.getBalanceForToken(this.tokenService.selectedSellToken()!))),
+        Number(
+          parseFloat(
+            await this.walletBalanceService.getBalanceForToken(
+              this.tokenService.selectedSellToken()!,
+            ),
+          ),
+        ),
       );
       this.balanceBuy.set(
-        Number(parseFloat(await this.walletBalanceService.getBalanceForToken(this.tokenService.selectedBuyToken()!))),
+        Number(
+          parseFloat(
+            await this.walletBalanceService.getBalanceForToken(
+              this.tokenService.selectedBuyToken()!,
+            ),
+          ),
+        ),
       );
       this.walletBalanceService.invalidateBalanceCacheForToken(
         this.blockchainStateService.networkSell()!.id,
@@ -687,7 +734,7 @@ export class TradeComponent implements AfterViewChecked {
         this.blockchainStateService.networkBuy()!.id,
         this.tokenService.selectedBuyToken()!.contractAddress,
       );
-    } catch (error) {
+    } catch {
       // console.log("error setting balance",error);
     }
 
@@ -753,7 +800,10 @@ export class TradeComponent implements AfterViewChecked {
     // const allowance = await erc20Contract["allowance"](fromAddress, this.txData()?.to);
     // // console.log("allowance",allowance);
 
-    const approveTx = await erc20Contract['approve']((this.txData() as TransactionRequestEVM).to, approveAmount);
+    const approveTx = await erc20Contract['approve'](
+      (this.txData() as TransactionRequestEVM).to,
+      approveAmount,
+    );
 
     // console.log("a");
 
@@ -776,7 +826,7 @@ export class TradeComponent implements AfterViewChecked {
 
   test() {
     this.transactionsService.runTest().subscribe({
-      next: (response) => {
+      next: () => {
         // console.log('Quote:', response.quote);
         // console.log('Simulation Result:', response.simulationResult);
       },
@@ -791,18 +841,24 @@ export class TradeComponent implements AfterViewChecked {
     const fromChain = this.blockchainStateService.networkSell()!.id.toString();
     const toChain = this.blockchainStateService.networkBuy()!.id.toString();
     const fromTokenDecimals = this.tokenService.selectedSellToken()!.decimals;
-    const formattedFromAmount = this.transactionsService.toNonExponential(this.validatedSellAmount());
+    const formattedFromAmount = this.transactionsService.toNonExponential(
+      this.validatedSellAmount(),
+    );
     const fromAmount = parseUnits(formattedFromAmount, fromTokenDecimals);
     const fromToken = this.tokenService.selectedSellToken()!.contractAddress;
     const toToken = this.tokenService.selectedBuyToken()!.contractAddress;
     const toTokenDecimals = this.tokenService.selectedBuyToken()!.decimals;
 
     let fromAddress = '';
-    let toAddress = this.customAddress() !== '' && this.addressStatus === 'good' ? this.customAddress() : undefined;
+    let toAddress =
+      this.customAddress() !== '' && this.addressStatus === 'good'
+        ? this.customAddress()
+        : undefined;
 
     const CONSTANT_ETH_ADDRESS = '0x1111111111111111111111111111111111111111';
     const CONSTANT_SOL_ADDRESS = '11111111111111111111111111111111';
-    const CONSTANT_SUI_ADDRESS = '0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI';
+    const CONSTANT_SUI_ADDRESS =
+      '0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI';
 
     const fromChainType = this.blockchainStateService.networkSell()?.chainType;
     const toChainType = this.blockchainStateService.networkBuy()?.chainType;
@@ -850,7 +906,15 @@ export class TradeComponent implements AfterViewChecked {
 
     // console.log("fromChain",fromChain);
 
-    if (!fromChain || !toChain || !fromAddress || !fromAmount || !fromToken || !toToken || !fromTokenDecimals) {
+    if (
+      !fromChain ||
+      !toChain ||
+      !fromAddress ||
+      !fromAmount ||
+      !fromToken ||
+      !toToken ||
+      !fromTokenDecimals
+    ) {
       // console.log("fromChain",fromChain);
       // console.log("toChain",toChain);
       // console.log("fromAddress",fromAddress);
@@ -874,10 +938,21 @@ export class TradeComponent implements AfterViewChecked {
       fromChainType !== toChainType &&
       !(this.customAddress() !== '' && this.addressStatus === 'good');
 
-    if ([10, 56, 137, 42161, 1151111081099710].includes(this.blockchainStateService.networkSell()!.id)) {
+    if (
+      [10, 56, 137, 42161, 1151111081099710].includes(this.blockchainStateService.networkSell()!.id)
+    ) {
       // blackHole API for supportted chains
       this.transactionsService
-        .getV1(fromChain, toChain, fromToken, toToken, adjustedFromAmount, fromAddress, toAddress, 'EXACT_INPUT')
+        .getV1(
+          fromChain,
+          toChain,
+          fromToken,
+          toToken,
+          adjustedFromAmount,
+          fromAddress,
+          toAddress,
+          'EXACT_INPUT',
+        )
         .subscribe({
           next: (response: any) => {
             // console.log('Quote received:', response);
@@ -888,7 +963,9 @@ export class TradeComponent implements AfterViewChecked {
               const toAmountNumber = Number(
                 this.transactionsService.parseToAmount(response.outputAmount, toTokenDecimals),
               );
-              const readableToAmount = toAmountNumber.toFixed(toTokenDecimals).replace(/\.?0+$/, '');
+              const readableToAmount = toAmountNumber
+                .toFixed(toTokenDecimals)
+                .replace(/\.?0+$/, '');
               // console.log('readableToAmount:', readableToAmount);
               this.updateBuyAmount(readableToAmount);
 
@@ -953,7 +1030,10 @@ export class TradeComponent implements AfterViewChecked {
               error.error.message.includes('Invalid fromAddress')
             ) {
               this.buttonState = 'wrong-address';
-            } else if (error.error.statusCode === 429 || error.error.message.includes('Rate limit exceeded')) {
+            } else if (
+              error.error.statusCode === 429 ||
+              error.error.message.includes('Rate limit exceeded')
+            ) {
               this.buttonState = 'rate-limit';
             } else if (error.status === 404) {
               console.error('Custom error message:', error || 'Unknown error');
@@ -1000,7 +1080,9 @@ export class TradeComponent implements AfterViewChecked {
               const toAmountNumber = Number(
                 this.transactionsService.parseToAmount(response.estimate.toAmount, toTokenDecimals),
               );
-              const readableToAmount = toAmountNumber.toFixed(toTokenDecimals).replace(/\.?0+$/, '');
+              const readableToAmount = toAmountNumber
+                .toFixed(toTokenDecimals)
+                .replace(/\.?0+$/, '');
               // console.log('readableToAmount:', readableToAmount);
               this.updateBuyAmount(readableToAmount);
 
@@ -1023,7 +1105,10 @@ export class TradeComponent implements AfterViewChecked {
               // console.log('gasPriceUSD:', this.gasPriceUSD);
 
               const fromDecimal = parseFloat(
-                this.transactionsService.parseToAmount(response.estimate.fromAmount, fromTokenDecimals),
+                this.transactionsService.parseToAmount(
+                  response.estimate.fromAmount,
+                  fromTokenDecimals,
+                ),
               );
               const toDecimal = parseFloat(
                 this.transactionsService.parseToAmount(response.estimate.toAmount, toTokenDecimals),
@@ -1068,7 +1153,10 @@ export class TradeComponent implements AfterViewChecked {
               error.error.message.includes('Invalid fromAddress')
             ) {
               this.buttonState = 'wrong-address';
-            } else if (error.error.statusCode === 429 || error.error.message.includes('Rate limit exceeded')) {
+            } else if (
+              error.error.statusCode === 429 ||
+              error.error.message.includes('Rate limit exceeded')
+            ) {
               this.buttonState = 'rate-limit';
             } else if (error.status === 404) {
               console.error('Custom error message:', error || 'Unknown error');
@@ -1389,7 +1477,9 @@ export class TradeComponent implements AfterViewChecked {
       return 'none';
     }
 
-    return this.isValidWalletAddress(addr, this.blockchainStateService.networkBuy()!.chainType) ? 'good' : 'bad';
+    return this.isValidWalletAddress(addr, this.blockchainStateService.networkBuy()!.chainType)
+      ? 'good'
+      : 'bad';
   }
 
   private isValidWalletAddress(address: string, chainType: string): boolean {

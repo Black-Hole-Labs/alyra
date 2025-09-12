@@ -42,7 +42,6 @@ export interface TransactionRequestMVM {
   data: string; // base64 tx
 }
 
-
 export interface Wallets {
   id: string;
   name: string;
@@ -57,7 +56,7 @@ export enum ProviderType {
   EVM = 'EVM',
   SVM = 'SVM',
   MULTICHAIN = 'multichain',
-  MVM = 'MVM'
+  MVM = 'MVM',
 }
 
 export enum NetworkId {

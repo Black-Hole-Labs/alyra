@@ -1,25 +1,17 @@
-import { RouterModule } from '@angular/router';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { PopupService } from '../../services/popup.service';
-import { Subscription } from 'rxjs';
-import {
-  Component,
-  ElementRef,
-  Renderer2,
-  EventEmitter,
-  Output,
-  OnInit,
-  OnDestroy,
-  computed,
-  signal,
-  effect,
-} from '@angular/core';
-import { BlockchainStateService } from '../../services/blockchain-state.service';
-import { NetworkId, Wallets } from '../../models/wallet-provider.interface';
-import { WalletBalanceService } from '../../services/wallet-balance.service';
-import { MouseGradientService } from '../../services/mouse-gradient.service';
-import { TextScrambleDirective } from './text-scramble.directive';
+import type { ElementRef, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, computed, effect, EventEmitter, Output, signal } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import type { Subscription } from 'rxjs';
+
+import type { Wallets } from '../../models/wallet-provider.interface';
+import { NetworkId } from '../../models/wallet-provider.interface';
+import type { BlockchainStateService } from '../../services/blockchain-state.service';
+import type { MouseGradientService } from '../../services/mouse-gradient.service';
+import type { PopupService } from '../../services/popup.service';
+import type { WalletBalanceService } from '../../services/wallet-balance.service';
 import { GmCounterService } from './gm-counter.service';
+import { TextScrambleDirective } from './text-scramble.directive';
 
 // import providers from '@public/data/providers.json';
 
@@ -43,7 +35,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showConnectWalletPopup = false;
   showWalletPopup = false;
   //walletName: string = 'Connect Wallet';
-  walletName = computed(() => this.blockchainStateService.getCurrentWalletAddress() ?? 'Connect Wallet');
+  walletName = computed(
+    () => this.blockchainStateService.getCurrentWalletAddress() ?? 'Connect Wallet',
+  );
   currentWalletIcon = computed(() => {
     if (!this.blockchainStateService.connected()) {
       return '';
@@ -316,13 +310,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
       const nativeToken = {
         symbol: network.nativeCurrency.symbol,
         imageUrl: '',
-        contractAddress: network.chainType === 'SVM' ? address : '0x0000000000000000000000000000000000000000',
+        contractAddress:
+          network.chainType === 'SVM' ? address : '0x0000000000000000000000000000000000000000',
         chainId: network.id,
         decimals: network.nativeCurrency.decimals,
       };
       const balance = await this.walletBalanceService.getBalanceForToken(nativeToken);
       this.nativeBalance.set(this.truncateTo6Decimals(parseFloat(balance)));
-    } catch (e) {
+    } catch {
       this.nativeBalance.set('0');
     }
   }

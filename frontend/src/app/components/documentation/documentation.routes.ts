@@ -1,6 +1,7 @@
-import { Routes } from '@angular/router';
-import { TermsofuseComponent } from './termsofuse/termsofuse.component';
+import type { Routes } from '@angular/router';
+
 import { PrivacypolicyComponent } from './privacypolicy/privacypolicy.component';
+import { TermsofuseComponent } from './termsofuse/termsofuse.component';
 
 export const documentationRoutes: Routes = [
   { path: 'termsofuse', component: TermsofuseComponent },

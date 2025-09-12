@@ -1,4 +1,5 @@
-import { Injectable, NgZone } from '@angular/core';
+import type { NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 export interface Star {
@@ -18,7 +19,7 @@ export interface Star {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StarAnimationService {
   private stars$ = new BehaviorSubject<Star[]>([]);
@@ -47,14 +48,12 @@ export class StarAnimationService {
     this.performanceMode = mode;
     this.animationEnabled = mode !== 'disabled';
     localStorage.setItem('star-animation-mode', mode);
-    
+
     if (!this.animationEnabled) {
       this.stars$.next([]);
     } else {
       this.updateStarsCount();
     }
-    
-
   }
 
   getPerformanceMode() {
@@ -68,24 +67,24 @@ export class StarAnimationService {
 
     const currentTime = Date.now();
     const deltaTime = currentTime - this.lastMoveTime;
-    
+
     if (deltaTime > 0 && this.lastMoveTime > 0) {
       const deltaX = event.clientX - this.lastMouseX;
       const deltaY = event.clientY - this.lastMouseY;
-      
-      const velocityX = deltaX / deltaTime * 8;
-      const velocityY = deltaY / deltaTime * 8;
-      
+
+      const velocityX = (deltaX / deltaTime) * 8;
+      const velocityY = (deltaY / deltaTime) * 8;
+
       const maxPush = 5;
       const newPushX = Math.max(-maxPush, Math.min(maxPush, velocityX));
       const newPushY = Math.max(-maxPush, Math.min(maxPush, velocityY));
-      
+
       this.pushX += newPushX * 0.3;
       this.pushY += newPushY * 0.3;
-      
+
       this.updatePushEffect();
     }
-    
+
     this.lastMouseX = event.clientX;
     this.lastMouseY = event.clientY;
     this.lastMoveTime = currentTime;
@@ -103,7 +102,7 @@ export class StarAnimationService {
     if (this.decayTimer) {
       clearTimeout(this.decayTimer);
     }
-    
+
     this.decayTimer = setTimeout(() => {
       this.decayPushEffect();
     }, 500);
@@ -113,18 +112,18 @@ export class StarAnimationService {
     const decayStep = () => {
       this.pushX *= 0.95;
       this.pushY *= 0.95;
-      
+
       if (Math.abs(this.pushX) < 0.01 && Math.abs(this.pushY) < 0.01) {
         this.pushX = 0;
         this.pushY = 0;
         this.updatePushEffect();
         return;
       }
-      
+
       this.updatePushEffect();
       requestAnimationFrame(decayStep);
     };
-    
+
     decayStep();
   }
 
@@ -138,10 +137,10 @@ export class StarAnimationService {
 
   private updateStarsCount() {
     this.detectPerformanceMode();
-    
+
     const width = window.innerWidth;
     let baseCount = Math.floor(width / 15);
-    
+
     if (!this.animationEnabled) {
       const starsCount = 0;
       if (this.stars$.value.length !== starsCount) {
@@ -161,9 +160,9 @@ export class StarAnimationService {
         baseCount = Math.floor(baseCount * 0.7);
         break;
     }
-    
+
     const starsCount = Math.min(50, Math.max(5, baseCount));
-    
+
     if (this.stars$.value.length !== starsCount) {
       this.generateStars(starsCount);
     }
@@ -180,11 +179,11 @@ export class StarAnimationService {
     const width = window.innerWidth;
     const height = window.innerHeight;
     const pixelCount = width * height;
-    
+
     const canvas = document.createElement('canvas');
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
     const hasHardwareAcceleration = !!gl;
-    
+
     if (pixelCount > 2073600 && hasHardwareAcceleration) {
       this.performanceMode = 'medium';
     } else if (pixelCount > 921600 || hasHardwareAcceleration) {
@@ -192,13 +191,13 @@ export class StarAnimationService {
     } else {
       this.performanceMode = 'disabled';
     }
-    
+
     this.animationEnabled = this.performanceMode !== 'disabled';
   }
 
   private generateStars(count: number) {
     const newStars: Star[] = [];
-    
+
     for (let i = 0; i < count; i++) {
       const initialX = Math.random() * 100;
       const initialY = Math.random() * 100;
@@ -213,7 +212,7 @@ export class StarAnimationService {
       const offsetX3 = Math.random() * 400 - 200;
       const offsetY3 = Math.random() * 400 - 200;
       const weight = 0.3 + Math.random() * 0.7;
-      
+
       newStars.push({
         id: i,
         initialX,
@@ -227,7 +226,7 @@ export class StarAnimationService {
         duration: `${duration}s`,
         delay: `${delay}s`,
         opacity,
-        weight
+        weight,
       });
     }
 
@@ -241,4 +240,4 @@ export class StarAnimationService {
     }
     this.stars$.complete();
   }
-} 
+}
