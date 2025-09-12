@@ -1,7 +1,17 @@
 {
   "name": "black-hole",
   "version": "0.0.0",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix --max-warnings=0",
+      "prettier -w"
+    ],
+    "*.{md,json,yml,yaml,css,scss}": [
+      "prettier -w"
+    ]
+  },
   "scripts": {
+    "lint": "eslint . --ext .ts,.html --fix && prettier -w . && tsc --noEmit",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -35,12 +45,21 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.11",
+    "@angular-eslint/eslint-plugin": "^20.2.0",
+    "@angular-eslint/eslint-plugin-template": "^20.2.0",
+    "@angular-eslint/template-parser": "^20.2.0",
     "@angular/cli": "^18.2.11",
     "@angular/compiler-cli": "^18.2.0",
     "@types/bs58": "^4.0.4",
     "@types/jasmine": "~5.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "@typescript-eslint/parser": "^8.43.0",
     "autoprefixer": "^10.4.20",
     "buffer": "^6.0.3",
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "https-browserify": "^1.0.0",
     "jasmine-core": "~5.2.0",
     "karma": "~6.4.0",
