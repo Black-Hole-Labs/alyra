@@ -46,7 +46,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   walletName = computed(() => this.blockchainStateService.getCurrentWalletAddress() ?? 'Connect Wallet');
   currentWalletIcon = computed(() => {
     if (!this.blockchainStateService.connected()) {
-      return '/img/header/wallet.png';
+      return '';
     }
     const providerId = this.blockchainStateService.getCurrentProviderId();
     const provider = this.providers.find((p) => p.id === providerId);

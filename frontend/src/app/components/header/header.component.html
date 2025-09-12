@@ -26,7 +26,7 @@
       </div>
       <div class="separator" *ngIf="blockchainStateService.connected()"></div>
       <p class="walletId">
-        <img class="icon" [ngSrc]="currentWalletIcon()" width="15" height="15"
+        <img class="icon" *ngIf="blockchainStateService.connected()" [ngSrc]="currentWalletIcon()" width="15" height="15"
              alt="Wallet icon"/>
         {{ walletName().length > 20 ? walletName().slice(0, 6) + '...' + walletName().slice(-3) : walletName() }}
       </p>
